@@ -1,0 +1,10 @@
+{
+  "name": "@ariskill/analytics-projection",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Aggregate-only Insights projection with cohort suppression (D-15). Pure functions; imported by the game service.",
+  "main": "src/insights.js",
+  "exports": { ".": "./src/insights.js" },
+  "dependencies": {}
+}

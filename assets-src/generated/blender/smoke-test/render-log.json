@@ -1,0 +1,16 @@
+{
+  "mode": "smoke",
+  "seed": "abc123",
+  "size": 256,
+  "samples": 16,
+  "blender": "5.2.0 LTS",
+  "renders": [
+    {
+      "file": "soul-abc123-drop-aurora-threequarter.png",
+      "view": "threequarter",
+      "seconds": 0.15,
+      "body": "drop",
+      "palette": "aurora"
+    }
+  ]
+}

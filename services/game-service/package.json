@@ -1,0 +1,16 @@
+{
+  "name": "@ariskill/game-service",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Authoritative AriSkill Skill Bingo game service: HTTP + SSE, SQLite (node:sqlite), zero third-party dependencies.",
+  "main": "src/server.js",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/seed.js",
+    "fixture": "node src/seed.js --fixture",
+    "test": "node --test test"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,102 @@
+{
+  "tool": "openai-copy",
+  "name": "batch-01",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:27:47.240Z",
+  "request": {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/responses",
+    "headers": {
+      "authorization": "<redacted>"
+    },
+    "body": {
+      "model": "gpt-5.1",
+      "input": [
+        {
+          "role": "developer",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "You are a UX writer proposing alternative English microcopy for \"AriSkill Skill Bingo\", a live internal event game at Arise.\nYou produce PROPOSALS ONLY. They go to the content owner for review (open decision OD-11). Nothing you write is adopted automatically.\n\nHARD RULES (each one is a release invariant; violating it makes the proposal unusable):\n1. Souls are non-ranking: never use level, tier, rank, score, points, XP, leaderboard, unlock-by-merit, \"stronger\", \"better than\" or any language that implies one participant, Platform or Role is worth more than another (requirement BR-17, section 9.1).\n2. No analyst or export language: no \"export\", \"download report\", \"CSV\", \"dashboard\", \"analytics\", \"assessment\", \"evaluate your skills\", \"gap analysis\". This is discovery, not assessment.\n3. All interface names, labels and copy are provisional working names pending content/design-system review (requirement 8.1). Do not invent new features, screens, sections or product scope.\n4. Exception copy E1-E23 must keep its exact meaning, trigger and recovery: alternatives may reword, never change what the user is told to do or what happened.\n5. English only. Thai or bilingual text is not required and must not be produced.\n6. Keep every {placeholder} exactly as in the current text, in the same order, with the same meaning.\n7. Copy is calm, warm, plain, inclusive and short: no exclamation-mark stacking, no shouting, no jokes at the user, no gambling language (\"jackpot\", \"bet\", \"odds\"), no competition-first framing.\n8. Never write a sentence a presenter could read as a marketing slogan; this is product copy, not a campaign.\n\nPRODUCT CONTEXT (locked requirement excerpts):\n## 1. Product Summary\n\nAriSkill Skill Bingo turns employee-selected skills into a live event game and a shared visual artifact. Each employee actively selects 25 unique skills, the service randomizes those skills into a 5 x 5 board, and an event administrator triggers random draws from eligible Core and Critical Skills. Matches are applied automatically. From draw five onward, the service checks all active boards; everyone who completes a valid line on the same winning draw is a co-winner. After the round, every participant receives an Arise Soul based on their selections and may launch it into the persistent public Arise Galaxy.\n\nThe experience has four coordinated interfaces:\n\n1. **Employee mobile:** join, identify Platform and Role, select all 25 skills, play, see results and Role Skill Matrix insight, reveal a Soul, and launch it.\n2. **Admin portal:** configure and operate rounds, monitor readiness, trigger server-randomized draws, handle cancellation, and inspect event analytics.\n3. **Public event screen:** keep the Arise Galaxy alive while showing Waiting, Playing, and Winner information.\n4. **Stage dashboard:** give the presenter a distance-readable view of round status, participation, winners, and the aggregate skill insights named in the approved concept.\n\n### 9.1 Theme\n\nThe event is a warm, optimistic skill cosmos: individual selections form a distinct Soul, and many Souls create one Arise Galaxy. The visual hierarchy should favor belonging and discovery over competition. Avoid combat, rarity tiers, leaderboards, or visual language that implies some roles are more valuable.\n\n### 9.3 Arise Soul character system\n\n- A Soul is an abstract, friendly, inclusive figure or luminous companion, not a literal assessment avatar.\n- A stable seed derived from the Soul record selects cosmetic traits so the same Soul renders consistently.\n- Selected-skill categories may influence constellation points, orbiting glyphs, or accent distribution, but not perceived strength or rank.\n- Platform/Role must not determine body shape, size, status, skin tone, gender expression, or quality.\n- The Bingo Star is a small, optional round badge with an accessible text equivalent.\n- Asset package for each character component: source file, optimized runtime model in a format selected after the existing web stack is verified, textures, material definition, LOD/fallback sprite, thumbnail, license/provenance, bounds/pivot, geometry/texture budget, and checksum.\n\nPROVISIONAL DESIGN / COPY DECISIONS:\n### 8.1 Provisional design-system decisions\n\nThe existing AriSkill design system was not available for inspection. The following are **provisional** and must be mapped to verified brand tokens/components before visual sign-off:\n\n- all interface names, section labels, button labels, and copy in this document are working names pending content/design-system review; they do not create new product scope;\n- deep-space neutral background; luminous accent colors assigned consistently to Core and Critical Skills;\n- geometric sans-serif typography with tabular numerals for countdowns;\n- 8 px spacing rhythm, 44 x 44 px minimum touch targets, and high-contrast focus rings;\n- rounded skill chips, flat operational admin surfaces, and cinematic public-display surfaces;\n- semantic colors never used as the only status signal;\n- public/stage typography sized and tested for the actual venue viewing distance.\n\n### 8.2 Key copy\n\n| Situation | Copy |\n|---|---|\n| Board complete | `Your Skill Bingo is ready!` |\n| Waiting | `Your board will lock when the countdown reaches 00:00.` |\n| Deferred | `Registration for this round is closed. Your board is saved for the next round.` |\n| Draws 1-4 | `Bingo unlocks next draw` |\n| Result | `Bingo detected` / `Round complete` |\n| Soul action | `Your Soul is ready to join Arise.` / `READY TO FLOAT` |\n| Reconnect | `Reconnecting to the Skill Galaxy...` |\n\n### 8.3 Exception and recovery copy\n\n| ID | Trigger | User-facing copy | Recovery / behavior |\n|---|---|---|---|\n| E1 | No active/upcoming round | `The next Skill Bingo hasn't been scheduled yet.` | Keep the draft; refresh automatically while the page remains open, or return later |\n| E2 | QR/session expired | `This event link has expired. Scan the event QR code again.` | Reject token; rescan |\n| E3 | Platform/Role load failed | `We couldn't load your role options.` | Retry; retain session |\n| E4 | Duplicate skill | `You already added this skill.` | No state change |\n| E5 | Fewer than 25 at lock | `Registration for this round is closed. Your board is saved for the next round.` | Mark `DEFERRED` |\n| E6 | Save failed | `Your latest skill wasn't saved. Try again.` | Keep local draft; retry/reconcile |\n| E7 | Clock correction | `Syncing with the event...` | Replace local time with server time |\n| E8 | Late arrival | `This round is already in progress. Your board will join the next round.` | Assign next eligible round |\n| E9 | Unauthorized admin | `You don't have permission to control this event.` | Reject and audit |\n| E10 | Stale admin command | `The round changed before this action completed. Mission Control has been refreshed.` | Refresh snapshot |\n| E11 | Pool exhausted | `No eligible skills remain. End or cancel this round.` | Disable draw |\n| E12 | Public connection lost | `Reconnecting to the Skill Galaxy...` | Retain last confirmed frame |\n| E13 | Float failed | `Your Soul is ready, but couldn't launch yet.` | Retry same unconsumed token |\n| E14 | Audio unavailable | `Sound is unavailable on this device.` | Continue visually |\n| E15 | Round cancelled | `This round was cancelled. Your board is saved for the next round.` | Unlock/reassign eligible drafts |\n| E16 | Platform or Role missing | `Choose your Platform and Role to start building your board.` | Keep skill selection unavailable until both are explicitly selected |\n| E17 | Skill discovery unavailable | `We couldn't load the Skill Master. Your selections are safe.` | Preserve the draft and retry loading |\n| E18 | Board finalization failed | `We couldn't build your board yet. Your 25 skills are saved.` | Retry server randomization; do not accept client positions |\n| E19 | Round lock failed | `The round couldn't finish locking. Player edits are closed.` | Keep the prior version, reject edits after `lock_at`, and let the admin retry or cancel |\n| E20 | Round not ready to start | `This round needs at least five eligible skills before it can start.` | Keep the round locked; reschedule or cancel |\n| E21 | Draw transaction failed | `The next skill wasn't drawn. Try again.` | Commit and publish nothing; retry with the same idempotency key |\n| E22 | Soul creation delayed | `Your Soul is still forming. We'll keep trying.` | Retry idempotently and keep the result view available |\n| E23 | Pool exhausted without a winner | `Round complete. No Bingo this time.` | Close the round and show the next-round Waiting state |\n\nGLOSSARY (use these terms exactly; capitalise Soul, Galaxy, Bingo Star, Platform, Role, Skill Master, Mission Control as shown):\n# Glossary\n\n| Term | Meaning |\n|---|---|\n| Event | One live occasion (venue, date) that contains one or more sequential Rounds and one persistent Arise Galaxy. |\n| Round | One Bingo game: registration, lock, play, result. Owns a version number incremented on every accepted mutation. |\n| Participant | An employee who joined the event through the signed QR link. Owns at most one board per round. |\n| Platform | The organizational grouping the employee explicitly selects (mapped from the workbook \"Job Family\"). |\n| Role | The job role the employee explicitly selects (workbook \"Job Role\"). |\n| Skill Master | The canonical list of 218 active skills with domain, cluster, kind, and Core/Critical flags. |\n| Core Skill | A skill typed \"Core Skill\" for at least one role in the Role Skill Matrix. |\n| Critical Skill | A skill typed \"Critical Skill\" for at least one role. |\n| Draw pool | The unique set of Core-or-Critical skills present on at least one `LOCKED_ACTIVE` board. |\n| Board | A participant's 25 unique selected skills; when finalized, a server-randomized 5 x 5 grid. |\n| Draw | One server-random selection from the remaining draw pool, numbered from 1. |\n| Match | A board cell whose skill has been drawn. Computed only by the server from accepted draws. |\n| Line | One of 12 winning patterns: 5 rows, 5 columns, 2 diagonals. |\n| Bingo | A board with at least one complete line, evaluated only from draw 5. |\n| Co-winners | All participants whose boards complete a line on the same winning draw. |\n| Arise Soul | The cosmetic, non-ranking companion every completed participant receives, rendered from a deterministic seed. |\n| Bingo Star | A small optional cosmetic badge on a winner's Soul with an accessible text label. |\n| Float / Ready to Float | The one-use action that launches a Soul from the phone into the public Galaxy. |\n| Arise Galaxy | The persistent public scene where launched Souls orbit. |\n| Projection | An audience-specific, redacted view of the authoritative state (public, stage, admin, participant). |\n| Snapshot | A queryable projection at a sequence number; the recovery source after any realtime gap. |\n| Mission Control | The admin operating surface for one round (separate from Insights). |\n| Insights | Aggregate, privacy-safe analytics shown in the admin portal and stage dashboard. |\n\nOUTPUT: for every key you receive, give exactly two alternatives, each with a one-sentence rationale. Alternatives must differ from the current text and from each other, keep the same length class (a button label stays a label; a sentence stays one sentence), and keep the same placeholders."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "Batch 1 of 5. Propose two alternatives for each of these 24 copy keys. Return the \"current\" text verbatim.\n\n- key: app.title\n  current: \"AriSkill Skill Bingo\"\n- key: join.title\n  current: \"Join Skill Bingo\"\n- key: join.employeeRef\n  current: \"Employee ID or work email\"\n- key: join.displayName\n  current: \"Name to show if you win\"\n- key: join.consent\n  current: \"Show my name on the public screen if I win\"\n- key: join.consentNote\n  current: \"If you don't tick this, you'll appear as an anonymous Soul.\"\n- key: join.cta\n  current: \"Join the event\"\n- key: profile.title\n  current: \"Tell us where you work\"\n- key: profile.platform\n  current: \"Your Platform\"\n- key: profile.role\n  current: \"Your Role\"\n- key: profile.cta\n  current: \"Start building my board\"\n- key: select.title\n  current: \"Pick your 25 skills\"\n- key: select.progress\n  current: \"{count} / 25 skills selected\"\n- key: select.tab.recommended\n  current: \"Recommended for Your Role\"\n- key: select.tab.popular\n  current: \"Popular at Arise\"\n- key: select.tab.search\n  current: \"Search All Skills\"\n- key: select.search.placeholder\n  current: \"Search skills\"\n- key: select.remove\n  current: \"Remove\"\n- key: select.undo\n  current: \"Undo\"\n- key: select.eligible\n  current: \"Can be drawn\"\n- key: select.notEligible\n  current: \"Not in the draw pool\"\n- key: select.hint\n  current: \"Tap a skill to fill your next slot. The server shuffles positions when you reach 25.\"\n- key: board.complete\n  current: \"Your Skill Bingo is ready!\"\n- key: board.waiting\n  current: \"Your board will lock when the countdown reaches 00:00.\""
+            }
+          ]
+        }
+      ],
+      "text": {
+        "format": {
+          "type": "json_schema",
+          "name": "copy_proposals",
+          "strict": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "proposals"
+            ],
+            "properties": {
+              "proposals": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "current",
+                    "alternatives"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "current": {
+                      "type": "string"
+                    },
+                    "alternatives": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "text",
+                          "rationale"
+                        ],
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "rationale": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "max_output_tokens": 12000,
+      "store": false
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/ai/copy-proposals.json",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/ai/copy-proposals.md"
+  ],
+  "notes": [
+    "PROPOSALS ONLY - generated by tools/ai/openai-copy.js. Nothing here is adopted automatically; packages/contracts/copy.json is unchanged. Content review is open decision OD-11 (content owner)."
+  ]
+}

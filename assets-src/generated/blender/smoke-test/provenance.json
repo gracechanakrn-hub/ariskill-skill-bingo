@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "tool": "tools/ai/blender-render.js",
+  "script": "tools/ai/blender/soul_turnaround.py",
+  "scriptSha256": "aafcde9e00ae18c0a302c87089d8930d54c6ed2e48fa9dff1dd5c0035b976b54",
+  "renderer": "Blender (Eevee)",
+  "blender": {
+    "bin": "/Applications/Blender.app/Contents/MacOS/Blender",
+    "version": "5.2.0"
+  },
+  "seed": "abc123",
+  "mode": "smoke",
+  "createdAt": "2026-09-23T07:27:09.377Z",
+  "elapsedMs": 666,
+  "runs": [
+    {
+      "args": [
+        "--background",
+        "--factory-startup",
+        "--python",
+        "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/tools/ai/blender/soul_turnaround.py",
+        "--",
+        "--mode",
+        "smoke",
+        "--seed",
+        "abc123",
+        "--out",
+        "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/smoke-test",
+        "--body",
+        "drop",
+        "--palette",
+        "aurora",
+        "--view",
+        "threequarter",
+        "--size",
+        "256",
+        "--samples",
+        "16"
+      ],
+      "status": 0,
+      "elapsedMs": 665,
+      "renders": [
+        {
+          "file": "soul-abc123-drop-aurora-threequarter.png",
+          "view": "threequarter",
+          "seconds": 0.15,
+          "body": "drop",
+          "palette": "aurora"
+        }
+      ]
+    }
+  ],
+  "license": "AI-generated reference, not shipped",
+  "shipped": false,
+  "note": "Procedural render from the repo body profiles (soul-params.js port) - reference material for the marketing sheet / Galaxy atlas decision; not a runtime asset.",
+  "entries": [
+    {
+      "file": "soul-abc123-drop-aurora-threequarter.png",
+      "sha256": "1a4710cf32d325535b7145d1be0e70c2b494f361efba942c9e6b567283f76670",
+      "bytes": 28708
+    }
+  ]
+}

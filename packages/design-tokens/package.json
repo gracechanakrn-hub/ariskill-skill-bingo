@@ -1,0 +1,19 @@
+{
+  "name": "@ariskill/design-tokens",
+  "version": "1.2.0",
+  "type": "module",
+  "private": true,
+  "description": "PROVISIONAL AriSkill Skill Bingo design tokens (dark-first; light admin theme; venue scale). Map to verified brand tokens before visual sign-off (OD-12).",
+  "main": "tokens.json",
+  "exports": {
+    ".": "./tokens.json",
+    "./tokens.json": "./tokens.json",
+    "./tokens.css": "./tokens.css"
+  },
+  "files": ["tokens.json", "tokens.css", "README.md"],
+  "scripts": {
+    "build": "node build.js",
+    "test": "node build.js --check && node --test test"
+  },
+  "license": "UNLICENSED"
+}

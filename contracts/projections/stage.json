@@ -1,0 +1,25 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/projections/stage",
+  "version": "1.0.0",
+  "audience": "stage (presenter, read-only)",
+  "allow": {
+    "eventId": "string", "eventName": "string", "sequence": "int", "serverTime": "ISO", "publicState": "Waiting|Playing|Winner",
+    "notice": "null|{kind, text}",
+    "round": "RoundSummary + resultWindowEndsAt + startOverdue:bool",
+    "nextRound": "RoundSummary|null",
+    "counts": { "joined": "int", "completed": "int", "incomplete": "int", "active": "int", "deferred": "int", "matchedBoards": "int" },
+    "currentDraw": "as public", "recentDraws": "as public (last 10)",
+    "winners": "[{label, soulId, winningDrawNumber}]",
+    "resultTiming": { "winningDrawNumber": "int|null", "publishedAt": "ISO|null", "resultWindowEndsAt": "ISO|null" },
+    "insights": {
+      "topSkills": "[{skillId, name, kind, count}] (top 10)",
+      "coreCriticalDensity": { "core": "int", "critical": "int", "optional": "int", "totalSelections": "int" },
+      "platformEngagement": "[{platformId, name, joined, completed}] (cohort >= 5 only)",
+      "roleEngagement": "[{roleId, name, joined, completed}] (cohort >= 5 only)",
+      "matrixAlignment": { "rate": "float 0-1", "matrixVersion": "string", "participants": "int" },
+      "skillsBeyondMatrix": "[{skillId, name, count}] (top 10)",
+      "suppressedCohorts": "int"
+    }
+  },
+  "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email", "joinUrl"]
+}

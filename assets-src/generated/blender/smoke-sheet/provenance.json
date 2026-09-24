@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "tool": "tools/ai/blender-render.js",
+  "script": "tools/ai/blender/soul_turnaround.py",
+  "scriptSha256": "aafcde9e00ae18c0a302c87089d8930d54c6ed2e48fa9dff1dd5c0035b976b54",
+  "renderer": "Blender (Eevee)",
+  "blender": {
+    "bin": "/Applications/Blender.app/Contents/MacOS/Blender",
+    "version": "5.2.0"
+  },
+  "seed": "abc123",
+  "mode": "sheet",
+  "createdAt": "2026-09-23T07:26:35.580Z",
+  "elapsedMs": 1749,
+  "runs": [
+    {
+      "args": [
+        "--background",
+        "--factory-startup",
+        "--python",
+        "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/tools/ai/blender/soul_turnaround.py",
+        "--",
+        "--mode",
+        "sheet",
+        "--seed",
+        "abc123",
+        "--out",
+        "--size",
+        "480",
+        "--samples",
+        "16"
+      ],
+      "status": 0,
+      "elapsedMs": 1748,
+      "renders": [
+        {
+          "file": "contact-sheet-abc123.png",
+          "view": "sheet",
+          "seconds": 0.66,
+          "bodies": [
+            "drop",
+            "bell",
+            "cloud",
+            "pebble",
+            "flame",
+            "bean"
+          ],
+          "palettes": [
+            "aurora",
+            "sunset",
+            "orchid"
+          ]
+        }
+      ]
+    }
+  ],
+  "license": "AI-generated reference, not shipped",
+  "shipped": false,
+  "note": "Procedural render from the repo body profiles (soul-params.js port) - reference material for the marketing sheet / Galaxy atlas decision; not a runtime asset.",
+  "entries": [
+    {
+      "file": "contact-sheet-abc123.png",
+      "sha256": "fd7b31b5fde2066fe36ca0086aa0a5a8837b9c0fb56e610827d4df604cc1e07b",
+      "bytes": 1241348
+    }
+  ]
+}

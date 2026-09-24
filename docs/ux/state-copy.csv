@@ -1,0 +1,115 @@
+id,kind,trigger_or_key,copy,recovery
+"app.title",state,"app.title","AriSkill Skill Bingo",
+"join.title",state,"join.title","Join Skill Bingo",
+"join.employeeRef",state,"join.employeeRef","Employee ID or work email",
+"join.displayName",state,"join.displayName","Name to show if you win",
+"join.consent",state,"join.consent","Show my name on the public screen if I win",
+"join.consentNote",state,"join.consentNote","If you don't tick this, you'll appear as an anonymous Soul.",
+"join.cta",state,"join.cta","Join the event",
+"profile.title",state,"profile.title","Tell us where you work",
+"profile.platform",state,"profile.platform","Your Platform",
+"profile.role",state,"profile.role","Your Role",
+"profile.cta",state,"profile.cta","Start building my board",
+"select.title",state,"select.title","Pick your 25 skills",
+"select.progress",state,"select.progress","{count} / 25 skills selected",
+"select.tab.recommended",state,"select.tab.recommended","Recommended for Your Role",
+"select.tab.popular",state,"select.tab.popular","Popular at Arise",
+"select.tab.search",state,"select.tab.search","Search All Skills",
+"select.search.placeholder",state,"select.search.placeholder","Search skills",
+"select.remove",state,"select.remove","Remove",
+"select.undo",state,"select.undo","Undo",
+"select.eligible",state,"select.eligible","Can be drawn",
+"select.notEligible",state,"select.notEligible","Not in the draw pool",
+"select.hint",state,"select.hint","Tap a skill to fill your next slot. The server shuffles positions when you reach 25.",
+"board.complete",state,"board.complete","Your Skill Bingo is ready!",
+"board.waiting",state,"board.waiting","Your board will lock when the countdown reaches 00:00.",
+"board.edit",state,"board.edit","Edit skills",
+"board.editWarning",state,"board.editWarning","Changing a skill reshuffles your board.",
+"board.locked",state,"board.locked","Board locked",
+"board.deferred",state,"board.deferred","Registration for this round is closed. Your board is saved for the next round.",
+"board.noRound",state,"board.noRound","The next Skill Bingo hasn't been scheduled yet.",
+"play.waitingStart",state,"play.waitingStart","Board locked. Waiting for the host to start...",
+"play.drawsBeforeFive",state,"play.drawsBeforeFive","Bingo unlocks next draw",
+"play.drawsBeforeFiveN",state,"play.drawsBeforeFiveN","Bingo unlocks at draw 5",
+"play.evaluationActive",state,"play.evaluationActive","Bingo is live",
+"play.draw",state,"play.draw","Draw {number}",
+"play.matched",state,"play.matched","{count} matched on your board",
+"play.pacing",state,"play.pacing","Waiting for the next skill...",
+"result.bingo",state,"result.bingo","Bingo detected",
+"result.roundComplete",state,"result.roundComplete","Round complete",
+"result.winner",state,"result.winner","You completed a line on draw {draw}!",
+"result.coWinners",state,"result.coWinners","You share this Bingo with {count} others.",
+"result.notWinner",state,"result.notWinner","No line this time. Your Soul is still on its way.",
+"result.noRankNote",state,"result.noRankNote","This game is about discovery, not assessment.",
+"soul.ready",state,"soul.ready","Your Soul is ready to join Arise.",
+"soul.float",state,"soul.float","READY TO FLOAT",
+"soul.floated",state,"soul.floated","Your Soul is in the Galaxy",
+"soul.countdown",state,"soul.countdown","3 -> 2 -> 1 -> FLOAT",
+"soul.badge",state,"soul.badge","Bingo Star",
+"soul.badgeLabel",state,"soul.badgeLabel","Bingo Star badge: completed a line this round",
+"insight.title",state,"insight.title","Your Role Skill Matrix insight",
+"insight.inMatrix",state,"insight.inMatrix","{count} of your 25 skills are in the {role} matrix",
+"insight.beyond",state,"insight.beyond","{count} go beyond the current matrix",
+"insight.private",state,"insight.private","Only you can see this.",
+"reconnect",state,"reconnect","Reconnecting to the Skill Galaxy...",
+"syncing",state,"syncing","Syncing with the event...",
+"admin.missionControl",state,"admin.missionControl","Mission Control",
+"admin.insights",state,"admin.insights","Insights",
+"admin.createRound",state,"admin.createRound","Create round",
+"admin.openRegistration",state,"admin.openRegistration","Open registration",
+"admin.lockNow",state,"admin.lockNow","Lock now",
+"admin.start",state,"admin.start","Start round",
+"admin.startNow",state,"admin.startNow","Start now",
+"admin.startNowConfirm",state,"admin.startNowConfirm","Start now will lock all boards immediately and begin play. Incomplete boards move to the next round. Continue?",
+"admin.nextSkill",state,"admin.nextSkill","Next Skill",
+"admin.nextSkillPending",state,"admin.nextSkillPending","Drawing...",
+"admin.pacingHint",state,"admin.pacingHint","Suggested pacing: 5-8 seconds between draws. Draws never fire automatically.",
+"admin.cancel",state,"admin.cancel","Cancel round",
+"admin.cancelReason",state,"admin.cancelReason","Reason for cancellation (shown to players)",
+"admin.close",state,"admin.close","Close round",
+"admin.startOverdue",state,"admin.startOverdue","Round has been locked for over 60 seconds. Start when ready.",
+"admin.readiness.pool",state,"admin.readiness.pool","{count} eligible skills in the draw pool (minimum 5)",
+"admin.readiness.canWin",state,"admin.readiness.canWin","{count} boards can complete a line with this pool",
+"admin.readiness.noneCanWin",state,"admin.readiness.noneCanWin","No board can complete a line with this pool. Reschedule or cancel.",
+"admin.lockCountdown",state,"admin.lockCountdown","Registration locks in",
+"public.waiting.title",state,"public.waiting.title","Next round",
+"public.waiting.scan",state,"public.waiting.scan","Scan to join",
+"public.waiting.previous",state,"public.waiting.previous","Previous winners",
+"public.playing.draw",state,"public.playing.draw","Draw {number}",
+"public.playing.matched",state,"public.playing.matched","{count} boards matched",
+"public.playing.pacing",state,"public.playing.pacing","Bingo unlocks at draw 5",
+"public.playing.live",state,"public.playing.live","Bingo is live",
+"public.winner.title",state,"public.winner.title","Bingo!",
+"public.winner.round",state,"public.winner.round","Round {number}",
+"public.winner.anonymous",state,"public.winner.anonymous","Soul #{id}",
+"public.cancelled",state,"public.cancelled","This round was cancelled. Next round coming up.",
+"public.exhausted",state,"public.exhausted","Round complete. No Bingo this time.",
+"stage.status",state,"stage.status","Round status",
+"stage.participation",state,"stage.participation","Participation",
+"stage.insights",state,"stage.insights","Skill insights",
+"stage.alignment",state,"stage.alignment","Role Skill Matrix alignment",
+"stage.beyond",state,"stage.beyond","Skills beyond the matrix",
+"stage.suppressed",state,"stage.suppressed","Small groups hidden for privacy",
+"E1",exception,"No active/upcoming round","The next Skill Bingo hasn't been scheduled yet.","Keep the draft; refresh automatically while the page remains open, or return later"
+"E2",exception,"QR/session expired","This event link has expired. Scan the event QR code again.","Reject token; rescan"
+"E3",exception,"Platform/Role load failed","We couldn't load your role options.","Retry; retain session"
+"E4",exception,"Duplicate skill","You already added this skill.","No state change"
+"E5",exception,"Fewer than 25 at lock","Registration for this round is closed. Your board is saved for the next round.","Mark DEFERRED"
+"E6",exception,"Save failed","Your latest skill wasn't saved. Try again.","Keep local draft; retry/reconcile"
+"E7",exception,"Clock correction","Syncing with the event...","Replace local time with server time"
+"E8",exception,"Late arrival","This round is already in progress. Your board will join the next round.","Assign next eligible round"
+"E9",exception,"Unauthorized admin","You don't have permission to control this event.","Reject and audit"
+"E10",exception,"Stale admin command","The round changed before this action completed. Mission Control has been refreshed.","Refresh snapshot"
+"E11",exception,"Pool exhausted","No eligible skills remain. End or cancel this round.","Disable draw"
+"E12",exception,"Public connection lost","Reconnecting to the Skill Galaxy...","Retain last confirmed frame"
+"E13",exception,"Float failed","Your Soul is ready, but couldn't launch yet.","Retry same unconsumed token"
+"E14",exception,"Audio unavailable","Sound is unavailable on this device.","Continue visually"
+"E15",exception,"Round cancelled","This round was cancelled. Your board is saved for the next round.","Unlock/reassign eligible drafts"
+"E16",exception,"Platform or Role missing","Choose your Platform and Role to start building your board.","Keep skill selection unavailable until both are explicitly selected"
+"E17",exception,"Skill discovery unavailable","We couldn't load the Skill Master. Your selections are safe.","Preserve the draft and retry loading"
+"E18",exception,"Board finalization failed","We couldn't build your board yet. Your 25 skills are saved.","Retry server randomization; do not accept client positions"
+"E19",exception,"Round lock failed","The round couldn't finish locking. Player edits are closed.","Keep the prior version, reject edits after lock_at, and let the admin retry or cancel"
+"E20",exception,"Round not ready to start","This round needs at least five eligible skills before it can start.","Keep the round locked; reschedule or cancel"
+"E21",exception,"Draw transaction failed","The next skill wasn't drawn. Try again.","Commit and publish nothing; retry with the same idempotency key"
+"E22",exception,"Soul creation delayed","Your Soul is still forming. We'll keep trying.","Retry idempotently and keep the result view available"
+"E23",exception,"Pool exhausted without a winner","Round complete. No Bingo this time.","Close the round and show the next-round Waiting state"

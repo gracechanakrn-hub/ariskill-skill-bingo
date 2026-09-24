@@ -1,0 +1,599 @@
+# Generated asset manifest (workflow 5.2). Do not hand-edit: regenerate with the generator_script of each entry.
+version: 1.0.0
+license_default: internal-original
+runtime_formats: "svg,json,html"
+entries:
+  - id: scene_config
+    kind: data
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/scene-config.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:47797eada0e6b79d207aa2e5128bd619e330504707ac7166172e0a013a248f53
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1920, 1080, 0]
+    pivot: [960, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 3272
+    lods: []
+    approved_by: null
+  - id: scene_doodads
+    kind: sprite
+    source_file: packages/ui/doodads.js
+    source_format: js-procedural
+    runtime_file: assets/scene/doodads.svg
+    runtime_format: svg
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:b5dada56e1458a53629f2f3bd106955ddf2a16b575799b3d84c2f7b20eb076c8
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [64, 64, 0]
+    pivot: [32, 32, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4800
+    lods: []
+    approved_by: null
+  - id: scene_nebula
+    kind: sprite
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/nebula.svg
+    runtime_format: svg
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:60e5ccb51f907f75c2d721e0c451c4db7b28ad85623f8c8149636ece0f3c8abf
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1248, 1080, 0]
+    pivot: [624, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 2947
+    lods: []
+    approved_by: null
+  - id: scene_orbit_rings
+    kind: data
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/orbit-rings.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:3e1511cf66d275a8dd0932f65350f3c30693808d6fa725739442cd83298b5489
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1920, 1080, 0]
+    pivot: [960, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 1249
+    lods: []
+    approved_by: null
+  - id: scene_starfield_layer_1
+    kind: data
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/starfield-layer-1.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:e355485aa3a7f11694233f61efb48f8a8ca5a1383cbd13ec4d21eff8b06e5965
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1920, 1080, 0]
+    pivot: [960, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 21866
+    lods: []
+    approved_by: null
+  - id: scene_starfield_layer_2
+    kind: data
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/starfield-layer-2.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:4faaf256aa5b928212ffe6d60cb692cf1417c2a9363d9aa9ec1a5a05c41f3704
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1920, 1080, 0]
+    pivot: [960, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 11580
+    lods: []
+    approved_by: null
+  - id: scene_starfield_layer_3
+    kind: data
+    source_file: assets-src/scene/scene-params.json
+    source_format: json-parameters
+    runtime_file: assets/scene/starfield-layer-3.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:de87cb8e9ab98b4a76efb40871d7b2f04575a0eec6f63b93ea2497f028b8edc1
+    license: internal-original
+    generator_script: tools/assets/build-scene.js
+    bounds: [1920, 1080, 0]
+    pivot: [960, 540, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4873
+    lods: []
+    approved_by: null
+  - id: soul_cohort_01_140e6ebb0fff0f
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/140e6ebb0fff0f.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/140e6ebb0fff0f-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:724b1fe46b0ac50397b4e9f80018820a14c4754862189f57a0c27ead8c88e6d4
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5014
+    lods: [assets/souls/cohort/140e6ebb0fff0f.svg, assets/souls/fallback/140e6ebb0fff0f-simple.svg, assets/souls/fallback/140e6ebb0fff0f-dot.svg, assets/souls/thumbnails/140e6ebb0fff0f-64.svg]
+    approved_by: null
+  - id: soul_cohort_02_0e7c71a4f4779e
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0e7c71a4f4779e.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0e7c71a4f4779e-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:16ff65528a5d45f4f102a0e3d9d443d2b233444446e65bd541f28f6e2f5d6adc
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4886
+    lods: [assets/souls/cohort/0e7c71a4f4779e.svg, assets/souls/fallback/0e7c71a4f4779e-simple.svg, assets/souls/fallback/0e7c71a4f4779e-dot.svg, assets/souls/thumbnails/0e7c71a4f4779e-64.svg]
+    approved_by: null
+  - id: soul_cohort_03_185edf81266a86
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/185edf81266a86.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/185edf81266a86-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:bad92ea203ff29011965ab9fcfcb32c3c75f4a93a01b582f54f4f119f9775122
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5577
+    lods: [assets/souls/cohort/185edf81266a86.svg, assets/souls/fallback/185edf81266a86-simple.svg, assets/souls/fallback/185edf81266a86-dot.svg, assets/souls/thumbnails/185edf81266a86-64.svg]
+    approved_by: null
+  - id: soul_cohort_04_0c8fda8ffef1d5
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0c8fda8ffef1d5.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0c8fda8ffef1d5-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:bd5f94209888e7b1a2e93c3c427f66acad17bcbb7123924be2e8da41fde39932
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4564
+    lods: [assets/souls/cohort/0c8fda8ffef1d5.svg, assets/souls/fallback/0c8fda8ffef1d5-simple.svg, assets/souls/fallback/0c8fda8ffef1d5-dot.svg, assets/souls/thumbnails/0c8fda8ffef1d5-64.svg]
+    approved_by: null
+  - id: soul_cohort_05_0e39e2f5047a44
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0e39e2f5047a44.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0e39e2f5047a44-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:ea3c3c31d77634077a8ae9666ff3f84bd049f59449382b45543a6641124f7b70
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4597
+    lods: [assets/souls/cohort/0e39e2f5047a44.svg, assets/souls/fallback/0e39e2f5047a44-simple.svg, assets/souls/fallback/0e39e2f5047a44-dot.svg, assets/souls/thumbnails/0e39e2f5047a44-64.svg]
+    approved_by: null
+  - id: soul_cohort_06_1a094e030d5e89
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/1a094e030d5e89.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/1a094e030d5e89-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:56f787d3b55cd83b0ff90013ae96852de291f29ea868737978de89f04c51631a
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4404
+    lods: [assets/souls/cohort/1a094e030d5e89.svg, assets/souls/fallback/1a094e030d5e89-simple.svg, assets/souls/fallback/1a094e030d5e89-dot.svg, assets/souls/thumbnails/1a094e030d5e89-64.svg]
+    approved_by: null
+  - id: soul_cohort_07_045e48e3566287
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/045e48e3566287.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/045e48e3566287-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:aa3ac117fc87ec4b6abeef9d04a30bb03abc84c3a7300073bf62a8fd7e609f85
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5096
+    lods: [assets/souls/cohort/045e48e3566287.svg, assets/souls/fallback/045e48e3566287-simple.svg, assets/souls/fallback/045e48e3566287-dot.svg, assets/souls/thumbnails/045e48e3566287-64.svg]
+    approved_by: null
+  - id: soul_cohort_08_1ef9240343b1a0
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/1ef9240343b1a0.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/1ef9240343b1a0-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:c23cca4ee4f990702a03f12678ac51361d74cd59d8d95697d6097168dfa7a103
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5081
+    lods: [assets/souls/cohort/1ef9240343b1a0.svg, assets/souls/fallback/1ef9240343b1a0-simple.svg, assets/souls/fallback/1ef9240343b1a0-dot.svg, assets/souls/thumbnails/1ef9240343b1a0-64.svg]
+    approved_by: null
+  - id: soul_cohort_09_0f1be17ca9df8f
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0f1be17ca9df8f.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0f1be17ca9df8f-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:0d2e1d51566fab983a3785c42716fb99bb0b6a1ddd8a4f426ec4ccc6c2268ac8
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4838
+    lods: [assets/souls/cohort/0f1be17ca9df8f.svg, assets/souls/fallback/0f1be17ca9df8f-simple.svg, assets/souls/fallback/0f1be17ca9df8f-dot.svg, assets/souls/thumbnails/0f1be17ca9df8f-64.svg]
+    approved_by: null
+  - id: soul_cohort_10_0539dc0c10513f
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0539dc0c10513f.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0539dc0c10513f-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:7decaceee6f7a3984759870a4b9871f3c40dd1664bbe9e1ed79c5bce0ac22a95
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5362
+    lods: [assets/souls/cohort/0539dc0c10513f.svg, assets/souls/fallback/0539dc0c10513f-simple.svg, assets/souls/fallback/0539dc0c10513f-dot.svg, assets/souls/thumbnails/0539dc0c10513f-64.svg]
+    approved_by: null
+  - id: soul_cohort_11_1d2e20987152b0
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/1d2e20987152b0.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/1d2e20987152b0-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:d3a4070e353cefd1bff3a7b09849f946f4f0d2574838b451317130ebfe0942a9
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5168
+    lods: [assets/souls/cohort/1d2e20987152b0.svg, assets/souls/fallback/1d2e20987152b0-simple.svg, assets/souls/fallback/1d2e20987152b0-dot.svg, assets/souls/thumbnails/1d2e20987152b0-64.svg]
+    approved_by: null
+  - id: soul_cohort_12_064b5af3ba69c3
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/064b5af3ba69c3.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/064b5af3ba69c3-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:123fe6aed207840fc848affd2215a045c36831260de81e540374e2f00f7dd421
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5103
+    lods: [assets/souls/cohort/064b5af3ba69c3.svg, assets/souls/fallback/064b5af3ba69c3-simple.svg, assets/souls/fallback/064b5af3ba69c3-dot.svg, assets/souls/thumbnails/064b5af3ba69c3-64.svg]
+    approved_by: null
+  - id: soul_cohort_13_1cdc2b005f78f8
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/1cdc2b005f78f8.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/1cdc2b005f78f8-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:c82806f2d85255c38fb4ee45374d348dda6636c3e06c574f7aa527509db208e8
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4878
+    lods: [assets/souls/cohort/1cdc2b005f78f8.svg, assets/souls/fallback/1cdc2b005f78f8-simple.svg, assets/souls/fallback/1cdc2b005f78f8-dot.svg, assets/souls/thumbnails/1cdc2b005f78f8-64.svg]
+    approved_by: null
+  - id: soul_cohort_14_08ff91eabc6d43
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/08ff91eabc6d43.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/08ff91eabc6d43-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:97055862342e670831702554cf588282c4a09d6e87d3b69e3d95f083ec9a844c
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4770
+    lods: [assets/souls/cohort/08ff91eabc6d43.svg, assets/souls/fallback/08ff91eabc6d43-simple.svg, assets/souls/fallback/08ff91eabc6d43-dot.svg, assets/souls/thumbnails/08ff91eabc6d43-64.svg]
+    approved_by: null
+  - id: soul_cohort_15_01a5bc0af65924
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/01a5bc0af65924.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/01a5bc0af65924-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:fd2fbbe3ca4c185f6d49117f416d2da4f1f211e837eb4e231e15aa35080d8303
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4294
+    lods: [assets/souls/cohort/01a5bc0af65924.svg, assets/souls/fallback/01a5bc0af65924-simple.svg, assets/souls/fallback/01a5bc0af65924-dot.svg, assets/souls/thumbnails/01a5bc0af65924-64.svg]
+    approved_by: null
+  - id: soul_cohort_16_1ec3a1b6539cad
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/1ec3a1b6539cad.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/1ec3a1b6539cad-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:2dd1e2e70286d457df7c0e615690e81f90dffbc2358a33881c0d793950afffa7
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5029
+    lods: [assets/souls/cohort/1ec3a1b6539cad.svg, assets/souls/fallback/1ec3a1b6539cad-simple.svg, assets/souls/fallback/1ec3a1b6539cad-dot.svg, assets/souls/thumbnails/1ec3a1b6539cad-64.svg]
+    approved_by: null
+  - id: soul_cohort_17_0cf1c4f541ecc5
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0cf1c4f541ecc5.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0cf1c4f541ecc5-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:264b8e91d8e707f2bee2ed4b2eb6d26e877586d8633f83e102e8272593192b3c
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4533
+    lods: [assets/souls/cohort/0cf1c4f541ecc5.svg, assets/souls/fallback/0cf1c4f541ecc5-simple.svg, assets/souls/fallback/0cf1c4f541ecc5-dot.svg, assets/souls/thumbnails/0cf1c4f541ecc5-64.svg]
+    approved_by: null
+  - id: soul_cohort_18_10e619a585d80a
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/10e619a585d80a.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/10e619a585d80a-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:a3480b3d66a041eca4546b4370f83d8a694582a12c104fdd8f0d063a4633bfee
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5387
+    lods: [assets/souls/cohort/10e619a585d80a.svg, assets/souls/fallback/10e619a585d80a-simple.svg, assets/souls/fallback/10e619a585d80a-dot.svg, assets/souls/thumbnails/10e619a585d80a-64.svg]
+    approved_by: null
+  - id: soul_cohort_19_12ce33f272ee40
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/12ce33f272ee40.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/12ce33f272ee40-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:6c6f770e8b913940e1780e62b369f58292dd7925d668f472a75e97b1ec26fa83
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 5025
+    lods: [assets/souls/cohort/12ce33f272ee40.svg, assets/souls/fallback/12ce33f272ee40-simple.svg, assets/souls/fallback/12ce33f272ee40-dot.svg, assets/souls/thumbnails/12ce33f272ee40-64.svg]
+    approved_by: null
+  - id: soul_cohort_20_0406b542e700a1
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0406b542e700a1.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0406b542e700a1-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:8c19cad53d5095760c46cbd6ed48073627a35b868df18461a7083d1983913b12
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4819
+    lods: [assets/souls/cohort/0406b542e700a1.svg, assets/souls/fallback/0406b542e700a1-simple.svg, assets/souls/fallback/0406b542e700a1-dot.svg, assets/souls/thumbnails/0406b542e700a1-64.svg]
+    approved_by: null
+  - id: soul_cohort_21_19c576aacf1ebd
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/19c576aacf1ebd.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/19c576aacf1ebd-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:3652ed2bc91915f1198b59290275718ad1c05299d57abd73242bbd25d7be63c6
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4674
+    lods: [assets/souls/cohort/19c576aacf1ebd.svg, assets/souls/fallback/19c576aacf1ebd-simple.svg, assets/souls/fallback/19c576aacf1ebd-dot.svg, assets/souls/thumbnails/19c576aacf1ebd-64.svg]
+    approved_by: null
+  - id: soul_cohort_22_06f6f233f18448
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/06f6f233f18448.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/06f6f233f18448-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:dd4e80656e10f0fed1ed20b2c321ff10d2796d3156508091aec610d771f2a5c4
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4911
+    lods: [assets/souls/cohort/06f6f233f18448.svg, assets/souls/fallback/06f6f233f18448-simple.svg, assets/souls/fallback/06f6f233f18448-dot.svg, assets/souls/thumbnails/06f6f233f18448-64.svg]
+    approved_by: null
+  - id: soul_cohort_23_15b36949ab1524
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/15b36949ab1524.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/15b36949ab1524-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:e9d0898ace7188d41ff955b99f27767c69c0958f4ac243ff575d22d13efd6d29
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4468
+    lods: [assets/souls/cohort/15b36949ab1524.svg, assets/souls/fallback/15b36949ab1524-simple.svg, assets/souls/fallback/15b36949ab1524-dot.svg, assets/souls/thumbnails/15b36949ab1524-64.svg]
+    approved_by: null
+  - id: soul_cohort_24_0bc49cd4fd7217
+    kind: sprite
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort/0bc49cd4fd7217.svg
+    runtime_format: svg
+    fallback_file: assets/souls/fallback/0bc49cd4fd7217-simple.svg
+    fallback_format: svg
+    version: 2.0.0
+    checksum: sha256:dcd2c82399e68f6508941bdbc37b0b74bb094988552a1b165d091d1d0dd76517
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [200, 200, 0]
+    pivot: [100, 112, 0]
+    triangle_count: 0
+    texture_memory_bytes: 4485
+    lods: [assets/souls/cohort/0bc49cd4fd7217.svg, assets/souls/fallback/0bc49cd4fd7217-simple.svg, assets/souls/fallback/0bc49cd4fd7217-dot.svg, assets/souls/thumbnails/0bc49cd4fd7217-64.svg]
+    approved_by: null
+  - id: soul_cohort_index
+    kind: data
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/cohort.json
+    runtime_format: json
+    fallback_file: null
+    fallback_format: null
+    version: 2.0.0
+    checksum: sha256:c512939c7b76e0decba26e63447df17c57c9fbd43b560060029c23215c675df5
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [0, 0, 0]
+    pivot: [0, 0, 0]
+    triangle_count: 0
+    texture_memory_bytes: 17999
+    lods: []
+    approved_by: null
+  - id: soul_cohort_sheet
+    kind: review-page
+    source_file: assets-src/souls/cohort.json
+    source_format: json-parameters
+    runtime_file: assets/souls/sheet.html
+    runtime_format: html
+    fallback_file: null
+    fallback_format: null
+    version: 2.0.0
+    checksum: sha256:e2f6d41b6428805c78104ec66fbdfcfe0069d6dfd3b16fce33ff803105dd9bad
+    license: internal-original
+    generator_script: tools/assets/build-souls.js
+    bounds: [0, 0, 0]
+    pivot: [0, 0, 0]
+    triangle_count: 0
+    texture_memory_bytes: 304543
+    lods: []
+    approved_by: null

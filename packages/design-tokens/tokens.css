@@ -1,0 +1,128 @@
+/* @ariskill/design-tokens v1.2.0 - PROVISIONAL tokens. Generated from tokens.json by build.js; do not hand-edit. */
+/* Provisional: the AriSkill design system was not available (OD-12). Map to verified tokens before visual sign-off. */
+
+/* dark */
+:root {
+  --color-bg: #120A2E;
+  --color-bg-elevated: #1B1142;
+  --color-surface: #241858;
+  --color-surface-2: #2F2170;
+  --color-border: #6A57B8;
+  --color-text: #F2F4FF;
+  --color-text-muted: #BDB4E6;
+  --color-text-inverse: #120A2E;
+  --color-accent: #A98BFF;
+  --color-accent-strong: #CDBBFF;
+  --color-core: #F5C84B;
+  --color-critical: #6FD6FF;
+  --color-optional: #AAB3CC;
+  --color-success: #5EE1A0;
+  --color-warning: #FFA24A;
+  --color-danger: #FF7A8A;
+  --color-info: #7DB6FF;
+  --color-focus: #FFE68A;
+  --color-match: #8CF5C9;
+  --color-line: #FFF3B0;
+  --sticker-navy: #0B1030;
+  --sticker-space: #151C48;
+  --sticker-aurora-teal: #4FE3C1;
+  --sticker-aurora-lime: #B6FF5C;
+  --sticker-lilac: #8B7CF0;
+  --sticker-violet-deep: #3B2A7A;
+  --sticker-mint: #7CF5C8;
+  --sticker-cyan: #63E6FF;
+  --sticker-peach: #FFB27A;
+  --sticker-gold: #F6C453;
+  --sticker-rose: #FF6FA5;
+  --sticker-badge: #2D2670;
+  --sticker-badge-ink: #E7DFFF;
+  --sticker-outline: #FFFFFF;
+  --sticker-shadow: 0 6px 14px rgba(5, 8, 30, 0.55);
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: "Fredoka", "Plus Jakarta Sans", sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-display: 3.5rem;
+  --line-height-tight: 1.15;
+  --line-height-normal: 1.5;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 72px;
+  --space-10: 80px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.45), 0 12px 32px rgba(0, 0, 0, 0.35);
+  --touch-min: 44px;
+  --z-toast: 1000;
+  --z-modal: 900;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 600ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+/* light: Flat operational admin surfaces only. Inherits non-colour tokens from :root. */
+[data-theme="light"] {
+  --color-bg: #FFFFFF;
+  --color-bg-elevated: #F7F8FC;
+  --color-surface: #F1F3F9;
+  --color-surface-2: #E6E9F3;
+  --color-border: #7C87A6;
+  --color-text: #101527;
+  --color-text-muted: #4A5474;
+  --color-text-inverse: #FFFFFF;
+  --color-accent: #4D3ED1;
+  --color-accent-strong: #3A2CB0;
+  --color-core: #7A5300;
+  --color-critical: #0B6C9C;
+  --color-optional: #767676;
+  --color-success: #1B7A47;
+  --color-warning: #9A4E00;
+  --color-danger: #B4233B;
+  --color-info: #1F5FB5;
+  --color-focus: #3A2CB0;
+  --color-match: #1B7A47;
+  --color-line: #7A5300;
+}
+
+/* venue: Public/stage displays at 1920x1080 viewed from 10-25 m: body >= 40 px, headline >= 96 px (art-direction 6). */
+.theme-venue {
+  --font-size-xs: 28px;
+  --font-size-sm: 32px;
+  --font-size-md: 40px;
+  --font-size-lg: 48px;
+  --font-size-xl: 64px;
+  --font-size-2xl: 96px;
+  --font-size-3xl: 128px;
+  --font-size-display: 192px;
+  --line-height-tight: 1.05;
+  --line-height-normal: 1.3;
+  --radius-sm: 12px;
+  --radius-md: 24px;
+  --radius-lg: 40px;
+}
+
+/* Colour scheme hint for form controls and scrollbars */
+:root { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
+
+/* Reduced effects: travel/parallax/bursts are replaced by short fades (motion-spec); durations collapse to one perceivable 120 ms fade, never 0 */
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: 120ms; --duration-base: 120ms; --duration-slow: 120ms; --ease-emphasized: var(--ease-standard); }
+}

@@ -1,0 +1,791 @@
+{
+  "rendererVersion": "2.0.0",
+  "generator": "tools/assets/build-souls.js",
+  "version": "2.0.0",
+  "members": [
+    {
+      "index": 1,
+      "seed": "140e6ebb0fff0f",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "140e6ebb0fff0f",
+        "body": 0,
+        "palette": 5,
+        "eyes": 5,
+        "antenna": 5,
+        "mouth": 2,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Operations Support",
+            "weight": 0.429
+          },
+          {
+            "domain": "Quality Assurance & Testing",
+            "weight": 0.357
+          },
+          {
+            "domain": "Deployment",
+            "weight": 0.214
+          }
+        ],
+        "driftPhase": 0.285
+      },
+      "alt": "Arise Soul, coral drop with sparkle eyes"
+    },
+    {
+      "index": 2,
+      "seed": "0e7c71a4f4779e",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0e7c71a4f4779e",
+        "body": 1,
+        "palette": 3,
+        "eyes": 3,
+        "antenna": 2,
+        "mouth": 1,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.444
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.333
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.111
+          },
+          {
+            "domain": "Risk & Compliance",
+            "weight": 0.111
+          }
+        ],
+        "driftPhase": 0.133
+      },
+      "alt": "Arise Soul, orchid bell with wide eyes"
+    },
+    {
+      "index": 3,
+      "seed": "185edf81266a86",
+      "badge": "bingo-star",
+      "config": {
+        "version": 1,
+        "seed": "185edf81266a86",
+        "body": 0,
+        "palette": 7,
+        "eyes": 5,
+        "antenna": 5,
+        "mouth": 0,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.533
+          },
+          {
+            "domain": "Development",
+            "weight": 0.267
+          },
+          {
+            "domain": "Project & Product Management",
+            "weight": 0.2
+          }
+        ],
+        "driftPhase": 0.161
+      },
+      "alt": "Arise Soul, lilac drop with sparkle eyes. Bingo Star badge: completed a line this round"
+    },
+    {
+      "index": 4,
+      "seed": "0c8fda8ffef1d5",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0c8fda8ffef1d5",
+        "body": 4,
+        "palette": 4,
+        "eyes": 5,
+        "antenna": 4,
+        "mouth": 2,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Project & Product Management",
+            "weight": 0.667
+          },
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.333
+          }
+        ],
+        "driftPhase": 0.082
+      },
+      "alt": "Arise Soul, mint flame with sparkle eyes"
+    },
+    {
+      "index": 5,
+      "seed": "0e39e2f5047a44",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0e39e2f5047a44",
+        "body": 2,
+        "palette": 3,
+        "eyes": 0,
+        "antenna": 5,
+        "mouth": 2,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Deployment",
+            "weight": 0.714
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.286
+          }
+        ],
+        "driftPhase": 0.703
+      },
+      "alt": "Arise Soul, orchid cloud with dot eyes"
+    },
+    {
+      "index": 6,
+      "seed": "1a094e030d5e89",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "1a094e030d5e89",
+        "body": 5,
+        "palette": 6,
+        "eyes": 0,
+        "antenna": 1,
+        "mouth": 1,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.625
+          },
+          {
+            "domain": "Development",
+            "weight": 0.375
+          }
+        ],
+        "driftPhase": 0.526
+      },
+      "alt": "Arise Soul, sky bean with dot eyes"
+    },
+    {
+      "index": 7,
+      "seed": "045e48e3566287",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "045e48e3566287",
+        "body": 2,
+        "palette": 5,
+        "eyes": 5,
+        "antenna": 0,
+        "mouth": 2,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "IT Security",
+            "weight": 0.476
+          },
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.238
+          },
+          {
+            "domain": "Cloud",
+            "weight": 0.143
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.143
+          }
+        ],
+        "driftPhase": 0.033
+      },
+      "alt": "Arise Soul, coral cloud with sparkle eyes"
+    },
+    {
+      "index": 8,
+      "seed": "1ef9240343b1a0",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "1ef9240343b1a0",
+        "body": 3,
+        "palette": 1,
+        "eyes": 5,
+        "antenna": 3,
+        "mouth": 3,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.293
+          },
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.22
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.22
+          },
+          {
+            "domain": "Risk & Compliance",
+            "weight": 0.22
+          },
+          {
+            "domain": "Development",
+            "weight": 0.049
+          }
+        ],
+        "driftPhase": 0.992
+      },
+      "alt": "Arise Soul, lagoon pebble with sparkle eyes"
+    },
+    {
+      "index": 9,
+      "seed": "0f1be17ca9df8f",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0f1be17ca9df8f",
+        "body": 1,
+        "palette": 5,
+        "eyes": 4,
+        "antenna": 5,
+        "mouth": 2,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.48
+          },
+          {
+            "domain": "Data Management",
+            "weight": 0.28
+          },
+          {
+            "domain": "Risk & Compliance",
+            "weight": 0.16
+          },
+          {
+            "domain": "Business & Technology Strategy",
+            "weight": 0.08
+          }
+        ],
+        "driftPhase": 0.974
+      },
+      "alt": "Arise Soul, coral bell with wink eyes"
+    },
+    {
+      "index": 10,
+      "seed": "0539dc0c10513f",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0539dc0c10513f",
+        "body": 4,
+        "palette": 4,
+        "eyes": 5,
+        "antenna": 5,
+        "mouth": 1,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Deployment",
+            "weight": 0.458
+          },
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.333
+          },
+          {
+            "domain": "Soft Skill",
+            "weight": 0.208
+          }
+        ],
+        "driftPhase": 0.072
+      },
+      "alt": "Arise Soul, mint flame with sparkle eyes"
+    },
+    {
+      "index": 11,
+      "seed": "1d2e20987152b0",
+      "badge": "bingo-star",
+      "config": {
+        "version": 1,
+        "seed": "1d2e20987152b0",
+        "body": 3,
+        "palette": 1,
+        "eyes": 3,
+        "antenna": 2,
+        "mouth": 2,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.8
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.2
+          }
+        ],
+        "driftPhase": 0.587
+      },
+      "alt": "Arise Soul, lagoon pebble with wide eyes. Bingo Star badge: completed a line this round"
+    },
+    {
+      "index": 12,
+      "seed": "064b5af3ba69c3",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "064b5af3ba69c3",
+        "body": 1,
+        "palette": 2,
+        "eyes": 3,
+        "antenna": 5,
+        "mouth": 2,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.423
+          },
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.231
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.154
+          },
+          {
+            "domain": "Cloud",
+            "weight": 0.154
+          },
+          {
+            "domain": "IT Security",
+            "weight": 0.038
+          }
+        ],
+        "driftPhase": 0.542
+      },
+      "alt": "Arise Soul, sunset bell with wide eyes"
+    },
+    {
+      "index": 13,
+      "seed": "1cdc2b005f78f8",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "1cdc2b005f78f8",
+        "body": 2,
+        "palette": 4,
+        "eyes": 0,
+        "antenna": 2,
+        "mouth": 0,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Data Management",
+            "weight": 0.294
+          },
+          {
+            "domain": "IT Security",
+            "weight": 0.265
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.206
+          },
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.176
+          },
+          {
+            "domain": "Cloud",
+            "weight": 0.059
+          }
+        ],
+        "driftPhase": 0.883
+      },
+      "alt": "Arise Soul, mint cloud with dot eyes"
+    },
+    {
+      "index": 14,
+      "seed": "08ff91eabc6d43",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "08ff91eabc6d43",
+        "body": 4,
+        "palette": 7,
+        "eyes": 1,
+        "antenna": 1,
+        "mouth": 0,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "IT Security",
+            "weight": 0.387
+          },
+          {
+            "domain": "Risk & Compliance",
+            "weight": 0.226
+          },
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.194
+          },
+          {
+            "domain": "Design",
+            "weight": 0.194
+          }
+        ],
+        "driftPhase": 0.967
+      },
+      "alt": "Arise Soul, lilac flame with star eyes"
+    },
+    {
+      "index": 15,
+      "seed": "01a5bc0af65924",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "01a5bc0af65924",
+        "body": 0,
+        "palette": 0,
+        "eyes": 1,
+        "antenna": 4,
+        "mouth": 0,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Cloud",
+            "weight": 0.538
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.462
+          }
+        ],
+        "driftPhase": 0.975
+      },
+      "alt": "Arise Soul, aurora drop with star eyes"
+    },
+    {
+      "index": 16,
+      "seed": "1ec3a1b6539cad",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "1ec3a1b6539cad",
+        "body": 4,
+        "palette": 6,
+        "eyes": 2,
+        "antenna": 2,
+        "mouth": 3,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.588
+          },
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.176
+          },
+          {
+            "domain": "Design",
+            "weight": 0.176
+          },
+          {
+            "domain": "Cloud",
+            "weight": 0.059
+          }
+        ],
+        "driftPhase": 0.668
+      },
+      "alt": "Arise Soul, sky flame with sleepy eyes"
+    },
+    {
+      "index": 17,
+      "seed": "0cf1c4f541ecc5",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0cf1c4f541ecc5",
+        "body": 5,
+        "palette": 4,
+        "eyes": 4,
+        "antenna": 3,
+        "mouth": 2,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Soft Skill",
+            "weight": 0.75
+          },
+          {
+            "domain": "IT Security",
+            "weight": 0.25
+          }
+        ],
+        "driftPhase": 0.127
+      },
+      "alt": "Arise Soul, mint bean with wink eyes"
+    },
+    {
+      "index": 18,
+      "seed": "10e619a585d80a",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "10e619a585d80a",
+        "body": 4,
+        "palette": 6,
+        "eyes": 3,
+        "antenna": 3,
+        "mouth": 2,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.45
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.3
+          },
+          {
+            "domain": "Risk & Compliance",
+            "weight": 0.15
+          },
+          {
+            "domain": "Artificial Intelligence (AI)",
+            "weight": 0.05
+          },
+          {
+            "domain": "Soft Skill",
+            "weight": 0.05
+          }
+        ],
+        "driftPhase": 0.456
+      },
+      "alt": "Arise Soul, sky flame with wide eyes"
+    },
+    {
+      "index": 19,
+      "seed": "12ce33f272ee40",
+      "badge": "bingo-star",
+      "config": {
+        "version": 1,
+        "seed": "12ce33f272ee40",
+        "body": 2,
+        "palette": 7,
+        "eyes": 5,
+        "antenna": 4,
+        "mouth": 2,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "IT Security",
+            "weight": 0.462
+          },
+          {
+            "domain": "Data Management",
+            "weight": 0.385
+          },
+          {
+            "domain": "User Experience",
+            "weight": 0.154
+          }
+        ],
+        "driftPhase": 0.84
+      },
+      "alt": "Arise Soul, lilac cloud with sparkle eyes. Bingo Star badge: completed a line this round"
+    },
+    {
+      "index": 20,
+      "seed": "0406b542e700a1",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0406b542e700a1",
+        "body": 1,
+        "palette": 3,
+        "eyes": 2,
+        "antenna": 2,
+        "mouth": 3,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.414
+          },
+          {
+            "domain": "Human Capital & Organizational Development",
+            "weight": 0.414
+          },
+          {
+            "domain": "Quality Assurance & Testing",
+            "weight": 0.103
+          },
+          {
+            "domain": "Project & Product Management",
+            "weight": 0.069
+          }
+        ],
+        "driftPhase": 0.204
+      },
+      "alt": "Arise Soul, orchid bell with sleepy eyes"
+    },
+    {
+      "index": 21,
+      "seed": "19c576aacf1ebd",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "19c576aacf1ebd",
+        "body": 4,
+        "palette": 4,
+        "eyes": 0,
+        "antenna": 2,
+        "mouth": 1,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Data & Analytics",
+            "weight": 0.5
+          },
+          {
+            "domain": "Quality Assurance & Testing",
+            "weight": 0.375
+          },
+          {
+            "domain": "Project & Product Management",
+            "weight": 0.083
+          },
+          {
+            "domain": "Corporate & Business Support",
+            "weight": 0.042
+          }
+        ],
+        "driftPhase": 0.366
+      },
+      "alt": "Arise Soul, mint flame with dot eyes"
+    },
+    {
+      "index": 22,
+      "seed": "06f6f233f18448",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "06f6f233f18448",
+        "body": 4,
+        "palette": 7,
+        "eyes": 4,
+        "antenna": 2,
+        "mouth": 1,
+        "glow": 2,
+        "constellation": [
+          {
+            "domain": "Project & Product Management",
+            "weight": 0.385
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.231
+          },
+          {
+            "domain": "Development",
+            "weight": 0.192
+          },
+          {
+            "domain": "Business & Technology Strategy",
+            "weight": 0.154
+          },
+          {
+            "domain": "Soft Skill",
+            "weight": 0.038
+          }
+        ],
+        "driftPhase": 0.087
+      },
+      "alt": "Arise Soul, lilac flame with wink eyes"
+    },
+    {
+      "index": 23,
+      "seed": "15b36949ab1524",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "15b36949ab1524",
+        "body": 3,
+        "palette": 3,
+        "eyes": 5,
+        "antenna": 4,
+        "mouth": 0,
+        "glow": 1,
+        "constellation": [
+          {
+            "domain": "Development",
+            "weight": 0.444
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.333
+          },
+          {
+            "domain": "Architecture",
+            "weight": 0.222
+          }
+        ],
+        "driftPhase": 0.998
+      },
+      "alt": "Arise Soul, orchid pebble with sparkle eyes"
+    },
+    {
+      "index": 24,
+      "seed": "0bc49cd4fd7217",
+      "badge": null,
+      "config": {
+        "version": 1,
+        "seed": "0bc49cd4fd7217",
+        "body": 3,
+        "palette": 3,
+        "eyes": 2,
+        "antenna": 0,
+        "mouth": 0,
+        "glow": 0,
+        "constellation": [
+          {
+            "domain": "Human Capital & Organizational Development",
+            "weight": 0.529
+          },
+          {
+            "domain": "Operations Support",
+            "weight": 0.471
+          }
+        ],
+        "driftPhase": 0.164
+      },
+      "alt": "Arise Soul, orchid pebble with sleepy eyes"
+    }
+  ]
+}

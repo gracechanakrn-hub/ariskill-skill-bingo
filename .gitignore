@@ -1,0 +1,14 @@
+node_modules/
+data/*.sqlite
+data/*.sqlite-*
+build/dist/
+build/screenshots/
+*.log
+.DS_Store
+
+# secrets (never committed)
+.env
+.env.*
+!.env.example
+assets-src/generated/**/*.png
+data/backup/

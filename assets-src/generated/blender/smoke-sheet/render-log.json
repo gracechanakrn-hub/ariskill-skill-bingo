@@ -1,0 +1,27 @@
+{
+  "mode": "sheet",
+  "seed": "abc123",
+  "size": 480,
+  "samples": 16,
+  "blender": "5.2.0 LTS",
+  "renders": [
+    {
+      "file": "contact-sheet-abc123.png",
+      "view": "sheet",
+      "seconds": 0.66,
+      "bodies": [
+        "drop",
+        "bell",
+        "cloud",
+        "pebble",
+        "flame",
+        "bean"
+      ],
+      "palettes": [
+        "aurora",
+        "sunset",
+        "orchid"
+      ]
+    }
+  ]
+}

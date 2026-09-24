@@ -1,0 +1,144 @@
+{
+  "runId": "run-20260922-113339",
+  "generatedAt": "2026-09-23T08:01:13.944Z",
+  "node": "v26.8.2",
+  "params": {
+    "players": 150,
+    "publicStreams": 150,
+    "participantStreams": 150,
+    "totalStreams": 300,
+    "draws": 6,
+    "batch": 50,
+    "rateLimitsRelaxed": true,
+    "inProcess": true
+  },
+  "thresholds": {
+    "drawFanoutP95Ms": 1000,
+    "reconnectRecoveryMs": 5000,
+    "snapshotP95Ms": 500
+  },
+  "results": {
+    "setupApi": {
+      "n": 450,
+      "p50": 8.59,
+      "p95": 37.93,
+      "max": 53.35,
+      "totalMs": 130,
+      "calls": 450
+    },
+    "streamsOpenMs": 32,
+    "drawFanout": {
+      "n": 1800,
+      "p50": 10.08,
+      "p95": 13.53,
+      "max": 14.44,
+      "draws": 6,
+      "perDraw": [
+        {
+          "number": 1,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 14.31,
+          "maxMs": 14,
+          "commandMs": 11
+        },
+        {
+          "number": 2,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 11.64,
+          "maxMs": 12,
+          "commandMs": 9
+        },
+        {
+          "number": 3,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 11.3,
+          "maxMs": 11,
+          "commandMs": 8
+        },
+        {
+          "number": 4,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 10.48,
+          "maxMs": 11,
+          "commandMs": 8
+        },
+        {
+          "number": 5,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 11.21,
+          "maxMs": 11,
+          "commandMs": 9
+        },
+        {
+          "number": 6,
+          "delivered": 300,
+          "complete": true,
+          "p95Ms": 10.63,
+          "maxMs": 11,
+          "commandMs": 8
+        }
+      ],
+      "allDelivered": true
+    },
+    "drawCommand": {
+      "n": 6,
+      "p50": 8.44,
+      "p95": 11.47,
+      "max": 11.47
+    },
+    "reconnectStorm": {
+      "streams": 300,
+      "dropMs": 8,
+      "offlineDraw": 7,
+      "recovered": 300,
+      "recoveryAllMs": 93,
+      "n": 300,
+      "p50": 87.28,
+      "p95": 87.36,
+      "max": 93.17,
+      "replayedBelowLastEventId": 0,
+      "nonMonotonicStreams": 0
+    },
+    "publicSnapshot": {
+      "n": 150,
+      "p50": 7.85,
+      "p95": 8.31,
+      "max": 8.93
+    },
+    "stageSnapshot": {
+      "n": 50,
+      "p50": 96.16,
+      "p95": 96.64,
+      "max": 96.66
+    }
+  },
+  "invariants": {
+    "duplicateDrawEventsOnStreams": 0,
+    "drawsPersisted": 7,
+    "drawsIssued": 7,
+    "uniqueSkills": true,
+    "winnersPersisted": 0,
+    "entrancesEmitted": 0,
+    "serverConnectionsAfterStorm": 300,
+    "expectedConnections": 300
+  },
+  "notes": [
+    "Release run = expected attendance 300 + 50 % headroom -> PLAYERS=450 (900 streams). The gate default PLAYERS=150 is a fast run.",
+    "snapshotP95 is informational (15.4 API p95 <= 500 ms target); only draw fan-out and reconnect recovery gate the exit code.",
+    "Rate limits are relaxed for setup (session 5/min per IP would block N players from one IP); production limits are per IP/actor.",
+    "In-process measurement on a developer machine; venue network latency is not included and must be validated at rehearsal (reports/qa/venue-performance.md)."
+  ],
+  "checks": {
+    "drawFanoutP95": true,
+    "reconnectRecovery": true,
+    "snapshotP95": true,
+    "noDuplicateDraws": true,
+    "noReplayBelowLastEventId": true
+  },
+  "pass": true
+}

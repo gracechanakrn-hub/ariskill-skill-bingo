@@ -1,0 +1,7 @@
+{
+  "name": "@ariskill/vendor-space-grotesk",
+  "version": "22.0.0",
+  "private": true,
+  "license": "OFL-1.1",
+  "description": "Self-hosted Space Grotesk variable font (latin, latin-ext, upright) for the stage HUD; offline, CSP-safe"
+}

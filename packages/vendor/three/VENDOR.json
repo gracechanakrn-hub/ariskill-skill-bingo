@@ -1,0 +1,74 @@
+{
+  "name": "three",
+  "version": "0.186.0",
+  "license": "MIT",
+  "source": "https://registry.npmjs.org/three/-/three-0.186.0.tgz",
+  "vendoredBy": "tools/vendor/vendor-three.js",
+  "files": [
+    {
+      "path": "packages/vendor/three/build/three.module.js",
+      "bytes": 662772,
+      "sha256": "9052042d676cb0fdc1ddfefe193053f34b7ac0513a616fdac4535d49987812ea"
+    },
+    {
+      "path": "packages/vendor/three/build/three.core.js",
+      "bytes": 1458113,
+      "sha256": "9edde002b066a9a05676a6127f67735b62baf399bdea529f2f7e31657da769e6"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/EffectComposer.js",
+      "bytes": 8526,
+      "sha256": "79a86f1e6c6a9be918b09b17936dc2dba12aaae8b5ccecdf8763ea57d162f23c"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/RenderPass.js",
+      "bytes": 4305,
+      "sha256": "ad6c4ff61bf8339dd0604b96cb85d0c9642f1e06dc9ea4a1f476f0d01beec662"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/ShaderPass.js",
+      "bytes": 3253,
+      "sha256": "5df4d3e1384f5cb108fa23ecf7f534edd10e1631cd3db06c0dda557372dc7e8f"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/UnrealBloomPass.js",
+      "bytes": 15422,
+      "sha256": "d0da111a74ea1d3256ee773745058e28e83ee0b9df06d52a968ad64756a46b3e"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/Pass.js",
+      "bytes": 4243,
+      "sha256": "f873ec11f08728ee1301aae7d47e1243574d124ee108213ef93c5c10458afc5b"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/MaskPass.js",
+      "bytes": 4694,
+      "sha256": "7cd08eee9d5d6f5578beaddbdcbe9c384f6873810af27f22ab7db3ceeb127aa3"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/postprocessing/OutputPass.js",
+      "bytes": 4209,
+      "sha256": "905fff0f3b850a962dd675d13fe5c9420b3e36a332739451b8b669379c8389d8"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/shaders/CopyShader.js",
+      "bytes": 729,
+      "sha256": "a33057d5ac91c43304c186ac0e8816e62bb2ed471d3a00ff3018dfd5c0389718"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/shaders/LuminosityHighPassShader.js",
+      "bytes": 1316,
+      "sha256": "3db5f13c9cab9f05cb572710a9fdb809a32ad0f2c7e68b2e261817c198ba813e"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/shaders/OutputShader.js",
+      "bytes": 1876,
+      "sha256": "353479f77a8d7e2629d49ccac9fc2f5dbfdda5442e0adf867b00377a2fcb0cb2"
+    },
+    {
+      "path": "packages/vendor/three/LICENSE",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    }
+  ]
+}

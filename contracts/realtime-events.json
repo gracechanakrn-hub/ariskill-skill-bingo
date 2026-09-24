@@ -1,0 +1,323 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/realtime-events",
+  "version": "1.0.3",
+  "transport": {
+    "type": "server-sent-events",
+    "paths": {
+      "public": "GET /api/v1/events/{eventId}/stream",
+      "stage": "GET /api/v1/stage/events/{eventId}/stream",
+      "admin": "GET /api/v1/admin/events/{eventId}/stream",
+      "participant": "GET /api/v1/me/stream"
+    },
+    "resume": "Query `since=<sequence>` or header `Last-Event-ID`. Server replays redacted events with sequence > since from the outbox (bounded to the last 500); if the requested sequence is older than retained, it emits `system.snapshot_required`.",
+    "heartbeat": "comment frame every 15 s; clients treat 45 s silence as disconnected (E12) and reconnect.",
+    "sseFormat": "id: <sequence>\\nevent: <type>\\ndata: <envelope JSON>\\n\\n",
+    "skipMarker": "id: <sequence>\\n\\n - sent instead of an event when the outbox row is not visible to this audience/participant (redaction). It carries no data and dispatches no event; clients set last = sequence so filtered streams never see a false gap. Sequence numbers are shared by all audiences of an eventId."
+  },
+  "envelope": {
+    "eventId": "string",
+    "roundId": "string|null",
+    "sequence": "integer, monotonic per eventId",
+    "type": "string",
+    "occurredAt": "ISO-8601 UTC",
+    "roundVersion": "integer|null",
+    "payload": "object (audience-redacted)"
+  },
+  "clientRules": [
+    "Track the last applied sequence; ignore sequence <= last. An id-only skip marker advances last without dispatching an event.",
+    "On sequence gap (> last + 1) fetch the audience snapshot and set last = snapshot.sequence.",
+    "On `system.snapshot_required` fetch the snapshot.",
+    "Apply only the fields present in the audience projection contract; never infer private data.",
+    "Animations may interpolate but the final visual state always equals the snapshot/event state; replays after reconnect never re-trigger celebrations (motion contract)."
+  ],
+  "types": {
+    "round.created": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary"
+      }
+    },
+    "round.updated": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary",
+        "startOverdue": "bool (optional; system actor, no version change)"
+      }
+    },
+    "round.registration_opened": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary"
+      }
+    },
+    "round.locked": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary",
+        "activeBoards": "int",
+        "deferredBoards": "int"
+      }
+    },
+    "round.started": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary",
+        "poolSize": "int"
+      }
+    },
+    "round.cancelled": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary",
+        "reason": "string"
+      }
+    },
+    "round.exhausted": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary"
+      }
+    },
+    "round.closed": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary"
+      }
+    },
+    "board.saved": {
+      "audiences": [
+        "participant"
+      ],
+      "payload": {
+        "board": "ParticipantBoard"
+      }
+    },
+    "board.ready": {
+      "audiences": [
+        "participant"
+      ],
+      "payload": {
+        "board": "ParticipantBoard"
+      }
+    },
+    "board.deferred": {
+      "audiences": [
+        "participant"
+      ],
+      "payload": {
+        "board": "ParticipantBoard",
+        "reason": "incomplete|late|cancelled (late = draft saved after lock; reassigned when the next round opens)"
+      }
+    },
+    "board.locked_active": {
+      "audiences": [
+        "participant"
+      ],
+      "payload": {
+        "board": "ParticipantBoard"
+      }
+    },
+    "draw.accepted": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "draw": "Draw",
+        "poolRemaining": "int",
+        "matchedBoards": "int (admin/stage/public)",
+        "myMatchedPositions": "int[] (participant only)",
+        "bingoEvaluationActive": "bool"
+      }
+    },
+    "draw.match_counts_updated": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public"
+      ],
+      "payload": {
+        "drawNumber": "int",
+        "matchedBoards": "int",
+        "boardsWithFourInLine": "int (admin only)"
+      }
+    },
+    "bingo.detected": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "drawNumber": "int",
+        "winnerCount": "int"
+      }
+    },
+    "result.published": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "round": "RoundSummary",
+        "winners": "WinnerPublic[] (public/stage), WinnerAdmin[] (admin)",
+        "myResult": "{ isWinner, lineIds[] } (participant only)",
+        "resultWindowEndsAt": "ISO"
+      }
+    },
+    "soul.created": {
+      "audiences": [
+        "participant"
+      ],
+      "payload": {
+        "soul": "SoulPrivate"
+      }
+    },
+    "soul.float_accepted": {
+      "audiences": [
+        "public",
+        "stage",
+        "admin",
+        "participant"
+      ],
+      "payload": {
+        "entrance": "SoulEntrance"
+      }
+    },
+    "participation.updated": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public"
+      ],
+      "payload": {
+        "counts": "Counts"
+      }
+    },
+    "system.snapshot_required": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "reason": "string"
+      }
+    }
+  },
+  "shapes": {
+    "RoundSummary": {
+      "roundId": "string",
+      "number": "int",
+      "title": "string",
+      "state": "RoundState",
+      "version": "int",
+      "lockAt": "ISO|null",
+      "startedAt": "ISO|null",
+      "resultWindowSeconds": "int",
+      "cancellationReason": "string|null"
+    },
+    "Draw": {
+      "drawId": "string",
+      "number": "int",
+      "skill": {
+        "id": "string",
+        "name": "string",
+        "kind": "Core|Critical",
+        "domain": "string"
+      },
+      "drawnAt": "ISO"
+    },
+    "Counts": {
+      "joined": "int",
+      "completed": "int",
+      "incomplete": "int",
+      "active": "int",
+      "deferred": "int",
+      "matchedBoards": "int",
+      "connections": "int (admin only)"
+    },
+    "WinnerPublic": {
+      "label": "string (consented display name or pseudonym)",
+      "soulId": "string"
+    },
+    "WinnerAdmin": {
+      "participantId": "string",
+      "label": "string",
+      "lineIds": "string[]",
+      "winningDrawNumber": "int"
+    },
+    "ParticipantBoard": {
+      "boardId": "string",
+      "roundId": "string",
+      "state": "BoardState",
+      "version": "int",
+      "selectedSkillIds": "string[]",
+      "cells": "[{position, skillId, name, kind, domain}] | null",
+      "matchedPositions": "int[]",
+      "matrixVersion": "string|null"
+    },
+    "SoulPrivate": {
+      "soulId": "string",
+      "config": "SoulConfig",
+      "badge": "bingo-star|null",
+      "floatToken": "string|null (only until consumed)",
+      "floated": "bool"
+    },
+    "SoulEntrance": {
+      "soulId": "string",
+      "config": "SoulConfig",
+      "badge": "bingo-star|null",
+      "label": "string|null",
+      "enteredAt": "ISO",
+      "edge": "left|right|top|bottom"
+    },
+    "SoulConfig": "see packages/game-rules/src/soul.js SOUL_CONFIG_SCHEMA"
+  }
+}

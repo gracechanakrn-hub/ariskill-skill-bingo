@@ -1,0 +1,319 @@
+/* AriSkill Skill Bingo - motion stylesheet (packages/ui/motion.css)
+ * Source of truth for values: tokens/motion.json (mirrored in packages/ui/motion.js MOTION).
+ * Spec: docs/motion/motion-spec.md.
+ *
+ * Rules baked in here:
+ *  - Only compositor-friendly properties animate (transform, opacity, box-shadow/outline-color on small
+ *    surfaces, stroke-dashoffset on SVG). No layout properties.
+ *  - Final visual states live on persistent classes (.is-matched, .is-on-line, .is-locked, .is-complete,
+ *    .is-floated) - never on the animation itself, so a replay/snapshot can set state without motion.
+ *  - Every .m-* class has a reduced-motion counterpart in BOTH the media-query block and the
+ *    [data-reduced-motion="true"] block (opacity fade or static end state).
+ *  - Photosensitivity: nothing repeats faster than 0.5 Hz (.m-pulse-soft: 2.4 s period), one-shot pulses
+ *    keep luminance change within ~10 % of the affected surface, and no animation covers > 25 % of the
+ *    viewport with a bright flash.
+ */
+
+:root {
+  /* Durations (ms). Alias to the design-token names when tokens.css is loaded; fall back to motion.json. */
+  --motion-instant: 0ms;
+  --motion-fast: var(--duration-fast, 120ms);
+  --motion-base: var(--duration-base, 180ms);
+  --motion-medium: 280ms;
+  --motion-slow: var(--duration-slow, 400ms);
+  --motion-reveal: 800ms;
+  --motion-soul-reveal: 2000ms;
+  --motion-celebrate: 1000ms;
+  --motion-reduced-fade: 180ms;       /* literal: tokens.css zeroes --duration-* under reduced motion; fades must stay perceptible */
+
+  /* Easing */
+  --motion-ease-standard: var(--ease-standard, cubic-bezier(0.2, 0, 0, 1));
+  --motion-ease-emphasized: cubic-bezier(0.3, 0, 0, 1); /* literal: tokens.css --ease-emphasized overshoots (…,1.2); motion stays bounded */
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-linear: linear;
+
+  /* Delays and stagger */
+  --motion-delay-match-after-draw: 200ms;
+  --motion-delay-line-after-match: 350ms;
+  --motion-delay-winner-text: 280ms;
+  --motion-stagger-cell: 20ms;
+  --motion-stagger-line-cell: 120ms;
+
+  /* Interaction-specific */
+  --motion-add: 150ms;
+  --motion-remove: 150ms;
+  --motion-cell-glow: 300ms;          /* 24 * 20ms + 300ms = 780ms <= 800ms */
+  --motion-lock: 400ms;
+  --motion-draw-arrival: 400ms;
+  --motion-match: 300ms;
+  --motion-line-cell: 320ms;
+  --motion-line-trace: 800ms;
+  --motion-winner: 1000ms;
+  --motion-float-tick: 600ms;
+  --motion-float-step: 1000ms;
+  --motion-float-launch: 600ms;
+  --motion-entrance-arc: 1800ms;
+  --motion-entrance-pulse: 400ms;
+  --motion-entrance-settle: 600ms;
+  --motion-orbit-period: 60000ms;
+  --motion-pulse-soft-period: 2400ms;
+
+  /* Colors used by glows; alias to design tokens when present. Kept low-contrast to respect flash limits. */
+  --motion-glow: var(--color-accent-glow, rgba(255, 196, 120, 0.55));
+  --motion-glow-strong: var(--color-accent, rgba(255, 196, 120, 0.9));
+  --motion-line: var(--color-success, #58d3a5);
+  --motion-lock-color: var(--color-border-strong, rgba(255, 255, 255, 0.7));
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Keyframes                                                                                         */
+/* ------------------------------------------------------------------------------------------------ */
+
+@keyframes m-kf-add {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes m-kf-remove {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.92); }
+}
+@keyframes m-kf-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes m-kf-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+/* Ordered glow: box-shadow only, no fill change -> small luminance delta */
+@keyframes m-kf-cell-glow {
+  0%   { box-shadow: 0 0 0 0 var(--motion-glow); }
+  40%  { box-shadow: 0 0 0 3px var(--motion-glow); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes m-kf-lock-seal {
+  from { outline-offset: 6px; outline-color: transparent; }
+  to   { outline-offset: 0px; outline-color: var(--motion-lock-color); }
+}
+@keyframes m-kf-lock-label {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes m-kf-draw-arrival {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  60%  { opacity: 1; }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes m-kf-match {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 var(--motion-glow); }
+  45%  { transform: scale(1.04); box-shadow: 0 0 0 4px var(--motion-glow); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes m-kf-line-cell {
+  0%   { outline-color: transparent; transform: scale(1); }
+  50%  { outline-color: var(--motion-line); transform: scale(1.03); }
+  100% { outline-color: var(--motion-line); transform: scale(1); }
+}
+@keyframes m-kf-line-stroke {
+  from { stroke-dashoffset: var(--line-length, 1000); }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes m-kf-winner-burst {
+  0%   { transform: scale(0.96); opacity: 0.85; }
+  35%  { transform: scale(1.01); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes m-kf-winner-halo {
+  0%   { opacity: 0; transform: scale(0.6); }
+  30%  { opacity: 0.35; }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes m-kf-soul-glow {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes m-kf-soul-silhouette {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes m-kf-soul-features {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes m-kf-float-tick {
+  0%   { opacity: 0; transform: scale(1.25); }
+  25%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes m-kf-float-launch {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.9); }
+}
+/* Entrance: travel from the configured edge (--from-x/--from-y), short arc via --arc-lift, pulse, settle */
+@keyframes m-kf-entrance-arc {
+  0%   { opacity: 0; transform: translate(var(--from-x, -400px), var(--from-y, 0px)) scale(0.6); }
+  15%  { opacity: 1; }
+  55%  { transform: translate(calc(var(--from-x, -400px) * 0.35), calc(var(--from-y, 0px) * 0.35 - var(--arc-lift, 40px))) scale(0.9); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+@keyframes m-kf-entrance-pulse {
+  0%   { filter: brightness(1); transform: scale(1); }
+  50%  { filter: brightness(1.08); transform: scale(1.06); }
+  100% { filter: brightness(1); transform: scale(1); }
+}
+@keyframes m-kf-orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes m-kf-pulse-soft {
+  0%, 100% { opacity: 0.82; }
+  50%      { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Utility classes (full motion)                                                                     */
+/* ------------------------------------------------------------------------------------------------ */
+
+/* Add / remove skill: 120-180 ms, layout stays stable (transform/opacity only) */
+.m-add    { animation: m-kf-add var(--motion-add) var(--motion-ease-standard) 1 both; }
+.m-remove { animation: m-kf-remove var(--motion-remove) var(--motion-ease-exit) 1 both; pointer-events: none; }
+
+/* Board completion: ordered glow across 25 cells using --i, 20 ms stagger, total <= 800 ms */
+.m-board-complete > * {
+  animation: m-kf-cell-glow var(--motion-cell-glow) var(--motion-ease-standard) calc(var(--i, 0) * var(--motion-stagger-cell)) 1 both;
+}
+.is-complete { --board-complete-static: 1; }
+
+/* Board lock: outline seals in, lock label fades up, <= 400 ms. Final state on .is-locked */
+.m-lock { animation: m-kf-lock-seal var(--motion-lock) var(--motion-ease-emphasized) 1 both; outline: 2px solid var(--motion-lock-color); }
+.m-lock .m-lock-label { animation: m-kf-lock-label var(--motion-lock) var(--motion-ease-emphasized) 1 both; }
+.is-locked { outline: 2px solid var(--motion-lock-color); outline-offset: 0; }
+
+/* Draw arrival: card reveal; matching-cell highlights follow after --motion-delay-match-after-draw */
+.m-draw-arrival { animation: m-kf-draw-arrival var(--motion-draw-arrival) var(--motion-ease-emphasized) 1 both; }
+
+/* Match: 200-350 ms glow/pulse; persistent state on .is-matched (set by the app before/without animating) */
+.m-match { animation: m-kf-match var(--motion-match) var(--motion-ease-standard) 1 both; }
+.is-matched { --matched: 1; }
+
+/* Bingo line: trace once (iteration-count 1). Two mechanisms:
+   (a) cell sequence: cells carry .is-on-line and --line-i (0..4); grid carries .m-line-trace
+   (b) SVG overlay: path.m-line-trace with stroke-dasharray = --line-length */
+.m-line-trace > .is-on-line {
+  outline: 3px solid var(--motion-line);
+  outline-offset: -3px;
+  animation: m-kf-line-cell var(--motion-line-cell) var(--motion-ease-standard) calc(var(--line-i, 0) * var(--motion-stagger-line-cell) + var(--motion-delay-line-after-match)) 1 both;
+}
+path.m-line-trace, line.m-line-trace {
+  stroke: var(--motion-line);
+  stroke-dasharray: var(--line-length, 1000);
+  animation: m-kf-line-stroke var(--motion-line-trace) var(--motion-ease-standard) var(--motion-delay-line-after-match) 1 forwards;
+}
+.is-on-line { outline: 3px solid var(--motion-line); outline-offset: -3px; }
+
+/* Winner view: restrained burst; text is readable within 1 s (text fades in by 280 ms) */
+.m-winner-burst { animation: m-kf-winner-burst var(--motion-winner) var(--motion-ease-emphasized) 1 both; position: relative; }
+.m-winner-burst .m-winner-text { animation: m-kf-fade-in var(--motion-delay-winner-text) var(--motion-ease-standard) 1 both; }
+.m-winner-burst .m-winner-halo {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(circle, var(--motion-glow) 0%, transparent 65%);
+  animation: m-kf-winner-halo var(--motion-winner) var(--motion-ease-standard) 1 both;
+}
+
+/* Soul reveal: staged glow (0-700) -> silhouette (600-1400) -> features (1300-2000); total 2 s */
+.m-soul-reveal .m-soul-glow       { animation: m-kf-soul-glow 700ms var(--motion-ease-emphasized) 0ms 1 both; }
+.m-soul-reveal .m-soul-silhouette { animation: m-kf-soul-silhouette 800ms var(--motion-ease-emphasized) 600ms 1 both; }
+.m-soul-reveal .m-soul-features   { animation: m-kf-soul-features 700ms var(--motion-ease-standard) 1300ms 1 both; }
+.is-revealed .m-soul-glow, .is-revealed .m-soul-silhouette, .is-revealed .m-soul-features { opacity: 1; }
+
+/* Float countdown: each digit change re-triggers via data-count; launch acknowledgement */
+.m-float-countdown .m-float-digit { animation: m-kf-float-tick var(--motion-float-tick) var(--motion-ease-emphasized) 1 both; }
+.m-float-launch { animation: m-kf-float-launch var(--motion-float-launch) var(--motion-ease-exit) 1 both; }
+.is-floated { opacity: 1; }
+
+/* Public Galaxy 2D fallback entrance: arc (1800) -> pulse (400) -> settle (600) then hand to orbit */
+.m-entrance-arc {
+  animation:
+    m-kf-entrance-arc var(--motion-entrance-arc) var(--motion-ease-emphasized) 0ms 1 both,
+    m-kf-entrance-pulse var(--motion-entrance-pulse) var(--motion-ease-standard) var(--motion-entrance-arc) 1 both,
+    m-kf-fade-in var(--motion-entrance-settle) var(--motion-ease-standard) calc(var(--motion-entrance-arc) + var(--motion-entrance-pulse)) 1 both;
+}
+
+/* Bounded orbit: 360 deg / 60 s = 6 deg/s max angular speed. Apply to an orbit ring container. */
+.m-orbit { animation: m-kf-orbit var(--motion-orbit-period) var(--motion-ease-linear) infinite; transform-origin: center; }
+
+/* Generic fade (also the reduced replacement for most transitions) */
+.m-fade { animation: m-kf-fade-in var(--motion-base) var(--motion-ease-standard) 1 both; }
+.m-fade-out { animation: m-kf-fade-out var(--motion-base) var(--motion-ease-exit) 1 both; }
+
+/* Soft ambient pulse: 2.4 s period (0.42 Hz), opacity 0.82-1 only */
+.m-pulse-soft { animation: m-kf-pulse-soft var(--motion-pulse-soft-period) ease-in-out infinite; }
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Reduced motion: OS preference (unless the user explicitly set data-reduced-motion="false")         */
+/* Every .m-* class is replaced with an opacity fade or its static end state.                         */
+/* ------------------------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="false"]) .m-add,
+  :root:not([data-reduced-motion="false"]) .m-draw-arrival,
+  :root:not([data-reduced-motion="false"]) .m-fade,
+  :root:not([data-reduced-motion="false"]) .m-winner-burst,
+  :root:not([data-reduced-motion="false"]) .m-entrance-arc,
+  :root:not([data-reduced-motion="false"]) .m-soul-reveal .m-soul-glow,
+  :root:not([data-reduced-motion="false"]) .m-soul-reveal .m-soul-silhouette,
+  :root:not([data-reduced-motion="false"]) .m-soul-reveal .m-soul-features,
+  :root:not([data-reduced-motion="false"]) .m-float-countdown .m-float-digit,
+  :root:not([data-reduced-motion="false"]) .m-lock .m-lock-label {
+    animation: m-kf-fade-in var(--motion-reduced-fade) var(--motion-ease-standard) 1 both;
+    transform: none;
+  }
+  :root:not([data-reduced-motion="false"]) .m-remove,
+  :root:not([data-reduced-motion="false"]) .m-fade-out,
+  :root:not([data-reduced-motion="false"]) .m-float-launch {
+    animation: m-kf-fade-out var(--motion-reduced-fade) var(--motion-ease-exit) 1 both;
+    transform: none;
+  }
+  /* Static end states */
+  :root:not([data-reduced-motion="false"]) .m-board-complete > * { animation: none; box-shadow: 0 0 0 2px var(--motion-glow); }
+  :root:not([data-reduced-motion="false"]) .m-lock { animation: none; outline-offset: 0; outline-color: var(--motion-lock-color); }
+  :root:not([data-reduced-motion="false"]) .m-match { animation: none; transform: none; box-shadow: none; }
+  :root:not([data-reduced-motion="false"]) .m-line-trace > .is-on-line { animation: none; transform: none; outline-color: var(--motion-line); }
+  :root:not([data-reduced-motion="false"]) path.m-line-trace,
+  :root:not([data-reduced-motion="false"]) line.m-line-trace { animation: none; stroke-dashoffset: 0; }
+  :root:not([data-reduced-motion="false"]) .m-winner-burst .m-winner-halo { animation: none; opacity: 0.2; transform: none; }
+  :root:not([data-reduced-motion="false"]) .m-winner-burst .m-winner-text { animation: none; opacity: 1; }
+  :root:not([data-reduced-motion="false"]) .m-orbit { animation: none; }
+  :root:not([data-reduced-motion="false"]) .m-pulse-soft { animation: none; opacity: 1; }
+}
+
+/* Explicit in-app toggle (packages/ui/motion.js setReducedMotion(true)) - identical replacements */
+[data-reduced-motion="true"] .m-add,
+[data-reduced-motion="true"] .m-draw-arrival,
+[data-reduced-motion="true"] .m-fade,
+[data-reduced-motion="true"] .m-winner-burst,
+[data-reduced-motion="true"] .m-entrance-arc,
+[data-reduced-motion="true"] .m-soul-reveal .m-soul-glow,
+[data-reduced-motion="true"] .m-soul-reveal .m-soul-silhouette,
+[data-reduced-motion="true"] .m-soul-reveal .m-soul-features,
+[data-reduced-motion="true"] .m-float-countdown .m-float-digit,
+[data-reduced-motion="true"] .m-lock .m-lock-label {
+  animation: m-kf-fade-in var(--motion-reduced-fade) var(--motion-ease-standard) 1 both;
+  transform: none;
+}
+[data-reduced-motion="true"] .m-remove,
+[data-reduced-motion="true"] .m-fade-out,
+[data-reduced-motion="true"] .m-float-launch {
+  animation: m-kf-fade-out var(--motion-reduced-fade) var(--motion-ease-exit) 1 both;
+  transform: none;
+}
+[data-reduced-motion="true"] .m-board-complete > * { animation: none; box-shadow: 0 0 0 2px var(--motion-glow); }
+[data-reduced-motion="true"] .m-lock { animation: none; outline-offset: 0; outline-color: var(--motion-lock-color); }
+[data-reduced-motion="true"] .m-match { animation: none; transform: none; box-shadow: none; }
+[data-reduced-motion="true"] .m-line-trace > .is-on-line { animation: none; transform: none; outline-color: var(--motion-line); }
+[data-reduced-motion="true"] path.m-line-trace,
+[data-reduced-motion="true"] line.m-line-trace { animation: none; stroke-dashoffset: 0; }
+[data-reduced-motion="true"] .m-winner-burst .m-winner-halo { animation: none; opacity: 0.2; transform: none; }
+[data-reduced-motion="true"] .m-winner-burst .m-winner-text { animation: none; opacity: 1; }
+[data-reduced-motion="true"] .m-orbit { animation: none; }
+[data-reduced-motion="true"] .m-pulse-soft { animation: none; opacity: 1; }

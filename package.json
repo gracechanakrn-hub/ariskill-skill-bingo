@@ -1,0 +1,36 @@
+{
+  "name": "ariskill-skill-bingo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AriSkill Skill Bingo - synchronized live event web experience (employee mobile, admin portal, public Arise Galaxy, stage dashboard)",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "start": "node services/game-service/src/server.js",
+    "dev": "BINGO_ENV=development node services/game-service/src/server.js",
+    "seed": "node services/game-service/src/seed.js",
+    "test": "node --test packages/game-rules/test services/game-service/test tests/contracts tests/e2e",
+    "test:unit": "node --test packages/game-rules/test services/game-service/test",
+    "test:contracts": "node --test tests/contracts",
+    "test:e2e": "node --test tests/e2e",
+    "test:load": "node tests/load/reconnect-storm.js",
+    "assets:build": "node tools/assets/build-all.js",
+    "assets:validate": "node tools/assets/validate-manifest.js",
+    "assemble": "node tools/assembly/assemble.js",
+    "qc": "node tools/assembly/release-gate.js",
+    "data:extract": "python3 tools/data/extract_skill_master.py",
+    "vendor:three": "node tools/vendor/vendor-three.js",
+    "ai:visuals": "node tools/ai/gemini-visuals.js",
+    "ai:copy": "node tools/ai/openai-copy.js",
+    "ai:uxui": "node tools/ai/openai-uxui.js",
+    "ai:blender": "node tools/ai/blender-render.js",
+    "test:ai": "node --test tools/ai/test"
+  },
+  "license": "UNLICENSED"
+}

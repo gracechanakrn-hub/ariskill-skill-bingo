@@ -1,0 +1,8 @@
+{
+  "$comment": "Source parameters for the neutral Arise Soul review cohort. Synthetic identities only; Platform/Role are never inputs. badgeMembers marks which members show the cosmetic Bingo Star for review of badge placement.",
+  "eventId": "cohort-review",
+  "roundId": "r1",
+  "participantPrefix": "neutral-",
+  "size": 24,
+  "badgeMembers": [3, 11, 19]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "fredoka",
+  "version": "17 (Google Fonts API v17)",
+  "license": "OFL-1.1",
+  "source": "https://fonts.googleapis.com/css2?family=Fredoka:wght@500..700&display=swap (woff2 subsets from fonts.gstatic.com/s/fredoka/v17); OFL.txt from https://github.com/google/fonts/blob/main/ofl/fredoka/OFL.txt (Fredoka Project Authors, https://github.com/hafontia/Fredoka-One)",
+  "vendoredBy": "manual (2026-09-23, art/tokens agent, stage 10 / D-25): variable woff2 (wght 500-700), latin + latin-ext, upright only; fonts.css written by hand from the Google Fonts CSS with local src URLs. Display face for --font-display (badges, counters, hero words); body text stays Plus Jakarta Sans.",
+  "files": [
+    {
+      "path": "packages/vendor/fredoka/fredoka-latin.woff2",
+      "bytes": 29704,
+      "sha256": "27d49d7c8362279bf81267c615481f4be9548d7568d58889aeb1a6395dd6c070"
+    },
+    {
+      "path": "packages/vendor/fredoka/fredoka-latin-ext.woff2",
+      "bytes": 4564,
+      "sha256": "337681f6b85d3ea22d9dd48c593d32a3a2588755a76ad9e3a4c64d014db51db1"
+    },
+    {
+      "path": "packages/vendor/fredoka/OFL.txt",
+      "bytes": 4388,
+      "sha256": "5c9e7eee5c6b25f4b05b8d53b2e470ea4962f9ced742d044a98f7d95d1375bab"
+    },
+    {
+      "path": "packages/vendor/fredoka/fonts.css",
+      "bytes": 1081,
+      "sha256": "93e12660df98e122598249a0fc593c95f064427751680d00de0a3dd030cf3a7d"
+    }
+  ]
+}

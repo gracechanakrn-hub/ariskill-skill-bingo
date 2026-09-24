@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion Prototype</title>
+<meta name="description" content="AriSkill Skill Bingo motion prototype: every animation from packages/ui/motion.css with a reduced-motion toggle.">
+<link rel="stylesheet" href="../../../packages/ui/motion.css">
+<style>
+  :root {
+    --bg: #0b1020; --panel: #141b31; --panel-2: #1c2542; --text: #eef2ff; --muted: #9aa5c7;
+    --accent: #ffc478; --accent-glow: rgba(255,196,120,.55); --success: #58d3a5; --border: rgba(255,255,255,.14);
+    --color-accent: var(--accent); --color-accent-glow: var(--accent-glow); --color-success: var(--success);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+  h1 { margin: 0; font-size: 20px; font-weight: 650; letter-spacing: .01em; }
+  h2 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; padding: 20px 24px; }
+  section { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .desc { color: var(--muted); font-size: 12.5px; margin: 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 13px; cursor: pointer; min-height: 40px; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #1a1200; border-color: transparent; font-weight: 650; }
+  label.toggle { display: inline-flex; align-items: center; gap: 8px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-size: 13px; cursor: pointer; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 40px; }
+  .chip { background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; border-radius: 10px; padding: 6px; }
+  .cell { aspect-ratio: 1; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; color: var(--muted); }
+  .cell.is-matched { background: #2b3a2f; color: var(--text); border-color: var(--success); }
+  .lock-label { font-size: 12px; color: var(--muted); }
+  .card { background: var(--panel-2); border-radius: 12px; padding: 14px; border: 1px solid var(--border); }
+  .card .kind { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .card .name { font-size: 18px; font-weight: 650; }
+  .winner { border-radius: 12px; padding: 18px; background: var(--panel-2); border: 1px solid var(--border); text-align: center; }
+  .winner .m-winner-text { font-size: 22px; font-weight: 700; }
+  .soul { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+  .soul > div { position: absolute; inset: 0; opacity: 0; }
+  .soul .m-soul-glow { border-radius: 50%; background: radial-gradient(circle, var(--accent-glow), transparent 70%); }
+  .soul .m-soul-silhouette { border-radius: 50% 50% 45% 45%; background: #3a4a8a; inset: 18px; }
+  .soul .m-soul-features { inset: 18px; display: grid; place-items: center; font-size: 26px; }
+  .soul.is-revealed > div { opacity: 1; }
+  .countdown { font-size: 56px; font-weight: 750; text-align: center; min-height: 72px; line-height: 72px; }
+  .galaxy { position: relative; height: 150px; border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse at 40% 60%, #1c2a5c 0%, #0b1020 70%); border: 1px solid var(--border); }
+  .orbit-ring { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%; border: 1px dashed rgba(255,255,255,.15); }
+  .soul-dot { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent-glow); left: calc(50% - 11px); top: calc(50% - 11px); }
+  .orbit-ring .soul-dot { left: -11px; top: calc(50% - 11px); }
+  .fade-box { padding: 12px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--border); }
+  .log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); max-height: 120px; overflow: auto; background: #0e1428; border-radius: 8px; padding: 8px; white-space: pre-wrap; }
+  @media (max-width: 480px) { header, main { padding: 16px; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>AriSkill Skill Bingo - motion prototype</h1>
+    <p>Every class from <code>packages/ui/motion.css</code>, driven by <code>packages/ui/motion.js</code>. Toggle reduced motion to see the fade/static replacements.</p>
+  </div>
+  <div class="row">
+    <label class="toggle"><input type="checkbox" id="rm"> Reduced motion</label>
+    <button id="play-all" class="primary">Play all</button>
+  </div>
+</header>
+<main>
+  <section>
+    <h2>Add / remove skill (.m-add, .m-remove)</h2>
+    <p class="desc">150 ms scale + fade; layout stays stable. Reduced: opacity fade.</p>
+    <div class="chips" id="chips"><span class="chip m-add">Prompt Engineering</span><span class="chip">SQL</span><span class="chip">UX Research</span></div>
+    <div class="row"><button data-demo="add">Add skill</button><button data-demo="remove">Remove last</button></div>
+  </section>
+
+  <section>
+    <h2>Board completion (.m-board-complete) and lock (.m-lock)</h2>
+    <p class="desc">Ordered glow across 25 cells, 20 ms stagger, 780 ms total. Lock seals the border in 400 ms. Reduced: static glow / static border.</p>
+    <div class="grid is-complete" id="grid"><div class="cell" style="--i:0">0</div><div class="cell" style="--i:1">1</div><div class="cell" style="--i:2">2</div><div class="cell" style="--i:3">3</div><div class="cell" style="--i:4">4</div><div class="cell" style="--i:5">5</div><div class="cell is-matched" style="--i:6">6</div><div class="cell" style="--i:7">7</div><div class="cell" style="--i:8">8</div><div class="cell" style="--i:9">9</div><div class="cell" style="--i:10">10</div><div class="cell" style="--i:11">11</div><div class="cell is-matched" style="--i:12">12</div><div class="cell" style="--i:13">13</div><div class="cell" style="--i:14">14</div><div class="cell" style="--i:15">15</div><div class="cell" style="--i:16">16</div><div class="cell" style="--i:17">17</div><div class="cell is-matched" style="--i:18">18</div><div class="cell" style="--i:19">19</div><div class="cell" style="--i:20">20</div><div class="cell" style="--i:21">21</div><div class="cell" style="--i:22">22</div><div class="cell" style="--i:23">23</div><div class="cell" style="--i:24">24</div></div>
+    <div class="lock-label m-lock-label" id="lock-label">Board locked - included in Round 2</div>
+    <div class="row"><button data-demo="complete">Complete board</button><button data-demo="lock">Lock board</button><button data-demo="unlock">Reset</button></div>
+  </section>
+
+  <section>
+    <h2>Draw arrival (.m-draw-arrival) then match (.m-match + .is-matched)</h2>
+    <p class="desc">Card reveals in 400 ms; matching cells pulse 300 ms after a 200 ms delay. The matched state persists via <code>.is-matched</code>. Reduced: fade / static.</p>
+    <div class="card m-draw-arrival" id="draw-card"><div class="kind">Draw 6 - Critical skill</div><div class="name">Kubernetes</div></div>
+    <div class="row"><button data-demo="draw">Next draw (live)</button><button data-demo="draw-replay">Same draw via replay (no celebration)</button></div>
+  </section>
+
+  <section>
+    <h2>Bingo line (.m-line-trace)</h2>
+    <p class="desc">Traces the completed line once (iteration-count 1) via cell sequence with 120 ms steps. Reduced: static outline.</p>
+    <div class="row">
+      <select id="line-id"><option>row-0</option><option>row-2</option><option>col-4</option><option selected>diag-main</option><option>diag-anti</option></select>
+      <button data-demo="line">Trace line</button><button data-demo="line-clear">Clear</button>
+    </div>
+    <p class="desc">Uses the grid above. A replayed <code>bingo.detected</code> sets <code>.is-on-line</code> only.</p>
+  </section>
+
+  <section>
+    <h2>Winner view (.m-winner-burst)</h2>
+    <p class="desc">Restrained burst: 4 % scale settle and a soft halo; text readable by 280 ms. Reduced: fade.</p>
+    <div class="winner m-winner-burst" id="winner"><div class="m-winner-halo"></div><div class="m-winner-text">Bingo! Round 2</div><div class="desc">Alex T., Sam K. and 1 more</div></div>
+    <div class="row"><button data-demo="winner">Show winner</button></div>
+  </section>
+
+  <section>
+    <h2>Soul reveal (.m-soul-reveal)</h2>
+    <p class="desc">Staged: glow (0-700 ms) - silhouette (600-1400 ms) - features (1300-2000 ms). Skippable after first view. Reduced: single fade.</p>
+    <div class="soul is-revealed" id="soul"><div class="m-soul-glow"></div><div class="m-soul-silhouette"></div><div class="m-soul-features">&#10022;</div></div>
+    <div class="row"><button data-demo="soul">Reveal Soul</button><button data-demo="soul-skip">Skip (already seen)</button></div>
+  </section>
+
+  <section>
+    <h2>Float countdown and launch (.m-float-countdown, .m-float-launch)</h2>
+    <p class="desc">3 - 2 - 1 - FLOAT on server time via <code>runFloatCountdown</code>; launch acknowledgment 600 ms; public entrance keyed to <code>enteredAt + 300 ms</code>.</p>
+    <div class="countdown m-float-countdown" id="countdown"><span class="m-float-digit" id="digit">READY</span></div>
+    <div class="row"><button data-demo="float" class="primary">READY TO FLOAT</button></div>
+  </section>
+
+  <section>
+    <h2>Galaxy entrance 2D fallback (.m-entrance-arc, .m-orbit, .m-pulse-soft)</h2>
+    <p class="desc">Arc in from the configured edge (1.8 s), pulse (0.4 s), settle (0.6 s), then bounded orbit (6 deg/s). Reduced: fade in place, static orbit.</p>
+    <div class="galaxy" id="galaxy">
+      <div class="orbit-ring m-orbit"><div class="soul-dot m-pulse-soft"></div></div>
+    </div>
+    <div class="row">
+      <select id="edge"><option>left</option><option>right</option><option>top</option><option>bottom</option></select>
+      <button data-demo="entrance">Float entrance (live)</button><button data-demo="entrance-snapshot">From snapshot (no entrance)</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Generic fade (.m-fade) and log</h2>
+    <p class="desc">Used for counters and panel state changes on stage/public surfaces.</p>
+    <div class="fade-box m-fade" id="fade-box">Matched boards: <strong id="count">61</strong></div>
+    <div class="row"><button data-demo="fade">Update count</button></div>
+    <div class="log" id="log">motion.js log</div>
+  </section>
+</main>
+
+<script type="module">
+  import * as M from '../../../packages/ui/motion.js';
+  const $ = (s) => document.querySelector(s);
+  const log = (m) => { const el = $('#log'); el.textContent = `${new Date().toISOString().slice(11, 23)} ${m}\n` + el.textContent; };
+
+  // Reduced-motion toggle (persisted via motion.js)
+  M.restoreReducedMotion();
+  $('#rm').checked = M.prefersReducedMotion();
+  $('#rm').addEventListener('change', (e) => { M.setReducedMotion(e.target.checked); log(`reduced motion = ${e.target.checked}`); });
+
+  // Build grid
+  const grid = $('#grid');
+  const cells = Array.from(grid.children);
+  M.staggerIndex(grid);
+  $('#lock-label').style.visibility = 'hidden';
+
+  // Celebration guard with a fake connection epoch and sequence
+  let epoch = 1, seq = 100;
+  const guard = M.createCelebrationGuard({ getConnectionEpoch: () => epoch });
+  const clock = M.makeServerClock(0);
+
+  const demos = {
+    add() { const chip = document.createElement('span'); chip.className = 'chip'; chip.textContent = ['Docker', 'AI Literacy', 'Data Architecture', 'Agile'][Math.floor(Math.random() * 4)]; $('#chips').appendChild(chip); M.animateOnce(chip, 'm-add', { durationMs: M.MOTION.interactions.addSkill.ms }); },
+    remove() { const chips = $('#chips').children; const chip = chips[chips.length - 1]; if (!chip) return; M.animateOnce(chip, 'm-remove', { durationMs: M.MOTION.interactions.removeSkill.ms, onEnd: () => chip.remove() }); },
+    complete() { grid.classList.add('is-complete'); M.animateOnce(grid, 'm-board-complete', { durationMs: M.MOTION.interactions.boardComplete.ms }); log('board.ready -> m-board-complete (780 ms)'); },
+    lock() { grid.classList.add('is-locked'); $('#lock-label').style.visibility = 'visible'; M.animateOnce(grid, 'm-lock', { durationMs: M.MOTION.interactions.boardLock.ms }); log('round.locked -> m-lock (400 ms)'); },
+    unlock() { grid.classList.remove('is-locked', 'is-complete', 'm-line-trace'); $('#lock-label').style.visibility = 'hidden'; cells.forEach(c => { c.classList.remove('is-matched', 'is-on-line'); }); },
+    draw(replay = false) {
+      seq += 1;
+      const key = `draw:evt_${seq}`;
+      const celebrate = guard.shouldCelebrate(key, { epoch, sequence: seq, replay });
+      const positions = [12, 6, 18].filter(p => !cells[p].classList.contains('is-matched')).slice(0, 1);
+      if (!positions.length) positions.push(Math.floor(Math.random() * 25));
+      if (celebrate) M.animateOnce($('#draw-card'), 'm-draw-arrival', { durationMs: M.MOTION.interactions.drawArrival.ms });
+      setTimeout(() => positions.forEach(p => M.applyMatch(cells[p], { celebrate })), celebrate ? M.MOTION.delays.matchAfterDraw : 0);
+      log(`draw.accepted seq=${seq} replay=${replay} -> celebrate=${celebrate} (${guard.lastDecision().reason}); cells ${positions.join(',')} -> is-matched`);
+    },
+    'draw-replay'() { demos.draw(true); },
+    line() { const id = $('#line-id').value; M.markLine(cells, id).forEach(p => cells[p].classList.add('is-matched')); M.animateOnce(grid, 'm-line-trace', { durationMs: M.MOTION.interactions.bingoLine.ms + M.MOTION.delays.lineTraceAfterMatch }); log(`bingo.detected -> m-line-trace ${id} positions ${M.lineTracePositions(id).join(',')}`); },
+    'line-clear'() { cells.forEach(c => c.classList.remove('is-on-line')); grid.classList.remove('m-line-trace'); },
+    winner() { M.animateOnce($('#winner'), 'm-winner-burst', { durationMs: M.MOTION.interactions.winnerView.ms }); log('result.published -> m-winner-burst (readable by 280 ms)'); },
+    soul() { const s = $('#soul'); s.classList.remove('is-revealed'); M.animateOnce(s, 'm-soul-reveal', { durationMs: M.MOTION.interactions.soulReveal.ms, onEnd: () => s.classList.add('is-revealed') }); log('soul.created -> m-soul-reveal (2000 ms staged)'); },
+    'soul-skip'() { const s = $('#soul'); s.classList.remove('m-soul-reveal'); s.classList.add('is-revealed'); log('soul reveal skipped -> final state'); },
+    float() {
+      const digit = $('#digit'); const box = $('#countdown');
+      const startAt = clock() + 200;
+      const show = (t) => { digit.textContent = t; digit.classList.remove('m-float-digit'); void digit.offsetWidth; digit.classList.add('m-float-digit'); };
+      M.runFloatCountdown({ startAt, clockNow: clock, onTick: (n) => { show(String(n)); log(`float tick ${n}`); }, onLaunch: () => {
+        show('FLOAT');
+        // Simulated soul.float_accepted response: entrance keyed to server enteredAt + offset
+        const enteredAt = clock();
+        M.animateOnce(box, 'm-float-launch', { durationMs: M.MOTION.interactions.float.launch.ms, onEnd: () => { digit.textContent = 'In the Galaxy'; } });
+        M.scheduleAt(M.entranceStartMs({ enteredAt }), clock, () => demos.entrance());
+        log(`FLOAT -> m-float-launch; public entrance at enteredAt+${M.MOTION.delays.floatPublicOffset} ms`);
+      } });
+    },
+    entrance(fromSnapshot = false) {
+      const key = `float:soul_${Date.now()}`;
+      const celebrate = !fromSnapshot && guard.shouldCelebrate(key, { epoch });
+      const dot = document.createElement('div'); dot.className = 'soul-dot';
+      const ring = document.createElement('div'); ring.className = 'orbit-ring m-orbit'; ring.style.transform = `rotate(${Math.random() * 360}deg)`;
+      const g = $('#galaxy'); g.appendChild(dot);
+      const settle = () => { dot.remove(); ring.appendChild(dot); g.appendChild(ring); dot.classList.add('m-pulse-soft'); };
+      if (celebrate) { M.setEntranceEdge(dot, $('#edge').value, { width: g.clientWidth, height: g.clientHeight }); M.animateOnce(dot, 'm-entrance-arc', { durationMs: 2800, onEnd: settle }); }
+      else settle();
+      log(`soul.float_accepted -> ${celebrate ? 'm-entrance-arc (2.8 s)' : 'orbit only (snapshot/replay)'}`);
+    },
+    'entrance-snapshot'() { demos.entrance(true); },
+    fade() { $('#count').textContent = String(60 + Math.floor(Math.random() * 40)); M.animateOnce($('#fade-box'), 'm-fade', { durationMs: M.MOTION.durations.base }); },
+  };
+  document.querySelectorAll('button[data-demo]').forEach(b => b.addEventListener('click', () => demos[b.dataset.demo]()));
+  $('#play-all').addEventListener('click', () => { ['add', 'complete', 'lock', 'draw', 'line', 'winner', 'soul', 'fade'].forEach((d, i) => setTimeout(() => demos[d](), i * 400)); });
+  log('ready; reduced motion=' + M.prefersReducedMotion());
+</script>
+</body>
+</html>

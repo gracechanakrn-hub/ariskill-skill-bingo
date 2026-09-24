@@ -1,0 +1,21 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/projections/public",
+  "version": "1.0.0",
+  "audience": "public",
+  "description": "Anonymous public display projection. Allowlist: only the keys below may appear. Any individual skill selection, participant identifier, employee reference, Platform/Role of an individual, board content, or matrix gap is forbidden.",
+  "allow": {
+    "eventId": "string", "eventName": "string", "sequence": "int", "serverTime": "ISO", "publicState": "Waiting|Playing|Winner",
+    "notice": "null|{kind:'cancelled'|'exhausted', text:string}",
+    "round": { "roundId": "string", "number": "int", "title": "string", "state": "RoundState", "version": "int", "lockAt": "ISO|null", "startedAt": "ISO|null", "resultWindowEndsAt": "ISO|null" },
+    "nextRound": "same shape as round | null",
+    "join": { "joinUrl": "string", "expiresAt": "ISO" },
+    "counts": { "joined": "int", "completed": "int", "active": "int", "matchedBoards": "int" },
+    "currentDraw": { "number": "int", "skill": { "id": "string", "name": "string", "kind": "Core|Critical", "domain": "string" }, "drawnAt": "ISO", "poolRemaining": "int", "bingoEvaluationActive": "bool" },
+    "recentDraws": "[{number, skillName, kind}] (last 5)",
+    "pacingMessage": "string",
+    "winners": "[{label, soulId}]",
+    "previousWinners": "[{roundNumber, labels: string[]}] (last 3 rounds)",
+    "galaxy": { "souls": "[SoulEntrance] (all floated Souls; label only if consented)", "count": "int" }
+  },
+  "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "platformId", "roleId", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email"]
+}

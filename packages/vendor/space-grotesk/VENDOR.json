@@ -1,0 +1,29 @@
+{
+  "name": "space-grotesk",
+  "version": "22 (Google Fonts API v22)",
+  "license": "OFL-1.1",
+  "source": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700 (woff2 subsets from fonts.gstatic.com/s/spacegrotesk/v22); OFL.txt from https://github.com/floriankarsten/space-grotesk",
+  "vendoredBy": "manual (2026-09-22): variable woff2, latin + latin-ext, upright; fonts.css written by hand from the Google Fonts CSS with local src URLs. Used by the stage dashboard insights HUD only.",
+  "files": [
+    {
+      "path": "packages/vendor/space-grotesk/space-grotesk-latin.woff2",
+      "bytes": 22320,
+      "sha256": "a0d054c4af557de20afd6ca59f47ab353bcaec49c63ff04b6c9d39d0f8910557"
+    },
+    {
+      "path": "packages/vendor/space-grotesk/space-grotesk-latin-ext.woff2",
+      "bytes": 18924,
+      "sha256": "054c266fbb441ee059365dba0885d206f67ca05b375de869b88e02ebfccc9b9d"
+    },
+    {
+      "path": "packages/vendor/space-grotesk/OFL.txt",
+      "bytes": 4495,
+      "sha256": "564ce565c371c5e5bbf286006565a7c9aa55a9f56e7ca58d56e05d649dd61a72"
+    },
+    {
+      "path": "packages/vendor/space-grotesk/fonts.css",
+      "bytes": 1048,
+      "sha256": "ad4efc329974015482d334c46fce06771ceb63ee773a76638fdfeccd4226a1b1"
+    }
+  ]
+}

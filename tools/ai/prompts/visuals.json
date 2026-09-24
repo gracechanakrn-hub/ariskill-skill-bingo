@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "note": "Art-direction plate catalog for tools/ai/gemini-visuals.js. Each plate follows the 5-part framework (type, subject, environment, technical, constraints). Outputs are reference material only (docs/art/sticker-art-direction.md, 'AI-assisted production') and are never shipped at runtime.",
+  "shared": {
+    "styleAnchor": "Glossy 3D clay sticker style in the Arise Soul sticker language: chibi bell / gumdrop bodies with two soft foot nubs, an antenna stalk topped by a glowing orb, big soft top highlight, warm peach rim light, bubble speckles in two sizes (mint #7CF5C8, cyan #63E6FF, lilac #8B7CF0), a thick white die-cut sticker outline with a soft drop shadow.",
+    "sky": "Deep navy space background (#0B1030 to #151C48) with a slow aurora band drifting from teal #4FE3C1 to lime #B6FF5C and tiny star specks.",
+    "hardNo": "No human face or human likeness of any kind. No text, letters, numbers, labels, captions, logos or watermarks. No level, rank, tier, score, XP or badge labels. All figures are the same size and brightness; nothing looks stronger or more important than anything else."
+  },
+  "plates": [
+    {
+      "name": "soul-family-sheet",
+      "purpose": "Reference for the clay Soul family: 6 body silhouettes x 3 palettes as one sticker sheet.",
+      "aspectRatio": "4:3",
+      "temperature": 0.7,
+      "keep": ["the 6x3 grid layout", "the navy background", "the white die-cut outlines", "the creature faces"],
+      "parts": {
+        "type": "A single sticker-sheet illustration rendered as glossy 3D clay, product-shot quality.",
+        "subject": "Eighteen small friendly creature companions arranged in a neat grid of 6 columns and 3 rows. Each column is one body silhouette, left to right: a rounded teardrop, a wide bell, a puffy cloud, a smooth pebble, a soft flame tip, a leaning bean. Each row is one palette: row one soft teal-aqua (#74D6C8), row two warm peach-orange (#FFB58C), row three soft orchid-pink (#E3A3F2). Every creature has two dot eyes and a tiny smile (a creature face, not a person), two small foot nubs, an antenna stalk with a glowing orb, bubble speckles on the body, and an optional small heart on the belly on a few of them.",
+        "environment": "Flat deep navy sticker-sheet background (#0B1030) with faint star specks; every creature sits on its own white die-cut outline with a soft drop shadow, evenly spaced, none overlapping.",
+        "technical": "Studio three-point lighting, big soft top highlight, warm rim light from the lower right, clearcoat glossy surface, roughness 0.35, sharp focus, orthographic-feeling front view, centered composition, 4:3.",
+        "constraints": "Same size and brightness for every creature. No human face, no text, no numbers, no labels, no level or rank marks, no logos, no watermark."
+      }
+    },
+    {
+      "name": "backdrop-public-16x9",
+      "purpose": "Public / stage aurora night-forest backdrop plate (1920x1080 mood, safe zone on the right third).",
+      "aspectRatio": "16:9",
+      "temperature": 0.8,
+      "keep": ["the aurora band", "the forest silhouette line", "the empty right third"],
+      "parts": {
+        "type": "A wide cinematic matte-painting style background illustration with a soft clay-render finish.",
+        "subject": "An aurora night sky above a quiet forest silhouette: a slow luminous aurora band sweeping from teal (#4FE3C1) to lime (#B6FF5C), a violet-navy nebula haze, tiny star specks and a few warm fireflies low over the treeline.",
+        "environment": "Deep navy space sky (#0B1030 to #151C48) filling the frame, dark pine and broadleaf silhouettes along the bottom edge, the right third of the frame kept calm, dark and free of bright shapes so an information panel can sit there.",
+        "technical": "Ultra-wide 16:9, low horizon, soft gradients, gentle volumetric glow, no hard edges in the sky, restrained contrast for a projector, sharp foliage silhouettes.",
+        "constraints": "No characters, no creatures, no people, no text, no logos, no watermark, no lens flare across the right third."
+      }
+    },
+    {
+      "name": "backdrop-phone-9x16",
+      "purpose": "Employee phone aurora night-forest backdrop plate (portrait, content sits in the middle band).",
+      "aspectRatio": "9:16",
+      "temperature": 0.8,
+      "keep": ["the aurora band near the top", "the foliage at the bottom", "the calm middle band"],
+      "parts": {
+        "type": "A tall portrait background illustration with a soft clay-render matte-painting finish.",
+        "subject": "An aurora night sky over a forest silhouette seen from a clearing: the aurora band (teal #4FE3C1 to lime #B6FF5C) glows across the upper quarter, a violet-navy nebula haze fades downward, star specks and a few warm fireflies float near the bottom trees.",
+        "environment": "Deep navy sky (#0B1030 to #151C48), foliage silhouettes framing the lower edge and lower corners, the middle band of the frame kept dark, calm and evenly toned so white text and cards remain readable on top of it.",
+        "technical": "9:16 portrait, soft gradients, gentle glow, low contrast in the middle band, high contrast only at the aurora and treeline.",
+        "constraints": "No characters, no creatures, no people, no text, no logos, no watermark, no bright shapes in the middle band."
+      }
+    },
+    {
+      "name": "doodad-sheet",
+      "purpose": "Sticker doodads for the Galaxy periphery and waiting screens: rocket, UFO, ringed planet, comet, gold star.",
+      "aspectRatio": "4:3",
+      "temperature": 0.7,
+      "keep": ["the five objects and their order", "the flat two-tone fills", "the white die-cut outlines"],
+      "parts": {
+        "type": "A sticker-sheet illustration of five simple flat-shaded space doodads.",
+        "subject": "Left to right in one row: a small round retro rocket (peach #FFB27A and cream), a flying saucer UFO (lilac #8B7CF0 with a cyan #63E6FF dome), a ringed planet (violet body, lime #B6FF5C ring), a comet with a short teal tail (#4FE3C1), and a chunky gold five-point star (#F6C453). Each is a flat two-tone fill with one soft highlight and a thick white die-cut outline plus a soft drop shadow.",
+        "environment": "Deep navy sticker-sheet background (#0B1030) with faint star specks, generous even spacing, nothing overlapping.",
+        "technical": "Front-facing, evenly sized, crisp vector-like edges with a hint of clay gloss, 4:3, centered row.",
+        "constraints": "No characters, no faces, no text, no numbers, no labels, no logos, no watermark."
+      }
+    },
+    {
+      "name": "tile-study",
+      "purpose": "Glossy squircle tile study for the 5x5 board and stage tiles (empty, matched, on-line states as pure surfaces).",
+      "aspectRatio": "4:3",
+      "temperature": 0.6,
+      "keep": ["the three tiles side by side", "the squircle shape", "the navy background"],
+      "parts": {
+        "type": "A product-render style material study of three glossy rounded squircle tiles.",
+        "subject": "Three identical squircle tiles in a row, each a thick glossy clay slab with a big soft top highlight and a white die-cut outline. Left tile: deep violet (#2F2170) resting state. Middle tile: mint-teal (#8CF5C9) glowing softly as a matched state with a small filled circle emboss in a corner. Right tile: warm pale gold (#FFF3B0) with a gentle rim glow as a completed-line state with a small filled diamond emboss in a corner.",
+        "environment": "Deep navy background (#0B1030) with a faint aurora glow behind the tiles, soft contact shadows beneath each tile.",
+        "technical": "Studio three-point lighting, clearcoat gloss, roughness 0.35, slight 3/4 top-down camera, 4:3, tiles fill the middle of the frame with even margins.",
+        "constraints": "Tiles are empty surfaces: no text, no letters, no numbers, no icons other than the small circle and diamond embosses, no logos, no watermark, no characters."
+      }
+    },
+    {
+      "name": "orb-reveal-keyframes",
+      "purpose": "Four keyframes of the Soul reveal: dark orb glow, gathering motes, silhouette resolving, finished sticker Soul peeling forward.",
+      "aspectRatio": "16:9",
+      "temperature": 0.7,
+      "keep": ["the four-panel strip", "the same creature in every panel", "the navy background"],
+      "parts": {
+        "type": "A four-panel storyboard strip illustration in glossy 3D clay sticker style, panels separated by thin dark gutters.",
+        "subject": "Panel one: a small glowing violet orb alone in darkness with faint rings. Panel two: the orb brighter with dozens of tiny cyan and mint motes spiralling inward. Panel three: a soft creature silhouette (rounded teardrop body, antenna stalk with an orb tip) resolving from the light, still translucent. Panel four: the finished creature companion in soft teal-aqua (#74D6C8) with two dot eyes, a tiny smile, foot nubs, bubble speckles and a bright white die-cut sticker outline, slightly tilted as if peeling forward off the sky.",
+        "environment": "Deep navy space background (#0B1030) in every panel with a faint aurora glow and star specks; a soft glowing ring on the floor under the creature in panels three and four.",
+        "technical": "Consistent camera and scale across all four panels, centered subject, additive glow that never blows out, clearcoat gloss on the final creature, 16:9.",
+        "constraints": "The same creature in every panel, same size. No human face, no text, no numbers, no labels, no level or rank marks, no logos, no watermark."
+      }
+    }
+  ]
+}

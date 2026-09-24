@@ -1,0 +1,9 @@
+{
+  "name": "@ariskill/ui",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Zero-dependency shared client kit for the AriSkill Skill Bingo static apps (native ES modules, no build step).",
+  "exports": { "./*": "./*" },
+  "scripts": { "test": "node --test test", "check": "for f in *.js; do node --check \"$f\" || exit 1; done" }
+}

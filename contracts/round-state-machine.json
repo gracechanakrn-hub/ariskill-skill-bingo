@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ariskill-skill-bingo/contracts/round-state-machine",
+  "version": "1.0.0",
+  "description": "Authoritative round and board state machines (requirement 7.1, 7.2). Only the game service executes transitions; clients render projections.",
+  "round": {
+    "initial": "DRAFT",
+    "terminal": ["CLOSED", "CANCELLED"],
+    "states": {
+      "DRAFT": { "commands": ["round.update", "round.registration.open", "round.cancel"] },
+      "REGISTRATION_OPEN": { "commands": ["round.reschedule", "round.lock", "round.start_now", "round.cancel"] },
+      "LOCKED": { "commands": ["round.start", "round.cancel"] },
+      "PLAYING": { "commands": ["round.draw.next", "round.cancel"] },
+      "WINNER": { "commands": [], "autoExit": { "after": "resultWindowSeconds", "to": "CLOSED" } },
+      "EXHAUSTED": { "commands": ["round.close", "round.cancel"] },
+      "CLOSED": { "commands": [] },
+      "CANCELLED": { "commands": [] }
+    },
+    "transitions": [
+      { "from": "DRAFT", "command": "round.update", "to": "DRAFT", "event": "round.updated" },
+      { "from": "DRAFT", "command": "round.registration.open", "to": "REGISTRATION_OPEN", "event": "round.registration_opened", "guard": "lockAt is in the future" },
+      { "from": "DRAFT", "command": "round.cancel", "to": "CANCELLED", "event": "round.cancelled", "guard": "reason present" },
+      { "from": "REGISTRATION_OPEN", "command": "round.reschedule", "to": "REGISTRATION_OPEN", "event": "round.updated", "guard": "new lockAt is in the future" },
+      { "from": "REGISTRATION_OPEN", "command": "round.lock", "to": "LOCKED", "event": "round.locked", "guard": "lockAt reached (timer) or explicit admin lock-now; atomic board decision BR-06/BR-07" },
+      { "from": "REGISTRATION_OPEN", "command": "round.start_now", "to": "PLAYING", "event": "round.locked+round.started", "guard": "confirmed=true; atomic lock then start; pool >= 5 (E20)" },
+      { "from": "REGISTRATION_OPEN", "command": "round.cancel", "to": "CANCELLED", "event": "round.cancelled", "guard": "reason present" },
+      { "from": "LOCKED", "command": "round.start", "to": "PLAYING", "event": "round.started", "guard": "pool >= 5 (E20); never automatic" },
+      { "from": "LOCKED", "command": "round.cancel", "to": "CANCELLED", "event": "round.cancelled", "guard": "reason present" },
+      { "from": "PLAYING", "command": "round.draw.next", "to": "PLAYING", "event": "draw.accepted", "guard": "remaining pool > 0 and no winner produced" },
+      { "from": "PLAYING", "command": "round.draw.next", "to": "WINNER", "event": "draw.accepted+bingo.detected+result.published", "guard": "drawNumber >= 5 and >= 1 board completes a line" },
+      { "from": "PLAYING", "command": "round.draw.next", "to": "EXHAUSTED", "event": "draw.accepted+round.exhausted", "guard": "pool empty after this draw and no winner (E23)" },
+      { "from": "PLAYING", "command": "round.cancel", "to": "CANCELLED", "event": "round.cancelled", "guard": "reason present" },
+      { "from": "WINNER", "command": "(timer)", "to": "CLOSED", "event": "round.closed", "guard": "resultWindowSeconds elapsed" },
+      { "from": "EXHAUSTED", "command": "round.close", "to": "CLOSED", "event": "round.closed" },
+      { "from": "EXHAUSTED", "command": "round.cancel", "to": "CANCELLED", "event": "round.cancelled", "guard": "reason present" }
+    ],
+    "timers": [
+      { "name": "lockAt", "activeIn": "REGISTRATION_OPEN", "effect": "round.lock with actor=system. Locks registration only; never starts play or draws." },
+      { "name": "startGrace", "activeIn": "LOCKED", "effect": "After 60 s emit operator warning (admin projection flag `startOverdue`). No automatic start." },
+      { "name": "resultWindow", "activeIn": "WINNER", "effect": "Transition to CLOSED." }
+    ],
+    "invariants": [
+      "Every mutating command carries commandId (idempotency key) and expectedVersion; a mismatch is rejected with STALE_VERSION (E10) and no mutation.",
+      "round.version increments exactly once per accepted mutating command.",
+      "Events are emitted only after the durable transaction commits (outbox).",
+      "No transition draws a skill except an accepted round.draw.next in PLAYING.",
+      "A published winner set is never recalculated; an invalid round is cancelled transparently."
+    ]
+  },
+  "board": {
+    "initial": "DRAFT",
+    "states": {
+      "DRAFT": "0-25 unique selections; editable; no positions",
+      "READY": "25 selections with server-randomized positions; registration still open; editable (returns to DRAFT)",
+      "LOCKED_ACTIVE": "READY at round lock; included in draw pool and evaluation; immutable",
+      "DEFERRED": "Not READY at lock, or arrived after lock; preserved and reassigned to the next eligible round",
+      "FINISHED": "Round ended (WINNER/EXHAUSTED/CANCELLED/CLOSED); immutable game record"
+    },
+    "transitions": [
+      { "from": "DRAFT", "op": "board.selections.save", "to": "DRAFT", "guard": "0-25 unique active skills; Platform and Role selected (E16); round not locked (E8)" },
+      { "from": "DRAFT", "op": "board.finalize", "to": "READY", "guard": "exactly 25 unique; server assigns positions; matrixVersion snapshot" },
+      { "from": "READY", "op": "board.selections.save", "to": "DRAFT", "guard": "any change clears positions; identical set is a no-op" },
+      { "from": "READY", "op": "round.lock", "to": "LOCKED_ACTIVE", "guard": "atomic with all boards of the round" },
+      { "from": "DRAFT", "op": "round.lock", "to": "DEFERRED", "guard": "atomic; E5 copy" },
+      { "from": "LOCKED_ACTIVE", "op": "round end", "to": "FINISHED" },
+      { "from": "DEFERRED", "op": "next round registration opens", "to": "DRAFT", "guard": "selections retained; positions cleared; requires new finalize" }
+    ]
+  }
+}

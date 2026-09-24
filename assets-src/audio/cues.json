@@ -1,0 +1,1059 @@
+{
+  "$schema_note": "Editable synthesis source for tools/assets/build-audio.py. Every runtime WAV in assets/audio is generated from this file; never hand-edit the WAVs. Notes are scientific pitch (A4 = 440 Hz). Times in seconds, gains linear, cutoffs in Hz.",
+  "version": "1.0.0",
+  "sample_rate": 22050,
+  "seed": 20260922,
+  "defaults": {
+    "fade_ms": 10,
+    "ceiling_dbfs": -1.0,
+    "limiter_threshold_dbfs": -4.0,
+    "oneshot_rms_dbfs": -16.0,
+    "loop_rms_dbfs": -24.0,
+    "max_oneshot_bytes": 122880,
+    "max_total_bytes": 1638400
+  },
+  "cues": {
+    "ambient_galaxy": {
+      "kind": "loop",
+      "duration_s": 7.0,
+      "target_rms_dbfs": -24.0,
+      "max_duration_s": 8.0,
+      "min_duration_s": 6.0,
+      "description": "Seamless calm Galaxy bed. Exact-period synthesis: every partial, detune and LFO is an integer number of cycles per loop, so sample N wraps to sample 0 with no discontinuity. Low spectral density, nothing above 3 kHz.",
+      "lowpass_hz": 3000,
+      "layers": [
+        {
+          "type": "pad",
+          "notes": [
+            "A2",
+            "E3",
+            "A3",
+            "C#4",
+            "E4",
+            "B4"
+          ],
+          "gains": [
+            0.55,
+            0.45,
+            0.5,
+            0.32,
+            0.28,
+            0.14
+          ],
+          "partials": [
+            [
+              1,
+              1.0
+            ],
+            [
+              2,
+              0.35
+            ],
+            [
+              3,
+              0.1
+            ]
+          ],
+          "detune_cycles": 2,
+          "lfo_cycles": [
+            1,
+            2,
+            1,
+            3,
+            2,
+            1
+          ],
+          "lfo_depth": 0.55
+        },
+        {
+          "type": "pad",
+          "notes": [
+            "A1"
+          ],
+          "gains": [
+            0.35
+          ],
+          "partials": [
+            [
+              1,
+              1.0
+            ]
+          ],
+          "detune_cycles": 0,
+          "lfo_cycles": [
+            1
+          ],
+          "lfo_depth": 0.25
+        },
+        {
+          "type": "noise",
+          "band_hz": [
+            180,
+            1400
+          ],
+          "gain": 0.05,
+          "lfo_cycles": 1,
+          "lfo_depth": 0.6
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "app.start"
+        ],
+        "audiences": [
+          "public",
+          "stage"
+        ],
+        "priority": 0,
+        "rate_limit_ms": 0,
+        "duck": null,
+        "preload": [
+          "public",
+          "stage"
+        ],
+        "caption": "Galaxy ambience playing",
+        "copy_key": null,
+        "visual_equivalent": "Galaxy scene drifting; no state carried by the bed."
+      }
+    },
+    "registration_ready": {
+      "kind": "oneshot",
+      "duration_s": 0.6,
+      "max_duration_s": 0.6,
+      "target_rms_dbfs": -16.0,
+      "description": "Warm two-note confirmation (E5 -> A5, perfect fourth up). Soft triangle with a sine octave under, low-passed so it stays gentle.",
+      "voices": [
+        {
+          "wave": "triangle",
+          "note": "E5",
+          "start_s": 0.0,
+          "gate_s": 0.16,
+          "env": {
+            "a": 0.008,
+            "d": 0.12,
+            "s": 0.5,
+            "r": 0.18
+          },
+          "gain": 0.6,
+          "lowpass_hz": 3200
+        },
+        {
+          "wave": "sine",
+          "note": "E4",
+          "start_s": 0.0,
+          "gate_s": 0.16,
+          "env": {
+            "a": 0.008,
+            "d": 0.12,
+            "s": 0.5,
+            "r": 0.18
+          },
+          "gain": 0.3
+        },
+        {
+          "wave": "triangle",
+          "note": "A5",
+          "start_s": 0.17,
+          "gate_s": 0.2,
+          "env": {
+            "a": 0.008,
+            "d": 0.16,
+            "s": 0.5,
+            "r": 0.22
+          },
+          "gain": 0.6,
+          "lowpass_hz": 3200
+        },
+        {
+          "wave": "sine",
+          "note": "A4",
+          "start_s": 0.17,
+          "gate_s": 0.2,
+          "env": {
+            "a": 0.008,
+            "d": 0.16,
+            "s": 0.5,
+            "r": 0.22
+          },
+          "gain": 0.3
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "board.ready"
+        ],
+        "audiences": [
+          "participant"
+        ],
+        "priority": 2,
+        "rate_limit_ms": 1000,
+        "duck": null,
+        "preload": [],
+        "caption": "Your Skill Bingo is ready!",
+        "copy_key": "board.complete",
+        "visual_equivalent": "Board completion glow (motion spec) and board.complete copy."
+      }
+    },
+    "draw_leadin": {
+      "kind": "oneshot",
+      "duration_s": 0.4,
+      "max_duration_s": 0.4,
+      "target_rms_dbfs": -18.0,
+      "description": "Soft 0.4 s riser: filtered noise sweep with a rising sine underneath. No tonal chime so it never gets confused with draw_reveal.",
+      "voices": [
+        {
+          "wave": "noise",
+          "start_s": 0.0,
+          "gate_s": 0.34,
+          "env": {
+            "a": 0.3,
+            "d": 0.02,
+            "s": 1.0,
+            "r": 0.05
+          },
+          "gain": 0.7,
+          "lowpass_hz": [
+            250,
+            2600
+          ],
+          "highpass_hz": 180
+        },
+        {
+          "wave": "sine",
+          "note": "A4",
+          "glide_to": "A5",
+          "start_s": 0.0,
+          "gate_s": 0.34,
+          "env": {
+            "a": 0.28,
+            "d": 0.02,
+            "s": 1.0,
+            "r": 0.05
+          },
+          "gain": 0.35
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "round.draw.next.pending",
+          "draw.accepted"
+        ],
+        "audiences": [
+          "admin",
+          "public"
+        ],
+        "priority": 1,
+        "rate_limit_ms": 1000,
+        "duck": null,
+        "preload": [
+          "public"
+        ],
+        "caption": "Drawing the next skill",
+        "copy_key": "admin.nextSkillPending",
+        "visual_equivalent": "Admin: Next Skill button shows 'Drawing...'. Public: card pre-reveal shimmer."
+      }
+    },
+    "draw_reveal": {
+      "kind": "oneshot",
+      "duration_s": 0.8,
+      "max_duration_s": 0.8,
+      "target_rms_dbfs": -16.0,
+      "description": "Bright reveal chime: A5/C#6/E6 bell partials with a fast 30 ms arpeggio so it reads as one strike.",
+      "voices": [
+        {
+          "wave": "partials",
+          "note": "A5",
+          "partials": [
+            [
+              1,
+              1.0
+            ],
+            [
+              2.0,
+              0.3
+            ],
+            [
+              2.76,
+              0.18
+            ],
+            [
+              4.0,
+              0.06
+            ]
+          ],
+          "start_s": 0.0,
+          "gate_s": 0.25,
+          "env": {
+            "a": 0.003,
+            "d": 0.3,
+            "s": 0.2,
+            "r": 0.4
+          },
+          "gain": 0.55,
+          "lowpass_hz": 6000
+        },
+        {
+          "wave": "partials",
+          "note": "C#6",
+          "partials": [
+            [
+              1,
+              1.0
+            ],
+            [
+              2.0,
+              0.25
+            ],
+            [
+              2.76,
+              0.15
+            ]
+          ],
+          "start_s": 0.03,
+          "gate_s": 0.25,
+          "env": {
+            "a": 0.003,
+            "d": 0.3,
+            "s": 0.2,
+            "r": 0.4
+          },
+          "gain": 0.42,
+          "lowpass_hz": 6000
+        },
+        {
+          "wave": "partials",
+          "note": "E6",
+          "partials": [
+            [
+              1,
+              1.0
+            ],
+            [
+              2.0,
+              0.2
+            ]
+          ],
+          "start_s": 0.06,
+          "gate_s": 0.25,
+          "env": {
+            "a": 0.003,
+            "d": 0.3,
+            "s": 0.2,
+            "r": 0.4
+          },
+          "gain": 0.38,
+          "lowpass_hz": 6000
+        },
+        {
+          "wave": "sine",
+          "note": "A4",
+          "start_s": 0.0,
+          "gate_s": 0.2,
+          "env": {
+            "a": 0.004,
+            "d": 0.2,
+            "s": 0.3,
+            "r": 0.3
+          },
+          "gain": 0.3
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "draw.accepted"
+        ],
+        "audiences": [
+          "participant",
+          "public",
+          "stage",
+          "admin"
+        ],
+        "priority": 2,
+        "rate_limit_ms": 800,
+        "duck": null,
+        "preload": [
+          "participant",
+          "public",
+          "stage",
+          "admin"
+        ],
+        "caption": "Skill drawn",
+        "copy_key": "play.draw",
+        "visual_equivalent": "Skill card reveal and live-region announcement 'Draw {number}: {skill}'."
+      }
+    },
+    "cell_match": {
+      "kind": "oneshot",
+      "duration_s": 0.12,
+      "max_duration_s": 0.15,
+      "target_rms_dbfs": -18.0,
+      "description": "Very short tick: a 1.6 kHz -> 1.1 kHz sine blip with a 4 ms noise transient. Rate-limited by the manager to one per 250 ms.",
+      "voices": [
+        {
+          "wave": "sine",
+          "note": "G#6",
+          "glide_to": "C#6",
+          "start_s": 0.01,
+          "gate_s": 0.03,
+          "env": {
+            "a": 0.002,
+            "d": 0.04,
+            "s": 0.3,
+            "r": 0.05
+          },
+          "gain": 0.8
+        },
+        {
+          "wave": "noise",
+          "start_s": 0.01,
+          "gate_s": 0.004,
+          "env": {
+            "a": 0.001,
+            "d": 0.003,
+            "s": 0.2,
+            "r": 0.006
+          },
+          "gain": 0.25,
+          "lowpass_hz": 5000,
+          "highpass_hz": 1500
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "draw.accepted"
+        ],
+        "audiences": [
+          "participant"
+        ],
+        "priority": 1,
+        "rate_limit_ms": 250,
+        "duck": null,
+        "preload": [
+          "participant"
+        ],
+        "caption": "Matched on your board",
+        "copy_key": "play.matched",
+        "visual_equivalent": "Matching cell glow/pulse; final matched state stays visible."
+      }
+    },
+    "draw5_unlock": {
+      "kind": "oneshot",
+      "duration_s": 1.0,
+      "max_duration_s": 1.0,
+      "target_rms_dbfs": -16.0,
+      "description": "Rising three-note motif A4 -> C#5 -> E5 (major triad) with a soft A5 on the last note: 'Bingo is live'. Always paired with copy play.evaluationActive.",
+      "voices": [
+        {
+          "wave": "triangle",
+          "note": "A4",
+          "start_s": 0.0,
+          "gate_s": 0.14,
+          "env": {
+            "a": 0.006,
+            "d": 0.1,
+            "s": 0.5,
+            "r": 0.25
+          },
+          "gain": 0.55,
+          "lowpass_hz": 3500
+        },
+        {
+          "wave": "triangle",
+          "note": "C#5",
+          "start_s": 0.17,
+          "gate_s": 0.14,
+          "env": {
+            "a": 0.006,
+            "d": 0.1,
+            "s": 0.5,
+            "r": 0.25
+          },
+          "gain": 0.55,
+          "lowpass_hz": 3500
+        },
+        {
+          "wave": "triangle",
+          "note": "E5",
+          "start_s": 0.34,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.006,
+            "d": 0.15,
+            "s": 0.55,
+            "r": 0.35
+          },
+          "gain": 0.6,
+          "lowpass_hz": 3500
+        },
+        {
+          "wave": "sine",
+          "note": "A5",
+          "start_s": 0.36,
+          "gate_s": 0.28,
+          "env": {
+            "a": 0.03,
+            "d": 0.15,
+            "s": 0.5,
+            "r": 0.34
+          },
+          "gain": 0.3
+        },
+        {
+          "wave": "sine",
+          "note": "A3",
+          "start_s": 0.34,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.01,
+            "d": 0.15,
+            "s": 0.5,
+            "r": 0.35
+          },
+          "gain": 0.3
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "draw.accepted"
+        ],
+        "audiences": [
+          "participant",
+          "public",
+          "stage"
+        ],
+        "priority": 2,
+        "rate_limit_ms": 5000,
+        "duck": null,
+        "preload": [
+          "participant",
+          "public"
+        ],
+        "caption": "Bingo is live",
+        "copy_key": "play.evaluationActive",
+        "visual_equivalent": "Visible copy play.evaluationActive / public.playing.live replaces the 'Bingo unlocks at draw 5' pacing label."
+      }
+    },
+    "bingo": {
+      "kind": "oneshot",
+      "duration_s": 1.5,
+      "max_duration_s": 1.5,
+      "target_rms_dbfs": -16.0,
+      "description": "Single celebratory sting: quick noise lift, A-major chord strike (low-passed saw + sine) with a bright E6 bell on top. Peak-limited to -1 dBFS; ducks the ambient bed by 8 dB for 2 s.",
+      "voices": [
+        {
+          "wave": "noise",
+          "start_s": 0.0,
+          "gate_s": 0.12,
+          "env": {
+            "a": 0.1,
+            "d": 0.02,
+            "s": 1.0,
+            "r": 0.06
+          },
+          "gain": 0.35,
+          "lowpass_hz": [
+            600,
+            4000
+          ],
+          "highpass_hz": 300
+        },
+        {
+          "wave": "saw",
+          "note": "A4",
+          "start_s": 0.1,
+          "gate_s": 0.55,
+          "env": {
+            "a": 0.005,
+            "d": 0.45,
+            "s": 0.35,
+            "r": 0.6
+          },
+          "gain": 0.3,
+          "lowpass_hz": 2400
+        },
+        {
+          "wave": "saw",
+          "note": "C#5",
+          "start_s": 0.14,
+          "gate_s": 0.55,
+          "env": {
+            "a": 0.005,
+            "d": 0.45,
+            "s": 0.35,
+            "r": 0.6
+          },
+          "gain": 0.28,
+          "lowpass_hz": 2400
+        },
+        {
+          "wave": "saw",
+          "note": "E5",
+          "start_s": 0.18,
+          "gate_s": 0.55,
+          "env": {
+            "a": 0.005,
+            "d": 0.45,
+            "s": 0.35,
+            "r": 0.6
+          },
+          "gain": 0.26,
+          "lowpass_hz": 2400
+        },
+        {
+          "wave": "sine",
+          "note": "A5",
+          "start_s": 0.22,
+          "gate_s": 0.5,
+          "env": {
+            "a": 0.005,
+            "d": 0.4,
+            "s": 0.35,
+            "r": 0.6
+          },
+          "gain": 0.3
+        },
+        {
+          "wave": "sine",
+          "note": "A3",
+          "start_s": 0.1,
+          "gate_s": 0.6,
+          "env": {
+            "a": 0.01,
+            "d": 0.5,
+            "s": 0.4,
+            "r": 0.6
+          },
+          "gain": 0.4
+        },
+        {
+          "wave": "partials",
+          "note": "E6",
+          "partials": [
+            [
+              1,
+              1.0
+            ],
+            [
+              2.0,
+              0.25
+            ],
+            [
+              2.76,
+              0.12
+            ]
+          ],
+          "start_s": 0.26,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.003,
+            "d": 0.4,
+            "s": 0.2,
+            "r": 0.6
+          },
+          "gain": 0.35,
+          "lowpass_hz": 7000
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "bingo.detected",
+          "result.published"
+        ],
+        "audiences": [
+          "participant",
+          "public",
+          "stage",
+          "admin"
+        ],
+        "priority": 3,
+        "rate_limit_ms": 3000,
+        "duck": {
+          "db": 8,
+          "ms": 2000
+        },
+        "preload": [
+          "participant",
+          "public",
+          "stage",
+          "admin"
+        ],
+        "caption": "Bingo detected",
+        "copy_key": "result.bingo",
+        "visual_equivalent": "Winning line traced once; Winner view burst; result.bingo / public.winner.title copy and live-region announcement."
+      }
+    },
+    "soul_reveal": {
+      "kind": "oneshot",
+      "duration_s": 1.9,
+      "max_duration_s": 2.0,
+      "min_duration_s": 1.5,
+      "target_rms_dbfs": -17.0,
+      "description": "Gentle rising motif E4 -> G#4 -> B4 -> E5 over a soft E/B pad; long releases, everything below 2.5 kHz.",
+      "voices": [
+        {
+          "wave": "sine",
+          "note": "E3",
+          "start_s": 0.0,
+          "gate_s": 1.2,
+          "env": {
+            "a": 0.35,
+            "d": 0.3,
+            "s": 0.8,
+            "r": 0.6
+          },
+          "gain": 0.3
+        },
+        {
+          "wave": "triangle",
+          "note": "B3",
+          "start_s": 0.0,
+          "gate_s": 1.2,
+          "env": {
+            "a": 0.4,
+            "d": 0.3,
+            "s": 0.8,
+            "r": 0.6
+          },
+          "gain": 0.2,
+          "lowpass_hz": 1800
+        },
+        {
+          "wave": "triangle",
+          "note": "E4",
+          "start_s": 0.1,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.02,
+            "d": 0.25,
+            "s": 0.5,
+            "r": 0.6
+          },
+          "gain": 0.4,
+          "lowpass_hz": 2500
+        },
+        {
+          "wave": "triangle",
+          "note": "G#4",
+          "start_s": 0.45,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.02,
+            "d": 0.25,
+            "s": 0.5,
+            "r": 0.6
+          },
+          "gain": 0.4,
+          "lowpass_hz": 2500
+        },
+        {
+          "wave": "triangle",
+          "note": "B4",
+          "start_s": 0.8,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.02,
+            "d": 0.25,
+            "s": 0.5,
+            "r": 0.6
+          },
+          "gain": 0.4,
+          "lowpass_hz": 2500
+        },
+        {
+          "wave": "triangle",
+          "note": "E5",
+          "start_s": 1.15,
+          "gate_s": 0.35,
+          "env": {
+            "a": 0.02,
+            "d": 0.3,
+            "s": 0.5,
+            "r": 0.4
+          },
+          "gain": 0.45,
+          "lowpass_hz": 2500
+        },
+        {
+          "wave": "sine",
+          "note": "E6",
+          "start_s": 1.17,
+          "gate_s": 0.3,
+          "env": {
+            "a": 0.05,
+            "d": 0.3,
+            "s": 0.4,
+            "r": 0.4
+          },
+          "gain": 0.12
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "soul.created"
+        ],
+        "audiences": [
+          "participant"
+        ],
+        "priority": 2,
+        "rate_limit_ms": 5000,
+        "duck": null,
+        "preload": [],
+        "caption": "Your Soul is ready to join Arise.",
+        "copy_key": "soul.ready",
+        "visual_equivalent": "Staged 1.5-2.5 s Soul reveal (skippable) with soul.ready copy."
+      }
+    },
+    "float_countdown": {
+      "kind": "oneshot",
+      "duration_s": 0.18,
+      "max_duration_s": 0.2,
+      "target_rms_dbfs": -18.0,
+      "description": "One soft tick (A5 sine over an A4 triangle). The participant app plays it once per visual step 3 -> 2 -> 1 at the server-scheduled time; the visual countdown is authoritative.",
+      "voices": [
+        {
+          "wave": "sine",
+          "note": "A5",
+          "start_s": 0.012,
+          "gate_s": 0.05,
+          "env": {
+            "a": 0.003,
+            "d": 0.06,
+            "s": 0.3,
+            "r": 0.08
+          },
+          "gain": 0.7
+        },
+        {
+          "wave": "triangle",
+          "note": "A4",
+          "start_s": 0.012,
+          "gate_s": 0.05,
+          "env": {
+            "a": 0.003,
+            "d": 0.06,
+            "s": 0.3,
+            "r": 0.08
+          },
+          "gain": 0.35,
+          "lowpass_hz": 2500
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "client.float_countdown"
+        ],
+        "audiences": [
+          "participant"
+        ],
+        "priority": 1,
+        "rate_limit_ms": 300,
+        "duck": null,
+        "preload": [
+          "participant"
+        ],
+        "caption": "3 -> 2 -> 1 -> FLOAT",
+        "copy_key": "soul.countdown",
+        "visual_equivalent": "On-screen countdown digits are authoritative; the tick only accompanies each visible step."
+      }
+    },
+    "float_launch": {
+      "kind": "oneshot",
+      "duration_s": 1.2,
+      "max_duration_s": 1.2,
+      "target_rms_dbfs": -16.0,
+      "description": "Whoosh (noise with a 400 Hz -> 6 kHz sweep) into a soft A-major bloom that swells at 0.35 s.",
+      "voices": [
+        {
+          "wave": "noise",
+          "start_s": 0.0,
+          "gate_s": 0.45,
+          "env": {
+            "a": 0.25,
+            "d": 0.1,
+            "s": 0.7,
+            "r": 0.35
+          },
+          "gain": 0.6,
+          "lowpass_hz": [
+            400,
+            6000
+          ],
+          "highpass_hz": 250
+        },
+        {
+          "wave": "sine",
+          "note": "A4",
+          "start_s": 0.35,
+          "gate_s": 0.45,
+          "env": {
+            "a": 0.15,
+            "d": 0.3,
+            "s": 0.4,
+            "r": 0.4
+          },
+          "gain": 0.45
+        },
+        {
+          "wave": "triangle",
+          "note": "E5",
+          "start_s": 0.38,
+          "gate_s": 0.45,
+          "env": {
+            "a": 0.15,
+            "d": 0.3,
+            "s": 0.4,
+            "r": 0.4
+          },
+          "gain": 0.3,
+          "lowpass_hz": 2800
+        },
+        {
+          "wave": "sine",
+          "note": "A5",
+          "start_s": 0.42,
+          "gate_s": 0.42,
+          "env": {
+            "a": 0.18,
+            "d": 0.3,
+            "s": 0.4,
+            "r": 0.36
+          },
+          "gain": 0.28
+        },
+        {
+          "wave": "sine",
+          "note": "C#6",
+          "start_s": 0.5,
+          "gate_s": 0.35,
+          "env": {
+            "a": 0.2,
+            "d": 0.25,
+            "s": 0.4,
+            "r": 0.35
+          },
+          "gain": 0.16
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "soul.float_accepted"
+        ],
+        "audiences": [
+          "participant",
+          "public",
+          "stage"
+        ],
+        "priority": 3,
+        "rate_limit_ms": 600,
+        "duck": {
+          "db": 4,
+          "ms": 1200
+        },
+        "preload": [
+          "participant",
+          "public",
+          "stage"
+        ],
+        "caption": "Your Soul is in the Galaxy",
+        "copy_key": "soul.floated",
+        "visual_equivalent": "Participant: launch acknowledgment and soul.floated copy. Public: Soul entrance animation."
+      }
+    },
+    "error_soft": {
+      "kind": "oneshot",
+      "duration_s": 0.4,
+      "max_duration_s": 0.4,
+      "target_rms_dbfs": -19.0,
+      "description": "Subtle low double-blip A3 -> G3 (a step down, never a rising interval), dull triangle below 1.2 kHz. Deliberately unlike every success cue.",
+      "voices": [
+        {
+          "wave": "triangle",
+          "note": "A3",
+          "start_s": 0.0,
+          "gate_s": 0.06,
+          "env": {
+            "a": 0.006,
+            "d": 0.05,
+            "s": 0.6,
+            "r": 0.07
+          },
+          "gain": 0.7,
+          "lowpass_hz": 1200
+        },
+        {
+          "wave": "triangle",
+          "note": "G3",
+          "start_s": 0.15,
+          "gate_s": 0.07,
+          "env": {
+            "a": 0.006,
+            "d": 0.05,
+            "s": 0.6,
+            "r": 0.09
+          },
+          "gain": 0.7,
+          "lowpass_hz": 1200
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "client.exception"
+        ],
+        "audiences": [
+          "participant",
+          "admin",
+          "public",
+          "stage"
+        ],
+        "priority": 0,
+        "rate_limit_ms": 1500,
+        "duck": null,
+        "preload": [],
+        "caption": "Notice: see message",
+        "copy_key": null,
+        "visual_equivalent": "The E-code toast/banner text itself (packages/contracts copy.exceptions) is the equivalent; the blip never replaces it."
+      }
+    },
+    "reconnect": {
+      "kind": "oneshot",
+      "duration_s": 0.5,
+      "max_duration_s": 0.5,
+      "target_rms_dbfs": -20.0,
+      "description": "Very subtle single soft A4 sine with a slow attack. Optional; apps may leave it disabled.",
+      "voices": [
+        {
+          "wave": "sine",
+          "note": "A4",
+          "start_s": 0.0,
+          "gate_s": 0.22,
+          "env": {
+            "a": 0.09,
+            "d": 0.1,
+            "s": 0.7,
+            "r": 0.22
+          },
+          "gain": 0.8,
+          "lowpass_hz": 2000
+        }
+      ],
+      "policy": {
+        "event_types": [
+          "client.reconnecting"
+        ],
+        "audiences": [
+          "public",
+          "stage",
+          "admin"
+        ],
+        "priority": 0,
+        "rate_limit_ms": 10000,
+        "duck": null,
+        "preload": [],
+        "caption": "Reconnecting to the Skill Galaxy...",
+        "copy_key": "reconnect",
+        "visual_equivalent": "E12 banner 'Reconnecting to the Skill Galaxy...' over the retained last frame."
+      }
+    }
+  },
+  "policy_note": "policy = integration metadata copied verbatim into assets/manifest/audio.{yaml,json}: event_types use contracts/realtime-events.json type names; 'client.*' and 'app.start' are local UI moments, not server events. copy_key must exist in packages/contracts/copy.json (tested)."
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0B0F1F">
+  <meta name="description" content="Enter the Arise Galaxy, build your skill constellation, and play live Skill Bingo.">
+  <title>AriSkill Skill Bingo</title>
+  <link rel="stylesheet" href="/packages/vendor/plus-jakarta-sans/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/fredoka/fonts.css">
+  <link rel="stylesheet" href="/packages/design-tokens/tokens.css">
+  <link rel="stylesheet" href="/packages/ui/base.css">
+  <link rel="stylesheet" href="/packages/ui/motion.css">
+  <link rel="stylesheet" href="/play/app.css">
+  <script type="module" src="/play/src/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="cosmos" aria-hidden="true"><canvas class="cosmos__stars" aria-hidden="true"></canvas></div>
+  <header class="app-header" role="banner">
+    <p class="brand"><span class="brand__mark" aria-hidden="true"></span><span class="brand__name">AriSkill Skill Bingo</span></p>
+    <div id="header-status" class="cluster header-status"></div>
+  </header>
+  <div id="banner" class="banner-host"></div>
+  <main id="main" class="container app-main stack" tabindex="-1" aria-live="off"></main>
+  <footer class="app-footer container" role="contentinfo">
+    <div id="settings"></div>
+  </footer>
+  <div id="toasts" class="toast-region" aria-live="polite"></div>
+</body>
+</html>

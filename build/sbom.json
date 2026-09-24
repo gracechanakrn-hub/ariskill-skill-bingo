@@ -1,0 +1,79 @@
+{
+  "bomFormat": "CycloneDX-lite",
+  "specVersion": "1.0",
+  "runtime": {
+    "node": "v26.8.2"
+  },
+  "components": [
+    {
+      "name": "@ariskill/analytics-projection",
+      "version": "1.0.0",
+      "path": "services/analytics-projection/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/game-service",
+      "version": "1.0.0",
+      "path": "services/game-service/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/contracts",
+      "version": "1.0.0",
+      "path": "packages/contracts/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/design-tokens",
+      "version": "1.2.0",
+      "path": "packages/design-tokens/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/game-rules",
+      "version": "1.0.0",
+      "path": "packages/game-rules/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/ui",
+      "version": "1.0.0",
+      "path": "packages/ui/package.json",
+      "license": "UNLICENSED",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/vendor-fredoka",
+      "version": "17.0.0",
+      "path": "packages/vendor/fredoka/package.json",
+      "license": "OFL-1.1",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/vendor-plus-jakarta-sans",
+      "version": "12.0.0",
+      "path": "packages/vendor/plus-jakarta-sans/package.json",
+      "license": "OFL-1.1",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/vendor-space-grotesk",
+      "version": "22.0.0",
+      "path": "packages/vendor/space-grotesk/package.json",
+      "license": "OFL-1.1",
+      "dependencies": {}
+    },
+    {
+      "name": "@ariskill/vendor-three",
+      "version": "0.186.0",
+      "path": "packages/vendor/three/package.json",
+      "license": "MIT",
+      "dependencies": {}
+    }
+  ]
+}

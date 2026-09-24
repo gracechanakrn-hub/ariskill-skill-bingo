@@ -1,0 +1,107 @@
+// apps/employee-mobile/src/views/board.js - E4 Board ready (countdown, Edit skills), E4b No round,
+// E5 Locked / waiting for start, E5b Deferred (incomplete / late / cancelled) with next-round info.
+// The countdown is display only (formatCountdown over the synced server clock); lock and start are server events.
+import { h, mount } from '/packages/ui/dom.js';
+import { formatCountdown } from '/packages/ui/clock-sync.js';
+import { formatTime } from '/packages/ui/format.js';
+import { t } from '/packages/contracts/index.js';
+import { tl, exceptionCopy, notice, button, roundLine } from './common.js';
+import { createGrid } from './grid.js';
+import { editableRound, deferredCopyKey } from '../state.js';
+import { doodad } from '../doodads.js';
+import { doodadPlan } from '../backdrop-params.js';
+
+export function mountBoard(root, ctx, screen) {
+  const grid = createGrid();
+  let els = {};
+  let timer = null;
+  let lastState = null;
+
+  function countdownTarget(state) {
+    const r = editableRound(state) || state.round;
+    return r && r.lockAt ? r : null;
+  }
+
+  function tick() {
+    if (!lastState || !els.countdown) return;
+    const r = screen === 'board' ? countdownTarget(lastState) : null;
+    if (!r) { els.countdownBlock.hidden = true; return; }
+    els.countdownBlock.hidden = false;
+    if (!ctx.clockSynced()) { els.countdown.textContent = exceptionCopy('E7'); els.countdown.classList.add('countdown--syncing'); return; }
+    els.countdown.classList.remove('countdown--syncing');
+    const text = formatCountdown(r.lockAt, ctx.clockNow());
+    if (els.countdown.textContent !== text) els.countdown.textContent = text;
+    els.countdown.classList.toggle('is-zero', text === '00:00');
+    els.countdown.classList.toggle('is-urgent', text !== '00:00' && text < '01:00');
+  }
+
+  function renderShell(state) {
+    els = {};
+    const s = screen;
+    els.title = h('h1', { className: 'screen-title' });
+    els.notices = h('div', { className: 'stack stack--tight' });
+    els.round = h('div', { className: 'round-block' });
+    // Waiting screens park a ringed planet in a reserved strip (never over text / controls; hidden below 360 px).
+    els.sky = h('div', { className: 'waiting-sky', 'aria-hidden': 'true' }, ...doodadPlan(s, window.innerWidth).map((d) => doodad(d.kind, { size: d.size })));
+    els.countdown = h('p', { className: 'countdown', 'aria-live': 'off' });
+    els.countdownBlock = h('div', { className: 'countdown-block', hidden: true }, h('span', { className: 'countdown__label' }, tl('ui.locksIn')), els.countdown);
+    els.lockLabel = h('p', { className: 'lock-label m-lock-label', hidden: true }, `\u{1F512}︎ ${t('board.locked')}`);
+    els.actions = h('div', { className: 'cluster' });
+    const gridWrap = h('div', { className: 'board-wrap' }, grid.el, els.lockLabel, grid.legend);
+    mount(root, h('div', { className: 'stack' },
+      els.title, h('div', { className: 'round-row' }, els.round, els.sky), els.notices,
+      s === 'deferred' ? null : h('div', { className: 'cluster cluster--between board-status' }, els.countdownBlock, els.actions),
+      s === 'deferred' ? null : gridWrap,
+      s === 'deferred' ? els.actions : null));
+  }
+
+  function render(state) {
+    if (!els.title) renderShell(state);
+    const r = state.round;
+    const notices = [];
+    const actions = [];
+    if (screen === 'board') {
+      const editable = editableRound(state);
+      els.title.textContent = t('board.complete');
+      if (editable) {
+        notices.push(h('p', { className: 'lead' }, t('board.waiting')));
+        actions.push(button(t('board.edit'), { onClick: ctx.actions.startEditing, 'aria-describedby': 'edit-warning' }));
+        actions.push(h('span', { id: 'edit-warning', className: 'visually-hidden' }, t('board.editWarning')));
+      } else {
+        notices.push(notice(t('board.noRound'), { tone: 'info' }));
+      }
+      mount(els.round, roundLine(editable || r, editable && editable.lockAt ? `${tl('ui.locksAt')} ${formatTime(editable.lockAt)}` : null));
+      grid.update(state.board, { locked: false });
+      els.lockLabel.hidden = true;
+    } else if (screen === 'locked') {
+      els.title.textContent = t('board.locked');
+      notices.push(h('p', { className: 'lead', role: 'status' }, t('play.waitingStart')));
+      mount(els.round, roundLine(r));
+      grid.update(state.board, { locked: true });
+      els.lockLabel.hidden = false;
+      els.countdownBlock.hidden = true;
+    } else if (screen === 'deferred') {
+      const reason = (state.board && state.board.deferredReason) || (r && r.state === 'CANCELLED' ? 'cancelled' : 'incomplete');
+      const key = deferredCopyKey(reason);
+      els.title.textContent = t('board.locked');
+      notices.push(notice(key === 'board.deferred' ? t('board.deferred') : exceptionCopy(key), { tone: 'warning' }));
+      if (r && r.state === 'CANCELLED' && r.cancellationReason) notices.push(h('p', { className: 'muted' }, r.cancellationReason));
+      mount(els.round, roundLine(r));
+      const next = state.nextRound;
+      if (next) notices.push(h('div', { className: 'card card--flat stack stack--tight' }, h('h2', { className: 'section__title' }, tl('ui.nextRound')), roundLine(next, next.lockAt ? `${tl('ui.locksAt')} ${formatTime(next.lockAt)}` : null)));
+      else notices.push(h('p', { className: 'muted' }, t('board.noRound')));
+    }
+    mount(els.notices, notices);
+    mount(els.actions, actions);
+    tick();
+  }
+
+  return {
+    update(state) { lastState = state; render(state); if (!timer && screen === 'board') timer = setInterval(tick, 250); },
+    effect(e) {
+      if (e.type === 'board.ready' && e.live) { grid.celebrateComplete(); ctx.audioMotion.cueBoardReady(); }
+      if (e.type === 'lock') { grid.update(lastState.board, { locked: true }); els.lockLabel.hidden = false; if (e.live) grid.celebrateLock(); }
+    },
+    unmount() { if (timer) clearInterval(timer); mount(root, null); },
+  };
+}

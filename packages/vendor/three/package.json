@@ -1,0 +1,8 @@
+{
+  "name": "@ariskill/vendor-three",
+  "version": "0.186.0",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "description": "Pinned vendored Three.js for offline, CSP-safe use"
+}

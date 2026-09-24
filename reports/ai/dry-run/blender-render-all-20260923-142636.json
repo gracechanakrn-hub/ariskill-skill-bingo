@@ -1,0 +1,61 @@
+{
+  "tool": "blender-render",
+  "name": "all",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:26:36.067Z",
+  "request": {
+    "method": "spawn",
+    "url": "file:///Applications/Blender.app/Contents/MacOS/Blender",
+    "headers": {},
+    "body": {
+      "commands": [
+        [
+          "/Applications/Blender.app/Contents/MacOS/Blender",
+          "--background",
+          "--factory-startup",
+          "--python",
+          "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/tools/ai/blender/soul_turnaround.py",
+          "--",
+          "--mode",
+          "turnaround",
+          "--seed",
+          "abc123",
+          "--out",
+          "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/20260923-142636-all"
+        ],
+        [
+          "/Applications/Blender.app/Contents/MacOS/Blender",
+          "--background",
+          "--factory-startup",
+          "--python",
+          "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/tools/ai/blender/soul_turnaround.py",
+          "--",
+          "--mode",
+          "sheet",
+          "--seed",
+          "abc123",
+          "--out",
+          "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/20260923-142636-all"
+        ]
+      ],
+      "seedParams": {
+        "body": "flame",
+        "palette": "coral",
+        "eyes": "wink",
+        "mouth": "smile",
+        "antenna": "orb",
+        "speckles": 9
+      }
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/20260923-142636-all/*.png",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/20260923-142636-all/provenance.json",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/blender/20260923-142636-all/render-log.json"
+  ],
+  "notes": [
+    "py_compile ok",
+    "blender found",
+    "AI-generated reference, not shipped"
+  ]
+}

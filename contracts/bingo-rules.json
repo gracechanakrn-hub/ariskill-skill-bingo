@@ -1,0 +1,41 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/bingo-rules",
+  "version": "1.0.0",
+  "grid": { "size": 5, "cells": 25, "positionOrder": "row-major, position = row*5 + col" },
+  "selection": { "requiredUniqueSkills": 25, "activeSelectionOnly": true, "autoFillForbidden": true, "duplicateTapIsNoOp": true },
+  "randomization": { "owner": "server", "method": "Fisher-Yates with cryptographically secure integers", "clientPositionsIgnored": true, "reRandomizeOnlyAfterExplicitChange": true },
+  "drawPool": {
+    "eligibility": "skill.status == active AND (skill.isCore OR skill.isCritical)",
+    "membership": "present on at least one LOCKED_ACTIVE board",
+    "uniquePerRound": true,
+    "minimumSizeToStart": 5,
+    "warnIfNoBoardCanWin": true,
+    "selection": "uniform random over remaining pool using cryptographically secure integers"
+  },
+  "evaluation": {
+    "minDrawForBingo": 5,
+    "lines": {
+      "count": 12,
+      "masks": [
+        { "id": "row-0", "positions": [0, 1, 2, 3, 4] },
+        { "id": "row-1", "positions": [5, 6, 7, 8, 9] },
+        { "id": "row-2", "positions": [10, 11, 12, 13, 14] },
+        { "id": "row-3", "positions": [15, 16, 17, 18, 19] },
+        { "id": "row-4", "positions": [20, 21, 22, 23, 24] },
+        { "id": "col-0", "positions": [0, 5, 10, 15, 20] },
+        { "id": "col-1", "positions": [1, 6, 11, 16, 21] },
+        { "id": "col-2", "positions": [2, 7, 12, 17, 22] },
+        { "id": "col-3", "positions": [3, 8, 13, 18, 23] },
+        { "id": "col-4", "positions": [4, 9, 14, 19, 24] },
+        { "id": "diag-main", "positions": [0, 6, 12, 18, 24] },
+        { "id": "diag-anti", "positions": [4, 8, 12, 16, 20] }
+      ]
+    },
+    "freeCell": false,
+    "coWinners": "All LOCKED_ACTIVE boards with at least one complete line after the accepted draw N (N >= 5) are winners of draw N. The winning draw closes drawing atomically.",
+    "atomicity": "draw selection, persistence, match computation, evaluation of all active boards, winner persistence, version increment, and outbox events occur in one durable transaction."
+  },
+  "results": { "winnerWindowSeconds": { "default": 12, "min": 10, "max": 15 }, "exhaustedWithoutWinner": "EXHAUSTED -> CLOSED (E23)" },
+  "soul": { "everyCompletedParticipant": true, "cosmeticOnly": true, "bingoStarIsCosmetic": true, "forbiddenTraitInputs": ["Platform", "Role", "matrix alignment", "winner status (except badge)", "any personal attribute"] },
+  "float": { "oneUse": true, "tokenExpiryHours": 24, "replayReturnsOriginalResult": true }
+}

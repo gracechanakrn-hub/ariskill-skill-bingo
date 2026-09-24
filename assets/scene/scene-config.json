@@ -1,0 +1,146 @@
+{
+  "version": "1.0.0",
+  "generator": "tools/assets/build-scene.js",
+  "background": "#0B0F1F",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "note": "OD-14 assumption: 1920x1080 public display; renderers scale by viewport height"
+  },
+  "safeZone": {
+    "galaxyFraction": 0.65,
+    "panelFraction": 0.35,
+    "innerMarginPx": 32,
+    "note": "Right 35 % is the information panel; effects are clipped to the Galaxy viewport",
+    "galaxyWidthPx": 1248,
+    "panelX": 1248,
+    "panelWidthPx": 672,
+    "rule": "No glow, particle, Soul, nebula or ring pixel may be drawn at x >= panelX. Renderers clip the Galaxy viewport to [0, galaxyWidthPx)."
+  },
+  "camera": {
+    "type": "fixed-orthographic",
+    "driftRadiusFraction": 0.015,
+    "driftPeriodSeconds": 40,
+    "maxAngularSpeedDegPerSec": 0.5,
+    "shake": "forbidden",
+    "zoom": "fixed"
+  },
+  "entrance": {
+    "defaultEdge": "bottom",
+    "edges": [
+      "left",
+      "right",
+      "top",
+      "bottom"
+    ],
+    "arcDurationMs": 2200,
+    "pulseDurationMs": 600,
+    "settleDurationMs": 1200,
+    "maxConcurrent": 6,
+    "queueOverflow": "settle-instantly"
+  },
+  "lod": {
+    "fullBelowCount": 120,
+    "simpleBelowCount": 300,
+    "dotAbove": 300,
+    "fullMinPx": 56,
+    "simpleMinPx": 24,
+    "clusterAbove": 300,
+    "clusterGridPx": 96
+  },
+  "performance": {
+    "high": {
+      "maxSouls": 600,
+      "starLayers": 3,
+      "nebula": true,
+      "orbitRings": true,
+      "glowFilters": true,
+      "twinkle": true,
+      "entranceTrail": true,
+      "targetFps": 60
+    },
+    "medium": {
+      "maxSouls": 450,
+      "starLayers": 2,
+      "nebula": true,
+      "orbitRings": true,
+      "glowFilters": false,
+      "twinkle": true,
+      "entranceTrail": false,
+      "targetFps": 60
+    },
+    "low": {
+      "maxSouls": 300,
+      "starLayers": 1,
+      "nebula": true,
+      "orbitRings": false,
+      "glowFilters": false,
+      "twinkle": false,
+      "entranceTrail": false,
+      "targetFps": 30
+    },
+    "autoDowngrade": {
+      "belowFps": 45,
+      "sampleSeconds": 5,
+      "cooldownSeconds": 30
+    }
+  },
+  "reducedMotion": {
+    "orbit": "static",
+    "parallax": "off",
+    "twinkle": "off",
+    "entrance": "fade-in 400 ms at final slot",
+    "glowPulse": "off",
+    "camera": "static"
+  },
+  "fallback": {
+    "order": [
+      "webgl2",
+      "canvas2d",
+      "static"
+    ],
+    "static": "nebula.svg + starfield-layer-1 + Souls at simple detail, no animation"
+  },
+  "budgets": {
+    "frameTimeMs": 16.7,
+    "minFps": 30,
+    "soakMinutes": 30,
+    "soakSouls": 450,
+    "textureMemoryMB": 64,
+    "bundleKB": 350,
+    "sceneDataKB": 120,
+    "soulSvgBytes": 6144
+  },
+  "soulPalettes": [
+    "aurora",
+    "lagoon",
+    "sunset",
+    "orchid",
+    "mint",
+    "coral",
+    "sky",
+    "lilac"
+  ],
+  "orbit": {
+    "file": "assets/scene/orbit-rings.json",
+    "totalCapacity": 588,
+    "clusterAbove": 300
+  },
+  "starfield": [
+    {
+      "file": "assets/scene/starfield-layer-1.json",
+      "parallax": 0.15,
+      "count": 420
+    },
+    {
+      "file": "assets/scene/starfield-layer-2.json",
+      "parallax": 0.35,
+      "count": 220
+    },
+    {
+      "file": "assets/scene/starfield-layer-3.json",
+      "parallax": 0.6,
+      "count": 90
+    }
+  ]
+}

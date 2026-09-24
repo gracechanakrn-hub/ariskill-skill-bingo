@@ -1,0 +1,45 @@
+{
+  "tool": "gemini-visuals",
+  "name": "backdrop-phone-9x16",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:27:47.110Z",
+  "request": {
+    "method": "POST",
+    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+    "headers": {
+      "x-goog-api-key": "<redacted>"
+    },
+    "body": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "A tall portrait background illustration with a soft clay-render matte-painting finish.\nAn aurora night sky over a forest silhouette seen from a clearing: the aurora band (teal #4FE3C1 to lime #B6FF5C) glows across the upper quarter, a violet-navy nebula haze fades downward, star specks and a few warm fireflies float near the bottom trees.\nDeep navy sky (#0B1030 to #151C48), foliage silhouettes framing the lower edge and lower corners, the middle band of the frame kept dark, calm and evenly toned so white text and cards remain readable on top of it.\n9:16 portrait, soft gradients, gentle glow, low contrast in the middle band, high contrast only at the aurora and treeline.\nStyle anchor: Glossy 3D clay sticker style in the Arise Soul sticker language: chibi bell / gumdrop bodies with two soft foot nubs, an antenna stalk topped by a glowing orb, big soft top highlight, warm peach rim light, bubble speckles in two sizes (mint #7CF5C8, cyan #63E6FF, lilac #8B7CF0), a thick white die-cut sticker outline with a soft drop shadow.\nSky: Deep navy space background (#0B1030 to #151C48) with a slow aurora band drifting from teal #4FE3C1 to lime #B6FF5C and tiny star specks.\nNo characters, no creatures, no people, no text, no logos, no watermark, no bright shapes in the middle band.\nNo human face or human likeness of any kind. No text, letters, numbers, labels, captions, logos or watermarks. No level, rank, tier, score, XP or badge labels. All figures are the same size and brightness; nothing looks stronger or more important than anything else."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "responseModalities": [
+          "TEXT",
+          "IMAGE"
+        ],
+        "temperature": 0.8,
+        "imageConfig": {
+          "aspectRatio": "9:16"
+        }
+      }
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142747/backdrop-phone-9x16.png",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142747/provenance.json"
+  ],
+  "notes": [
+    "aspect 9:16",
+    "temperature 0.8",
+    "kind generate",
+    "AI-generated reference, not shipped"
+  ]
+}

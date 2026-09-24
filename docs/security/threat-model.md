@@ -1,0 +1,24 @@
+# Threat Model (v1, provisional)
+
+Scope: game service, four web clients, SQLite store, SSE fan-out, QR join flow. Assets: gameplay integrity (draws, winners, Float), participant privacy (skill selections, matrix gaps, employee reference), operational control (admin commands), availability during the event.
+
+| # | Threat (requirement 15.2 list) | Vector | Control in build | Residual / owner |
+|---|---|---|---|---|
+| T1 | QR sharing outside the venue | Photo of the public screen | Join token is HMAC-signed, event-scoped, expires (12 h), rotated; joining still requires an employee reference; no capability beyond one's own board | Accept for internal event; SSO (OD-02) removes it. Security owner |
+| T2 | Unauthorized round control | Guessing or leaking admin token; stage device used as admin | Separate admin and stage bearer tokens, timing-safe comparison, rate limits, every rejection audited (E9); stage token cannot POST commands | Token distribution procedure in runbook; recent-auth policy pending SSO |
+| T3 | Event enumeration | Scanning event IDs | Public snapshot exposes only public-safe data; sessions require a signed join token; rate limits on session creation | Accept |
+| T4 | Replayed Float actions | Re-sending the same request or token | One-use token hash consumed atomically; replay returns the original result and emits no second entrance (BR-15-style atomicity; test float.test.js) | None |
+| T5 | Duplicate / stale / concurrent admin commands | Double click, two admins, retries after timeout | Idempotency-Key with request hash; expectedVersion optimistic check; single BEGIN IMMEDIATE transaction; UNIQUE constraints on draws and winners | None |
+| T6 | Event-message spoofing | Fake SSE data injected client-side | SSE is served same-origin over TLS in production; clients treat messages as hints and reload authoritative snapshots; no client can publish events | TLS termination is a deployment responsibility |
+| T7 | Projection data leakage | Bug adds a private field to public/stage payloads | Allowlist projections plus recursive forbidden-key redaction; contract test scans every payload type (privacy gate, critical) | None |
+| T8 | Manipulated client marks cells / declares winner | Modified JS | Server ignores client positions, matches, and results; participant endpoints only save selections; authz tests | None |
+| T9 | Employee identity spoofing | Entering someone else's employee reference | Same employee reference maps to the same participant; guest flow is explicitly weaker than SSO | Accept for v1 with OD-02 open; consider one-time codes from HR data |
+| T10 | Overload / reconnect storm | 450 phones reconnecting at once | SSE replay window, snapshot endpoint cached per sequence, token-bucket rate limits, load test in tests/load | Capacity numbers pending OD-01 |
+| T11 | Secrets in bundles or repo | Accidental commit | Assembly secret scan; env-only secrets; production refuses to start without them | None |
+| T12 | Supply-chain compromise | Third-party npm package | Zero third-party runtime dependencies; SBOM lists only workspace packages | None |
+| T13 | XSS through display names or reasons | Winner label or cancellation reason rendered as HTML | Clients render text nodes only (dom.js `h` uses textContent); CSP default-src 'self' | Client agents must not use innerHTML with user strings (checked in critique) |
+| T14 | Path traversal in static serving | `/packages/../data/bingo.sqlite` | Normalized path must stay under the allowed root; sqlite files never served | None |
+| T15 | Developer AI keys leaking (Gemini / OpenAI) | Key committed, logged, echoed into a report, or read by the running service | Keys live only in a git-ignored `.env` (template `.env.example`); loaded by `tools/ai/env.js` through Node's built-in env loader and never imported by `services/` or `apps/`; the Gemini key is sent as an `x-goog-api-key` header, never in a URL; every dry-run record and log line passes through `redact()`; the Blender child process runs with both keys blanked; the assembly secret scan covers the repo (D-26) | Rotate the keys if a `.env` is ever shared; a hosted CI run would need its own secret store |
+| T16 | AI-generated content entering the product unreviewed | A generated bitmap or copy string is merged without provenance or review | Generated bitmaps land in `assets-src/generated/` (git-ignored PNGs) with prompt/model/sha256 provenance and are never required at runtime; copy and UX proposals are written to `reports/ai/` as proposals only and never edit `copy.json`; a runtime use needs a manifest entry with provenance and `approved_by` (D-26, OD-11) | Content owner reviews before any merge |
+
+Pending human review items: penetration test, TLS/ingress configuration, SSO integration, and the recent-authentication policy for admins.

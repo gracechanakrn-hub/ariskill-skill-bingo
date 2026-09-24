@@ -1,0 +1,45 @@
+{
+  "tool": "gemini-visuals",
+  "name": "soul-family-sheet",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:29:08.846Z",
+  "request": {
+    "method": "POST",
+    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+    "headers": {
+      "x-goog-api-key": "<redacted>"
+    },
+    "body": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "A single sticker-sheet illustration rendered as glossy 3D clay, product-shot quality.\nEighteen small friendly creature companions arranged in a neat grid of 6 columns and 3 rows. Each column is one body silhouette, left to right: a rounded teardrop, a wide bell, a puffy cloud, a smooth pebble, a soft flame tip, a leaning bean. Each row is one palette: row one soft teal-aqua (#74D6C8), row two warm peach-orange (#FFB58C), row three soft orchid-pink (#E3A3F2). Every creature has two dot eyes and a tiny smile (a creature face, not a person), two small foot nubs, an antenna stalk with a glowing orb, bubble speckles on the body, and an optional small heart on the belly on a few of them.\nFlat deep navy sticker-sheet background (#0B1030) with faint star specks; every creature sits on its own white die-cut outline with a soft drop shadow, evenly spaced, none overlapping.\nStudio three-point lighting, big soft top highlight, warm rim light from the lower right, clearcoat glossy surface, roughness 0.35, sharp focus, orthographic-feeling front view, centered composition, 4:3.\nStyle anchor: Glossy 3D clay sticker style in the Arise Soul sticker language: chibi bell / gumdrop bodies with two soft foot nubs, an antenna stalk topped by a glowing orb, big soft top highlight, warm peach rim light, bubble speckles in two sizes (mint #7CF5C8, cyan #63E6FF, lilac #8B7CF0), a thick white die-cut sticker outline with a soft drop shadow.\nSky: Deep navy space background (#0B1030 to #151C48) with a slow aurora band drifting from teal #4FE3C1 to lime #B6FF5C and tiny star specks.\nSame size and brightness for every creature. No human face, no text, no numbers, no labels, no level or rank marks, no logos, no watermark.\nNo human face or human likeness of any kind. No text, letters, numbers, labels, captions, logos or watermarks. No level, rank, tier, score, XP or badge labels. All figures are the same size and brightness; nothing looks stronger or more important than anything else."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "responseModalities": [
+          "TEXT",
+          "IMAGE"
+        ],
+        "temperature": 0.7,
+        "imageConfig": {
+          "aspectRatio": "4:3"
+        }
+      }
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142908/soul-family-sheet.png",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142908/provenance.json"
+  ],
+  "notes": [
+    "aspect 4:3",
+    "temperature 0.7",
+    "kind generate",
+    "AI-generated reference, not shipped"
+  ]
+}

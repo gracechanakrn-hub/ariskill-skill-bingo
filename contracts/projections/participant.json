@@ -1,0 +1,33 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/projections/participant",
+  "version": "1.0.2",
+  "audience": "participant (self only)",
+  "allow": {
+    "sequence": "int",
+    "serverTime": "ISO",
+    "participant": {
+      "participantId": "string",
+      "displayName": "string",
+      "consentPublicName": "bool",
+      "platformId": "string|null",
+      "roleId": "string|null",
+      "publicLabel": "string (the label the public/stage screens would show for this participant: consented display name or Soul # pseudonym)"
+    },
+    "event": {
+      "eventId": "string",
+      "eventName": "string"
+    },
+    "round": "RoundSummary|null (the round this participant's board is attached to)",
+    "nextRound": "RoundSummary|null",
+    "board": "ParticipantBoard|null",
+    "draws": "[Draw] for the attached round",
+    "result": "{ isWinner:bool, lineIds:string[], winningDrawNumber:int, coWinnerCount:int } | null",
+    "soul": "SoulPrivate|null",
+    "insightAvailable": "bool"
+  },
+  "forbidden": [
+    "other participants' data",
+    "employeeRef of others",
+    "aggregate gap data keyed by individual"
+  ]
+}

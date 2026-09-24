@@ -1,0 +1,74 @@
+# Canonical artifact manifest. Only the orchestrator edits status fields.
+# Status vocabulary: planned -> in_progress -> submitted -> validating -> accepted | changes_requested | blocked -> superseded
+run_id: run-20260922-113339
+build_id: bingo-f584aefb2e9a
+created: 2026-09-22
+path_mapping: docs/stack-verification.md#canonical-path-mapping
+gates:
+  gate1_requirements: { status: accepted, approval: "orchestrator provisional (D-09); product owner lock recorded in source as `labibi`", evidence: docs/requirements/traceability-matrix.md }
+  gate2_mechanics:    { status: accepted, approval: "orchestrator provisional (D-09)", evidence: "packages/game-rules tests 23/23 pass; contracts/*" }
+  gate3_visual:       { status: accepted, approval: "orchestrator provisional (D-09); brand owner + inclusivity review pending", evidence: "reports/qa/soul-cohort-sheet.png; design-tokens 7/7, souls 24/24 tests" }
+  asset_gate:         { status: accepted, approval: "orchestrator provisional", evidence: "assets.yaml + audio.yaml checksums verified by generators; tools/assets/test 43/43; deterministic rebuild" }
+  hard_qc:            { status: accepted_automated, repair_attempts: 1, decision: AUTOMATED_GREEN_MANUAL_PENDING, evidence: reports/qa/release-gate.json, note: "18/18 automated checks pass; 8 manual reviews (compat, privacy, a11y walkthrough, venue perf, resilience drills, threat-model review, migrations, rehearsal) await human sign-off" }
+  critique:           { status: accepted, outcome: approve-with-follow-ups, correction_loops: 1, evidence: reports/critique/critique-round-1.md, note: "9 corrections applied and verified; remainder in backlog" }
+  release:            { status: blocked_on_human_signoff, build: bingo-f584aefb2e9a, automated: "18/18 pass", manual_pending: 8, go_live: "NOT claimed (D-09); see docs/release-report.md" }
+artifacts:
+  - { id: requirements, stage: 1, path: docs/requirements/ariskill-skill-bingo-requirements.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: glossary, stage: 1, path: docs/requirements/glossary.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: traceability, stage: 1, path: docs/requirements/traceability-matrix.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: decision-log, stage: 1, path: docs/decisions/decision-log.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: open-decisions, stage: 1, path: docs/decisions/open-decisions.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: stack-verification, stage: 0, path: docs/stack-verification.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: skill-master-data, stage: 1, path: packages/skill-master/data/skill-master.json, type: schema, version: 2026.03.19, owner: orchestrator, generator: tools/data/extract_skill_master.py, status: accepted }
+  - { id: canonical-flow, stage: 2, path: docs/ux/canonical-flow.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: state-copy, stage: 2, path: docs/ux/state-copy.csv, type: document, version: 1.0.0, owner: orchestrator, generator: packages/contracts/copy.json, status: accepted }
+  - { id: wireframes, stage: 2, path: docs/ux/wireframes/README.md, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: round-state-machine, stage: 2, path: contracts/round-state-machine.json, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: bingo-rules, stage: 2, path: contracts/bingo-rules.json, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: realtime-events, stage: 2, path: contracts/realtime-events.json, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: api-contract, stage: 2, path: contracts/api-contract.yaml, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: projections, stage: 2, path: contracts/projections/, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: copy-catalog, stage: 2, path: packages/contracts/copy.json, type: schema, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: game-rules, stage: 2, path: packages/game-rules/, type: code, version: 1.0.0, owner: orchestrator, tests: packages/game-rules/test, status: accepted }
+  - { id: art-direction, stage: 3, path: docs/art/art-direction.md, type: document, version: 1.0.0, owner: art-director-agent, status: accepted }
+  - { id: design-tokens, stage: 3, path: packages/design-tokens/, type: code, version: 1.0.0, owner: art-director-agent, status: accepted }
+  - { id: soul-system, stage: 3.2, path: docs/art/soul-system.md, type: document, version: 1.0.0, owner: art-director-agent, status: accepted }
+  - { id: scene-spec, stage: 3.1, path: docs/art/scene-spec.md, type: document, version: 1.0.0, owner: art-director-agent, status: accepted }
+  - { id: soul-assets, stage: 3.2, path: assets/souls/, type: asset, version: 1.0.0, owner: art-director-agent, generator: tools/assets/build-souls.js, status: accepted }
+  - { id: assets-manifest, stage: 3, path: assets/manifest/assets.yaml, type: schema, version: 1.0.0, owner: art-director-agent, status: accepted }
+  - { id: sound-spec, stage: 4, path: docs/audio/sound-spec.md, type: document, version: 1.0.0, owner: sound-agent, status: accepted, evidence: "tools/assets/test/audio.test.js 19/19; deterministic rebuild verified" }
+  - { id: audio-assets, stage: 4, path: assets/audio/, type: asset, version: 1.0.0, owner: sound-agent, generator: tools/assets/build-audio.py, license: internal-original, status: accepted }
+  - { id: audio-manifest, stage: 4, path: assets/manifest/audio.yaml, type: schema, version: 1.0.0, owner: sound-agent, status: accepted }
+  - { id: motion-spec, stage: 5, path: docs/motion/motion-spec.md, type: document, version: 1.0.0, owner: motion-agent, status: accepted, evidence: "packages/ui/test/motion.test.js 17/17" }
+  - { id: motion-tokens, stage: 5, path: tokens/motion.json, type: schema, version: 1.0.0, owner: motion-agent, status: accepted }
+  - { id: ui-kit, stage: 6, path: packages/ui/, type: code, version: 1.0.0, owner: ui-kit-agent, tests: packages/ui/test, status: accepted, evidence: "65/65 pass" }
+  - { id: game-service, stage: 6.1, path: services/game-service/, type: code, version: 1.0.1, owner: backend-agent, tests: services/game-service/test, status: accepted, evidence: "54/54 pass; fixture deterministic; smoke on port 8099" }
+  - { id: employee-mobile, stage: 6.2, path: apps/employee-mobile/, type: code, version: 1.0.1, owner: employee-mobile-agent, tests: apps/employee-mobile/test, status: accepted, evidence: "15/15 unit; full flow driven in Chrome at 390 and 320 px; reports/qa/screens/employee-*.png" }
+  - { id: admin-portal, stage: 6.3, path: apps/admin-portal/, type: code, version: 1.0.1, owner: admin-portal-agent, tests: apps/admin-portal/test, status: accepted, evidence: "17/17 unit; live rounds driven via UI; reports/qa/screens/admin-*.png" }
+  - { id: public-galaxy, stage: 6.4, path: apps/public-galaxy/, type: code, version: 1.0.1, owner: public-galaxy-agent, tests: apps/public-galaxy/test, status: accepted, evidence: "24/24 unit; WebGL2+Canvas2D+static verified; 450-Soul canvas run 59 fps; reports/qa/screens/public-*.png" }
+  - { id: stage-dashboard, stage: 6.5, path: apps/stage-dashboard/, type: code, version: 1.0.1, owner: stage-dashboard-agent, tests: apps/stage-dashboard/test, status: accepted, evidence: "22/22 unit; no overflow at 1080p; reports/qa/screens/stage-*.png" }
+  - { id: asset-integration, stage: 6.6, path: tools/assets/validate-manifest.js, type: code, version: 1.0.0, owner: asset-integration-agent, status: accepted, evidence: "tools/assets/test 53/53; validate-manifest 0 critical/0 major" }
+  - { id: qa-suites, stage: 6.7, path: tests/, type: test, version: 1.0.0, owner: qa-agent, status: accepted, evidence: "e2e 30/32 (2 encoded defects DEF-01/02), contracts 38/38, a11y 41/41, load p95 fan-out 58 ms at 450 players; reports/qa/qa-summary.md" }
+  - { id: assembly, stage: 7, path: tools/assembly/, type: code, version: 1.0.0, owner: orchestrator, status: accepted, evidence: "build bingo-f584aefb2e9a reproduced twice; 0 problems; sbom + tarball" }
+  - { id: release-gate, stage: 7, path: reports/qa/release-gate.json, type: report, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: critique, stage: 8, path: reports/critique/critique-round-1.md, type: report, version: 1.0.0, owner: orchestrator, status: accepted }
+  - { id: ops, stage: 9, path: ops/, type: document, version: 1.0.0, owner: orchestrator, status: accepted }
+  # Stage 9 - game-experience upgrade (product-owner decision D-22, 2026-09-22)
+  - { id: vendor-three, stage: 9, path: packages/vendor/three/, type: code, version: 0.186.0, owner: orchestrator, generator: tools/vendor/vendor-three.js, license: MIT, provenance: packages/vendor/three/VENDOR.json, status: accepted }
+  - { id: game-experience-brief, stage: 9, path: docs/art/game-experience-brief.md, type: document, version: 1.1.0, owner: orchestrator, status: accepted }
+  - { id: design-tokens-violet, stage: 9, path: packages/design-tokens/tokens.json, type: code, version: 1.1.0, owner: orchestrator, status: accepted, evidence: "contrast tests 7/7" }
+  - { id: public-galaxy-three, stage: 9.1, path: apps/public-galaxy/src/renderer/three.js, type: code, version: 1.1.0, owner: public-galaxy-agent, status: accepted, evidence: "suite 36/36 (12 new); public-three-{waiting,playing,winner,galaxy,entrance,perf450,contextloss,reduced,low,alias,nogl}.png; fallback chain three->webgl2->canvas2d->static verified headless; real-GPU 60fps@450 owed to venue rehearsal" }
+  - { id: employee-game-ux, stage: 9.2, path: apps/employee-mobile/src/scene/, type: code, version: 1.1.0, owner: employee-mobile-agent, status: accepted, evidence: "suite 32/32 (15 new); employee-game-01..08 png (13 captures, 390x844 + 320 px); real frame probe passed under SwiftShader; low-end device check owed to rehearsal" }
+  - { id: stage-ambient, stage: 9.3, path: apps/stage-dashboard/src/backdrop.js, type: code, version: 1.1.0, owner: stage-dashboard-agent, status: accepted, evidence: "backdrop.test.js 7/7 (suite 31/31); stage-game-{locked,playing,winner,reduced}.png; tile text contrast >= 4.5:1 over highlighted surfaces" }
+  - { id: static-compression, stage: 9.4, path: services/game-service/src/static.js, type: code, version: 1.0.2, owner: backend-agent, status: accepted, evidence: "static.test.js 7/7; three.core.js 1.46 MB -> 288 KB gzip" }
+  - { id: vendor-fonts, stage: 9.0, path: packages/vendor/plus-jakarta-sans/, type: asset, version: 1.0.0, owner: art-agent, status: accepted, evidence: "OFL.txt + VENDOR.json provenance for plus-jakarta-sans and space-grotesk; linked from all four apps; same-origin, CSP-safe" }
+  - { id: sse-skip-marker, stage: 9.5, path: services/game-service/src/sse.js, type: code, version: 1.0.3, owner: coordinator, status: accepted, evidence: "DEF-05 fixed: filtered streams emit id-only skip markers; sse-skip.test.js 1/1, sse-client.test.js 9/9, service 69/69, e2e 32/32; contract realtime-events 1.0.3" }
+  - { id: sticker-art-direction, stage: 10.0, path: docs/art/sticker-art-direction.md, type: doc, version: 1.0.0, owner: coordinator, status: accepted, evidence: "D-25; references in docs/art/reference/" }
+  - { id: env-scaffold, stage: 10.0, path: tools/ai/env.js, type: code, version: 1.0.0, owner: coordinator, status: accepted, evidence: ".env + .env.example + .gitignore; loader verified with empty keys" }
+  - { id: ai-tooling, stage: 10.1, path: tools/ai/, type: code, version: 1.0.0, owner: ai-tooling-agent, status: accepted, evidence: "tools/ai/test 23/23; dry-run with empty keys exit 0; Blender 5.2 smoke + 18-Soul contact sheet rendered; docs/ai-tooling.md; D-26" }
+  - { id: soul-renderer-v2, stage: 10.2, path: packages/ui/soul-renderer.js, type: code, version: 2.0.0, owner: art-agent, status: accepted, evidence: "ui 77/77, assets 53/53, rules 23/23; soul-v2-sheet.png viewed; worst-case SVG 6041 B under 6144 budget; doodads.js + assets/scene/doodads.svg" }
+  - { id: design-tokens-sticker, stage: 10.2, path: packages/design-tokens/tokens.json, type: code, version: 1.2.0, owner: art-agent, status: accepted, evidence: "tokens 10/10 incl. contrast pairs; Fredoka vendored (OFL, VENDOR.json sha256) and linked in all four apps" }
+  - { id: employee-sticker, stage: 10.3, path: apps/employee-mobile/src/scene/, type: code, version: 1.2.0, owner: employee-mobile-agent, status: accepted, evidence: "suite 39/39 (+7 sticker); employee-sticker-*.png (8); all measured contrast >= 4.34:1 icons / 5.52:1 text; 272 KB of 600 KB budget" }
+  - { id: stage-sticker, stage: 10.4, path: apps/stage-dashboard/src/backdrop.js, type: code, version: 1.2.0, owner: stage-dashboard-agent, status: accepted, evidence: "suite 35/35 (+4 aurora); stage-sticker-{locked,playing,winner,reduced}.png; body text >= 4.95:1 over brightest aurora band; no new animations" }
+  - { id: public-sticker, stage: 10.5, path: apps/public-galaxy/src/renderer/three.js, type: code, version: 1.2.0, owner: public-galaxy-agent, status: accepted, evidence: "suite 49/49 (+13); public-sticker-*.png (7); sky luminance clamped to 0.14 (>= 4.65:1 body text); render 0.58 ms avg at 450 Souls; atlas one 2048 page" }
+

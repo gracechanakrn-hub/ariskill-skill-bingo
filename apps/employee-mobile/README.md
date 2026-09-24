@@ -1,0 +1,126 @@
+# Employee mobile (`/play`)
+
+Responsive web app for participants of AriSkill Skill Bingo. Served by the game service at `/play` (static mount
+`apps/employee-mobile`), opened from the event QR / join link `/play?t=<joinToken>`. Native ES modules, no build
+step, no third-party code, CSP-safe (no inline scripts). Every screen is a projection of the participant snapshot
+(`GET /api/v1/me`) plus the participant stream (`GET /api/v1/me/stream`); the client never computes matches,
+winners or lock/start transitions (BR-05, BR-11, BR-19).
+
+## Run
+
+```bash
+cd "<repo root>"
+export BINGO_ENV=development BINGO_DB_PATH=/tmp/employee.sqlite PORT=8101 BINGO_PUBLIC_BASE_URL=http://127.0.0.1:8101
+SEED_PLAYERS=12 node services/game-service/src/seed.js   # prints a sample /play?t=<joinToken> URL
+node services/game-service/src/server.js
+```
+
+Tests (pure reducer / view-model module): `node --test apps/employee-mobile/test`.
+
+## Structure
+
+| File | Role |
+|---|---|
+| `index.html` | Document skeleton: skip link, header, banner host, `main#main`, settings footer, toast region. Loads tokens.css, base.css, motion.css, app.css and `src/main.js`. |
+| `app.css` | Cosmos surface, sticker language (docs/art/sticker-art-direction.md: pill badges with a 2 px die-cut outline in the display font, Core / Critical / Optional chips, round-number medallion, "Bingo!" pill, outlined draw card, white die-cut on matched tiles, doodad slots), skill rows, chip strip, board/play/result/soul styling, `prefers-contrast: more` (gloss and shadows stripped), 320 px reflow. Tile / pill contrast is measured (see Sticker language below). |
+| `src/main.js` | Bootstrap and orchestration: session, clock sync, `/me` snapshot, SSE with snapshot/acknowledge pattern, autosave (debounced 400 ms, idempotent retries, STALE_VERSION reconcile), finalize, insight, Float, toasts, settings row, telemetry. |
+| `src/state.js` | Pure state: `initialState`, `applyParticipantSnapshot`, `reduceEvent(state, envelope) -> { state, effects }`, draft helpers (`addSkill`, `removeSkill`, `undoSelection`, `reconcileDraft`), selectors (`screenFor`, `editableRound`, `saveBlockedReason`, `playingBannerKey`, ...). Node-testable, no DOM. |
+| `src/api.js` | Participant API on the shared `api-client` + `clock-sync`. |
+| `src/audio-motion.js` | AudioManager (participant preload list, captions to the live region), celebration guard, reduced-motion / mute switches, cue helpers with app-level dedupe. |
+| `src/views/join.js` | E1 Join + E2 expired link. Audio unlock runs inside the join tap. |
+| `src/views/profile.js` | E2 Platform + Role: disabled placeholders, role filtered by platform, button disabled until both are chosen (E16). Never prefilled. |
+| `src/views/select.js` | E3: tabs (role=tablist, arrow keys), debounced search, skill rows (`aria-pressed`, kind chip, eligibility), chip strip with Remove + one-level Undo, progress, E1/E8/E15 banners, E6/E18 retry. No "accept all" control. |
+| `src/views/grid.js` | 5 x 5 grid shared by board / playing / result; state first (`.is-matched`, `.is-on-line`, `.is-locked`), one-shot classes only via the guarded effects. |
+| `src/views/board.js` | E4 board ready (server countdown, Edit skills with warning), E4b no round, E5 locked, E5b deferred (incomplete / late / cancelled) with next-round info. |
+| `src/views/playing.js` | E6: latest draw card, draw list, automatic matches, draws 1-4 banner vs "Bingo is live", matched count. |
+| `src/views/result.js` | E7: winner / co-winner / not-winner copy, first line traced once (live only), Reveal my Soul (E22 while forming). |
+| `src/views/soul.js` | E8-E10: staged reveal (skippable after first view, remembered per soulId), private Matrix insight, READY TO FLOAT countdown on the server clock, one-use Float with kept Idempotency-Key (E13 retry), floated state. |
+| `src/views/common.js` | Copy access (`tl()` = shared catalogue first, local UI-chrome fallback), kind chips, notices, buttons. |
+| `src/backdrop.js` | Violet night-forest backdrop layer: Canvas 2D aurora band (teal -> lime, pre-rendered once, bounded 0.01 rad/s drift), stars (slow twinkle < 0.5 Hz) and warm fireflies behind every screen, ~30 fps, paused when hidden, one static frame under reduced motion (OS preference or the in-app switch, watched live). The gradients, nebula and foliage silhouettes are CSS (`.cosmos`). |
+| `src/backdrop-params.js` | Pure sticker-sky parameters: `auroraState(t, { width, height, reduced })` (angle swing bounded so the peak rate is 0.01 rad/s; frozen under reduced motion) and the doodad placement rules `doodadPlan(screen, width)` (rocket in the join hero corner, ringed planet in the waiting-sky strip on board / locked / deferred; nothing on dense screens; nothing below 360 px). |
+| `src/doodads.js` | Inline SVG sticker doodads (rocket, ringed planet): flat two-tone fills, white die-cut outline, no text. Built here because `packages/ui/doodads.js` did not exist at integration time; swap for the shared sprite when it lands. |
+| `src/liveness.js` | Pure liveness decision for participant stream events: the service numbers events across audiences, so the participant stream skips sequences on almost every draw and the shared sse-client reports each skip as a gap + replay. `sparseStreamLiveness` keeps the snapshot refetch but lets a genuinely new event of the acknowledged epoch celebrate / announce (see Behaviour notes). |
+| `src/scene/loader.js` | Lazy access to the vendored Three.js (`/packages/vendor/three/index.js` + `addons.js`, D-22): `loadThree()` on demand, `prefetchThree()` from an idle callback while the round plays. Nothing loads at startup. |
+| `src/scene/capability.js` | Scene tier heuristic (`sceneQuality`: off / low / high from WebGL, DPR, cores, memory), pixel-ratio cap, and a 45-frame median frame-time probe (`> 33 ms` -> fall back to the SVG). QA override `?scene=off|low|force`. |
+| `src/scene/soul-params.js` | Pure, deterministic 3D parameters from a SoulConfig: lathe profile per body silhouette, palette colours (PALETTES), lean / bump, head geometry, antenna layout, reveal stage timing, plus the sticker helpers: `speckleLayout(seed, profile, count)` (<= 14 seeded speckles on the surface, face kept clear, mint / cyan / lilac, two sizes), `speckleCount` / `outlineScale` per tier (14 / 8 speckles, hull 1.06 / 1.05), `stickerPeel(p)` (scale 0.92 -> 1, 6 deg tilt, one 250 ms flash) and `revealScale`. Never reads Platform, Role, rank or winner state; size and glow are constants (BR-17). |
+| `src/scene/join-scene.js` | Ambient sticker mascot behind the Join form: a lilac clay gumdrop (clearcoat + peach sheen, seeded speckles, lit antenna orb + additive glow, white inverted-hull outline, no face - nobody's Soul) with rings + ~300 motes (bloom on the high tier), disposed on unmount; the CSS orb stays until it is ready or when WebGL is unavailable. |
+| `src/scene/soul-scene.js` | The reveal / Float hero scene: darkness -> glowing orb sprite + gathering motes -> the Soul resolves as a lathe clay sticker (MeshPhysicalMaterial: palette base, clearcoat 1 / 0.15, roughness 0.35, sheen 0.6 peach; seeded speckle spheres; warm peach fresnel rim; curved face decal rasterised from `renderSoulSvg(detail:'simple')`; antenna with an emissive orb + additive glow; feet / badge meshes; a white back-face inverted hull at ~1.06 on every part as the die-cut) above a glowing ring with a slow bob. The last reveal stage is the sticker peel (0.92 -> 1, 6 deg tilt, one 250 ms outline flash). Float lifts it with a mote trail and fades. Low tier: no clearcoat, no bloom, 8 speckles. Timed by the callers with the motion tokens; skip jumps to the end; static under reduced motion. |
+
+## Sticker language (art direction v2)
+
+- Tokens come from `packages/design-tokens/tokens.css` (`--sticker-*`, `--font-display`) and every use carries a CSS
+  fallback, so the app renders the same on an older token build. Fredoka is the vendored display face
+  (`/packages/vendor/fredoka/fonts.css`); body text stays Plus Jakarta Sans.
+- Measured contrast (WCAG, composited over the page ink): tile name 6.5:1 and tile meta 5.5:1 on `--tile-top`,
+  kind icons on tiles >= 4.3:1 (optional icon 5.2:1), selected row 6.8:1, matched tile ink on gold 7.4-14.7:1,
+  pill ink on badge 10.1:1, Core pill 11.4:1, Critical pill 12.6:1, "Bingo!" pill 15.4:1, medallion 8.4:1,
+  draw card 11.8:1, draw number pill 11.4:1. Script: `node` over the pairs in the stage handoff.
+- No level / rank / score label ever appears on or near a Soul (BR-17); the only badge is the Bingo Star.
+- Doodads never overlap text or controls (reserved slots only) and are hidden below 360 px; they bob +-6 px over
+  4.6-5.2 s and stop under reduced motion. The aurora is static under reduced motion. The peel flash is a single
+  250 ms pulse (flash-safety tokens), the additive glow is capped.
+
+## Behaviour notes
+
+- Session: `localStorage['ariskill.play.session:<eventId>']` (plus `ariskill.play.lastEvent`), so a QR re-scan or a
+  closed tab keeps the session; the draft is stored under `ariskill.play.draft:<eventId>:<participantId>`. A stored
+  session is reused; otherwise the join form needs `?t=`. 401/403 on `/me` or the stream drops the session and shows E2.
+- Late joiners (F-01): a participant without a board may save while the round is LOCKED/PLAYING/WINNER/EXHAUSTED; the
+  server parks the draft as a DEFERRED (late) board and answers with a `notice` (E8 copy). The client projects that
+  response (and the `board.deferred {reason:'late'}` event) to the deferred screen with the E8 copy. An older backend
+  that still answers ROUND_LOCKED keeps the local draft and shows the E8/E1 notice on the selection screen.
+- Next round (UX-01): the "Build my board for the next round" card appears on the result and Soul screens whenever a
+  newer round accepts boards, independent of Float; READY TO FLOAT stays available alongside it.
+- Public label (EO-02): the result view shows "Shown on the public screen as: <participant.publicLabel>" (consented
+  display name or Soul # pseudonym) when the backend sends it, so a winner can identify themselves to the MC.
+- Draft: the local 25-skill draft is the only client-owned state. It is saved with `PUT /me/board/selections`
+  (`boardVersion`, debounced 400 ms, same Idempotency-Key while the set is unchanged). On network failure the
+  api-client retries with the same key; on E6 the draft stays in `sessionStorage` and is re-PUT on the next
+  reconnect / snapshot / round event whenever the server set differs. STALE_VERSION applies the returned board
+  snapshot and re-saves with the current version. The 25th selection triggers `POST /me/board/finalize`; failure
+  shows E18 with a retry that reuses the key. A READY board whose set changes returns to DRAFT (server rule) and
+  re-finalizes with a new shuffle.
+- No editable round: the draft is kept locally with the E1 (no round), E8 (in progress) or E15 (cancelled)
+  banner, `/me` is refreshed every 20 s, and the draft is saved as soon as a round accepts saves.
+- Realtime: first `/me` snapshot -> `createSseClient({ since })`; on reconnect (`connectionEpoch > 1`) or a gap the
+  snapshot is refetched and acknowledged. `reduceEvent` returns effects; each effect is gated by the celebration
+  guard (`shouldCelebrate(key, meta)`) so replayed / snapshot-covered events set final state without animation or
+  sound. The audio manager is put into replay mode while a snapshot is applied.
+- Countdown: `formatCountdown(round.lockAt, clockSync.now())`, display only; E7 "Syncing..." while unsynced.
+- Accessibility: skip link, landmarks, one h1 per screen, labelled controls, 44 px targets, `focus-visible`,
+  polite live-region announcements for draws / results / lock / deferral (never moves focus), dismissible toasts,
+  reduced-motion and mute switches (persisted), 320 px reflow. Kind is always icon + label + colour.
+- Copy: everything user-facing comes from `packages/contracts/copy.json` via `t()` / `exception()`. A few UI-chrome
+  strings the catalogue does not define yet (settings switch labels, Dismiss, Try again, Reveal my Soul, Skip
+  reveal, Back to my board, Next round, ...) live in `views/common.js` `LOCAL_COPY` and are looked up only when the
+  shared catalogue has no value for the key.
+
+## Game experience (stage 9.2, D-22)
+
+- Look: glossy squircle tiles for the board, skill rows and chips (top highlight, inner shadow, opaque surfaces for contrast), matched
+  cells in warm gold with a star accent, the completed line traced with a light sweep (`.bingo-grid.m-line-trace::after`), a radial
+  progress ring (`.ring`, conic-gradient driven by `--p`) next to the catalogue copy `select.progress`, and the draw as a glowing reveal
+  card. Every state keeps its icon / text twin; targets stay >= 44 px; the layout reflows at 320 px (smaller tile radius and type).
+- Three.js (vendored, `packages/vendor/three`) is imported only by dynamic `import()` from the Join screen (after first paint, idle) and
+  the Soul screen; the Playing / locked / result screens prefetch it from an idle callback so the reveal opens instantly. WebGL missing,
+  module failure or a frame-time probe above 33 ms fall back to the existing SVG Soul with the staged CSS reveal.
+- Soul reveal in 3D follows the `soulReveal` token (2000 ms: glow 0-35 %, silhouette 30-70 %, features 65-100 %), is skippable after the
+  first view exactly as before, and the SVG stays in the DOM (visually hidden) so the accessible name never depends on the scene. Float
+  runs the `float.launch` token (600 ms) as a lift-off with a mote trail, then the floated view shows the small SVG Soul. State is applied
+  first; the scene is released 400 ms after a floated state that arrived without a live launch (replay / reload).
+- Reduced motion: backdrop static, no nebula drift, no bob / motes drift in the scenes (one settled frame), reveal and lift-off become
+  short fades, line sweep off. Flash safety: no loop above 0.5 Hz, ambient amplitudes small.
+- Sparse participant stream (`src/liveness.js`): observed on the game service, `/me/stream` ids skip on every draw (1416 -> 1419 ->
+  1422 ...; other audiences' events sit between). The shared sse-client marks each skip as a gap and everything until the next snapshot
+  acknowledgement as `replay: true`, which silenced every live celebration, cue and polite announcement on the phone. `main.js`
+  keeps the gap -> `/me` refetch contract and only overrides liveness for events of the current, acknowledged epoch that are newer than
+  the applied snapshot; reconnect backlog stays silent. Root cause belongs to the shared kit / service (reported in the stage handoff).
+
+## Manual verification
+
+`reports/qa/screens/employee-*.png` (390 x 844 @2x, plus 320 px variants) cover join, profile, selection (empty /
+17 / search / edit warning), board ready + countdown, locked, playing (draws 1-4 and from 5), result, Soul reveal,
+insight, Float countdown, floated, deferred (incomplete) and cancelled (E15).
+`reports/qa/screens/employee-game-*.png` (stage 9.2, headless Chrome with SwiftShader WebGL) cover the game look: join orb
+scene, progress ring + glossy rows (+320 px), glossy board (+320 px), matched gold stars, line sweep, 3D Soul forming and
+revealed with bloom, Float lift-off, floated, reduced motion.

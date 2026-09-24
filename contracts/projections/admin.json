@@ -1,0 +1,54 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/projections/admin",
+  "version": "1.0.1",
+  "audience": "admin (Mission Control)",
+  "allow": {
+    "eventId": "string",
+    "eventName": "string",
+    "sequence": "int",
+    "serverTime": "ISO",
+    "rounds": "[RoundSummary + resultWindowEndsAt + startOverdue + readiness]",
+    "currentRound": {
+      "summary": "RoundSummary + resultWindowEndsAt (ISO|null)",
+      "readiness": {
+        "poolSize": "int",
+        "poolMinimum": 5,
+        "anyBoardCanWin": "bool",
+        "boardsThatCanWin": "int",
+        "startOverdue": "bool",
+        "lockCountdownMs": "int|null"
+      },
+      "counts": "Counts (+ connections)",
+      "draws": "[Draw + matchedBoards]",
+      "poolRemaining": "int",
+      "winners": "[WinnerAdmin]",
+      "lastCommand": {
+        "commandId": "string",
+        "command": "string",
+        "outcome": "accepted|rejected",
+        "at": "ISO"
+      },
+      "pacingHintSeconds": "[5,8]"
+    },
+    "join": {
+      "joinUrl": "string",
+      "expiresAt": "ISO"
+    },
+    "connections": {
+      "public": "int",
+      "stage": "int",
+      "participants": "int",
+      "admin": "int"
+    }
+  },
+  "forbidden": [
+    "selectedSkillIds of individuals",
+    "cells of individuals",
+    "inMatrixCount",
+    "beyondMatrixCount",
+    "floatToken",
+    "sessionToken",
+    "email"
+  ],
+  "note": "Winner display labels are visible to admins (requirement 3). Individual boards are never listed; Mission Control is operational, Insights are separate (A-08)."
+}

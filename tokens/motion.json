@@ -1,0 +1,158 @@
+{
+  "version": "1.0.0",
+  "durations": {
+    "instant": 0,
+    "fast": 120,
+    "base": 180,
+    "medium": 280,
+    "slow": 400,
+    "reveal": 800,
+    "soulReveal": 2000,
+    "celebrate": 1000
+  },
+  "easing": {
+    "standard": "cubic-bezier(0.2,0,0,1)",
+    "emphasized": "cubic-bezier(0.3,0,0,1)",
+    "exit": "cubic-bezier(0.4,0,1,1)",
+    "linear": "linear"
+  },
+  "delays": {
+    "matchAfterDraw": 200,
+    "lineTraceAfterMatch": 350,
+    "winnerTextReady": 280,
+    "floatPublicOffset": 300,
+    "reducedFade": 0
+  },
+  "stagger": {
+    "gridCell": 20,
+    "lineCell": 120
+  },
+  "interactions": {
+    "addSkill": {
+      "class": "m-add",
+      "duration": "fast..base",
+      "range": [120, 180],
+      "ms": 150,
+      "easing": "standard",
+      "reduced": "fade"
+    },
+    "removeSkill": {
+      "class": "m-remove",
+      "duration": "fast..base",
+      "range": [120, 180],
+      "ms": 150,
+      "easing": "exit",
+      "reduced": "fade"
+    },
+    "boardComplete": {
+      "class": "m-board-complete",
+      "max": 800,
+      "ms": 780,
+      "cellMs": 300,
+      "staggerMs": 20,
+      "cells": 25,
+      "easing": "standard",
+      "reduced": "static-glow"
+    },
+    "boardLock": {
+      "class": "m-lock",
+      "max": 400,
+      "ms": 400,
+      "easing": "emphasized",
+      "reduced": "static-border"
+    },
+    "drawArrival": {
+      "class": "m-draw-arrival",
+      "ms": 400,
+      "easing": "emphasized",
+      "matchDelayMs": 200,
+      "reduced": "fade"
+    },
+    "match": {
+      "class": "m-match",
+      "range": [200, 350],
+      "ms": 300,
+      "easing": "standard",
+      "persistClass": "is-matched",
+      "reduced": "static"
+    },
+    "bingoLine": {
+      "class": "m-line-trace",
+      "once": true,
+      "ms": 800,
+      "cellStepMs": 120,
+      "cellMs": 320,
+      "easing": "standard",
+      "persistClass": "is-on-line",
+      "reduced": "static-outline"
+    },
+    "winnerView": {
+      "class": "m-winner-burst",
+      "readableWithin": 1000,
+      "ms": 1000,
+      "textReadyMs": 280,
+      "easing": "emphasized",
+      "reduced": "fade"
+    },
+    "soulReveal": {
+      "class": "m-soul-reveal",
+      "range": [1500, 2500],
+      "ms": 2000,
+      "stages": { "glow": [0, 700], "silhouette": [600, 1400], "features": [1300, 2000] },
+      "easing": "emphasized",
+      "skippableAfterFirstView": true,
+      "reduced": "fade"
+    },
+    "float": {
+      "class": "m-float-countdown",
+      "launchClass": "m-float-launch",
+      "countdown": [3, 2, 1],
+      "stepMs": 1000,
+      "tickMs": 600,
+      "launch": { "ms": 600, "easing": "exit", "publicOffsetMs": 300 },
+      "reduced": "fade"
+    },
+    "galaxyEntrance": {
+      "class": "m-entrance-arc",
+      "arcMs": 1800,
+      "pulseMs": 400,
+      "settleMs": 600,
+      "easing": "emphasized",
+      "reduced": "fade"
+    },
+    "orbit": {
+      "class": "m-orbit",
+      "maxAngularSpeedDegPerSec": 6,
+      "maxCameraDriftPxPerSec": 12,
+      "maxCameraYawDeg": 8,
+      "periodMs": 60000,
+      "reduced": "static"
+    },
+    "pulseSoft": {
+      "class": "m-pulse-soft",
+      "periodMs": 2400,
+      "opacityRange": [0.82, 1],
+      "reduced": "static"
+    },
+    "fade": {
+      "class": "m-fade",
+      "ms": 180,
+      "easing": "standard",
+      "reduced": "fade"
+    }
+  },
+  "flashSafety": {
+    "maxFlashesPerSecond": 3,
+    "maxLuminanceDeltaPercent": 10,
+    "maxFlashAreaPercentOfViewport": 25,
+    "noSaturatedRedFlash": true
+  },
+  "budgets": {
+    "frameMsMobile": 16.7,
+    "frameMsVenue": 16.7,
+    "minFpsVenue": 30,
+    "maxConcurrentAnimatedElementsMobile": 30,
+    "maxConcurrentAnimatedElementsVenue": 200,
+    "compositorOnlyProperties": ["transform", "opacity"]
+  }
+}

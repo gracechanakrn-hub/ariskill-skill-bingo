@@ -1,0 +1,19 @@
+{
+  "$id": "ariskill-skill-bingo/contracts/projections/insights",
+  "version": "1.0.0",
+  "audience": "admin Insights and stage dashboard (aggregate only)",
+  "definitions": {
+    "joinedRate": "participants with a session / null (no denominator in v1)",
+    "completedRate": "boards READY or LOCKED_ACTIVE or FINISHED-with-25 / joined participants",
+    "activeRate": "LOCKED_ACTIVE boards / joined participants (current or last round)",
+    "deferredRate": "DEFERRED boards / joined participants",
+    "topSkills": "count of boards (READY+) containing the skill, descending, top 10",
+    "coreCriticalDensity": "selections split by skill.isCore / skill.isCritical / neither across READY+ boards",
+    "matrixAlignmentRate": "mean over participants of inMatrixCount/25 using each participant's role map at matrixVersion",
+    "skillsBeyondMatrix": "skills selected that are not in the participant's role map, aggregated, top 10",
+    "cohortSuppression": "Platform/Role breakdowns are omitted when the cohort has fewer than 5 joined participants (D-15)",
+    "matrixVersion": "skill-matrix-2026-tech-role-20260319 (from skill-master.json)"
+  },
+  "allow": ["participation", "platformEngagement", "roleEngagement", "topSkills", "coreCriticalDensity", "matrixAlignment", "skillsBeyondMatrix", "suppressedCohorts", "matrixVersion", "computedAt"],
+  "forbidden": ["any per-participant value", "employeeRef", "displayName"]
+}

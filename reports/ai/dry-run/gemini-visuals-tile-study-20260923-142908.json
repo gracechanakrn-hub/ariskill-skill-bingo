@@ -1,0 +1,45 @@
+{
+  "tool": "gemini-visuals",
+  "name": "tile-study",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:29:08.848Z",
+  "request": {
+    "method": "POST",
+    "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+    "headers": {
+      "x-goog-api-key": "<redacted>"
+    },
+    "body": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "A product-render style material study of three glossy rounded squircle tiles.\nThree identical squircle tiles in a row, each a thick glossy clay slab with a big soft top highlight and a white die-cut outline. Left tile: deep violet (#2F2170) resting state. Middle tile: mint-teal (#8CF5C9) glowing softly as a matched state with a small filled circle emboss in a corner. Right tile: warm pale gold (#FFF3B0) with a gentle rim glow as a completed-line state with a small filled diamond emboss in a corner.\nDeep navy background (#0B1030) with a faint aurora glow behind the tiles, soft contact shadows beneath each tile.\nStudio three-point lighting, clearcoat gloss, roughness 0.35, slight 3/4 top-down camera, 4:3, tiles fill the middle of the frame with even margins.\nStyle anchor: Glossy 3D clay sticker style in the Arise Soul sticker language: chibi bell / gumdrop bodies with two soft foot nubs, an antenna stalk topped by a glowing orb, big soft top highlight, warm peach rim light, bubble speckles in two sizes (mint #7CF5C8, cyan #63E6FF, lilac #8B7CF0), a thick white die-cut sticker outline with a soft drop shadow.\nSky: Deep navy space background (#0B1030 to #151C48) with a slow aurora band drifting from teal #4FE3C1 to lime #B6FF5C and tiny star specks.\nTiles are empty surfaces: no text, no letters, no numbers, no icons other than the small circle and diamond embosses, no logos, no watermark, no characters.\nNo human face or human likeness of any kind. No text, letters, numbers, labels, captions, logos or watermarks. No level, rank, tier, score, XP or badge labels. All figures are the same size and brightness; nothing looks stronger or more important than anything else."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "responseModalities": [
+          "TEXT",
+          "IMAGE"
+        ],
+        "temperature": 0.6,
+        "imageConfig": {
+          "aspectRatio": "4:3"
+        }
+      }
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142908/tile-study.png",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/assets-src/generated/20260923-142908/provenance.json"
+  ],
+  "notes": [
+    "aspect 4:3",
+    "temperature 0.6",
+    "kind generate",
+    "AI-generated reference, not shipped"
+  ]
+}

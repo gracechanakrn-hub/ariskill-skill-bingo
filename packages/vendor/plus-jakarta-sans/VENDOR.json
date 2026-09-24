@@ -1,0 +1,39 @@
+{
+  "name": "plus-jakarta-sans",
+  "version": "12 (Google Fonts API v12)",
+  "license": "OFL-1.1",
+  "source": "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800 (woff2 subsets from fonts.gstatic.com/s/plusjakartasans/v12); OFL.txt from https://github.com/tokotype/PlusJakartaSans",
+  "vendoredBy": "manual (2026-09-22): variable woff2, latin + latin-ext, upright + italic; fonts.css written by hand from the Google Fonts CSS with local src URLs",
+  "files": [
+    {
+      "path": "packages/vendor/plus-jakarta-sans/plus-jakarta-sans-latin.woff2",
+      "bytes": 27272,
+      "sha256": "cd8db90cd950e26bc8761f65d323588bd5cd112d326d6d322bc7c8ea86771215"
+    },
+    {
+      "path": "packages/vendor/plus-jakarta-sans/plus-jakarta-sans-latin-ext.woff2",
+      "bytes": 21688,
+      "sha256": "0303e02b53b0298fb26a0193941a2e8754f0f9a9fce50d90b178d8da3424873f"
+    },
+    {
+      "path": "packages/vendor/plus-jakarta-sans/plus-jakarta-sans-italic-latin.woff2",
+      "bytes": 29524,
+      "sha256": "f7f3c763fa6749357a187418d736aab5b2acdd1d0a83a408631382bcfd80d141"
+    },
+    {
+      "path": "packages/vendor/plus-jakarta-sans/plus-jakarta-sans-italic-latin-ext.woff2",
+      "bytes": 23140,
+      "sha256": "00b9920a831136ed75903abbc3011a69071dca7397493e944576fa70da89b0e9"
+    },
+    {
+      "path": "packages/vendor/plus-jakarta-sans/OFL.txt",
+      "bytes": 4402,
+      "sha256": "995c7199cab65954f545996326755daee7b63cc6b42b06c13da1f9502ab08a99"
+    },
+    {
+      "path": "packages/vendor/plus-jakarta-sans/fonts.css",
+      "bytes": 1811,
+      "sha256": "b20cf66a686a659a1f1f3adc9ad7197e97959a905bdc8b5f1f19632b23962c09"
+    }
+  ]
+}

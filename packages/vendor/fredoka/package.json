@@ -1,0 +1,7 @@
+{
+  "name": "@ariskill/vendor-fredoka",
+  "version": "17.0.0",
+  "private": true,
+  "license": "OFL-1.1",
+  "description": "Self-hosted Fredoka variable font (latin, latin-ext, weight 500-700) for offline, CSP-safe use as the sticker display face (--font-display)"
+}

@@ -1,0 +1,217 @@
+{
+  "tool": "openai-uxui",
+  "name": "employee-playing",
+  "dryRun": true,
+  "createdAt": "2026-09-23T07:27:47.421Z",
+  "request": {
+    "method": "POST",
+    "url": "https://api.openai.com/v1/responses",
+    "headers": {
+      "authorization": "<redacted>"
+    },
+    "body": {
+      "model": "gpt-5.1",
+      "input": [
+        {
+          "role": "developer",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "You are a product designer proposing a UX/UI TEMPLATE (layout regions, components, token usage, motion cues, accessibility notes) for one screen of \"AriSkill Skill Bingo\", a live internal event game at Arise.\nThis is a PROPOSAL ONLY for the design owner; nothing is applied automatically. Build on the existing screen structure you are given: refine, do not reinvent, and do not add features, screens or product scope.\n\nHARD RULES:\n1. Souls are non-ranking (BR-17): no level, tier, rank, score, leaderboard or \"stronger\" language or visuals; every Soul is the same size and brightness; the only badge is the Bingo Star.\n2. No analyst / export UI: no export buttons, downloads, CSV, per-person analytics. Insights are aggregate and privacy-safe.\n3. All names and labels are provisional (requirement 8.1). Copy comes from packages/contracts/copy.json keys; reference keys, do not write new copy except as an open question.\n4. Use ONLY token names from the allowed list below (design-tokens 1.1.0 plus the --sticker-* names from the art direction, which are pending 1.2.0). Never invent token names or hard-code colours.\n5. Semantic colour is never the only signal (Core = filled diamond + \"Core\", Critical = filled circle + \"Critical\").\n6. Accessibility baseline: WCAG 2.2 AA, 44x44 px targets, visible focus, live regions for accepted draws/results, no focus theft, reduced motion, zoom/reflow; venue displays: body >= 40 px, headline >= 96 px.\n7. Sticker art direction: glossy clay, white die-cut outlines, aurora night-forest sky, doodads never over text and never on the stage screen; flash safety (<= 3 luminance flips/s), additive glow capped.\n8. English only. No human-faced mascots. No marketing slogans.\n\nALLOWED TOKEN NAMES:\n--color-accent, --color-accent-strong, --color-bg, --color-bg-elevated, --color-border, --color-core, --color-critical, --color-danger, --color-focus, --color-info, --color-line, --color-match, --color-optional, --color-success, --color-surface, --color-surface-2, --color-text, --color-text-inverse, --color-text-muted, --color-warning, --duration-base, --duration-fast, --duration-slow, --ease-emphasized, --ease-standard, --font-display, --font-mono, --font-sans, --font-size-2xl, --font-size-3xl, --font-size-display, --font-size-lg, --font-size-md, --font-size-sm, --font-size-xl, --font-size-xs, --line-height-normal, --line-height-tight, --radius-lg, --radius-md, --radius-pill, --radius-sm, --shadow-1, --shadow-2, --space-1, --space-10, --space-2, --space-3, --space-4, --space-5, --space-6, --space-7, --space-8, --space-9, --sticker-aurora-lime, --sticker-aurora-teal, --sticker-badge, --sticker-badge-ink, --sticker-cyan, --sticker-gold, --sticker-lilac, --sticker-mint, --sticker-navy, --sticker-outline, --sticker-peach, --sticker-rose, --sticker-shadow, --sticker-space, --sticker-violet-deep, --touch-min, --z-modal, --z-toast\n\nTOKEN RULES:\n{\"semanticColourNeverAlone\":\"Core/Critical/Optional and success/warning/danger states always carry a label and/or icon; colour is never the only signal.\",\"coreCriticalIcons\":{\"core\":\"filled diamond + text label 'Core'\",\"critical\":\"filled circle + text label 'Critical'\",\"optional\":\"outlined circle + text label 'Optional'\"},\"contrast\":{\"text\":4.5,\"largeTextAndUi\":3},\"venueMinimums\":{\"bodyPx\":40,\"headlinePx\":96,\"viewingDistanceM\":[10,25],\"resolution\":\"1920x1080\"},\"sticker\":{\"pill\":\"pill labels use --sticker-badge fill with --sticker-badge-ink text (>= 4.5:1) and a 2 px --sticker-outline stroke; type is --font-display, uppercase, weight 600-700\",\"limeLabel\":\"text on --sticker-aurora-lime is always --sticker-navy (dark navy on lime), never white\",\"dieCut\":\"every Soul, badge and doodad gets the --sticker-outline (6 px at a 240 px Soul, scales with size) and --sticker-shadow\",\"nonRanking\":\"no level, tier or score label appears on or near a Soul (BR-17); the only badge is the Bingo Star\",\"bodyText\":\"body text stays >= 4.5:1 on every tile surface; --sticker-* colours are decorative and never the only signal\"}}\n\nREQUIREMENT EXCERPTS:\n### 8.1 Provisional design-system decisions\n\nThe existing AriSkill design system was not available for inspection. The following are **provisional** and must be mapped to verified brand tokens/components before visual sign-off:\n\n- all interface names, section labels, button labels, and copy in this document are working names pending content/design-system review; they do not create new product scope;\n- deep-space neutral background; luminous accent colors assigned consistently to Core and Critical Skills;\n- geometric sans-serif typography with tabular numerals for countdowns;\n- 8 px spacing rhythm, 44 x 44 px minimum touch targets, and high-contrast focus rings;\n- rounded skill chips, flat operational admin surfaces, and cinematic public-display surfaces;\n- semantic colors never used as the only status signal;\n- public/stage typography sized and tested for the actual venue viewing distance.\n\n### 9.1 Theme\n\nThe event is a warm, optimistic skill cosmos: individual selections form a distinct Soul, and many Souls create one Arise Galaxy. The visual hierarchy should favor belonging and discovery over competition. Avoid combat, rarity tiers, leaderboards, or visual language that implies some roles are more valuable.\n\n### 9.2 Public Galaxy scene\n\n- Use layered depth: slow star field, soft nebula volumes/gradients, orbital paths, Souls, and a restrained foreground glow.\n- Keep the right-side information panel readable; visual effects must not cross its safe zone.\n- Camera motion is slow and bounded. No uncontrolled spin, rapid parallax, or camera shake.\n- New Souls enter from a stage-configured edge, follow a short arc, briefly pulse, then join a stable orbit.\n- Crowd density uses level of detail, instancing/batching where available, and aggregate clusters at high counts.\n- Provide renderer quality levels plus a technology-neutral 2D fallback. The public display remains functional if the primary Galaxy renderer fails.\n\n## 11. Motion and Micro-animation\n\n| Interaction | Motion |\n|---|---|\n| Add/remove skill | 120-180 ms scale/fade with stable layout |\n| Board completion | Short ordered glow across the grid, <= 800 ms |\n| Board lock | Border seal and lock label, <= 400 ms |\n| Draw arrival | Skill card reveal followed by matching-cell highlights |\n| Match | 200-350 ms glow/pulse; final state remains visible |\n| Bingo line | Trace the completed line once; do not loop |\n| Winner view | Restrained celebratory burst; readable within 1 second |\n| Soul reveal | 1.5-2.5 second staged reveal, skippable after first view |\n| Float | `3 -> 2 -> 1 -> FLOAT`, launch acknowledgment, public entrance |\n\nMotion rules:\n\n- State changes do not wait for animation completion.\n- Replayed/resynchronized events set the correct final visual state without replaying old celebration.\n- Respect `prefers-reduced-motion`: replace travel, parallax, bursts, and orbit motion with fades/static composition.\n- Avoid flashing above accessibility thresholds and test for photosensitive risk.\n- Use server event timestamps for coordinated cues; animation may interpolate locally but cannot invent game state.\n\n### 12.2 Accessibility baseline\n\n- Target WCAG 2.2 AA for employee, admin, and stage web interfaces.\n- Full keyboard operation and visible focus for admin and employee flows.\n- Logical headings, labels, live-region announcements for accepted draws/results, and no focus theft from realtime updates.\n- Minimum 44 x 44 px touch targets; contrast compliant text and controls.\n- Do not rely on color, sound, motion, or spatial position alone.\n- Support zoom/reflow on mobile, reduced motion, mute, and high-contrast modes.\n- Test public/stage legibility at venue resolution, brightness, and viewing distance.\n\nSTICKER ART DIRECTION (v2, provisional D-25):\n# Art direction v2 - \"Arise Soul x AriSkill\" sticker language (stage 10, D-25 provisional)\n\nSource references (docs/art/reference/): `sticker-sheet-p1.png` (the A5 sticker sheet), `Arise soul 1 (2).png` (blue jelly Soul), `arise soul art.png` (trait generator: face / eyes / bubble / body / belly / antenna), two holographic-outline sticker sheets (neon outline mood only).\n\n## What we take from the stickers\n| Element | Sticker sheet | In the product |\n|---|---|---|\n| Body | chibi bell / gumdrop suit, soft feet nubs, antenna stalk with a glowing orb | Soul silhouettes keep their 6 bodies but read as one clay family: rounded bell mass, two foot nubs, antenna orb always lit |\n| Surface | glossy 3D clay, big soft top highlight, warm rim light, bubble speckles in two sizes (mint, cyan, lilac) | 2D SVG: highlight ellipse + rim gradient + speckle layer; 3D: MeshPhysicalMaterial clearcoat 1.0, roughness 0.35, sheen, speckle texture from the same seed |\n| Die-cut | 6-8 px white sticker outline + soft drop shadow | every Soul, badge and doodad gets `--sticker-outline` (white, 6 px at 240 px Soul, scales) and `--sticker-shadow` |\n| Badges | pill labels with 2 px outline, chunky rounded uppercase type, gold star, round medallions with constellation lines | tile badges (Core / Critical), draw card chip, \"Bingo!\" pill, Bingo Star badge, round medallions for round number |\n| Sky | deep navy space, aurora band (teal -> lime), star specks | aurora band added to public, stage and employee backdrops (slow drift, reduced-motion static) |\n| Doodads | rocket, UFO, ringed planet, comet, gold star | procedural sprites in the Galaxy periphery and the employee waiting screens; never over text |\n| Type | bold rounded display for labels (\"HOUSTON, SKILL LEVEL RISING\") | display font = Fredoka (OFL, vendored) for badges, counters and hero words; body stays Plus Jakarta Sans |\n\n## What we do NOT take\n- The human-faced mascot. Souls keep the creature face (dot eyes, small mouth, optional heart belly) - no likeness of a person.\n- \"LEVEL 5 UNLOCKED\", \"LV.5\", \"SKILL LEVEL RISING\": the Soul is universal and non-ranking (requirement, BR-17). No level, tier or score label ever appears on or near a Soul. The only badge stays the Bingo Star (line completed this round).\n- Marketing slogans as product copy. Any new copy is a proposal for the copy catalog (OD-11), generated into reports/ai/ and reviewed, never auto-merged.\n\n## Palette additions (design-tokens 1.2.0, names are final so apps can use them now)\n| Token | Value | Use |\n|---|---|---|\n| `--sticker-navy` | #0B1030 | deepest sky |\n| `--sticker-space` | #151C48 | sky mid |\n| `--sticker-aurora-teal` | #4FE3C1 | aurora start |\n| `--sticker-aurora-lime` | #B6FF5C | aurora end, \"lime label\" |\n| `--sticker-lilac` | #8B7CF0 | body base (violet Soul) |\n| `--sticker-violet-deep` | #3B2A7A | body shadow |\n| `--sticker-mint` | #7CF5C8 | speckle |\n| `--sticker-cyan` | #63E6FF | speckle / Critical |\n| `--sticker-peach` | #FFB27A | warm rim |\n| `--sticker-gold` | #F6C453 | star, Core |\n| `--sticker-rose` | #FF6FA5 | heart belly |\n| `--sticker-badge` | #2D2670 | pill fill |\n| `--sticker-badge-ink` | #E7DFFF | pill text |\n| `--sticker-outline` | #FFFFFF | die-cut |\n| `--sticker-shadow` | 0 6px 14px rgba(5, 8, 30, .55) | die-cut shadow |\n| `--font-display` | \"Fredoka\", \"Plus Jakarta Sans\", sans-serif | badges / hero |\n\nContrast rule unchanged: body text >= 4.5:1 on any tile surface; pill text #E7DFFF on #2D2670 = 10.1:1 (WCAG AAA; measured by the token test); lime label text is always dark navy on lime.\n\n## Soul renderer spec (packages/ui/soul-renderer.js, 2D, unchanged seed -> same Soul)\n1. Body path (existing 6 silhouettes) filled with a 3-stop radial gradient: palette light at 30% top-left, base, `--sticker-violet-deep` at the bottom edge.\n2. Rim light: 2 px inner stroke at 40% peach on the lower-right; top highlight ellipse 22% white, blurred 2 px.\n3. Speckles: 9-14 dots seeded from the Soul seed, two sizes (r 3-4 and 6-8 at 240 px), mint/cyan/lilac, clipped to the body.\n4. Antenna orb: existing antenna type, but the orb gets a 3-stop glow (white core, palette light, transparent) and a 2 px outline.\n5. Die-cut: whole figure duplicated below as a white stroke (6 px round joins) + `--sticker-shadow`. `detail: 'simple'` (thumbnails, Galaxy atlas) keeps the outline at 3 px and drops the speckle blur.\n6. Bingo Star badge: gold five-point star with white outline at the upper right, unchanged semantics.\n\n## 3D Soul spec (employee soul-scene / join-scene, public Galaxy sprites)\n- Same body profiles (soul-params.js) but MeshPhysicalMaterial: color = palette base, clearcoat 1, clearcoatRoughness 0.15, roughness 0.35, sheen 0.6 sheenColor peach, transmission 0. Speckle as an emissive-lit vertex-color or small spheres (<= 14) from the same seed.\n- Antenna orb: emissive sphere + additive sprite glow; bloom already exists.\n- Sticker die-cut in 3D: back-face inverted hull (white, unlit) scaled 1.06 - the classic toon-outline trick - so the orb reveal reads as a sticker peeling off the sky.\n- Galaxy atlas: rebuilt from the 2D renderer at detail 'simple' so phone and Galaxy match.\n\n## Doodads (assets/scene/doodads.svg sprite + procedural fallback)\nrocket, UFO, ringed planet, comet, gold star, small constellation medallion. Each: flat 2-tone fill, white die-cut outline, no text. Public Galaxy: 5-8 drifting at the periphery on high tier only. Employee: one rocket parked near the join orb, one planet on the waiting screens. Stage: none (presenter legibility).\n\n## Motion notes\nSticker \"peel\" reveal = scale 0.92 -> 1.0 with a 6 deg tilt and outline flash (250 ms); aurora drifts 0.01 rad/s; doodads bob +-6 px over 4-6 s; all respect prefers-reduced-motion and the flash-safety tokens (no more than 3 luminance flips/s, additive glow capped).\n\n## AI-assisted production (keys in .env, tools/ai/*)\n- Gemini image models: mood boards and reference plates per screen (not shipped in the app; land in assets-src/generated/ with prompt + model + sha256 provenance) to guide the procedural art.\n- Blender (bpy, tools/ai/blender/): renders the clay Soul turnarounds from the same body profiles for the marketing sheet and for the Galaxy atlas if the procedural sprite is judged weaker.\n- OpenAI text models: copy proposals (CW) for existing copy.json keys and UX/UI template proposals; written to reports/ai/ as proposals for the content owner (OD-11).\nGenerated bitmaps are never required at runtime: every screen must look finished with the procedural art alone.\n\n\nOUTPUT: fill the JSON schema. layoutRegions top to bottom / left to right; components reference a region id and list token names and copy keys; motion cues name a duration token (--duration-fast/base/slow) and the reduced-motion behaviour; openQuestions collect anything the design owner must decide."
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "input_text",
+              "text": "Screen: employee-playing (employee-mobile) - Employee - Playing (E6)\n\nCurrent structure: Latest draw card, draw list, automatic matches on the 5x5 grid, draws 1-4 banner (\"Bingo unlocks at draw 5\") vs \"Bingo is live\", matched count, pacing text. Live-region announcements for accepted draws; celebration guard; reduced motion honoured.\n\nCopy keys available: play.waitingStart, play.drawsBeforeFive, play.drawsBeforeFiveN, play.evaluationActive, play.draw, play.matched, play.pacing\n\nPropose the UX/UI template for this screen."
+            }
+          ]
+        }
+      ],
+      "text": {
+        "format": {
+          "type": "json_schema",
+          "name": "uxui_screen_template",
+          "strict": true,
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "screen",
+              "summary",
+              "layoutRegions",
+              "components",
+              "tokenUsage",
+              "motion",
+              "accessibility",
+              "stickerNotes",
+              "openQuestions"
+            ],
+            "properties": {
+              "screen": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "layoutRegions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "role",
+                    "placement",
+                    "contains"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "placement": {
+                      "type": "string"
+                    },
+                    "contains": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "components": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "region",
+                    "variant",
+                    "states",
+                    "tokens",
+                    "copyKeys",
+                    "notes"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    },
+                    "variant": {
+                      "type": "string"
+                    },
+                    "states": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "tokens": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "copyKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "notes": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "tokenUsage": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "token",
+                    "use"
+                  ],
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "use": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "motion": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "trigger",
+                    "cue",
+                    "durationToken",
+                    "reducedMotion"
+                  ],
+                  "properties": {
+                    "trigger": {
+                      "type": "string"
+                    },
+                    "cue": {
+                      "type": "string"
+                    },
+                    "durationToken": {
+                      "type": "string"
+                    },
+                    "reducedMotion": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "accessibility": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "stickerNotes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "openQuestions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "max_output_tokens": 9000,
+      "store": false
+    }
+  },
+  "outputs": [
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/ai/uxui-template.json",
+    "/Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/ai/uxui-template.md"
+  ],
+  "notes": [
+    "PROPOSAL ONLY - generated by tools/ai/openai-uxui.js for the design owner. No app, token or copy file is changed by this tool. Token names are constrained to design-tokens 1.1.0 plus the --sticker-* names of docs/art/sticker-art-direction.md (1.2.0 pending, D-25 provisional)."
+  ]
+}

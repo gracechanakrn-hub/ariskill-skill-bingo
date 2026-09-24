@@ -1,0 +1,65 @@
+{
+  "source": "packages/ui/soul-renderer.js#ORBIT_RINGS",
+  "radiusUnit": "fraction of Galaxy half-height",
+  "aspect": 1.35,
+  "totalCapacity": 588,
+  "clusterAbove": 300,
+  "angularSpeedRadPerSec": 0.02,
+  "driftAmplitude": 0.012,
+  "rings": [
+    {
+      "ring": 0,
+      "radius": 0.12,
+      "capacity": 6,
+      "angularSpeedRadPerSec": 0.02
+    },
+    {
+      "ring": 1,
+      "radius": 0.22,
+      "capacity": 14,
+      "angularSpeedRadPerSec": 0.019
+    },
+    {
+      "ring": 2,
+      "radius": 0.32,
+      "capacity": 24,
+      "angularSpeedRadPerSec": 0.018
+    },
+    {
+      "ring": 3,
+      "radius": 0.42,
+      "capacity": 36,
+      "angularSpeedRadPerSec": 0.016
+    },
+    {
+      "ring": 4,
+      "radius": 0.52,
+      "capacity": 52,
+      "angularSpeedRadPerSec": 0.015
+    },
+    {
+      "ring": 5,
+      "radius": 0.62,
+      "capacity": 72,
+      "angularSpeedRadPerSec": 0.014
+    },
+    {
+      "ring": 6,
+      "radius": 0.72,
+      "capacity": 96,
+      "angularSpeedRadPerSec": 0.013
+    },
+    {
+      "ring": 7,
+      "radius": 0.82,
+      "capacity": 128,
+      "angularSpeedRadPerSec": 0.012
+    },
+    {
+      "ring": 8,
+      "radius": 0.92,
+      "capacity": 160,
+      "angularSpeedRadPerSec": 0.01
+    }
+  ]
+}

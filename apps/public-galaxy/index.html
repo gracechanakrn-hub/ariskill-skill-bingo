@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" class="theme-venue">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070718">
+  <meta name="description" content="The live Arise Skill Bingo galaxy, where every player Soul joins the constellation.">
+  <title>AriSkill Skill Bingo - Public Galaxy</title>
+  <link rel="stylesheet" href="/packages/vendor/plus-jakarta-sans/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/fredoka/fonts.css">
+  <link rel="stylesheet" href="/packages/design-tokens/tokens.css">
+  <link rel="stylesheet" href="/packages/ui/base.css">
+  <link rel="stylesheet" href="/packages/ui/motion.css">
+  <link rel="stylesheet" href="/public/app.css">
+  <script type="module" src="/public/src/main.js"></script>
+</head>
+<body class="public-screen">
+  <div class="screen" id="screen">
+    <section class="galaxy" id="galaxy" aria-hidden="true"></section>
+    <p class="visually-hidden" id="galaxy-summary" aria-live="polite"></p>
+    <aside class="panel" id="panel" aria-label="Event information">
+      <div class="banner banner--reconnecting panel__banner" id="banner" role="status" hidden>
+        <span class="banner__icon" aria-hidden="true"></span>
+        <span class="banner__text" id="banner-text"></span>
+      </div>
+      <div class="panel__main" id="panel-main"></div>
+      <footer class="panel__footer" id="panel-footer"></footer>
+    </aside>
+  </div>
+</body>
+</html>

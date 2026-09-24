@@ -1,0 +1,7 @@
+{
+  "name": "@ariskill/vendor-plus-jakarta-sans",
+  "version": "12.0.0",
+  "private": true,
+  "license": "OFL-1.1",
+  "description": "Self-hosted Plus Jakarta Sans variable font (latin, latin-ext) for offline, CSP-safe use"
+}
