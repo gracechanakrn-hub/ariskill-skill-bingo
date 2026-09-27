@@ -597,3 +597,8 @@ html.theme-venue {
   .explore__side .explore__cards { grid-template-columns: repeat(auto-fit, minmax(calc(300 * var(--u)), 1fr)); }
   .insight-card { min-height: calc(90 * var(--u)); }
 }
+
+/* D-50: the matrix panel is the donut only, centred and larger */
+.matrix { grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; }
+.matrix__donut { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
+.matrix__meta { font-size: calc(30 * var(--u)); }

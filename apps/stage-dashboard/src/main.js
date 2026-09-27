@@ -6,6 +6,7 @@ import { createSseClient } from '/packages/ui/sse-client.js';
 import { restoreReducedMotion, setReducedMotion, prefersReducedMotion, createCelebrationGuard } from '/packages/ui/motion.js';
 import { createAudioManager } from '/packages/ui/audio.js';
 import { track } from '/packages/ui/telemetry.js';
+import { mountFullscreenButton } from '/packages/ui/fullscreen.js';
 import { t, exception, BINGO_UNLOCK_DRAW } from '/packages/contracts/index.js';
 import { readToken, saveToken, clearToken, readEventId, createStageApi, ApiError } from './api.js';
 import { initialState, reduce, deriveView, changedTiles, isRoundEvent } from './state.js';
@@ -221,4 +222,5 @@ function onTick() {
   updateConnection(vm);
 }
 
+mountFullscreenButton(); // D-51: corner button + F key; hides the browser UI on the venue screen
 boot();

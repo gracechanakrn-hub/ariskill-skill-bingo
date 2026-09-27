@@ -212,7 +212,7 @@ export function formatDashboard(insights) {
     hasData: Boolean(insights),
     platforms: eng(i.platformEngagement), roles: eng(i.roleEngagement),
     topSkills: rank(i.topSkills), coreSkills: rank(i.topCoreSkills),
-    matrix: { rate, percent: rate === null ? '' : formatPercent(rate), participants: Number(a?.participants) || 0, distribution: Array.isArray(a?.distribution) ? a.distribution.map((n) => Number(n) || 0) : null, version: a?.matrixVersion || '' },
+    matrix: { rate, percent: rate === null ? '' : formatPercent(rate), participants: Number(a?.participants) || 0, version: a?.matrixVersion || '' },
     suppressedCohorts: Number(i.suppressedCohorts) || 0,
   };
 }
@@ -245,7 +245,7 @@ function renderPanel(key, f) {
   ];
 }
 
-/** Donut of the average match plus a bar chart of boards by matched count (0-16). SVG built with dom.h (no innerHTML). */
+/** Donut of the average match (D-50: the matched-count bar chart was removed). SVG built with dom.h (no innerHTML). */
 function renderMatrix(m) {
   if (m.rate === null) return h('p', { class: 'muted panel__empty' }, tx('stage.noInsights'));
   const R = 70, C = 2 * Math.PI * R, pct = Math.max(0, Math.min(1, m.rate));
@@ -255,22 +255,6 @@ function renderMatrix(m) {
     h('text', { x: 90, y: 88, class: 'matrix__pct', 'text-anchor': 'middle' }, m.percent),
     h('text', { x: 90, y: 116, class: 'matrix__cap', 'text-anchor': 'middle' }, tx('stage.matrix.avg')));
   const parts = [h('div', { class: 'matrix__hero' }, donut, h('p', { class: 'matrix__meta tabular' }, tx('stage.matrix.players', { count: formatInt(m.participants) })))];
-  if (m.distribution) {
-    const max = Math.max(1, ...m.distribution);
-    const W = 17 * 34, H = 200;
-    const bars = m.distribution.map((n, k) => {
-      const bh = Math.round((n / max) * (H - 40));
-      return h('g', null,
-        h('rect', { x: k * 34 + 5, y: H - 24 - bh, width: 24, height: Math.max(bh, n ? 3 : 0), rx: 5, class: 'matrix__bar' }),
-        n ? h('text', { x: k * 34 + 17, y: H - 30 - bh, class: 'matrix__n', 'text-anchor': 'middle' }, String(n)) : null,
-        h('text', { x: k * 34 + 17, y: H - 4, class: 'matrix__k', 'text-anchor': 'middle' }, String(k)));
-    });
-    parts.push(h('figure', { class: 'matrix__hist' },
-      h('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': tx('stage.matrix.axis') }, ...bars),
-      h('figcaption', { class: 'matrix__axis' }, tx('stage.matrix.axis'))));
-  } else {
-    parts.push(h('p', { class: 'muted matrix__wait' }, tx('stage.matrix.wait')));
-  }
   return h('div', { class: 'matrix' }, ...parts);
 }
 
