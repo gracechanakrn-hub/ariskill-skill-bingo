@@ -533,7 +533,6 @@ h1, h2, .screen-title, .pick-title, .join-hero__title, .brand__name, .draw-card_
 .landing__still { position: absolute; left: 50%; bottom: 4%; height: 82%; width: auto; transform: translateX(-50%); }
 .landing__copy { display: flex; flex-direction: column; align-items: center; gap: var(--ui-space-3); opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
 .landing.is-landed .landing__copy { opacity: 1; transform: none; }
-.landing__tagline { margin: 0; color: #E7DFFF; font: 400 1.1rem var(--font-title); text-shadow: 0 2px 10px rgba(5, 8, 30, .9); }
 .landing__start { min-width: 12rem; min-height: 56px; font: 400 1.25rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--v2-navy); background: var(--v2-lime); border: 2px solid #fff; border-radius: 999px; box-shadow: 0 0 0 6px rgba(182, 255, 92, .12), 0 8px 20px rgba(5, 8, 30, .55); }
 @keyframes sign-drop { from { opacity: 0; transform: translateY(-24px) scale(.9); } to { opacity: 1; transform: none; } }
 @keyframes landing-in { from { opacity: 0; transform: translateY(18px) scale(.94); } to { opacity: 1; transform: none; } }
@@ -545,10 +544,9 @@ h1, h2, .screen-title, .pick-title, .join-hero__title, .brand__name, .draw-card_
 /* D-40: deadline wording */
 .pick-deadline { margin: -4px 0 0; text-align: center; color: #D9D3FA; font-size: .9rem; }
 .board-status--card .countdown__label { text-transform: none; letter-spacing: .01em; font-size: .95rem; color: #E7DFFF; }
-.countdown__left { font-size: .85rem; color: #CFC8F5; }
+.countdown__left { font-size: .95rem; color: #E7DFFF; }
 
 /* ---- Join, continued from the landing (D-40) ---- */
-#main[data-screen="landing"] ~ .app-footer, #main[data-screen="join"] ~ .app-footer { display: none; } /* no sound / motion toggles here */
 .join2 { display: flex; flex-direction: column; align-items: center; gap: var(--ui-space-3); padding-top: var(--ui-space-2); }
 .join2__sign { width: min(86vw, 22rem); height: auto; filter: drop-shadow(0 10px 24px rgba(5, 8, 30, .6)); animation: landing-in .8s cubic-bezier(.2, .8, .2, 1) both; }
 .join2__hello { display: flex; align-items: flex-end; gap: var(--ui-space-2); width: 100%; max-width: 26rem; }
@@ -563,4 +561,27 @@ h1, h2, .screen-title, .pick-title, .join-hero__title, .brand__name, .draw-card_
 .join2__cta { width: 100%; min-height: 54px; font: 400 1.15rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--v2-navy); background: var(--v2-lime); border: 2px solid #fff; border-radius: 999px; }
 @media (prefers-reduced-motion: reduce) { .join2 * { animation: none !important; } }
 :root[data-reduced-motion="true"] .join2 * { animation: none !important; }
-.board-status--card .countdown-block { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+/* D-42: one sentence - "The game will start in 12:34 mins" */
+.board-status--card .countdown-block { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: 10px; text-align: center; }
+
+/* ---- Float greeting (D-42) ---- */
+.greet { padding: var(--ui-space-3); border-radius: 20px; background: rgba(21, 28, 72, .78); border: 2px solid rgba(231, 223, 255, .18); }
+.greet__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--ui-space-2); }
+.greet__input { resize: none; min-height: 3.2em; font: 400 1.05rem / 1.35 var(--font-ui); }
+.greet__count { font-size: .85rem; color: #CFC8F5; }
+.greet__count.is-over, .greet__help.is-error { color: #FFB4B4; }
+
+/* D-43: link to the desktop AriSkill site from the private insight */
+.insight-more { margin: 0; font-size: .9rem; color: #E7DFFF; }
+.insight-more a { color: var(--v2-mint, #7CF5C8); text-decoration: underline; text-underline-offset: 2px; }
+
+/* D-45: round medallion redrawn so nothing overlaps - "ROUND" and the number sit inside the dashed ring with clear space
+   to the white border; the ring dots are gone (they sat on the dashed line). */
+.round-medallion {
+  width: 60px; height: 60px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding-top: 2px; font-family: var(--font-ui);
+}
+.round-medallion::before { inset: 5px; border-color: rgba(231, 223, 255, .38); }
+.round-medallion::after { display: none; }
+.round-medallion__label { font-size: .42rem; letter-spacing: .1em; line-height: 1; margin: 0; font-weight: 400; color: #CFC8F5; }
+.round-medallion__num { font-size: 1.4rem; line-height: .9; font-weight: 400; color: #fff; }

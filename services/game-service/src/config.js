@@ -50,6 +50,8 @@ export function loadConfig(env = process.env, overrides = {}) {
     rngSeed: overrides.rngSeed ?? env.BINGO_RNG_SEED ?? null,
     // Guided draws (D-33) aim for 1-2 winners between draws 6 and 12; BINGO_DRAW_GUIDANCE=off falls back to plain random.
     drawGuidance: overrides.drawGuidance ?? !['0', 'off', 'false', 'no'].includes(String(env.BINGO_DRAW_GUIDANCE ?? 'on').toLowerCase()),
+    // Float greetings (D-42) on the public screen; BINGO_GREETINGS=off hides every greeting from public / stage payloads.
+    greetings: overrides.greetings ?? !['0', 'off', 'false', 'no'].includes(String(env.BINGO_GREETINGS ?? 'on').toLowerCase()),
     defaultEventId: overrides.defaultEventId ?? env.BINGO_EVENT_ID ?? 'evt_demo',
     defaultEventName: overrides.defaultEventName ?? env.BINGO_EVENT_NAME ?? 'AriSkill Skill Bingo Demo',
     logLevel: overrides.logLevel ?? env.BINGO_LOG_LEVEL ?? (bingoEnv === 'test' ? 'silent' : 'info'),

@@ -1,7 +1,6 @@
 id,kind,trigger_or_key,copy,recovery
 "app.title",state,"app.title","AriSkill Skill Bingo",
 "landing.title",state,"landing.title","AriSkill Bingo",
-"landing.tagline",state,"landing.tagline","Pick your skills. Play live. Meet your Soul.",
 "landing.cta",state,"landing.cta","Start",
 "landing.alt",state,"landing.alt","Arise Soul mascot floating, with a glowing antenna orb and an Arise Soul, AriSkill Bingo badge",
 "join.title",state,"join.title","Join Skill Bingo",
@@ -45,8 +44,8 @@ id,kind,trigger_or_key,copy,recovery
 "board.shuffled",state,"board.shuffled","Shuffled!",
 "board.ready",state,"board.ready","I'm ready",
 "board.readyDone",state,"board.readyDone","You're in! Your board locks with the countdown.",
-"board.editUntil",state,"board.editUntil","You can edit your board until {time}",
-"board.timeLeft",state,"board.timeLeft","left",
+"board.startsIn",state,"board.startsIn","The game will start in",
+"board.timeLeft",state,"board.timeLeft","mins",
 "pick.deadline",state,"pick.deadline","Complete your board before {time}",
 "board.complete",state,"board.complete","Your Skill Bingo is ready!",
 "board.waiting",state,"board.waiting","Your board will lock when the countdown reaches 00:00.",
@@ -70,6 +69,14 @@ id,kind,trigger_or_key,copy,recovery
 "result.noRankNote",state,"result.noRankNote","This game is about discovery, not assessment.",
 "soul.ready",state,"soul.ready","Your Soul is ready to join Arise.",
 "soul.float",state,"soul.float","READY TO FLOAT",
+"soul.greeting.label",state,"soul.greeting.label","Say hi on the big screen (optional)",
+"soul.greeting.placeholder",state,"soul.greeting.placeholder","e.g. Good luck, everyone!",
+"soul.greeting.hint",state,"soul.greeting.hint","Leave it empty and your Soul just says hi.",
+"soul.greeting.error.too-long",state,"soul.greeting.error.too-long","Keep it to 40 characters.",
+"soul.greeting.error.link",state,"soul.greeting.error.link","Links can't go on the big screen.",
+"soul.greeting.error.contact",state,"soul.greeting.error.contact","Please leave out e-mails and phone numbers.",
+"soul.greeting.error.handle",state,"soul.greeting.error.handle","Please leave out @handles.",
+"soul.greeting.error.language",state,"soul.greeting.error.language","Please keep it friendly.",
 "soul.floated",state,"soul.floated","Your Soul is in the Galaxy",
 "soul.countdown",state,"soul.countdown","3 -> 2 -> 1 -> FLOAT",
 "soul.badge",state,"soul.badge","Bingo Star",
@@ -78,6 +85,7 @@ id,kind,trigger_or_key,copy,recovery
 "insight.inMatrix",state,"insight.inMatrix","{count} of your 16 skills are in the {role} matrix",
 "insight.beyond",state,"insight.beyond","{count} go beyond the current matrix",
 "insight.private",state,"insight.private","Only you can see this.",
+"insight.more",state,"insight.more","See more detail in {site} (desktop only)",
 "reconnect",state,"reconnect","Reconnecting to the Skill Galaxy...",
 "syncing",state,"syncing","Syncing with the event...",
 "admin.missionControl",state,"admin.missionControl","Mission Control",
@@ -140,3 +148,4 @@ id,kind,trigger_or_key,copy,recovery
 "E21",exception,"Draw transaction failed","The next skill wasn't drawn. Try again.","Commit and publish nothing; retry with the same idempotency key"
 "E22",exception,"Soul creation delayed","Your Soul is still forming. We'll keep trying.","Retry idempotently and keep the result view available"
 "E23",exception,"Pool exhausted without a winner","Round complete. No Bingo this time.","Close the round and show the next-round Waiting state"
+"E24",exception,"Float greeting rejected","Please rephrase your message. Links, contact details and rude words can't go on the big screen.","Keep the text so the player can edit or clear it, then float again"

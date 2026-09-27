@@ -1,6 +1,9 @@
 """Cinematic mobile sky (D-41): four portrait layers rendered from one camera so they line up, animated in CSS.
 
-    blender -b -P tools/ai/blender/mobile_sky.py -- [--size 1080x2340] [--only sky|aurora|meteors|ground]
+    blender -b -P tools/ai/blender/mobile_sky.py -- [--size 1080x2340] [--only sky|aurora|meteors|ground] [--prefix stage-]
+
+  A landscape --size (e.g. 1920x1080, for the stage dashboard, D-47) switches to a longer lens with a gentler tilt and
+  moves the ringed planet into the wider, shorter frame; the horizon still sits about 20% from the bottom.
 
   sky      opaque   deep-space gradient, violet nebula, stars, a small ringed planet
   aurora   alpha    three curtains of aurora (teal -> lime -> violet) across the upper-middle sky
@@ -19,6 +22,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')
 OUT = os.path.join(ROOT, 'assets-src/generated/mobile-sky')
 W, H = (int(v) for v in arg('--size', '1080x2340').split('x'))
 ONLY = arg('--only')
+PREFIX = arg('--prefix', '')
+LANDSCAPE = W > H
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -82,14 +87,15 @@ def build_sky():
     L(a1.outputs[2], a2.inputs[6]); L(s2.outputs[0], a2.inputs[7])
     em = nt.nodes.new('ShaderNodeEmission'); L(a2.outputs[2], em.inputs[0])
     out = nt.nodes.new('ShaderNodeOutputMaterial'); L(em.outputs[0], out.inputs[0])
-    card('sky', 90, 190, (0, 60, 18), m)
+    card('sky', 240, 150, (0, 60, 18), m) if LANDSCAPE else card('sky', 90, 190, (0, 60, 18), m)
     # small ringed planet, upper left
     pm, pnt, PL = nodes_mat('planet')
     b = pnt.nodes.new('ShaderNodeBsdfPrincipled'); b.inputs['Base Color'].default_value = (*lin('#6B4FD8'), 1); b.inputs['Roughness'].default_value = 0.5
     o = pnt.nodes.new('ShaderNodeOutputMaterial'); PL(b.outputs[0], o.inputs[0])
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=2.2, location=(-9, 45, 40), segments=64, ring_count=32); bpy.ops.object.shade_smooth()
+    planet_at = (-27, 55, 25) if LANDSCAPE else (-9, 45, 40)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=2.2, location=planet_at, segments=64, ring_count=32); bpy.ops.object.shade_smooth()
     bpy.context.active_object.data.materials.append(pm)
-    bpy.ops.mesh.primitive_torus_add(major_radius=3.6, minor_radius=0.12, location=(-9, 45, 40), rotation=(math.radians(76), math.radians(-20), 0))
+    bpy.ops.mesh.primitive_torus_add(major_radius=3.6, minor_radius=0.12, location=planet_at, rotation=(math.radians(76), math.radians(-20), 0))
     rm, rnt, RL = nodes_mat('ring')
     rb = rnt.nodes.new('ShaderNodeEmission'); rb.inputs['Color'].default_value = (*lin('#C9B6FF'), 1); rb.inputs['Strength'].default_value = 0.8
     ro = rnt.nodes.new('ShaderNodeOutputMaterial'); RL(rb.outputs[0], ro.inputs[0])
@@ -98,7 +104,8 @@ def build_sky():
 
 def build_aurora():
     rnd = random.Random(11)
-    for i, (x0, z0, depth, width, height, tilt) in enumerate(((-10, 22, 40, 40, 18, 0.18), (8, 27, 48, 46, 22, -0.12), (-2, 17, 34, 30, 12, 0.08))):
+    curtains = ((-22, 20, 40, 60, 18, 0.10), (18, 25, 48, 70, 22, -0.08), (0, 16, 34, 50, 12, 0.05)) if LANDSCAPE else ((-10, 22, 40, 40, 18, 0.18), (8, 27, 48, 46, 22, -0.12), (-2, 17, 34, 30, 12, 0.08))
+    for i, (x0, z0, depth, width, height, tilt) in enumerate(curtains):
         m, nt, L = nodes_mat(f'aurora{i}', blended=True)
         tc = nt.nodes.new('ShaderNodeTexCoord')
         sep = nt.nodes.new('ShaderNodeSeparateXYZ'); L(tc.outputs['UV'], sep.inputs[0])
@@ -218,9 +225,9 @@ def lights_camera(sc):
     area('rim-violet', (-30, 40, -2), 25000, 20, '#8B4FE8', (0, 12, -4))
     area('key-soft', (10, -6, 12), 1200, 20, '#B9A8FF', (0, 20, 10))
     # wide lens tilted up 20 deg: the horizon sits ~20% from the bottom, the sky and aurora fill the rest
-    cd = bpy.data.cameras.new('cam'); cd.lens = 18; cd.sensor_fit = 'VERTICAL'
+    cd = bpy.data.cameras.new('cam'); cd.lens = 30 if LANDSCAPE else 18; cd.sensor_fit = 'VERTICAL'
     cam = link(bpy.data.objects.new('cam', cd)); cam.location = (0, -14, -3.0)
-    cam.rotation_euler = (math.radians(110), 0, 0)
+    cam.rotation_euler = (math.radians(100 if LANDSCAPE else 110), 0, 0)
     sc.camera = cam
 
 
@@ -243,6 +250,6 @@ for name, (fn, alpha) in LAYERS.items():
     sc = setup(); fn(); lights_camera(sc)
     sc.render.film_transparent = alpha
     sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_mode = 'RGBA' if alpha else 'RGB'
-    sc.render.filepath = os.path.join(OUT, f'{name}.png')
+    sc.render.filepath = os.path.join(OUT, f'{PREFIX}{name}.png')
     bpy.ops.render.render(write_still=True)
     print('wrote', sc.render.filepath)

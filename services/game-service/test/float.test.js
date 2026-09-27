@@ -68,3 +68,49 @@ describe('Soul + Float (M-13, P-05, BR-16, BR-17, D-11)', () => {
     assert.equal((await t.api.get(`/events/${EVENT_ID}/snapshot`)).body.galaxy.count, 2);
   });
 });
+
+describe('Float greeting (D-42)', () => {
+  async function finishedRound(overrides = {}) {
+    const t = await startServer({ drawGuidance: false, ...overrides });
+    const sc = await lineScenario(t, { extraPlayers: [{ join: { displayName: 'Quiet', consent: false } }] });
+    await drawUntilEnd(t, sc.round);
+    const me = (await t.api.get('/me', sc.p.token)).body;
+    const other = (await t.api.get('/me', sc.others[0].p.token)).body;
+    return { t, sc, me, other };
+  }
+
+  test('a rejected greeting is E24 with a reason and does not spend the token; a clean one reaches the public screen; none is null', async () => {
+    const { t, sc, me, other } = await finishedRound();
+    try {
+      const bad = await t.api.post('/me/soul/float', { soulId: me.soul.soulId, floatToken: me.soul.floatToken, greeting: 'visit www.spam.example' }, sc.p.token);
+      assert.equal(bad.status, 422); assert.equal(bad.body.error.code, 'GREETING_REJECTED'); assert.equal(bad.body.error.exceptionId, 'E24'); assert.equal(bad.body.error.details.reason, 'link');
+      const long = await t.api.post('/me/soul/float', { soulId: me.soul.soulId, floatToken: me.soul.floatToken, greeting: 'x'.repeat(41) }, sc.p.token);
+      assert.equal(long.body.error.details.reason, 'too-long');
+      assert.equal((await t.api.post('/me/soul/float', { soulId: me.soul.soulId, floatToken: me.soul.floatToken, greeting: 42 }, sc.p.token)).status, 400);
+      const ok = await t.api.post('/me/soul/float', { soulId: me.soul.soulId, floatToken: me.soul.floatToken, greeting: '  Good luck,\n everyone!  ' }, sc.p.token);
+      assert.equal(ok.status, 200, 'the token survived the rejected tries'); assert.equal(ok.body.entrance.greeting, 'Good luck, everyone!');
+      const none = await t.api.post('/me/soul/float', { soulId: other.soul.soulId, floatToken: other.soul.floatToken }, sc.others[0].p.token);
+      assert.equal(none.body.entrance.greeting, null);
+      const souls = (await t.api.get(`/events/${EVENT_ID}/snapshot`)).body.galaxy.souls;
+      const byId = new Map(souls.map(s => [s.soulId, s]));
+      assert.equal(byId.get(me.soul.soulId).greeting, 'Good luck, everyone!');
+      assert.equal(byId.get(other.soul.soulId).greeting, null, 'no greeting: the big screen shows "..."');
+      assert.equal(byId.get(other.soul.soulId).label, null, 'the greeting never exposes a non-consented name');
+    } finally { await t.close(); }
+  });
+
+  test('BINGO_GREETINGS=off hides greetings from public payloads; the owner still gets their own back', async () => {
+    const { t, sc, me } = await finishedRound({ greetings: false });
+    try {
+      const streamP = readSse(t.baseUrl, `/events/${EVENT_ID}/stream`, { timeoutMs: 700 });
+      await new Promise(r => setTimeout(r, 50));
+      const ok = await t.api.post('/me/soul/float', { soulId: me.soul.soulId, floatToken: me.soul.floatToken, greeting: 'Hello team' }, sc.p.token);
+      assert.equal(ok.body.entrance.greeting, 'Hello team');
+      const { events } = await streamP;
+      const accepted = events.find(e => e.event === 'soul.float_accepted');
+      assert.ok(accepted); assert.equal(accepted.data.payload.entrance.greeting, null);
+      const soul = (await t.api.get(`/events/${EVENT_ID}/snapshot`)).body.galaxy.souls.find(s => s.soulId === me.soul.soulId);
+      assert.equal(soul.greeting, null);
+    } finally { await t.close(); }
+  });
+});

@@ -135,7 +135,7 @@ describe('projection redaction across audiences', () => {
     assert.equal(galaxy.count, 2);
     const labels = galaxy.souls.map(s => s.label);
     assert.ok(labels.includes('Consented Winner')); assert.ok(labels.includes(null)); assert.ok(!labels.includes('Hidden Winner'));
-    for (const s of galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']); assert.deepEqual(findKeys(s.config, ['platformId', 'roleId', 'rank', 'isWinner', 'inMatrixCount', 'participantId']), [], 'Soul config carries no identity or rank trait'); assertSoulConfig(s.config, `galaxy ${s.soulId}`); }
+    for (const s of galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId']); assert.deepEqual(findKeys(s.config, ['platformId', 'roleId', 'rank', 'isWinner', 'inMatrixCount', 'participantId']), [], 'Soul config carries no identity or rank trait'); assertSoulConfig(s.config, `galaxy ${s.soulId}`); }
     const owners = new Map([[snaps.winner.A.soul.soulId, snaps.winner.A.soul.config], [snaps.winner.B.soul.soulId, snaps.winner.B.soul.config]]);
     for (const s of galaxy.souls) assert.deepEqual(s.config, owners.get(s.soulId), 'the Galaxy shows the config its owner saw, nothing added');
     assert.equal(snaps.next.public.previousWinners.length, 1); assert.equal(snaps.next.public.previousWinners[0].labels.length, 2);
@@ -150,7 +150,7 @@ describe('projection redaction across audiences', () => {
     assert.ok(insights.topSkills.every(s => typeof s.count === 'number' && Object.keys(s).every(k => ['skillId', 'name', 'kind', 'count'].includes(k))));
     const stageIns = snaps.winner.stage.insights;
     assert.deepEqual(findKeys(stageIns, [...FORBIDDEN.stage, ...INDIVIDUAL_KEYS]), []);
-    assert.deepEqual(Object.keys(stageIns).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topSkills']);
+    assert.deepEqual(Object.keys(stageIns).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
     assert.ok(!('participation' in stageIns) && !('computedAt' in stageIns), 'stage gets the stage subset only');
   });
 
@@ -190,7 +190,7 @@ describe('projection redaction across audiences', () => {
         if (aud === 'admin') assert.ok(counts.every(c => 'boardsWithFourInLine' in c.data.payload)); else assert.ok(counts.every(c => !('boardsWithFourInLine' in c.data.payload)));
         const floats = s.events.filter(e => e.event === 'soul.float_accepted');
         assert.equal(floats.length, 2); assert.deepEqual(floats.map(f => f.data.payload.entrance.label).sort(), [null, 'Consented Winner'].sort((a, b) => String(a).localeCompare(String(b))));
-        for (const f of floats) { assert.deepEqual(Object.keys(f.data.payload.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId'], `${k} entrance keys`); assertSoulConfig(f.data.payload.entrance.config, `${k} soul.float_accepted`); }
+        for (const f of floats) { assert.deepEqual(Object.keys(f.data.payload.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId'], `${k} entrance keys`); assertSoulConfig(f.data.payload.entrance.config, `${k} soul.float_accepted`); }
       }
     }
   });

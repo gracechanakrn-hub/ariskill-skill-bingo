@@ -8,12 +8,20 @@
   <link rel="stylesheet" href="/packages/vendor/plus-jakarta-sans/fonts.css">
   <link rel="stylesheet" href="/packages/vendor/fredoka/fonts.css">
   <link rel="stylesheet" href="/packages/vendor/space-grotesk/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/electrolize/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/comfortaa/fonts.css">
   <link rel="stylesheet" href="/packages/design-tokens/tokens.css">
   <link rel="stylesheet" href="/packages/ui/base.css">
   <link rel="stylesheet" href="/packages/ui/motion.css">
   <link rel="stylesheet" href="/stage/app.css">
 </head>
 <body class="stage-body">
+  <div class="scene" aria-hidden="true">
+    <span class="scene__layer scene__sky"></span>
+    <span class="scene__layer scene__aurora"></span><span class="scene__layer scene__aurora scene__aurora--shimmer"></span>
+    <span class="scene__layer scene__meteors"></span>
+    <span class="scene__layer scene__ground"></span>
+  </div>
   <div id="app"></div>
   <script type="module" src="/stage/src/main.js"></script>
 </body>

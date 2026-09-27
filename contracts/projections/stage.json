@@ -1,26 +1,75 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/stage",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "audience": "stage (presenter, read-only)",
   "allow": {
-    "eventId": "string", "eventName": "string", "sequence": "int", "serverTime": "ISO", "publicState": "Waiting|Playing|Winner",
+    "eventId": "string",
+    "eventName": "string",
+    "sequence": "int",
+    "serverTime": "ISO",
+    "publicState": "Waiting|Playing|Winner",
     "notice": "null|{kind, text}",
     "round": "RoundSummary + resultWindowEndsAt + startOverdue:bool",
     "nextRound": "RoundSummary|null",
-    "counts": { "joined": "int", "completed": "int", "incomplete": "int", "active": "int", "deferred": "int", "matchedBoards": "int" },
-    "currentDraw": "as public", "recentDraws": "as public (last 10)",
+    "counts": {
+      "joined": "int",
+      "completed": "int",
+      "incomplete": "int",
+      "active": "int",
+      "deferred": "int",
+      "matchedBoards": "int"
+    },
+    "roundsPlayed": "int: rounds of the event that reached WINNER, EXHAUSTED or CLOSED (D-46)",
+    "currentDraw": "as public",
+    "recentDraws": "as public (last 10)",
     "winners": "[{label, soulId, winningDrawNumber}]",
-    "resultTiming": { "winningDrawNumber": "int|null", "publishedAt": "ISO|null", "resultWindowEndsAt": "ISO|null" },
+    "resultTiming": {
+      "winningDrawNumber": "int|null",
+      "publishedAt": "ISO|null",
+      "resultWindowEndsAt": "ISO|null"
+    },
     "insights": {
+      "totals": {
+        "participants": "int: everyone who joined the event",
+        "completed": "int: people with at least one complete board in any round (D-48)"
+      },
       "topSkills": "[{skillId, name, kind, count}] (top 10)",
-      "coreCriticalDensity": { "core": "int", "critical": "int", "optional": "int", "totalSelections": "int" },
+      "topCoreSkills": "[{skillId, name, count}] every active Core Skill kind skill (D-46)",
+      "coreCriticalDensity": {
+        "core": "int",
+        "critical": "int",
+        "optional": "int",
+        "totalSelections": "int"
+      },
       "platformEngagement": "[{platformId, name, joined, completed}] (cohort >= 5 only)",
       "roleEngagement": "[{roleId, name, joined, completed}] (cohort >= 5 only)",
-      "matrixAlignment": { "rate": "float 0-1", "matrixVersion": "string", "participants": "int" },
+      "matrixAlignment": {
+        "rate": "float 0-1",
+        "matrixVersion": "string",
+        "participants": "int",
+        "distribution": "int[17]|null: boards per matched count 0..16, null below 5 boards (D-46)"
+      },
       "skillsBeyondMatrix": "[{skillId, name, count}] (top 10)",
       "suppressedCohorts": "int"
     }
   },
-  "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email", "joinUrl", "skillIds", "matchedCount", "selectedKinds", "matchedKinds", "kindCounts"],
-  "note": "Contract 1.2.0 (D-31): Soul entrances on the stage stream (soul.float_accepted) carry the Soul's config, SoulConfig v3 for new Souls (realtime-events.json shapes.SoulConfig; SoulConfigV2 / SoulConfigV1 for Souls stored earlier and the neutral fallback), the same config the owner and the public screen get. Its decoration is charm ids, face, face plate, eyes, antenna charm (topper) and gradient only; plate, eyes and topper are cosmetic ids picked from the seed, never from skills; skill ids, skill names, match counts and the raw decoration inputs (the last five forbidden keys) never appear. The stage snapshot has no galaxy."
+  "forbidden": [
+    "participantId",
+    "employeeRef",
+    "selectedSkillIds",
+    "cells",
+    "inMatrixCount",
+    "beyondMatrixCount",
+    "floatToken",
+    "sessionToken",
+    "matchedPositions",
+    "email",
+    "joinUrl",
+    "skillIds",
+    "matchedCount",
+    "selectedKinds",
+    "matchedKinds",
+    "kindCounts"
+  ],
+  "note": "Contract 1.2.0 (D-31): Soul entrances on the stage stream (soul.float_accepted) carry the Soul's config, SoulConfig v3 for new Souls (realtime-events.json shapes.SoulConfig; SoulConfigV2 / SoulConfigV1 for Souls stored earlier and the neutral fallback), the same config the owner and the public screen get. Its decoration is charm ids, face, face plate, eyes, antenna charm (topper) and gradient only; plate, eyes and topper are cosmetic ids picked from the seed, never from skills; skill ids, skill names, match counts and the raw decoration inputs (the last five forbidden keys) never appear. The stage snapshot has no galaxy. Contract 1.3.0 (D-48): stage insights combine every round of the event (all boards), and carry totals {participants, completed}."
 }

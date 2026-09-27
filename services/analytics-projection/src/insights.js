@@ -31,6 +31,7 @@ export function computeInsights({ participants, boards, skills, platforms, roles
   const participation = {
     joined, completed: completedBoards.length, active, deferred,
     joinedRate: null, completedRate: rate(completedBoards.length, joined), activeRate: rate(active, joined), deferredRate: rate(deferred, joined),
+    completedParticipants: completedByParticipant.size, // D-48: people with at least one complete board (all rounds on the stage)
   };
 
   // Cohort engagement with suppression (D-15): cohorts with fewer than minCohort joined participants are omitted and counted.
@@ -59,11 +60,16 @@ export function computeInsights({ participants, boards, skills, platforms, roles
   }
   const topSkills = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10)
     .map(([skillId, count]) => ({ skillId, name: skills.get(skillId)?.name ?? skillId, kind: kindOf(skills.get(skillId)), count }));
+  // Top core skills (D-46): the organisation's Core Skill kind (the picker's question 1), every one listed, most picked first.
+  const topCoreSkills = [...skills.values()].filter(sk => sk.kind === 'Core Skill' && sk.status === 'active')
+    .map(sk => ({ skillId: sk.id, name: sk.name, count: counts.get(sk.id) ?? 0 }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 
   // Matrix alignment: mean of inMatrixCount/CELLS over completed boards whose participant has a role; beyond-matrix aggregate.
   const roleOf = new Map(participants.map(p => [p.participantId, p.roleId]));
   const beyond = new Map();
   let alignSum = 0, alignN = 0;
+  const histogram = new Array(CELLS + 1).fill(0);
   for (const b of completedBoards) {
     const roleId = roleOf.get(b.participantId);
     if (!roleId) continue;
@@ -71,17 +77,21 @@ export function computeInsights({ participants, boards, skills, platforms, roles
     let inMatrix = 0;
     for (const id of b.selectedSkillIds) { if (set.has(id)) inMatrix += 1; else beyond.set(id, (beyond.get(id) ?? 0) + 1); }
     alignSum += inMatrix / CELLS; alignN += 1;
+    histogram[inMatrix] += 1;
   }
-  const matrixAlignment = { rate: alignN ? Math.round((alignSum / alignN) * 1000) / 1000 : null, matrixVersion, participants: alignN };
+  // distribution (D-46): how many completed boards matched k of the 16 skills (index k = 0..16); only from minCohort
+  // boards on, so a small room never reveals one person's count.
+  const matrixAlignment = { rate: alignN ? Math.round((alignSum / alignN) * 1000) / 1000 : null, matrixVersion, participants: alignN, distribution: alignN >= minCohort ? histogram : null };
   const skillsBeyondMatrix = [...beyond.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10)
     .map(([skillId, count]) => ({ skillId, name: skills.get(skillId)?.name ?? skillId, count }));
 
-  return { participation, platformEngagement, roleEngagement, topSkills, coreCriticalDensity: density, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, matrixVersion, computedAt };
+  return { participation, platformEngagement, roleEngagement, topSkills, topCoreSkills, coreCriticalDensity: density, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, matrixVersion, computedAt };
 }
 
 /** Keys the stage dashboard may show (contracts/projections/stage.json insights block). */
 export function stageInsights(full) {
   if (!full) return null;
-  const { topSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts } = full;
-  return { topSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts };
+  const { topSkills, topCoreSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, participation } = full;
+  const totals = { participants: participation.joined, completed: participation.completedParticipants }; // D-48: aggregate counts only
+  return { totals, topSkills, topCoreSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts };
 }

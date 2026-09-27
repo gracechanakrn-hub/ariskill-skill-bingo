@@ -12,6 +12,7 @@ import { t } from '/packages/contracts/index.js';
 import { formatTime } from '/packages/ui/format.js';
 import { tl, exceptionCopy, notice, button, roundLine, nextRoundBlock } from './common.js';
 import { nextRoundAction } from '../state.js';
+import { checkGreeting, greetingLength, cleanGreeting, GREETING_MAX_CHARS } from '/packages/game-rules/src/greeting.js';
 
 const SEEN_KEY = (soulId) => `ariskill.play.soulSeen:${soulId}`;
 const SETTLE_GRACE_MS = 400; // floated state without a live launch effect -> SVG takes over after this grace
@@ -52,7 +53,14 @@ export function mountSoul(root, ctx, screen) {
     els.digits = h('div', { className: 'float-countdown m-float-countdown', 'aria-live': 'assertive', 'aria-atomic': 'true', hidden: true });
     els.round = h('div', { className: 'round-block' });
     els.next = h('div', { className: 'stack stack--tight' });
-    mount(root, h('div', { className: 'stack' }, els.title, els.round, els.reveal, els.skip, els.digits, els.float, els.insight, els.next));
+    // Float greeting (D-42): built once so typing never loses focus; optional, 40 characters, checked as you type.
+    els.greetInput = h('textarea', { className: 'input greet__input', id: 'float-greeting', rows: '2', maxlength: String(GREETING_MAX_CHARS * 2), placeholder: t('soul.greeting.placeholder'), 'aria-describedby': 'float-greeting-help float-greeting-count', autocomplete: 'off', onInput: onGreetingInput });
+    els.greetCount = h('span', { className: 'greet__count tabular', id: 'float-greeting-count', 'aria-live': 'polite' }, `0/${GREETING_MAX_CHARS}`);
+    els.greetHelp = h('p', { className: 'field__hint greet__help', id: 'float-greeting-help' }, t('soul.greeting.hint'));
+    els.greet = h('div', { className: 'field greet', hidden: true },
+      h('div', { className: 'greet__head' }, h('label', { className: 'field__label', for: 'float-greeting' }, t('soul.greeting.label')), els.greetCount),
+      els.greetInput, els.greetHelp);
+    mount(root, h('div', { className: 'stack' }, els.title, els.round, els.reveal, els.skip, els.digits, els.greet, els.float, els.insight, els.next));
   }
 
   function renderSoul(state) {
@@ -142,6 +150,10 @@ export function mountSoul(root, ctx, screen) {
       children.push(h('p', { className: 'muted', role: 'status' }, tl('ui.loading')));
     }
     children.push(h('p', { className: 'muted insight-private' }, t('insight.private')));
+    // D-43: point to the full AriSkill profile (a desktop site); the link opens in a new tab.
+    const [before, after] = t('insight.more').split('{site}');
+    children.push(h('p', { className: 'insight-more' }, before,
+      h('a', { href: 'https://ariskill.space', target: '_blank', rel: 'noopener noreferrer' }, 'ariskill.space'), after));
     mount(els.insight, children);
     els.insight.hidden = !state.insightAvailable;
   }
@@ -155,13 +167,28 @@ export function mountSoul(root, ctx, screen) {
     } else {
       els.title.textContent = t('soul.ready');
       if (state.ui.floatError) actions.push(notice(exceptionCopy(state.ui.floatError), { tone: 'danger', role: 'alert' }));
-      const disabled = state.ui.floating || !soul.floatToken;
+      const disabled = state.ui.floating || !soul.floatToken || !greetingOk();
       els.floatButton = button(state.ui.floatError ? tl('ui.retry') : t('soul.float'), { variant: 'primary', className: 'btn--block btn--lg float-button', onClick: onFloat, disabled });
       actions.push(els.floatButton);
       if (!soul.floatToken && !state.ui.floating) actions.push(notice(exceptionCopy('E13'), { tone: 'warning' }));
     }
     mount(els.float, actions);
     els.digits.hidden = !state.ui.floating;
+    els.greet.hidden = !soul || soul.floated || state.ui.floating;
+  }
+
+  function greetingOk() { return checkGreeting(els.greetInput ? els.greetInput.value : '').ok; }
+  function onGreetingInput() {
+    const raw = els.greetInput.value;
+    const n = greetingLength(cleanGreeting(raw));
+    const check = checkGreeting(raw);
+    els.greetCount.textContent = `${n}/${GREETING_MAX_CHARS}`;
+    els.greetCount.classList.toggle('is-over', n > GREETING_MAX_CHARS);
+    els.greetInput.setAttribute('aria-invalid', check.ok ? 'false' : 'true');
+    els.greetHelp.textContent = check.ok ? t('soul.greeting.hint') : t(`soul.greeting.error.${check.reason}`);
+    els.greetHelp.classList.toggle('is-error', !check.ok);
+    ctx.actions.setFloatGreeting(raw);
+    if (els.floatButton && lastState && lastState.soul && !lastState.ui.floating) els.floatButton.disabled = !check.ok || !lastState.soul.floatToken;
   }
 
   async function onFloat() {

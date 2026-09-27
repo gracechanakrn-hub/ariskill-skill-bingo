@@ -22,6 +22,7 @@ conventions:
       ILLEGAL_TRANSITION: { http: 409, exception: E10 }
       DRAW_FAILED: { http: 500, exception: E21 }
       FLOAT_FAILED: { http: 409, exception: E13 }
+      GREETING_REJECTED: { http: 422, exception: E24 }
       RATE_LIMITED: { http: 429 }
       INTERNAL: { http: 500, message: "unexpected server error; never used on the draw path" }
   idempotency:
@@ -149,7 +150,7 @@ operations:
     path: /me/soul/float
     auth: participant
     headers: [Idempotency-Key]
-    body: { soulId: string, floatToken: string }
+    body: { soulId: string, floatToken: string, greeting: string? }   # greeting (D-42): optional, checked before the token is used; see packages/game-rules/src/greeting.js; rejected -> GREETING_REJECTED (E24, details.reason too-long|link|contact|handle|language)
     rule: >
       Atomic one-use consumption. A repeat with the same token returns the original entrance (accepted=true, replay=true). Expired/unknown token -> FLOAT_FAILED (E13).
       entrance.config is the Soul's stored config, the same one the public and stage screens get (realtime-events.json shapes):

@@ -11,7 +11,7 @@ import stageContract from '../../contracts/projections/stage.json' with { type: 
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
 
 const FORBIDDEN = { public: forbiddenKeysFromContract(publicContract), stage: forbiddenKeysFromContract(stageContract) };
-const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId'];
+const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId'];
 const safeRoles = ROLES.filter(r => !PRIVACY_TEXT_REGEX.test(`${r.id} ${r.name}`));
 const byPlatform = new Map(); for (const r of safeRoles) { if (!byPlatform.has(r.platformId)) byPlatform.set(r.platformId, []); byPlatform.get(r.platformId).push(r); }
 const [cohortRole, otherRole] = [...byPlatform.values()].find(rs => rs.length >= 2);
@@ -65,7 +65,7 @@ describe('public + stage views across a full round', () => {
     assert.equal(stage.publicState, 'Waiting'); assert.equal(stage.round.startOverdue, false); assert.equal(stage.counts.incomplete, 0); assert.equal(stage.counts.deferred, 0);
     assert.deepEqual(stage.resultTiming, { winningDrawNumber: null, publishedAt: null, resultWindowEndsAt: null });
     const ins = stage.insights;
-    assert.deepEqual(Object.keys(ins).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topSkills']);
+    assert.deepEqual(Object.keys(ins).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
     assert.ok(!ins.roleEngagement.some(r => r.roleId === cohortRole.id), 'a 4-person role cohort is suppressed');
     assert.ok(!ins.roleEngagement.some(r => r.roleId === otherRole.id), 'a 2-person role cohort is suppressed');
     assert.ok(ins.suppressedCohorts >= 2); assert.equal(ins.coreCriticalDensity.totalSelections, 6 * CELLS); assert.ok(ins.topSkills.length <= 10 && ins.topSkills.every(s => 'count' in s && !('participantId' in s)));
@@ -111,7 +111,7 @@ describe('public + stage views across a full round', () => {
     assert.equal(winner.publicState, 'Winner'); assert.equal(winner.winners.length, winners.length); assert.ok(winner.winners.some(w => w.label === 'Public Name')); assert.ok(!winner.winners.some(w => w.label === 'Hidden Name'));
     assert.ok(winner.round.resultWindowEndsAt); assert.equal(winner.pacingMessage, 'Bingo!');
     assert.equal(winnerStage.resultTiming.winningDrawNumber, totalDraws); assert.ok(winnerStage.resultTiming.publishedAt);
-    assert.equal(winnerStage.recentDraws.length, Math.min(10, totalDraws)); assert.equal(winner.recentDraws.length, Math.min(5, totalDraws));
+    assert.equal(winnerStage.recentDraws.length, Math.min(10, totalDraws)); assert.equal(winner.recentDraws.length, Math.min(6, totalDraws));
     assert.equal((await me(t, hiddenName)).result.isWinner, true, 'the non-consented winner still sees their own result privately');
     // contract 1.0.2 (EO-02): participant.publicLabel equals the label the public/stage screens show for that participant
     const pm = await me(t, publicName), hm = await me(t, hiddenName);

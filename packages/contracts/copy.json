@@ -5,7 +5,6 @@
   "key": {
     "app.title": "AriSkill Skill Bingo",
     "landing.title": "AriSkill Bingo",
-    "landing.tagline": "Pick your skills. Play live. Meet your Soul.",
     "landing.cta": "Start",
     "landing.alt": "Arise Soul mascot floating, with a glowing antenna orb and an Arise Soul, AriSkill Bingo badge",
     "join.title": "Join Skill Bingo",
@@ -49,8 +48,8 @@
     "board.shuffled": "Shuffled!",
     "board.ready": "I'm ready",
     "board.readyDone": "You're in! Your board locks with the countdown.",
-    "board.editUntil": "You can edit your board until {time}",
-    "board.timeLeft": "left",
+    "board.startsIn": "The game will start in",
+    "board.timeLeft": "mins",
     "pick.deadline": "Complete your board before {time}",
     "board.complete": "Your Skill Bingo is ready!",
     "board.waiting": "Your board will lock when the countdown reaches 00:00.",
@@ -74,6 +73,14 @@
     "result.noRankNote": "This game is about discovery, not assessment.",
     "soul.ready": "Your Soul is ready to join Arise.",
     "soul.float": "READY TO FLOAT",
+    "soul.greeting.label": "Say hi on the big screen (optional)",
+    "soul.greeting.placeholder": "e.g. Good luck, everyone!",
+    "soul.greeting.hint": "Leave it empty and your Soul just says hi.",
+    "soul.greeting.error.too-long": "Keep it to 40 characters.",
+    "soul.greeting.error.link": "Links can't go on the big screen.",
+    "soul.greeting.error.contact": "Please leave out e-mails and phone numbers.",
+    "soul.greeting.error.handle": "Please leave out @handles.",
+    "soul.greeting.error.language": "Please keep it friendly.",
     "soul.floated": "Your Soul is in the Galaxy",
     "soul.countdown": "3 -> 2 -> 1 -> FLOAT",
     "soul.badge": "Bingo Star",
@@ -82,6 +89,7 @@
     "insight.inMatrix": "{count} of your 16 skills are in the {role} matrix",
     "insight.beyond": "{count} go beyond the current matrix",
     "insight.private": "Only you can see this.",
+    "insight.more": "See more detail in {site} (desktop only)",
     "reconnect": "Reconnecting to the Skill Galaxy...",
     "syncing": "Syncing with the event...",
     "admin.missionControl": "Mission Control",
@@ -145,6 +153,7 @@
     "E20": { "trigger": "Round not ready to start", "copy": "This round needs at least five eligible skills before it can start.", "recovery": "Keep the round locked; reschedule or cancel" },
     "E21": { "trigger": "Draw transaction failed", "copy": "The next skill wasn't drawn. Try again.", "recovery": "Commit and publish nothing; retry with the same idempotency key" },
     "E22": { "trigger": "Soul creation delayed", "copy": "Your Soul is still forming. We'll keep trying.", "recovery": "Retry idempotently and keep the result view available" },
-    "E23": { "trigger": "Pool exhausted without a winner", "copy": "Round complete. No Bingo this time.", "recovery": "Close the round and show the next-round Waiting state" }
+    "E23": { "trigger": "Pool exhausted without a winner", "copy": "Round complete. No Bingo this time.", "recovery": "Close the round and show the next-round Waiting state" },
+    "E24": { "trigger": "Float greeting rejected", "copy": "Please rephrase your message. Links, contact details and rude words can't go on the big screen.", "recovery": "Keep the text so the player can edit or clear it, then float again" }
   }
 }

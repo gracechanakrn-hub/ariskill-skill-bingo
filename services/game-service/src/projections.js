@@ -14,6 +14,7 @@ import { currentJoinLink } from './auth.js';
 import {
   getEvent, getRound, roundsOfEvent, activeRound, displayRound, latestDraftRoundAfter, latestRound, drawsOf, winnersOf, latestSequence,
   roundSummary, resultWindowEndsAt, drawShape, publicState, winnerLabel, participantBoard, boardsOfRound,
+  publicEntrance,
 } from './queries.js';
 import { computeInsights, stageInsights } from '../../analytics-projection/src/insights.js';
 
@@ -91,7 +92,7 @@ export function createProjections({ db, clock, config, game, participants, hub =
     return rounds.map(r => ({ roundNumber: r.number, labels: winnersOf(db, r.id).map(w => winnerLabel(w)) }));
   }
   function galaxy(eventId) {
-    const souls = db.all('SELECT entrance_json FROM souls WHERE event_id = ? AND entrance_json IS NOT NULL ORDER BY floated_at', eventId).map(r => json.parse(r.entrance_json));
+    const souls = db.all('SELECT entrance_json FROM souls WHERE event_id = ? AND entrance_json IS NOT NULL ORDER BY floated_at', eventId).map(r => publicEntrance(json.parse(r.entrance_json), config));
     return { souls, count: souls.length };
   }
   function base(eventId) {
@@ -112,7 +113,7 @@ export function createProjections({ db, clock, config, game, participants, hub =
       eventId, eventName: event.name, sequence: seq, serverTime: clock.iso(), publicState: publicState(cur), notice: noticeFor(cur),
       round: publicRound(cur), nextRound: publicRound(nextRoundFor(eventId, cur)), join: joinFor(eventId),
       counts: { joined: counts.joined, completed: counts.completed, active: counts.active, matchedBoards: counts.matchedBoards },
-      currentDraw, recentDraws: recent(draws, 5), pacingMessage: pacing(cur, draws),
+      currentDraw, recentDraws: recent(draws, 6), pacingMessage: pacing(cur, draws),
       winners: showWinners ? winnersOf(db, cur.id).map(w => ({ label: winnerLabel(w), soulId: w.soul_id })) : [],
       previousWinners: previousWinners(eventId, cur?.id), galaxy: galaxy(eventId),
     };
@@ -127,10 +128,12 @@ export function createProjections({ db, clock, config, game, participants, hub =
     const snap = {
       eventId, eventName: event.name, sequence: seq, serverTime: clock.iso(), publicState: publicState(cur), notice: noticeFor(cur),
       round: stageRound(cur), nextRound: roundSummary(nextRoundFor(eventId, cur)), counts: game.countsOf(cur, eventId),
+      // D-46: rounds that reached a result (Bingo, no winner, or closed); cancelled rounds do not count
+      roundsPlayed: roundsOfEvent(db, eventId).filter(r => ['WINNER', 'EXHAUSTED', 'CLOSED'].includes(r.state)).length,
       currentDraw, recentDraws: recent(draws, 10),
       winners: winners.map(w => ({ label: winnerLabel(w), soulId: w.soul_id, winningDrawNumber: w.winning_draw_number })),
       resultTiming: { winningDrawNumber: winners[0]?.winning_draw_number ?? null, publishedAt: cur?.published_at ?? null, resultWindowEndsAt: resultWindowEndsAt(cur) },
-      insights: stageInsights(insights(eventId)),
+      insights: stageInsights(insights(eventId, { allRounds: true })),
     };
     return redact('stage', snap);
   }
@@ -180,18 +183,21 @@ export function createProjections({ db, clock, config, game, participants, hub =
   }
 
   // ---- insights (cached) ---------------------------------------------------------------------------------------------
-  function insightsInput(eventId) {
+  /** allRounds (stage, D-48): every board of the event, so all rounds combine; otherwise the current or last round. */
+  function insightsInput(eventId, { allRounds = false } = {}) {
     const round = activeRound(db, eventId) ?? latestRound(db, eventId);
     const parts = db.all('SELECT id, platform_id, role_id FROM participants WHERE event_id = ?', eventId).map(r => ({ participantId: r.id, platformId: r.platform_id, roleId: r.role_id }));
-    const boards = round ? boardsOfRound(db, round.id).map(b => ({ participantId: b.participant_id, state: b.state, selectedSkillIds: json.parse(b.selected_json, []), matrixVersion: b.matrix_version })) : [];
+    const rows = allRounds ? db.all('SELECT * FROM boards WHERE event_id = ?', eventId) : round ? boardsOfRound(db, round.id) : [];
+    const boards = rows.map(b => ({ participantId: b.participant_id, state: b.state, selectedSkillIds: json.parse(b.selected_json, []), matrixVersion: b.matrix_version }));
     return { participants: parts, boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: clock.iso() };
   }
-  function insights(eventId, { fresh = false } = {}) {
-    const c = cache.get(eventId);
+  function insights(eventId, { fresh = false, allRounds = false } = {}) {
+    const key = `${eventId}|${allRounds ? 'all' : 'round'}`;
+    const c = cache.get(key);
     if (!fresh && c && clock.now() - c.at < config.insightsCacheMs) return c.value;
     if (!getEvent(db, eventId)) return null;
-    const value = redact('insights', computeInsights(insightsInput(eventId)));
-    cache.set(eventId, { at: clock.now(), value });
+    const value = redact('insights', computeInsights(insightsInput(eventId, { allRounds })));
+    cache.set(key, { at: clock.now(), value });
     return value;
   }
 

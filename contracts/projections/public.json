@@ -11,11 +11,11 @@
     "join": { "joinUrl": "string", "expiresAt": "ISO" },
     "counts": { "joined": "int", "completed": "int", "active": "int", "matchedBoards": "int" },
     "currentDraw": { "number": "int", "skill": { "id": "string", "name": "string", "kind": "Core|Critical|Optional", "domain": "string" }, "drawnAt": "ISO", "poolRemaining": "int", "bingoEvaluationActive": "bool" },
-    "recentDraws": "[{number, skillName, kind}] (last 5)",
+    "recentDraws": "[{number, skillName, kind}] (last 6: the current draw and the five before it)",
     "pacingMessage": "string",
     "winners": "[{label, soulId}]",
     "previousWinners": "[{roundNumber, labels: string[]}] (last 3 rounds)",
-    "galaxy": { "souls": "[SoulEntrance] (all floated Souls; label only if consented; config: SoulConfig v3, or SoulConfigV2 / SoulConfigV1 for Souls stored earlier, exactly the keys of its version)", "count": "int" }
+    "galaxy": { "souls": "[SoulEntrance] (all floated Souls; label only if consented; greeting string|null (D-42, null when BINGO_GREETINGS=off); config: SoulConfig v3, or SoulConfigV2 / SoulConfigV1 for Souls stored earlier, exactly the keys of its version)", "count": "int" }
   },
   "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "platformId", "roleId", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email", "skillIds", "matchedCount", "selectedKinds", "matchedKinds", "kindCounts"],
   "note": "Contract 1.2.0 (D-31): a new Soul's config is SoulConfig v3 (realtime-events.json shapes.SoulConfig); Souls stored earlier and the neutral fallback keep SoulConfigV2 / SoulConfigV1. Its decoration is charm ids, face, face plate, eyes, antenna charm (topper) and gradient only; plate, eyes and topper are cosmetic ids picked from the seed, never from skills. Skill ids, skill names, match counts and the raw decoration inputs (the last five forbidden keys) never appear."

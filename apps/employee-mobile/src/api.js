@@ -37,7 +37,7 @@ export function createParticipantApi({ getToken, baseUrl = '/api/v1' } = {}) {
     saveSelections: (skillIds, boardVersion, idempotencyKey) => client.put('/me/board/selections', { skillIds, boardVersion }, { idempotencyKey }),
     finalize: (boardVersion, idempotencyKey) => client.post('/me/board/finalize', { boardVersion }, { idempotencyKey }),
     insight: () => client.get('/me/insight'),
-    float: (soulId, floatToken, idempotencyKey) => client.post('/me/soul/float', { soulId, floatToken }, { idempotencyKey }),
+    float: (soulId, floatToken, idempotencyKey, greeting = null) => client.post('/me/soul/float', greeting ? { soulId, floatToken, greeting } : { soulId, floatToken }, { idempotencyKey }),
     streamUrl: `${baseUrl}/me/stream`,
   };
 }

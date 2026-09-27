@@ -66,4 +66,12 @@ export function participantBoard(db, b) {
   const cells = b.state === 'DRAFT' || b.state === 'DEFERRED' ? null : cellsOf(db, b.id).map(c => { const s = SKILLS.get(c.skillId); return { position: c.position, skillId: c.skillId, name: s?.name ?? c.skillId, kind: skillKind(s), domain: s?.domain ?? null }; });
   return { boardId: b.id, roundId: b.round_id, state: b.state, version: b.version, selectedSkillIds: selected, cells: cells && cells.length ? cells : (cells ? null : null), matchedPositions: matchesOf(db, b.id), matrixVersion: b.matrix_version };
 }
+/**
+ * SoulEntrance as public / stage screens get it (D-42): `greeting` is always present (null for Souls floated before
+ * greetings existed) and null for everyone when BINGO_GREETINGS=off. The owner's own Float response is not masked.
+ */
+export function publicEntrance(entrance, config) {
+  return { ...entrance, greeting: config.greetings ? (entrance.greeting ?? null) : null };
+}
+
 export function soulEntranceEdge(seed) { return ['left', 'right', 'top', 'bottom'][hashString(`edge:${seed}`) % 4]; }

@@ -315,6 +315,7 @@
       "config": "SoulConfig (v3) for Souls created from contract 1.2.0 on; SoulConfigV2 for Souls created under 1.1.0 and for the neutral fallback; SoulConfigV1 for Souls created before 1.1.0. Public and stage get the same config as the owner: its decoration is charm ids, face, face plate, eyes, antenna charm and gradient, never skill ids, skill names or match counts",
       "badge": "bingo-star|null",
       "label": "string|null",
+      "greeting": "string|null (D-42): the player's optional message, max 40 characters, checked by packages/game-rules/src/greeting.js; null when none (the public screen shows \"Hi, I'm <name>!\", or \"Hi!\" without a public name, D-36), for Souls floated before greetings existed, and for everyone when BINGO_GREETINGS=off",
       "enteredAt": "ISO",
       "edge": "left|right|top|bottom"
     },

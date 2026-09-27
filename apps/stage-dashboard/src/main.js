@@ -10,7 +10,6 @@ import { t, exception, BINGO_UNLOCK_DRAW } from '/packages/contracts/index.js';
 import { readToken, saveToken, clearToken, readEventId, createStageApi, ApiError } from './api.js';
 import { initialState, reduce, deriveView, changedTiles, isRoundEvent } from './state.js';
 import { renderShell, renderDashboard, renderTokenPrompt, renderError, renderLoading, setConnection, setControls, setCaption, tick, announceDraw, announceWinners, announceState, ageSeconds } from './view.js';
-import { mountBackdrop } from './backdrop.js';
 
 const SNAPSHOT_REFRESH_MS = 15_000; // insights are computed server-side (2 s cache); refresh the whole snapshot
 const CONTACT_POLL_MS = 5_000;      // cheap GET /time keeps the "last server contact" age honest between events
@@ -64,14 +63,10 @@ const refs = renderShell(root, {
 });
 document.title = t('app.title');
 
-// ---- ambient backdrop (decorative, aria-hidden canvas behind the tiles; Three.js loaded lazily after boot) -----
-let backdrop = { mode: 'css', setReducedMotion() {}, dispose() {} };
-const scheduleBackdrop = typeof requestIdleCallback === 'function' ? (fn) => requestIdleCallback(fn, { timeout: 1500 }) : (fn) => setTimeout(fn, 300);
-scheduleBackdrop(() => {
-  mountBackdrop(document.body, { reducedMotion: prefersReducedMotion() })
-    .then((ctl) => { backdrop = ctl; document.documentElement.setAttribute('data-backdrop', ctl.mode); })
-    .catch(() => { document.documentElement.setAttribute('data-backdrop', 'css'); });
-});
+// ---- ambient backdrop (D-47): the Blender cinematic sky (art/sky*.{jpg,webp}) is plain CSS layers in index.html, the
+// same scene as the phone; the older Three.js forest (src/backdrop.js) is no longer mounted. Reduced motion is CSS only.
+const backdrop = { mode: 'layers', setReducedMotion() {}, dispose() {} };
+document.documentElement.setAttribute('data-backdrop', 'layers');
 
 // ---- boot ----------------------------------------------------------------------------------------------------
 function clearTimers() { for (const id of timers) clearInterval(id); timers = []; }

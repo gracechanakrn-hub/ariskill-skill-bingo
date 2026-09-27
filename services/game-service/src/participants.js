@@ -6,8 +6,8 @@ import { exception } from '../../../packages/contracts/index.js';
 import { newId, sha256Hex } from './ids.js';
 import { verifyJoinToken, issueSession, employeeRefHash, decryptToken } from './auth.js';
 import { SKILLS, SKILL_MASTER, PLATFORMS, ROLES, PLATFORM_BY_ID, ROLE_BY_ID, ROLE_SKILL_LEVELS, MATRIX_FREQUENCY, MATRIX_VERSION, discoverySkill, roleSkillSet } from './skills.js';
-import { activeRound, boardOf, getBoard, participantBoard, roundSummary, winnerLabel, soulEntranceEdge, getRound } from './queries.js';
-import { validateSelections, isComplete, REQUIRED_SELECTIONS, matrixInsight } from '../../../packages/game-rules/src/index.js';
+import { activeRound, boardOf, getBoard, participantBoard, roundSummary, winnerLabel, soulEntranceEdge, getRound, publicEntrance } from './queries.js';
+import { validateSelections, isComplete, REQUIRED_SELECTIONS, matrixInsight, checkGreeting } from '../../../packages/game-rules/src/index.js';
 
 const LEVEL_ORDER = { core: 0, critical: 1, optional: 2 };
 /** Discovery lists; 'core' and 'role' feed picker questions 1 and 2 (D-35). */
@@ -221,6 +221,10 @@ export function createParticipants({ db, clock, config, game, log }) {
   function float(participant, body, meta) {
     const { soulId, floatToken } = body ?? {};
     if (typeof soulId !== 'string' || typeof floatToken !== 'string' || !floatToken) throw new ApiError('VALIDATION', 'soulId and floatToken are required');
+    // Greeting (D-42): optional; checked before the one-use token is spent, so a rejected message costs nothing.
+    if (body.greeting !== undefined && body.greeting !== null && typeof body.greeting !== 'string') throw new ApiError('VALIDATION', 'greeting must be a string');
+    const greeting = checkGreeting(body.greeting ?? '');
+    if (!greeting.ok) throw new ApiError('GREETING_REJECTED', null, { reason: greeting.reason });
     const soul = db.get('SELECT * FROM souls WHERE id = ? AND participant_id = ?', soulId, participant.id);
     if (!soul) throw new ApiError('FLOAT_FAILED', null, { reason: 'unknown-soul' });
     const hash = sha256Hex(floatToken);
@@ -233,11 +237,11 @@ export function createParticipants({ db, clock, config, game, log }) {
         throw new ApiError('FLOAT_FAILED', null, { reason: !tok ? 'unknown-token' : 'expired' });
       }
       const p = db.get('SELECT * FROM participants WHERE id = ?', participant.id);
-      const entrance = { soulId, config: json.parse(soul.config_json), badge: soul.badge, label: p.consent_public_name ? p.display_name : null, enteredAt: t, edge: soulEntranceEdge(soul.seed) };
+      const entrance = { soulId, config: json.parse(soul.config_json), badge: soul.badge, label: p.consent_public_name ? p.display_name : null, greeting: greeting.value, enteredAt: t, edge: soulEntranceEdge(soul.seed) };
       db.run('UPDATE souls SET floated_at = ?, entrance_json = ? WHERE id = ? AND floated_at IS NULL', t, json.str(entrance), soulId);
       const round = getRound(db, soul.round_id);
-      ctx.emit('soul.float_accepted', { eventId: soul.event_id, roundId: soul.round_id, roundVersion: round?.version ?? null, payload: { entrance } });
-      game.audit({ eventId: soul.event_id, roundId: soul.round_id, actor: participant.id, action: 'soul.float', target: soulId, outcome: 'accepted', correlationId: meta.correlationId, commandId: meta.commandId, details: { edge: entrance.edge } });
+      ctx.emit('soul.float_accepted', { eventId: soul.event_id, roundId: soul.round_id, roundVersion: round?.version ?? null, payload: { entrance: publicEntrance(entrance, config) } });
+      game.audit({ eventId: soul.event_id, roundId: soul.round_id, actor: participant.id, action: 'soul.float', target: soulId, outcome: 'accepted', correlationId: meta.correlationId, commandId: meta.commandId, details: { edge: entrance.edge, greeting: entrance.greeting } });
       return { accepted: true, replay: false, entrance };
     });
     return result;

@@ -18,6 +18,7 @@ export const ERROR_CODES = {
   ILLEGAL_TRANSITION: { http: 409, exceptionId: 'E10' },
   DRAW_FAILED: { http: 500, exceptionId: 'E21' },
   FLOAT_FAILED: { http: 409, exceptionId: 'E13' },
+  GREETING_REJECTED: { http: 422, exceptionId: 'E24' },
   RATE_LIMITED: { http: 429, exceptionId: null },
 };
 /**

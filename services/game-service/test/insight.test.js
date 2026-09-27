@@ -63,7 +63,7 @@ describe('private insight, aggregate insights with cohort suppression, retention
       assert.equal(ins.roleEngagement.length, 1); assert.equal(ins.roleEngagement[0].joined, 5); assert.equal(ins.suppressedCohorts, 0);
       assert.deepEqual(findForbiddenKeys('insights', ins), []);
       const stage = (await s.api.get(`/stage/events/${EVENT_ID}/snapshot`, s.stage)).body.insights;
-      assert.deepEqual(Object.keys(stage).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topSkills']);
+      assert.deepEqual(Object.keys(stage).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
     } finally { await s.close(); }
   });
 
@@ -88,5 +88,58 @@ describe('private insight, aggregate insights with cohort suppression, retention
       assert.equal(s.db.get('SELECT status FROM events WHERE id = ?', EVENT_ID).status, 'archived');
       assert.equal((await s.api.get(`/events/${EVENT_ID}/snapshot`)).status, 200);
     } finally { s.clock.unfreeze(); await s.close(); }
+  });
+});
+
+describe('stage dashboard data (D-46)', () => {
+  const role = ROLES[0];
+  const CORE = [...SKILLS.values()].filter(s => s.kind === 'Core Skill' && s.status === 'active').map(s => s.id);
+  const inRole = [...roleSkillSet(role.id)];
+  const others = [...SKILLS.values()].filter(s => s.status === 'active' && !roleSkillSet(role.id).has(s.id)).map(s => s.id);
+  const board = (i, ids) => ({ participantId: `p${i}`, state: 'READY', selectedSkillIds: ids, matrixVersion: MATRIX_VERSION });
+  const people = (n) => Array.from({ length: n }, (_, i) => ({ participantId: `p${i}`, platformId: role.platformId, roleId: role.id }));
+  const pick = (a, n, from = 0) => a.slice(from, from + n);
+
+  test('topCoreSkills lists every active Core Skill, most picked first; the matched-count distribution sums to the boards', () => {
+    const boards = [0, 1, 2, 3, 4].map(i => board(i, [...pick(CORE, i + 1), ...pick(others, CELLS - i - 1, i * 3)]));
+    const r = computeInsights({ participants: people(5), boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    assert.equal(r.topCoreSkills.length, CORE.length);
+    assert.deepEqual(r.topCoreSkills.map(s => s.count), [...r.topCoreSkills.map(s => s.count)].sort((a, b) => b - a));
+    assert.equal(r.topCoreSkills[0].count, 5, 'the first core skill is on every board');
+    const d = r.matrixAlignment.distribution;
+    assert.equal(d.length, CELLS + 1); assert.equal(d.reduce((a, b) => a + b, 0), 5);
+    assert.ok(inRole.length > 0);
+  });
+
+  test('the distribution is withheld below 5 boards so a small room never shows one person', () => {
+    const boards = [0, 1, 2].map(i => board(i, [...pick(CORE, 2), ...pick(others, CELLS - 2, i)]));
+    const r = computeInsights({ participants: people(3), boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    assert.equal(r.matrixAlignment.distribution, null);
+    assert.equal(r.matrixAlignment.participants, 3);
+  });
+
+  test('the stage snapshot counts rounds that reached a result and combines every round (D-48)', async () => {
+    const s = await startServer({ drawGuidance: false, insightsCacheMs: 0 });
+    try {
+      const snap0 = (await s.api.get(`/stage/events/${EVENT_ID}/snapshot`, s.stage)).body;
+      assert.equal(snap0.roundsPlayed, 0);
+      const round = await createRound(s);
+      const p = await join(s);
+      await readyBoard(s, p, boardSet(0));
+      const started = await startRound(s, round);
+      await drawUntilEnd(s, started);
+      const snap1 = (await s.api.get(`/stage/events/${EVENT_ID}/snapshot`, s.stage)).body;
+      assert.equal(snap1.roundsPlayed, 1);
+      // D-48: a second round with another player; the stage combines both rounds
+      const r2 = await createRound(s, { title: 'Round 2' });
+      const q = await join(s);
+      await readyBoard(s, q, boardSet(1));
+      await drawUntilEnd(s, await startRound(s, r2));
+      const snap2 = (await s.api.get(`/stage/events/${EVENT_ID}/snapshot`, s.stage)).body;
+      assert.equal(snap2.roundsPlayed, 2);
+      assert.deepEqual(snap2.insights.totals, { participants: 2, completed: 2 });
+      const topCount = snap2.insights.topSkills.reduce((m, x) => Math.max(m, x.count), 0);
+      assert.ok(topCount <= 2 && snap2.insights.topSkills.length > 0, 'skills from both rounds are counted');
+    } finally { await s.close(); }
   });
 });

@@ -12,8 +12,26 @@
     "matrixAlignmentRate": "mean over participants of inMatrixCount/16 using each participant's role map at matrixVersion",
     "skillsBeyondMatrix": "skills selected that are not in the participant's role map, aggregated, top 10",
     "cohortSuppression": "Platform/Role breakdowns are omitted when the cohort has fewer than 5 joined participants (D-15)",
-    "matrixVersion": "skill-matrix-2026-tech-role-20260319 (from skill-master.json)"
+    "matrixVersion": "skill-matrix-2026-tech-role-20260319 (from skill-master.json)",
+    "topCoreSkills": "every active Core Skill kind skill (the picker's question 1) with the count of boards (READY+) containing it, descending (D-46)",
+    "matrixAlignmentDistribution": "matrixAlignment.distribution[k] = completed boards whose participant matched k of the 16 skills (k = 0..16); null below the cohort minimum (D-46)"
   },
-  "allow": ["participation", "platformEngagement", "roleEngagement", "topSkills", "coreCriticalDensity", "matrixAlignment", "skillsBeyondMatrix", "suppressedCohorts", "matrixVersion", "computedAt"],
-  "forbidden": ["any per-participant value", "employeeRef", "displayName"]
+  "allow": [
+    "participation",
+    "platformEngagement",
+    "roleEngagement",
+    "topSkills",
+    "topCoreSkills",
+    "coreCriticalDensity",
+    "matrixAlignment",
+    "skillsBeyondMatrix",
+    "suppressedCohorts",
+    "matrixVersion",
+    "computedAt"
+  ],
+  "forbidden": [
+    "any per-participant value",
+    "employeeRef",
+    "displayName"
+  ]
 }

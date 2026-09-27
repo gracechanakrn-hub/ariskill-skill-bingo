@@ -28,7 +28,7 @@ export function mountBoard(root, ctx, screen) {
     const r = screen === 'board' ? countdownTarget(lastState) : null;
     if (!r) { els.countdownBlock.hidden = true; return; }
     els.countdownBlock.hidden = false;
-    const label = t('board.editUntil', { time: formatTime(r.lockAt) });
+    const label = t('board.startsIn');
     if (els.countdownLabel.textContent !== label) els.countdownLabel.textContent = label;
     if (!ctx.clockSynced()) { els.countdown.textContent = exceptionCopy('E7'); els.countdown.classList.add('countdown--syncing'); return; }
     els.countdown.classList.remove('countdown--syncing');
@@ -47,7 +47,7 @@ export function mountBoard(root, ctx, screen) {
     // Waiting screens park a ringed planet in a reserved strip (never over text / controls; hidden below 360 px).
     els.sky = h('div', { className: 'waiting-sky', 'aria-hidden': 'true' }, ...doodadPlan(s, window.innerWidth).map((d) => doodad(d.kind, { size: d.size })));
     els.countdown = h('p', { className: 'countdown', 'aria-live': 'off' });
-    // D-40: say what the deadline means ("You can edit your board until 18:08") instead of a bare "Locks in".
+    // D-42: "The game will start in 12:34 mins" (the countdown runs to the round's lock time).
     els.countdownLabel = h('span', { className: 'countdown__label' });
     els.countdownLeft = h('span', { className: 'countdown__left' }, t('board.timeLeft'));
     els.countdownBlock = h('div', { className: 'countdown-block', hidden: true }, els.countdownLabel, els.countdown, els.countdownLeft);

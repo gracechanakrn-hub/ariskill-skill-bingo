@@ -2,7 +2,7 @@
 // Sound never carries required information (docs/audio/sound-spec.md); every cue has a visible/live-region twin.
 // Celebrations (motion + cue) are taken from the same guarded decision (docs/motion/motion-spec.md section 5).
 import { createAudioManager } from '/packages/ui/audio.js';
-import { createCelebrationGuard, setReducedMotion, restoreReducedMotion, prefersReducedMotion, MOTION } from '/packages/ui/motion.js';
+import { createCelebrationGuard, setReducedMotion, prefersReducedMotion, MOTION, REDUCED_MOTION_ATTR, REDUCED_MOTION_STORAGE_KEY } from '/packages/ui/motion.js';
 import { announce } from '/packages/ui/dom.js';
 import { t } from '/packages/contracts/index.js';
 
@@ -23,7 +23,11 @@ export function createAudioMotion({ clockNow, getConnectionEpoch }) {
   audio.preload();
   const guard = createCelebrationGuard({ getConnectionEpoch });
   const played = { bingoRounds: new Set(), soulReveals: new Set(), floats: new Set() };
-  restoreReducedMotion();
+  // D-44: no in-app sound / motion switches any more. Motion follows the phone's own reduced-motion setting and sound
+  // is on after the first tap, so a choice saved by the old switches is cleared rather than left stuck.
+  try { localStorage.removeItem(REDUCED_MOTION_STORAGE_KEY); } catch { /* storage unavailable */ }
+  document.documentElement.removeAttribute(REDUCED_MOTION_ATTR);
+  if (audio.state().muted) audio.setMuted(false);
 
   return {
     audio,

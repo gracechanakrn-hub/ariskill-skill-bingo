@@ -1,6 +1,6 @@
 // apps/employee-mobile/src/views/landing.js - E0 Landing (D-41): the Blender AriSkill sign, then the 3D Arise Soul flies
-// in from the distance, lands in front of the player and waves (src/landing/landing-scene.js); the tagline and Start
-// appear on touchdown. Without WebGL, or under reduced motion, the still waving pose shows and the copy is there at once.
+// in from the distance, lands in front of the player and waves (src/landing/landing-scene.js); Start appears on
+// touchdown (no tagline, D-42). Without WebGL, or under reduced motion, the still waving pose shows and the copy is there at once.
 import { h, mount } from '/packages/ui/dom.js';
 import { t } from '/packages/contracts/index.js';
 import { button } from './common.js';
@@ -15,7 +15,6 @@ export function mountLanding(root, ctx) {
     h('img', { className: 'landing__sign', src: '/play/art/ariskill-sign.webp', alt: '', width: '720', height: '360', decoding: 'async' }),
     stage,
     h('div', { className: 'landing__copy' },
-      h('p', { className: 'landing__tagline' }, t('landing.tagline')),
       button(t('landing.cta'), { variant: 'primary', className: 'landing__start', onClick: ctx.actions.enterJoin })));
   mount(root, section);
   const reveal = () => section.classList.add('is-landed');

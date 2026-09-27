@@ -4,6 +4,7 @@ export * from './board.js';
 export * from './pool.js';
 export * from './evaluate.js';
 export * from './director.js';
+export * from './greeting.js';
 export * from './soul.js';
 export * from './soul-catalog.js';
 export * from './insight.js';

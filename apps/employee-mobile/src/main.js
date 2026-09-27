@@ -9,6 +9,7 @@ import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t } from '/packages/contracts/index.js';
 import { createParticipantApi, ApiError, newIdempotencyKey, eventIdFromToken } from './api.js';
 import { createAudioMotion } from './audio-motion.js';
+import { cleanGreeting } from '/packages/game-rules/src/greeting.js';
 import {
   initialState, applyParticipantSnapshot, reduceEvent, reconcileDraft, placeBoard, sameSet,
   addSkill, removeSkill, undoSelection, screenFor, editableRound, saveBlockedReason, shouldAutoFinalize, applySaveResponse, REQUIRED_SELECTIONS,
@@ -92,7 +93,6 @@ const root = document.getElementById('main');
 const headerRight = document.getElementById('header-status');
 const bannerHost = document.getElementById('banner');
 const toastRegion = document.getElementById('toasts');
-const settingsHost = document.getElementById('settings');
 
 function patchUi(patch) { store.set((s) => ({ ...s, ui: { ...s.ui, ...patch } })); }
 
@@ -110,7 +110,7 @@ function toast(idOrText, { tone = 'danger', ms = TOAST_MS } = {}) {
   return el;
 }
 
-// ---- header / banner / settings ---------------------------------------------------------------------------
+// ---- header / banner ---------------------------------------------------------------------------
 function renderChrome(state) {
   const pills = [];
   if (state.session && state.participant) {
@@ -123,19 +123,6 @@ function renderChrome(state) {
   mount(bannerHost, showReconnect ? h('div', { className: 'banner banner--reconnecting', role: 'status' }, h('span', { className: 'banner__icon', 'aria-hidden': 'true' }), h('div', { className: 'banner__body' }, t('reconnect'))) : null);
 }
 
-function renderSettings() {
-  const reduced = audioMotion.isReduced();
-  const muted = audioMotion.isMuted();
-  const supported = audioMotion.audioSupported();
-  const unlocked = audioMotion.audio.state().unlocked; // silent until the join tap (autoplay policy)
-  const sw = (label, checked, onClick, { disabled = false, hint = null } = {}) => h('button', {
-    type: 'button', role: 'switch', className: 'switch', 'aria-checked': checked ? 'true' : 'false', onClick, disabled, title: hint || undefined,
-  }, h('span', { className: 'switch__label' }, label), h('span', { className: 'switch__state', 'aria-hidden': 'true' }, checked ? tl('ui.on') : tl('ui.off')));
-  mount(settingsHost, h('div', { className: 'settings-row', role: 'group', 'aria-label': tl('ui.settings') },
-    sw(tl('ui.reducedMotion'), reduced, () => { audioMotion.setReduced(!reduced); renderSettings(); }),
-    sw(tl('ui.sound'), supported && unlocked && !muted, async () => { audioMotion.setMuted(!muted); await audioMotion.unlock(); renderSettings(); }, { disabled: !supported, hint: supported ? null : exceptionCopy('E14') }),
-    supported ? null : h('span', { className: 'muted settings-note' }, exceptionCopy('E14'))));
-}
 
 // ---- rendering -----------------------------------------------------------------------------------------
 const VIEWS = {
@@ -229,7 +216,7 @@ function deviceRef() {
 }
 
 async function join({ employeeRef = deviceRef(), displayName, consentPublicName }) {
-  audioMotion.unlock().then(renderSettings); // inside the tap; the sound switch reflects the unlocked state
+  audioMotion.unlock(); // inside the tap (autoplay policy)
   track('client.join_started', { eventId });
   const tokenEvent = eventIdFromToken(store.get().joinToken);
   try {
@@ -511,7 +498,7 @@ function reviewBoard() {
 }
 function consumeShuffled() { patchUi({ justShuffled: false }); }
 /** Landing Start (D-39): also the first tap, so the audio unlock (autoplay policy) happens here. */
-function enterJoin() { audioMotion.unlock().then(renderSettings); patchUi({ landingDone: true }); }
+function enterJoin() { audioMotion.unlock(); patchUi({ landingDone: true }); }
 function readyAck() { patchUi({ readyAck: true }); announce(t('board.readyDone'), { politeness: 'polite' }); }
 function startNextRound(round = null) {
   const st = store.get();
@@ -533,6 +520,9 @@ function revealSoul() {
 }
 function soulRevealed() { patchUi({ soulRevealed: true }); }
 function floatStart() { patchUi({ floating: true, floatError: null }); }
+// Float greeting (D-42): kept outside the store so typing never re-renders the screen; sent with the Float request.
+let floatGreeting = '';
+function setFloatGreeting(text) { floatGreeting = typeof text === 'string' ? text : ''; }
 async function floatNow() {
   const st = store.get();
   const soul = st.soul;
@@ -543,7 +533,7 @@ async function floatNow() {
   if (!key) { key = newIdempotencyKey(); storage.set(keyName, key); }
   patchUi({ floating: true, floatError: null });
   try {
-    const res = await api.float(soul.soulId, soul.floatToken, key);
+    const res = await api.float(soul.soulId, soul.floatToken, key, cleanGreeting(floatGreeting) || null);
     track('client.float_result', { accepted: !!res.accepted, replay: !!res.replay });
     store.set((s) => ({ ...s, soul: s.soul ? { ...s.soul, floated: true, floatToken: null } : s.soul, ui: { ...s.ui, floating: false, floatError: null, floatDigit: null } }));
     const live = !res.replay && audioMotion.allow(`float:${soul.soulId}`, { connectionEpoch: sse ? sse.connectionEpoch : 0, replay: !!res.replay });
@@ -551,6 +541,8 @@ async function floatNow() {
     announce(t('soul.floated'), { politeness: 'polite' });
   } catch (err) {
     track('client.float_result', { accepted: false, replay: false });
+    // A rejected greeting (E24) did not spend the token: drop the key so the edited message is a new request.
+    if (err instanceof ApiError && err.code === 'GREETING_REJECTED') storage.del(keyName);
     patchUi({ floating: false, floatError: (err instanceof ApiError && err.exceptionId) || 'E13' });
     toast((err instanceof ApiError && err.exceptionId) || 'E13');
   }
@@ -561,7 +553,7 @@ Object.assign(ctx.actions, {
   join, loadTaxonomy, setProfile,
   discovery: (mode, q, limit) => api.discovery({ mode, q, limit }),
   tapSkill, removeSkill: removeSelected, undo, retrySave, retryFinalize, startEditing, stopEditing, setPickStep, reviewBoard, readyAck, consumeShuffled, enterJoin,
-  revealSoul, soulRevealed, floatStart, floatNow, startNextRound, toast,
+  revealSoul, soulRevealed, floatStart, floatNow, setFloatGreeting, startNextRound, toast,
 });
 
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && sse) { sse.reconnectNow(); } });
@@ -572,6 +564,5 @@ document.title = t('app.title');
 const skip = document.querySelector('.skip-link'); if (skip) skip.textContent = tl('ui.skip');
 const brand = document.querySelector('.brand__name'); if (brand) brand.textContent = t('app.title');
 
-renderSettings();
 render(store.get());
 if (session) start(); else if (!joinToken) store.set({ joinError: null });

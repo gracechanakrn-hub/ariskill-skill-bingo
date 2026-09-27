@@ -95,7 +95,7 @@ describe('api contract shapes', () => {
         expectError(await finished.api.post('/me/soul/float', {}, finished.p.token), 400, 'VALIDATION', null);
         expectError(await finished.api.post('/me/soul/float', { soulId: finished.me.soul.soulId, floatToken: 'wrong' }, finished.p.token), 409, 'FLOAT_FAILED', 'E13');
         const r = await finished.api.post('/me/soul/float', { soulId: finished.me.soul.soulId, floatToken: finished.me.soul.floatToken }, finished.p.token);
-        expectOk(r, 200, ['accepted', 'replay', 'entrance']); assert.equal(r.body.accepted, true); assert.deepEqual(Object.keys(r.body.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']);
+        expectOk(r, 200, ['accepted', 'replay', 'entrance']); assert.equal(r.body.accepted, true); assert.deepEqual(Object.keys(r.body.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId']);
         const cfg = r.body.entrance.config;
         assert.deepEqual(Object.keys(cfg), SOUL_CONFIG_KEYS, 'entrance.config is SoulConfig v3, keys in contract order'); assert.equal(cfg.version, 3);
         assert.ok(PLATE_IDS.includes(cfg.plate) && EYE_IDS.includes(cfg.eyes), 'plate and eyes are catalog ids');

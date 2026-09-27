@@ -17,7 +17,7 @@ export function initialState() {
     sequence: -1, eventId: null, eventName: '', serverTime: null, publicState: 'Waiting', notice: null,
     round: null, nextRound: null, counts: emptyCounts(), currentDraw: null, recentDraws: [], winners: [],
     resultTiming: { winningDrawNumber: null, publishedAt: null, resultWindowEndsAt: null },
-    insights: null, galaxy: null, bingo: null, poolSize: null,
+    insights: null, galaxy: null, bingo: null, poolSize: null, roundsPlayed: 0,
   };
 }
 
@@ -191,6 +191,7 @@ export function deriveView(state, { nowMs = Date.now() } = {}) {
       hero,
     },
     counts: { ...emptyCounts(), ...(state.counts || {}) },
+    roundsPlayed: Number(state.roundsPlayed) || 0, // D-46: rounds that reached a result (server-counted)
     draw: {
       current: state.currentDraw,
       recent: [...(state.recentDraws || [])].sort((a, b) => b.number - a.number).slice(0, RECENT_LIMIT),

@@ -7,7 +7,7 @@ import { formatCountdown } from '/packages/ui/clock-sync.js';
 import { formatInt } from '/packages/ui/format.js';
 import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t, exception, COPY } from '/packages/contracts/index.js';
-import { formatInsights, formatClock, kindIcon, winnerRows, winnerDisplayRows, ageSeconds } from './insights.js';
+import { winnerRows, ageSeconds, formatEngagement, formatPercent } from './insights.js';
 
 export const FALLBACK_COPY = Object.freeze({
   'stage.count.joined': 'Joined', 'stage.count.completed': 'Completed', 'stage.count.incomplete': 'Incomplete',
@@ -27,6 +27,11 @@ export const FALLBACK_COPY = Object.freeze({
   'stage.sound': 'Sound', 'stage.on': 'On', 'stage.off': 'Off', 'stage.volume': 'Volume', 'stage.reducedMotion': 'Reduced motion',
   'stage.token': 'Stage token', 'stage.tokenSubmit': 'Open dashboard', 'stage.skip': 'Skip to content', 'stage.retry': 'Retry',
   'stage.souls': 'Souls in the Galaxy', 'stage.nextRound': 'Next round', 'stage.moreWinners': '+{count} more',
+  'stage.kpi.rounds': 'Rounds played', 'stage.kpi.participants': 'Participants', 'stage.kpi.completed': 'Completed',
+  'stage.coreSkills': 'Top core skills', 'stage.matrix': 'Role Skill Matrix matched', 'stage.matrix.avg': 'average match',
+  'stage.matrix.players': '{count} players', 'stage.matrix.axis': 'Players by skills in their role matrix (0-16)',
+  'stage.matrix.wait': 'The breakdown appears once 5 boards are complete.', 'stage.boards': 'on {count} boards',
+  'stage.eng.legend': 'joined \u00B7 completed', 'stage.seeParticipants': 'See participants',
 });
 
 /** tx(key, vars): catalog copy when the key exists, otherwise the documented fallback (still keyed, never ad hoc). */
@@ -70,11 +75,6 @@ const STATE_META = {
 
 function stateLabel(rs) { return rs === 'WINNER' ? t('public.winner.title') : tx(`stage.state.${rs}`); }
 
-function kindBadge(kind, { size = 'md' } = {}) {
-  if (!kind) return null;
-  const k = kindIcon(kind);
-  return h('span', { class: `kind ${k.className} kind--${size}` }, h('span', { class: 'kind__glyph', 'aria-hidden': 'true' }, k.glyph), h('span', { class: 'kind__label' }, String(kind)));
-}
 
 // ---------------------------------------------------------------------------------------------------------------
 // Shell (rendered once)
@@ -89,18 +89,15 @@ export function renderShell(root, { onMute, onVolume, onReducedMotion, muted, vo
 
   const banner = h('div', { class: 'stage__banner banner banner--reconnecting', hidden: true, role: 'status', 'aria-live': 'polite', ref: (el) => { refs.banner = el; } },
     h('span', { class: 'banner__icon', 'aria-hidden': 'true' }), h('span', { class: 'banner__body', ref: (el) => { refs.bannerText = el; } }));
+  // D-48: no footer (connection pill, caption and sound controls are gone from the screen); the refs stay detached so
+  // the connection / caption helpers keep working, and the reconnect banner still shows a lost connection.
+  h('span', { ref: (el) => { refs.eventName = el; } });
+  h('span', { class: 'pill footer__conn', ref: (el) => { refs.conn = el; } }, h('span', { ref: (el) => { refs.connText = el; } }));
+  h('p', { ref: (el) => { refs.caption = el; } });
+  void soundBtn; void volumeInput; void rmBtn;
   const shell = h('div', { class: 'stage' },
     h('header', { class: 'stage__status', 'aria-label': t('stage.status'), ref: (el) => { refs.header = el; } }),
-    h('main', { id: 'main', class: 'stage__main', tabindex: '-1', ref: (el) => { refs.main = el; } }),
-    h('footer', { class: 'stage__footer' },
-      h('div', { class: 'footer__left' },
-        h('span', { class: 'footer__event', ref: (el) => { refs.eventName = el; } }, t('app.title')),
-        h('span', { class: 'pill footer__conn', ref: (el) => { refs.conn = el; } }, h('span', { class: 'footer__conn-text', ref: (el) => { refs.connText = el; } }, tx('stage.connecting')))),
-      h('p', { class: 'footer__caption', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true', ref: (el) => { refs.caption = el; } }),
-      h('div', { class: 'footer__controls' },
-        soundBtn,
-        h('label', { class: 'ctl ctl--range', for: 'stage-volume' }, h('span', { class: 'ctl__label' }, tx('stage.volume')), volumeInput),
-        rmBtn)));
+    h('main', { id: 'main', class: 'stage__main', tabindex: '-1', ref: (el) => { refs.main = el; } }));
   mount(root, [h('a', { class: 'skip-link', href: '#main' }, tx('stage.skip')), banner, shell]);
   refs.root = shell;
   return refs;
@@ -157,176 +154,144 @@ export function renderLoading(refs) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// Dashboard
+// Dashboard (D-46): logo + live round strip, three always-on numbers, and five insight cards; tapping a card opens its
+// list (or the matrix diagram) in the side panel. Aggregate data only (contracts/projections/stage.json).
 // ---------------------------------------------------------------------------------------------------------------
+export const PANELS = Object.freeze(['platforms', 'roles', 'topSkills', 'coreSkills', 'matrix']);
+const dash = { selected: 'topSkills', refs: null, args: null };
+
 /**
  * renderDashboard(refs, vm, { changed, effects, nowMs, synced })
  *  changed: Set from state.changedTiles (tiles get .m-fade when the change came from a live event)
  *  effects: { live: bool, drawArrival: bool, winnerBurst: bool } (already gated by the celebration guard)
  */
 export function renderDashboard(refs, vm, { changed = new Set(), effects = {}, nowMs = Date.now(), synced = true } = {}) {
-  refs.root.dataset.layout = vm.layout;
+  dash.refs = refs; dash.args = { vm, changed, effects, nowMs, synced };
+  refs.root.dataset.layout = 'dashboard';
   refs.root.dataset.roundState = vm.status.roundState || 'none';
   refs.eventName.textContent = vm.eventName || t('app.title');
   const fade = (key) => (effects.live && changed.has(key) ? 'm-fade' : null);
-
-  mount(refs.header, renderStatus(vm, { nowMs, synced, fadeClass: fade('status') }));
-  const parts = [renderParticipation(vm, { fade })];
-  if (vm.layout === 'live') {
-    parts.push(h('div', { class: 'live' },
-      h('div', { class: 'live__left' },
-        vm.status.roundState === 'WINNER' || vm.winners.list.length ? renderWinners(vm, { fadeClass: fade('winners'), burst: effects.winnerBurst }) : null,
-        renderDrawTile(vm, { fadeClass: fade('draw'), arrival: effects.drawArrival })),
-      renderInsights(vm, { fadeClass: fade('insights') })));
-  } else {
-    parts.push(renderInsights(vm, { fadeClass: fade('insights') }));
-  }
-  mount(refs.main, parts);
+  mount(refs.header, renderStatus());
+  const f = formatDashboard(vm.insights);
+  mount(refs.main, h('div', { class: 'dash' },
+    renderKpis(vm, { fade }),
+    h('section', { class: 'explore', 'aria-label': t('stage.insights') },
+      h('div', { class: 'explore__side' },
+        h('div', { class: 'explore__cards', role: 'tablist', 'aria-label': t('stage.insights'), 'aria-orientation': 'vertical', onKeydown: onCardKey }, ...PANELS.map((key) => renderCard(key))),
+        // D-48: the participants live on the big floating screen (the Galaxy); the stage itself stays aggregate-only
+        h('a', { class: 'explore__galaxy', href: '/public', target: '_blank', rel: 'noopener' }, tx('stage.seeParticipants'), h('span', { 'aria-hidden': 'true' }, ' \u2197'))),
+      h('div', { class: ['explore__panel', 'card', fade('insights')], role: 'tabpanel', id: 'explore-panel', 'aria-labelledby': `card-${dash.selected}` }, renderPanel(dash.selected, f)))));
   clipPartialRows(refs.root);
-  // One-shot classes were added at creation; clean them up so a later re-render can replay them.
-  for (const el of refs.root.querySelectorAll('.m-fade, .m-draw-arrival, .m-winner-burst')) {
-    for (const cls of ['m-fade', 'm-draw-arrival', 'm-winner-burst']) if (el.classList.contains(cls)) { el.classList.remove(cls); animateOnce(el, cls, { durationMs: cls === 'm-winner-burst' ? MOTION.durations.celebrate : cls === 'm-draw-arrival' ? MOTION.interactions.drawArrival.ms : MOTION.durations.base }); }
+  for (const el of refs.root.querySelectorAll('.m-fade, .m-winner-burst')) {
+    for (const cls of ['m-fade', 'm-winner-burst']) if (el.classList.contains(cls)) { el.classList.remove(cls); animateOnce(el, cls, { durationMs: cls === 'm-winner-burst' ? MOTION.durations.celebrate : MOTION.durations.base }); }
   }
 }
 
-function renderStatus(vm, { nowMs, synced, fadeClass }) {
-  const s = vm.status;
-  const rs = s.focusState;
-  const meta = STATE_META[rs] || null;
-  const number = s.roundNumber;
-  const title = s.roundTitle || '';
-  const roundLabel = number !== null ? t('public.winner.round', { number }) : '';
-  const showTitle = title && title.trim().toLowerCase() !== roundLabel.toLowerCase();
-  const left = h('div', { class: 'status__left' },
-    h('p', { class: 'status__eyebrow' }, s.isNextRound ? t('public.waiting.title') : t('stage.status')),
-    h('div', { class: 'status__row' },
-      h('h1', { class: 'status__title', id: 'status-title' }, number !== null ? [h('span', { class: 'status__round tabular sk-medallion', dataset: { number } }, roundLabel), showTitle ? h('span', { class: 'status__sep', 'aria-hidden': 'true' }, ' \u00B7 ') : null, showTitle ? h('span', { class: 'status__name' }, title) : null] : t('app.title')),
-      rs ? h('span', { class: ['pill', 'status__pill', meta ? meta.pill : ''] }, icon(meta ? meta.icon : 'ring', { size: 36 }), h('span', null, stateLabel(rs))) : null));
-  const right = h('div', { class: ['status__hero', `status__hero--${s.hero.kind}`, fadeClass] }, ...renderHero(s.hero, { nowMs, synced }), vm.layout === 'insights' && vm.winners.list.length ? renderWinnersLine(vm) : null);
-  return [left, right];
+function select(key, { focus = false } = {}) {
+  if (!PANELS.includes(key) || !dash.refs || !dash.args) return;
+  dash.selected = key;
+  renderDashboard(dash.refs, dash.args.vm, { ...dash.args, effects: {} });
+  if (focus) { const el = document.getElementById(`card-${key}`); if (el) el.focus(); }
+}
+function onCardKey(e) {
+  const i = PANELS.indexOf(dash.selected);
+  const next = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: PANELS.length - 1 }[e.key];
+  if (next === undefined) return;
+  e.preventDefault();
+  select(PANELS[(next + PANELS.length) % PANELS.length], { focus: true });
 }
 
-function renderHero(hero, { nowMs, synced }) {
-  switch (hero.kind) {
-    case 'countdown':
-      return [h('span', { class: 'hero__label' }, t('admin.lockCountdown')), h('span', { class: 'hero__numeral countdown tabular', dataset: { countdown: hero.target }, 'aria-live': 'off' }, synced ? formatCountdown(hero.target, nowMs) : t('syncing'))];
-    case 'scheduled':
-      return [h('span', { class: 'hero__text' }, hero.target ? tx('stage.locksAt', { time: formatClock(hero.target).slice(0, 5) }) : t('board.noRound'))];
-    case 'locked':
-      return [h('span', { class: 'hero__text' }, icon('lock', { size: 44 }), t('play.waitingStart')), hero.startOverdue ? h('span', { class: 'hero__hint' }, t('admin.startOverdue')) : null];
-    case 'draw':
-      return [h('span', { class: 'hero__draw' }, h('span', { class: 'hero__numeral hero__numeral--draw tabular' }, t('public.playing.draw', { number: hero.number })), h('span', { class: 'hero__skill' }, hero.skillName), kindBadge(hero.skillKind, { size: 'lg' }))];
-    case 'waitingDraw':
-      return [h('span', { class: 'hero__text' }, tx('stage.waitingDraw'))];
-    case 'result':
-      return [h('span', { class: 'hero__bingo' }, icon('star', { size: 64 }), t('public.winner.title')), h('span', { class: 'hero__hint tabular' }, [t('result.bingo'), hero.winningDrawNumber !== null ? ` · ${t('public.playing.draw', { number: hero.winningDrawNumber })}` : '', hero.publishedAt ? ` · ${formatClock(hero.publishedAt)}` : ''].join(''))];
-    case 'notice':
-      return [h('span', { class: 'hero__text hero__text--notice' }, icon(hero.notice === 'cancelled' ? 'cross' : 'check', { size: 44 }), hero.text || (hero.notice === 'cancelled' ? t('public.cancelled') : t('public.exhausted')))];
-    case 'closed':
-      return [h('span', { class: 'hero__text' }, exception('E1').copy)];
-    case 'none':
-    default:
-      return [h('span', { class: 'hero__text' }, exception('E1').copy)];
+/** Everything the cards and panels need, from the stage insights block (pure reshaping). */
+export function formatDashboard(insights) {
+  const i = insights || {};
+  const rank = (list) => { const rows = (Array.isArray(list) ? list : []).filter((r) => r && r.name).map((r) => ({ name: String(r.name), count: Number(r.count) || 0 })); rows.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)); const max = rows.reduce((m, r) => Math.max(m, r.count), 0); return rows.map((r, k) => ({ ...r, rank: k + 1, pct: max ? Math.round((r.count / max) * 100) : 0 })); };
+  const eng = (list) => { const rows = formatEngagement(list, { limit: 50 }); const max = rows.reduce((m, r) => Math.max(m, r.joined), 0); return rows.map((r, k) => ({ ...r, rank: k + 1, pct: max ? Math.round((r.joined / max) * 100) : 0 })); };
+  const a = i.matrixAlignment || null;
+  const rate = a && Number.isFinite(Number(a.rate)) && a.rate !== null ? Number(a.rate) : null;
+  return {
+    hasData: Boolean(insights),
+    platforms: eng(i.platformEngagement), roles: eng(i.roleEngagement),
+    topSkills: rank(i.topSkills), coreSkills: rank(i.topCoreSkills),
+    matrix: { rate, percent: rate === null ? '' : formatPercent(rate), participants: Number(a?.participants) || 0, distribution: Array.isArray(a?.distribution) ? a.distribution.map((n) => Number(n) || 0) : null, version: a?.matrixVersion || '' },
+    suppressedCohorts: Number(i.suppressedCohorts) || 0,
+  };
+}
+
+const CARD_TITLE = { platforms: 'stage.platforms', roles: 'stage.roles', topSkills: 'stage.topSkills', coreSkills: 'stage.coreSkills', matrix: 'stage.matrix' };
+function renderCard(key) {
+  const on = dash.selected === key;
+  return h('button', {
+    type: 'button', role: 'tab', id: `card-${key}`, class: ['insight-card', on ? 'is-on' : null], 'aria-selected': on ? 'true' : 'false',
+    'aria-controls': 'explore-panel', tabindex: on ? '0' : '-1', onClick: () => select(key),
+  },
+    h('span', { class: 'insight-card__title' }, tx(CARD_TITLE[key])),
+    h('span', { class: 'insight-card__chev', 'aria-hidden': 'true' }, '\u203A'));
+}
+
+function renderPanel(key, f) {
+  const title = h('h2', { class: 'panel__title' }, tx(CARD_TITLE[key]));
+  if (!f.hasData) return [title, h('p', { class: 'muted panel__empty' }, tx('stage.noInsights'))];
+  if (key === 'matrix') return [title, renderMatrix(f.matrix)];
+  const rows = f[key];
+  if (!rows.length) return [title, h('p', { class: 'muted panel__empty' }, key === 'platforms' || key === 'roles' ? tx('stage.noCohorts') : tx('stage.noInsights'))];
+  const isEng = key === 'platforms' || key === 'roles';
+  return [title,
+    h('ol', { class: 'bar-list', role: 'list' }, ...rows.map((r) => h('li', { class: ['bar-row', r.rank <= 3 ? `bar-row--r${r.rank}` : null] },
+      h('div', { class: 'bar-row__top' },
+        h('span', { class: 'bar-row__rank tabular', 'aria-hidden': 'true' }, String(r.rank)),
+        h('span', { class: 'bar-row__name' }, r.name),
+        h('span', { class: 'bar-row__count tabular' }, formatInt(isEng ? r.joined : r.count))),
+      h('span', { class: 'bar-row__bar', 'aria-hidden': 'true' }, h('span', { class: 'bar-row__fill', style: { width: `${r.pct}%` } }))))),
+  ];
+}
+
+/** Donut of the average match plus a bar chart of boards by matched count (0-16). SVG built with dom.h (no innerHTML). */
+function renderMatrix(m) {
+  if (m.rate === null) return h('p', { class: 'muted panel__empty' }, tx('stage.noInsights'));
+  const R = 70, C = 2 * Math.PI * R, pct = Math.max(0, Math.min(1, m.rate));
+  const donut = h('svg', { class: 'matrix__donut', viewBox: '0 0 180 180', role: 'img', 'aria-label': `${m.percent} ${tx('stage.matrix.avg')}` },
+    h('circle', { cx: 90, cy: 90, r: R, class: 'matrix__track' }),
+    h('circle', { cx: 90, cy: 90, r: R, class: 'matrix__arc', 'stroke-dasharray': `${(C * pct).toFixed(1)} ${C.toFixed(1)}`, transform: 'rotate(-90 90 90)' }),
+    h('text', { x: 90, y: 88, class: 'matrix__pct', 'text-anchor': 'middle' }, m.percent),
+    h('text', { x: 90, y: 116, class: 'matrix__cap', 'text-anchor': 'middle' }, tx('stage.matrix.avg')));
+  const parts = [h('div', { class: 'matrix__hero' }, donut, h('p', { class: 'matrix__meta tabular' }, tx('stage.matrix.players', { count: formatInt(m.participants) })))];
+  if (m.distribution) {
+    const max = Math.max(1, ...m.distribution);
+    const W = 17 * 34, H = 200;
+    const bars = m.distribution.map((n, k) => {
+      const bh = Math.round((n / max) * (H - 40));
+      return h('g', null,
+        h('rect', { x: k * 34 + 5, y: H - 24 - bh, width: 24, height: Math.max(bh, n ? 3 : 0), rx: 5, class: 'matrix__bar' }),
+        n ? h('text', { x: k * 34 + 17, y: H - 30 - bh, class: 'matrix__n', 'text-anchor': 'middle' }, String(n)) : null,
+        h('text', { x: k * 34 + 17, y: H - 4, class: 'matrix__k', 'text-anchor': 'middle' }, String(k)));
+    });
+    parts.push(h('figure', { class: 'matrix__hist' },
+      h('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': tx('stage.matrix.axis') }, ...bars),
+      h('figcaption', { class: 'matrix__axis' }, tx('stage.matrix.axis'))));
+  } else {
+    parts.push(h('p', { class: 'muted matrix__wait' }, tx('stage.matrix.wait')));
   }
+  return h('div', { class: 'matrix' }, ...parts);
 }
 
-const COUNT_KEYS = ['joined', 'completed', 'incomplete', 'active', 'deferred', 'matchedBoards'];
-function renderParticipation(vm, { fade }) {
-  return h('section', { class: 'tiles', 'aria-label': t('stage.participation') },
-    h('h2', { class: 'visually-hidden' }, t('stage.participation')),
-    ...COUNT_KEYS.map((k) => h('div', { class: ['stat', 'tile', `tile--${k}`, fade(`count.${k}`)] },
-      h('span', { class: 'stat__label tile__label' }, tx(`stage.count.${k}`)),
-      h('span', { class: 'stat__value tile__value tabular' }, formatInt(vm.counts[k])))));
+function renderStatus() {
+  // D-48: the header is the sign only; round state, hero text and hints are not shown on the stage any more.
+  return [h('h1', { class: 'visually-hidden', id: 'status-title' }, t('app.title')),
+    h('img', { class: 'status__logo', src: '/play/art/ariskill-sign.webp', alt: t('app.title'), width: '360', height: '180' })];
 }
 
-function renderDrawTile(vm, { fadeClass, arrival }) {
-  const cur = vm.draw.current;
-  const pacing = vm.draw.pacing === 'live' ? t('public.playing.live') : t('public.playing.pacing');
-  const compact = vm.status.roundState === 'WINNER'; // winners own the left column; the last draw becomes a one-line card so recent draws stay visible
-  return h('section', { class: ['card', 'draw', compact ? 'draw--compact' : null, arrival ? 'm-draw-arrival' : fadeClass], 'aria-labelledby': 'draw-title' },
-    cur ? h('div', { class: ['draw-card', 'draw__current', 'sk-card', cur.skill?.kind === 'Core' ? 'draw-card--core' : cur.skill?.kind === 'Critical' ? 'draw-card--critical' : null] },
-      h('h2', { class: 'draw__number tabular', id: 'draw-title' }, t('public.playing.draw', { number: cur.number })),
-      h('p', { class: 'draw__name' }, cur.skill?.name ?? ''),
-      h('p', { class: 'draw__meta' }, kindBadge(cur.skill?.kind, { size: 'md' }), h('span', { class: ['draw__pacing', vm.draw.pacing === 'live' ? 'draw__pacing--live' : null] }, pacing)),
-      h('p', { class: 'draw__matched tabular' }, t('public.playing.matched', { count: formatInt(vm.draw.matchedBoards) })))
-    : h('div', { class: 'draw__current draw__current--empty' }, h('h2', { class: 'draw__number', id: 'draw-title' }, tx('stage.recentDraws')), h('p', { class: 'draw__name muted' }, tx('stage.waitingDraw'))),
-    h('h3', { class: 'draw__list-title' }, tx('stage.recentDraws')),
-    vm.draw.recent.length ? h('ol', { class: 'draw-list draw__list', role: 'list', reversed: true } ,
-      ...vm.draw.recent.map((d) => h('li', { class: ['draw-list__item', 'draw__item', d.number === cur?.number ? 'is-current' : null] },
-        h('span', { class: 'draw__item-number tabular' }, String(d.number)),
-        h('span', { class: 'draw__item-name' }, d.skillName),
-        kindBadge(d.kind, { size: 'sm' }))))
-    : null);
+
+function renderKpis(vm, { fade }) {
+  const kpi = (key, value) => h('div', { class: ['kpi', `kpi--${key}`, fade(`count.${key}`)] },
+    h('span', { class: 'kpi__value tabular' }, formatInt(value)),
+    h('span', { class: 'kpi__label' }, tx(`stage.kpi.${key}`)));
+  return h('section', { class: 'kpis', 'aria-label': t('stage.participation') },
+    kpi('rounds', vm.roundsPlayed), kpi('participants', vm.insights?.totals?.participants ?? vm.counts.joined), kpi('completed', vm.insights?.totals?.completed ?? vm.counts.completed));
 }
 
-function renderWinners(vm, { fadeClass, burst }) {
-  const { rows, more, dense } = winnerDisplayRows(vm.winners.list);
-  const timing = vm.winners.timing;
-  return h('section', { class: ['card', 'winners', 'sk-card', dense ? 'winners--dense' : null, burst ? 'm-winner-burst' : fadeClass], 'aria-labelledby': 'winners-title' },
-    h('h2', { class: 'winners__title', id: 'winners-title' }, icon('star', { size: 44 }), t('public.winner.title'), vm.winners.roundNumber !== null ? h('span', { class: 'winners__round tabular' }, ` \u00B7 ${t('public.winner.round', { number: vm.winners.roundNumber })}`) : null),
-    rows.length ? h('ul', { class: 'winners__list', role: 'list' }, ...rows.map((w) => h('li', { class: 'winners__item' },
-      h('span', { class: 'winners__label' }, w.label ?? t('public.winner.anonymous', { id: w.shortId })),
-      w.winningDrawNumber !== null ? h('span', { class: 'winners__draw tabular' }, t('public.playing.draw', { number: w.winningDrawNumber })) : null)))
-    : h('p', { class: 'winners__empty muted' }, tx('stage.noWinners')),
-    more > 0 ? h('p', { class: 'winners__more tabular' }, tx('stage.moreWinners', { count: more })) : null,
-    timing.publishedAt ? h('p', { class: 'winners__timing tabular' }, tx('stage.publishedAt', { time: formatClock(timing.publishedAt) })) : null);
-}
-
-function renderWinnersLine(vm) {
-  const rows = winnerRows(vm.winners.list);
-  const names = rows.map((w) => `${w.label ?? t('public.winner.anonymous', { id: w.shortId })}${w.winningDrawNumber !== null ? ` (${t('public.playing.draw', { number: w.winningDrawNumber })})` : ''}`).join(', ');
-  return h('span', { class: 'hero__hint hero__winners' }, icon('star', { size: 30 }), h('span', { class: 'hero__winners-text' }, `${t('public.waiting.previous')}${vm.winners.roundNumber !== null ? ` \u00B7 ${t('public.winner.round', { number: vm.winners.roundNumber })}` : ''}: ${names}`));
-}
-
-function renderInsights(vm, { fadeClass }) {
-  const f = formatInsights(vm.insights, { layout: vm.layout });
-  const panel = (key, titleText, body, extraClass = null) => h('section', { class: ['card', 'panel', `panel--${key}`, extraClass], 'aria-labelledby': `panel-${key}` }, h('h3', { class: 'panel__title', id: `panel-${key}` }, titleText), body);
-  if (!f.hasData) return h('section', { class: ['insights', 'insights--empty', fadeClass], 'aria-label': t('stage.insights') }, h('h2', { class: 'visually-hidden' }, t('stage.insights')), h('p', { class: 'insights__empty muted' }, tx('stage.noInsights')));
-
-  const skillRow = (r, withKind) => h('li', { class: ['bar-row', r.rank <= 3 ? `bar-row--r${r.rank}` : null] },
-    h('div', { class: 'bar-row__top' },
-      h('span', { class: 'bar-row__rank tabular', 'aria-hidden': 'true' }, String(r.rank)),
-      h('span', { class: 'bar-row__name' }, withKind && r.kind ? [h('span', { class: `kind__glyph ${kindIcon(r.kind).className}`, 'aria-hidden': 'true' }, kindIcon(r.kind).glyph), ' ', r.name] : r.name),
-      withKind && r.kind ? h('span', { class: 'visually-hidden' }, String(r.kind)) : null,
-      h('span', { class: 'bar-row__count tabular' }, formatInt(r.count))),
-    h('span', { class: 'bar-row__bar', 'aria-hidden': 'true' }, h('span', { class: ['bar-row__fill', r.kind ? kindIcon(r.kind).className : null], style: { width: `${r.pct}%` } })));
-
-  const topSkills = panel('top', tx('stage.topSkills'), f.topSkills.length ? h('ol', { class: 'bar-list', role: 'list' }, ...f.topSkills.map((r) => skillRow(r, true))) : h('p', { class: 'muted panel__empty' }, tx('stage.noInsights')));
-
-  const density = panel('density', tx('stage.density'), h('div', { class: 'density' },
-    ...f.density.bars.map((b) => h('div', { class: 'density__row' },
-      h('span', { class: `density__label kind ${b.icon.className}` }, h('span', { class: 'kind__glyph', 'aria-hidden': 'true' }, b.icon.glyph), h('span', null, b.kind)),
-      h('span', { class: 'density__bar', 'aria-hidden': 'true' }, h('span', { class: ['density__fill', b.icon.className], style: { width: `${b.pct}%` } })),
-      h('span', { class: 'density__pct tabular' }, b.percentLabel || '0%'))),
-    h('p', { class: 'panel__foot tabular' }, tx('stage.selections', { count: formatInt(f.density.total) }))));
-
-  const alignment = panel('alignment', t('stage.alignment'), f.alignment
-    ? h('div', { class: 'alignment' },
-      h('div', { class: 'alignment__hero' }, h('span', { class: 'alignment__ring', 'aria-hidden': 'true', style: { '--pct': String(Math.min(100, Math.max(0, Math.round(f.alignment.rate * 100)))) } }), h('p', { class: 'alignment__rate tabular' }, f.alignment.percent)),
-      h('p', { class: 'alignment__meta tabular' }, tx('stage.participants', { count: formatInt(f.alignment.participants) })), f.alignment.matrixVersion ? h('p', { class: 'alignment__version' }, tx('stage.matrixVersion', { version: f.alignment.matrixVersion })) : null)
-    : h('p', { class: 'muted panel__empty' }, tx('stage.noInsights')));
-
-  const engagement = (key, titleText, rows) => panel(key, titleText, [
-    rows.length ? h('ol', { class: 'eng', role: 'list' }, ...rows.map((r) => h('li', { class: 'eng-row' },
-      h('span', { class: 'eng-row__name' }, r.name),
-      h('span', { class: 'eng-row__meta tabular' }, `${tx('stage.eng.joined', { count: formatInt(r.joined) })} \u00B7 ${tx('stage.eng.completed', { count: formatInt(r.completed) })}`))))
-    : h('p', { class: 'muted panel__empty' }, tx('stage.noCohorts')),
-    f.suppressedCohorts > 0 ? h('p', { class: 'panel__foot panel__foot--suppressed' }, icon('leaf', { size: 30 }), h('span', null, `${t('stage.suppressed')} \u00B7 ${tx('stage.hiddenCohorts', { count: formatInt(f.suppressedCohorts) })}`)) : null,
-  ]);
-
-  const beyond = panel('beyond', t('stage.beyond'), f.beyond.length ? h('ol', { class: 'bar-list', role: 'list' }, ...f.beyond.map((r) => skillRow(r, false))) : h('p', { class: 'muted panel__empty' }, tx('stage.noInsights')));
-
-  return h('section', { class: ['insights', f.compact ? 'insights--compact' : 'insights--full', fadeClass], 'aria-label': t('stage.insights') },
-    h('h2', { class: 'visually-hidden' }, t('stage.insights')),
-    topSkills,
-    h('div', { class: 'insights__stack' }, density, alignment),
-    engagement('platforms', tx('stage.platforms'), f.platforms),
-    engagement('roles', tx('stage.roles'), f.roles),
-    beyond);
-}
 
 /** Lists that may lose trailing rows when space runs out. Winner lists are never in this set (S-03: names must not be clipped). */
-export const CLIP_LIST_SELECTOR = '.draw__list, .bar-list, .eng';
+export const CLIP_LIST_SELECTOR = '.bar-list';
 
 /** Lists that must never scroll (1080p, no overflow): hide rows that would be cut in half instead of clipping mid-row. */
 export function clipPartialRows(root) {

@@ -17,7 +17,7 @@ const idsOf = (kind, pred) => SKILL_MASTER.skills.filter(s => s.kind === kind &&
 const CORE = idsOf('Core Skill', eligible), SOFT = idsOf('Soft Skill', eligible), HARD = idsOf('Hard Skill', eligible);
 const OPT_SOFT = OPTIONAL_IDS.filter(id => SKILLS.get(id).kind === 'Soft Skill'), OPT_HARD = OPTIONAL_IDS.filter(id => SKILLS.get(id).kind === 'Hard Skill');
 const V3_KEYS = Object.keys(SOUL_CONFIG_SCHEMA_V3), V2_KEYS = Object.keys(SOUL_CONFIG_SCHEMA_V2);
-const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId'];
+const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId'];
 const charmKinds = (charms) => { const out = { core: 0, technical: 0, soft: 0 }; for (const id of charms) out[CHARM_BY_ID.get(id).kind] += 1; return out; };
 const kindsOfIds = (ids) => countSkillKinds(ids.map(id => SKILLS.get(id).kind));
 
