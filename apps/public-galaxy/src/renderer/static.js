@@ -1,6 +1,7 @@
 // Static reduced-effects renderer (fallback tier 3, P-07): one composed frame, no animation loop.
 // Used for `?mode=static`, prefers-reduced-motion (when the operator did not force a live renderer) and when
-// both live renderers fail. Composition: nebula + star layer 1 + orbit rings + Souls at `simple` detail.
+// both live renderers fail. Composition: the still space backdrop (stage 15) + star layer 1 + orbit rings + Souls at
+// `simple` detail + the meteors in front.
 // galaxy.js re-renders it once per snapshot / accepted Float (Souls appear with no transition).
 import { createCanvas2dRenderer } from './canvas2d.js';
 

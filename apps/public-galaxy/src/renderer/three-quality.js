@@ -1,14 +1,23 @@
 // Quality table for the Three.js renderer (pure, Node-testable). scene-config#performance still decides star
 // layers, rings, twinkle and the entrance trail; this table adds what only the Three path has: resolution
-// scale, bloom parameters (off on `low`), firefly count and how many forest depth layers are drawn.
+// scale and bloom parameters (off on `low`). The space backdrop's own rule (space.js): no falling stars and no meteor
+// spin on `low`.
 export const THREE_QUALITY = Object.freeze({
-  high: { resolutionScale: 1.0, maxPixelRatio: 2, bloom: { strength: 0.62, radius: 0.55, threshold: 0.58 }, fireflies: 320, forestLayers: 3 },
-  medium: { resolutionScale: 0.85, maxPixelRatio: 1.5, bloom: { strength: 0.52, radius: 0.5, threshold: 0.62 }, fireflies: 220, forestLayers: 3 },
-  low: { resolutionScale: 0.7, maxPixelRatio: 1, bloom: null, fireflies: 110, forestLayers: 2 },
+  high: { resolutionScale: 1.0, maxPixelRatio: 2, bloom: { strength: 0.62, radius: 0.55, threshold: 0.58 } },
+  medium: { resolutionScale: 0.85, maxPixelRatio: 1.5, bloom: { strength: 0.52, radius: 0.5, threshold: 0.62 } },
+  low: { resolutionScale: 0.7, maxPixelRatio: 1, bloom: null },
 });
 
 /** Transient bloom bumps (strength added to the base, decaying linearly). Flash safety: single, non-repeating. */
 export const BLOOM_PULSE = Object.freeze({ entrance: 0.45, winner: 0.3 });
+
+/**
+ * A Bingo winner on the big screen (stage 15, D-36, with the gold crown of packages/ui/soul3d/winner.js): drawn `scale`
+ * times its size in a gold glow `halo` sizes wide (colour `rgb`, opacity `alpha`, brighter during the outline flash),
+ * laid under its own palette light, so it stands out in the crowd. An owner-approved exception to BR-17's equal size and
+ * brightness, scoped to the winner on this screen; the phone and the 2D fallback tiers keep every Soul equal.
+ */
+export const WINNER_LOOK = Object.freeze({ scale: 1.3, halo: 3.4, rgb: Object.freeze([1.0, 0.76, 0.28]), alpha: 0.72 });
 
 export function qualitySettings(quality) { return THREE_QUALITY[quality] || THREE_QUALITY.high; }
 

@@ -5,7 +5,7 @@ Status: submitted, provisional (OD-12 style, OD-14 venue). Owner: art-director-a
 ## 1. Scene hierarchy (back to front)
 
 ```
-GalaxyViewport (clip: x in [0, 1248) at 1920x1080; scales with viewport height)
+GalaxyViewport (clip: x in [0, 1344) at 1920x1080 since the 70 / 30 split, D-52 - [0, 1248) before; scales with viewport height)
   0 Background        flat --color-bg #0B0F1F
   1 Nebula            assets/scene/nebula.svg  (4 soft radial blobs, violet/blue/teal, <= 38 % opacity)
   2 Star layer 1 far  420 stars, parallax 0.15, twinkle +-8 % / 9 s
@@ -15,10 +15,10 @@ GalaxyViewport (clip: x in [0, 1248) at 1920x1080; scales with viewport height)
   6 Souls             sprites at full / simple / dot LOD, sorted by ring (outer first) then slot
   7 Entrance layer    active Float arcs, pulse, short trail (high level only)
   8 Foreground glow   one very soft vignette-glow towards the viewport centre, <= 12 % opacity
-InfoPanel (x >= 1248): opaque --color-bg-elevated, no scene content
+InfoPanel (x >= 1344): opaque, no scene content
 ```
 
-Nothing from layers 1-8 is drawn at x >= 1248 (`scene-config.json#safeZone`). All layer positions are normalised (0..1 of the Galaxy viewport) so the scene scales to any 16:9 display.
+Nothing from layers 1-8 is drawn at x >= panelX (1344 at 1920 wide, `scene-config.json#safeZone`). All layer positions are normalised (0..1 of the Galaxy viewport) so the scene scales to any 16:9 display.
 
 ## 2. Camera
 
@@ -65,7 +65,7 @@ At most 6 concurrent entrances; further entrances queue; if the queue exceeds 12
 
 Auto-downgrade when the 5 s average drops below 45 fps, with a 30 s cooldown (`performance.autoDowngrade`); never auto-upgrade during Playing. Level is also settable from the public URL (`?quality=low`) for rehearsal.
 
-Frame-time budget: 16.7 ms at 60 fps; **30-minute soak at 450 Souls on `medium` must hold >= 30 fps** (the acceptance capture on venue hardware is owed by workstream 13.4 / QA; not producible in this stage). Budgets: texture memory <= 64 MB, JS bundle <= 350 KB gzip, scene data <= 120 KB (current 41 KB), Soul SVG <= 6 KB.
+Frame-time budget: 16.7 ms at 60 fps; **30-minute soak at 450 Souls on `medium` must hold >= 30 fps** (the acceptance capture on venue hardware is owed by workstream 13.4 / QA; not producible in this stage). Budgets: texture memory <= 64 MB, JS bundle <= 350 KB gzip, scene data <= 120 KB (current 49.6 KB; the D-36 space pack is texture, not scene data: section 13), Soul SVG <= 6 KB.
 
 ## 7. Reduced-motion mode
 
@@ -79,7 +79,7 @@ Frame-time budget: 16.7 ms at 60 fps; **30-minute soak at 450 Souls on `medium` 
 
 ## 9. Information safe zone
 
-Right 35 % (`x >= 1248` at 1920). Effects clipped; panel opaque; 32 px inner margin; typography from `.theme-venue`. Tested in `tools/assets/test/souls.test.js` (scene-config values) and must be visually verified in every public state at rehearsal.
+Right 30 % (`x >= 1344` at 1920; D-52, 35 % before). Effects clipped; panel opaque; 32 px inner margin; typography from `.theme-venue`. Tested in `tools/assets/test/souls.test.js` (scene-config values) and must be visually verified in every public state at rehearsal.
 
 ## 10. Annotated compositions
 
@@ -124,7 +124,7 @@ Then back to Waiting at resultWindowEndsAt.
 ## 11. Deterministic asset generation and export rules
 
 - All scene files come from `node tools/assets/build-scene.js`; inputs are `assets-src/scene/scene-params.json` and `ORBIT_RINGS` from the renderer (single source). Star positions use `hash32(seed:index:salt)` so the same seed reproduces the same sky; running twice produces identical bytes (verified by diff).
-- Files: `starfield-layer-{1,2,3}.json` (normalised x, y, radius px @1080, brightness, twinkle phase), `nebula.svg` (1248 x 1080, clip-path to the Galaxy viewport), `orbit-rings.json`, `scene-config.json`. Manifest entries with sha256 checksums are merged into `assets/manifest/assets.yaml`.
+- Files: `starfield-layer-{1,2,3}.json` (normalised x, y, radius px @1080, brightness, twinkle phase), `nebula.svg` (galaxy width x 1080, clip-path to the Galaxy viewport), `orbit-rings.json`, `scene-config.json`. Manifest entries with sha256 checksums are merged into `assets/manifest/assets.yaml`.
 - Runtime format: JSON + SVG (no PNG; renderers rasterise at load). Formats are recorded in the manifest (`runtime_format`).
 - Never hand-edit `assets/scene/**`; change `scene-params.json` and regenerate. Tests compare the manifest checksums to the files.
 
@@ -133,3 +133,49 @@ Then back to Waiting at resultWindowEndsAt.
 - Load `assets/scene/scene-config.json` first; it links the other files and carries `safeZone`, `camera`, `entrance`, `lod`, `performance`, `reducedMotion`, `fallback`, `budgets`.
 - Render Souls with `renderSoulSvg(entrance.config, { detail, badge: entrance.badge, reducedMotion, idPrefix: entrance.soulId })`; place with `soulOrbitSlot(entrance.soulId, galaxy.count)`.
 - Do not add any per-Soul scale, tint, glow or ordering derived from data other than `config`, `badge` and `soulId`.
+
+## 13. Stage 15 (D-36): the living Galaxy and the space backdrop
+
+The big screen replaced layers 0-1 above, and the doodads, forest, fireflies and aurora, with a cinematic space sky, and
+gave the Souls depth and a little life. `nebula.svg`, `doodads.svg` and their modules are still generated and kept for
+other surfaces; the big screen no longer draws them. Order on the big screen (back to front):
+
+```
+GalaxyViewport
+  0 Space backdrop    assets/space/backdrop.jpg - Blender plate (nebula, milky way, a distant galaxy, a planet limb),
+                      region x 1.1 overscan, drifts 12 px / 80 s and breathes 1.2 % / 50 s, parallax 0.35
+  1 Constellations    assets/space/constellations.webp (Big Dipper, Cassiopeia, Orion, Cygnus) + their 24 stars drawn
+                      live, each twinkling (5.5 s), the lines shimmering (9 s)
+  2 Back meteors      3 small rocks (meteor-3..5): slow drift, spin <= 4 deg/s
+  3 Star layers 1-3   as before
+  4 Orbit rings       as before
+  5 Falling star      one at a time, every 6-12 s, 0.9-1.5 s, one fade in and out
+  6 Souls             far to near by depth: scale 0.64-1.36, haze 0.74-1, parallax 0.6-1.4 (every Soul averages the same
+                      over an orbit, BR-17); a Bingo winner 1.3x in a gold glow with a gold crown (OD-25)
+  7 Performers        up to 3 Souls doing an idle micro action (live 3D tiles; 2 on medium, none on low)
+  8 Entrance layer    as before
+  9 Visit             one Soul at the front saying hi (>= 30 % of the Galaxy height) + its speech bubble (DOM);
+                      a Soul that just floated in goes next, in arrival order, else a random one
+ 10 Front meteors     2 big rocks at the corners (meteor-1, meteor-2), where Souls never go
+ 11 Foreground glow   the soft vignette
+```
+
+| Level | Micro-action lanes | Falling stars | Meteor spin | Space drift / twinkle |
+|---|---|---|---|---|
+| high | 3 | yes | yes | yes |
+| medium | 2 | yes | yes | yes |
+| low | 0 | no | no | yes |
+| reduced motion | 0, no visits | no | no | at rest |
+
+- Data: `assets/space/space.json` (version 1: region, overscan, backdrop / constellations / meteors / fallingStars with
+  their movement) and the images it names. Build: `blender -b -P tools/ai/blender/galaxy_space.py` (renders, git-ignored
+  PNGs in `assets-src/generated/galaxy-space/`), then `python3 tools/assets/build-galaxy-space.py` (packs JPEG / WebP,
+  writes `provenance.json`); `tools/assets/build-galaxy-space.js` (build-all) checks the pack against the provenance
+  and merges the manifest entries (`space_*`). Never hand-edit `assets/space/**`.
+- Budgets (checked by the build step): backdrop <= 160 KB, each WebP layer <= 64 KB, space.json <= 16 KB, the pack
+  <= 320 KB (now 178 KB), decoded <= 16 MB of the 64 MB texture budget (now 15.5 MB). No space.json: a plain dark sky.
+- The plate is authored for a 1248 x 1080 region (`space.json` region) and cover-fitted to the live Galaxy size: at the
+  70 / 30 split (D-52, 1344 px wide) it is drawn about 8 % larger and trimmed top and bottom; the constellation stars
+  are placed on the plate, so they stay on their lines. Re-render at 1344 x 1080 if the softness ever shows.
+- The panel is unchanged by the sky: nothing is drawn at x >= panelX.
+

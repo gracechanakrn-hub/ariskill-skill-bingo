@@ -235,9 +235,9 @@ export async function loadSoulDecor(mods, config, { decor = SOUL_DECOR, face: fa
     return null;
   };
   plan.charms.forEach((c, i) => { const model = take(results[i], c.id); if (model) charms.push({ slot: c.slot, id: c.id, model, place: c.place }); });
-  const face = take(kitResult, plan.face && `face:${plan.face.face}`);
   const plate = take(plateResult, plan.plate && `plate:${plan.plate.id}`);
   const eyes = take(eyesResult, plan.eyes && `eyes:${plan.eyes.id}`);
+  const face = take(kitResult, plan.face && `face:${plan.face.face}`);
   const topperModel = take(topperResult, plan.topper && `topper:${plan.topper.id}`);
   const topper = topperModel ? { id: plan.topper.id, model: topperModel, place: plan.topper.place } : null;
   const any = charms.length > 0 || !!(face || plate || eyes || topper);

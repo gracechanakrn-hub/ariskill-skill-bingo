@@ -1,9 +1,11 @@
 // WebGL2 renderer (primary, fallback tier 1). Batched textured quads through ONE vertex array object
 // (unit quad + interleaved per-instance buffer, drawArraysInstanced), point sprites for the three star layers,
-// GL_LINES for the dashed orbit rings. Textures: nebula (rasterised once), atlas pages (re-uploaded only when
-// atlas.version changes), a shared radial glow. Context loss is handled: the renderer disposes itself and
-// calls onLost so galaxy.js can hand over to canvas2d.js.
+// GL_LINES for the dashed orbit rings. Textures: the space backdrop (stage 15, D-36: the Blender plate, the
+// constellation lines, the meteors turned once - all still here, space.js at rest; a plain dark sky without
+// space.json), atlas pages (re-uploaded only when atlas.version changes), a shared radial glow. Context loss is
+// handled: the renderer disposes itself and calls onLost so galaxy.js can hand over to canvas2d.js.
 import { hexToRgba } from './atlas.js';
+import { backdropPlacement, constellationPlacement, constellationStars, meteorPose } from './space.js';
 import { resolveSoul, PALETTES } from '../../../../packages/ui/soul-renderer.js';
 
 const SPRITE_VS = `#version 300 es
@@ -68,7 +70,7 @@ function program(gl, vs, fs) {
 }
 function hexToRgb(hex) { const h = String(hex).replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
 
-export function createWebgl2Renderer({ container, atlas, nebula = null, starLayers = [], background = '#0B0F1F', dpr = 1, onLost = null } = {}) {
+export function createWebgl2Renderer({ container, atlas, space = null, starLayers = [], background = '#0B0F1F', dpr = 1, onLost = null } = {}) {
   const canvas = document.createElement('canvas');
   canvas.className = 'galaxy__canvas';
   canvas.setAttribute('aria-hidden', 'true');
@@ -150,12 +152,44 @@ export function createWebgl2Renderer({ container, atlas, nebula = null, starLaye
     x.fillStyle = g; x.fillRect(0, 0, 128, 128); return c;
   }
   const glowTex = makeTexture(glowCanvas());
-  let nebulaTex = null, nebulaSize = null;
-  function ensureNebula() {
-    if (nebulaTex || !nebula) return;
-    const c = document.createElement('canvas'); c.width = nebula.width; c.height = nebula.height;
-    c.getContext('2d').drawImage(nebula, 0, 0);
-    nebulaTex = makeTexture(c); nebulaSize = { w: nebula.width, h: nebula.height };
+  // ---- space (still): textures made once; a meteor is turned by its rotDeg into a canvas (these quads never rotate) ----
+  const spec = space && space.spec ? space.spec : null;
+  const simg = (space && space.images) || {};
+  let spaceTex = null;
+  function turned(img, deg) {
+    const a = ((Number(deg) || 0) * Math.PI) / 180;
+    if (!a) return { source: img, k: 1 };
+    const c = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a));
+    const cv = document.createElement('canvas'); cv.width = Math.ceil(img.width * c + img.height * s); cv.height = Math.ceil(img.width * s + img.height * c);
+    const x = cv.getContext('2d'); x.translate(cv.width / 2, cv.height / 2); x.rotate(a); x.drawImage(img, -img.width / 2, -img.height / 2);
+    return { source: cv, k: cv.height / img.height };
+  }
+  function ensureSpace() {
+    if (spaceTex || !spec) return;
+    const tex = (img) => (img ? { tex: makeTexture(img), aspect: img.width / img.height || 1 } : null);
+    spaceTex = {
+      backdrop: tex(simg.backdrop), lines: tex(simg.constellations),
+      meteors: spec.meteors.map((m, i) => { const img = (simg.meteors || [])[i]; if (!img) return null; const t = turned(img, m.rotDeg); return { m, tex: makeTexture(t.source), aspect: t.source.width / t.source.height, k: t.k }; }).filter(Boolean),
+    };
+  }
+  function drawMeteors(front) {
+    if (!spaceTex) return;
+    for (const me of spaceTex.meteors) {
+      if (me.m.front !== front) continue;
+      const p = meteorPose({ ...me.m, rotDeg: 0 }, width, height, 0, { reducedMotion: true });
+      const h = p.size * me.k;
+      push(p.x, p.y, h * me.aspect, h, 0, 0, 1, 1, 1, 1, 1, 1); flush(me.tex, false);
+    }
+  }
+  function drawSpace() {
+    if (!spaceTex) return;
+    const B = spaceTex.backdrop, Ln = spaceTex.lines;
+    if (B) { const b = backdropPlacement(spec, width, height, 0, { reducedMotion: true, aspect: B.aspect }); push(b.x, b.y, b.w, b.h, 0, 0, 1, 1, 1, 1, 1, 1); flush(B.tex, false); }
+    const plate = constellationPlacement(spec, width, height, 0, { reducedMotion: true, aspect: Ln ? Ln.aspect : undefined });
+    if (Ln) { push(plate.x, plate.y, plate.w, plate.h, 0, 0, 1, 1, 1, 1, 1, 1); flush(Ln.tex, false); }
+    for (const s of constellationStars(spec, plate, height, 0, { reducedMotion: true })) push(s.x, s.y, s.r * 6, s.r * 6, 0, 0, 1, 1, 0.93, 0.95, 1, s.a);
+    flush(glowTex, true);
+    drawMeteors(false);
   }
   const pageTex = [];
   let atlasVersion = -1;
@@ -236,15 +270,11 @@ export function createWebgl2Renderer({ container, atlas, nebula = null, starLaye
 
   function render(f) {
     if (disposed || lost) return;
-    ensureNebula(); ensureAtlas();
+    ensureSpace(); ensureAtlas();
     gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND);
     gl.clearColor(bg[0], bg[1], bg[2], 1); gl.clear(gl.COLOR_BUFFER_BIT);
-    // 1 nebula (cover fit)
-    if (nebulaTex && f.nebula) {
-      const s = Math.max(width / nebulaSize.w, height / nebulaSize.h);
-      push(width / 2 + f.camera.dx * 0.1, height / 2 + f.camera.dy * 0.1, nebulaSize.w * s, nebulaSize.h * s, 0, 0, 1, 1, 1, 1, 1, 1);
-      flush(nebulaTex, false);
-    }
+    // 1 the space backdrop (still)
+    drawSpace();
     // 2-4 stars (additive point sprites)
     gl.useProgram(starProg);
     gl.blendFunc(gl.ONE, gl.ONE);
@@ -280,6 +310,11 @@ export function createWebgl2Renderer({ container, atlas, nebula = null, starLaye
       flush(glowTex, true);
     }
     drawSpriteList(f.entrances, () => 'full');
+    // 7b the Soul visiting the front to say hi (stage 15): a soft glow, then its sprite at the drawn size
+    const visits = (f.visits || []).map((v) => ({ ...v, size: v.size * (v.scale || 1), scale: 1 }));
+    for (const v of visits) { const c = glowOf(v); push(v.x, v.y, v.size * 1.9, v.size * 1.9, 0, 0, 1, 1, c[0], c[1], c[2], 0.35 * 0.6); flush(glowTex, true); }
+    drawSpriteList(visits, () => 'full');
+    drawMeteors(true);
     // 8 foreground vignette glow (<= 12 %)
     push(width / 2, height / 2, Math.max(width, height) * 1.4, Math.max(width, height) * 1.4, 0, 0, 1, 1, 0.65, 0.58, 1, 0.10);
     flush(glowTex, true);

@@ -10,6 +10,7 @@
 // (same-origin PNGs, cached per URL; a sprite that fails to load is left out). When the Three.js renderer attaches its
 // impostor stage (impostor.js), v2 Souls get a 3D impostor cell instead - the same figure as the phone, baked a few
 // per frame and cached by soulId + badge + cell - and fall back to this 2D composition whenever the stage fails.
+// Stage 15 (D-36): the big screen's Souls have no white die-cut, so the SVG is rendered with dieCut: false.
 import { renderSoulSvg, soulSpriteLayers, VIEWBOX } from '../../../../packages/ui/soul-renderer.js';
 import { ATLAS_CELLS, atlasCellFor } from './scene.js';
 import { impostorKey } from './impostor-plan.js';
@@ -82,7 +83,7 @@ export function createAtlas(opts = {}) {
 
   /** The 2D v4 composition into a slot: the SVG without image layers, then its sprite layers (v2) on top. */
   function draw2d(entry, slot, soul, d, cell) {
-    const svg = renderSoulSvg(soul.config, { size: cell, detail: d, badge: soul.badge || null, reducedMotion: true, images: false, idPrefix: `pg-${String(soul.soulId).replace(/[^A-Za-z0-9_-]/g, '')}-${d}-${cell}` });
+    const svg = renderSoulSvg(soul.config, { size: cell, detail: d, badge: soul.badge || null, reducedMotion: true, images: false, dieCut: false, idPrefix: `pg-${String(soul.soulId).replace(/[^A-Za-z0-9_-]/g, '')}-${d}-${cell}` });
     const layers = d === 'dot' ? [] : soulSpriteLayers(soul.config);
     const p = Promise.all([rasterise(svg, cell), ...layers.map((l) => sprite(l.href))]).then(([img, ...imgs]) => {
       const ctx = slot.page.ctx;
@@ -178,7 +179,7 @@ export function hexToRgba(hex, a) {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
 
-/** Load nebula.svg into an Image once (drawn with drawImage / uploaded as a texture). */
+/** Load an image (a charm / face sprite) into an Image element. */
 export function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();

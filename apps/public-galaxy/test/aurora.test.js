@@ -32,15 +32,9 @@ test('aurora cap: brightest sky pixel keeps >= 4.5:1 against the panel body text
   assert.ok(contrastRatio(luminanceHex('#E7DFFF'), luminanceHex('#2D2670')) >= 10, 'pill ink on badge (token rule)');
 });
 
-test('static / reduced tiers: app.css draws the same band as a still CSS gradient on non-Three renderers, capped', () => {
-  const rule = css.match(/body:not\(\[data-renderer="three"\]\) \.galaxy::after \{[^}]+\}/);
-  assert.ok(rule, 'non-three aurora rule present');
-  assert.match(rule[0], /rgba\(79,227,193/, 'teal');
-  assert.match(rule[0], /rgba\(182,255,92/, 'lime');
-  const alphas = [...rule[0].matchAll(/rgba\((?:79,227,193|182,255,92),\.(\d+)\)/g)].map(m => Number('0.' + m[1]));
-  assert.ok(alphas.length >= 3 && Math.max(...alphas) <= 0.3, 'CSS band alpha capped at .30');
-  const ys = [...rule[0].matchAll(/ellipse \d+% \d+% at \d+% (\d+)%/g)].map(m => Number(m[1]));
-  assert.equal(ys.length, 3);
-  assert.ok(ys.every(y => y <= 33), 'CSS band sits in the upper third');
-  assert.match(css, /\.galaxy__label \{[^}]*color: var\(--ui-text\)/, 'cluster labels use the full text colour over the band');
+test('stage 15 (D-36): no CSS aurora band on any tier any more - every renderer draws the space backdrop; the vignette and label rules stay', () => {
+  assert.doesNotMatch(css, /body:not\(\[data-renderer="three"\]\) \.galaxy::after \{[^}]*rgba\(79,227,193/, 'the still teal / lime band is gone');
+  assert.doesNotMatch(css, /rgba\(182,255,92,\.\d+\)/, 'no lime band left anywhere');
+  assert.match(css, /\.galaxy::after \{[^}]*radial-gradient\(circle at 51% 48%/, 'the soft vignette over the Galaxy stays');
+  assert.match(css, /\.galaxy__label \{[^}]*color: var\(--ui-text\)/, 'cluster labels use the full text colour over the sky');
 });

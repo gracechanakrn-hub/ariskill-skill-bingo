@@ -1,11 +1,14 @@
 // Canvas 2D renderer (fallback tier 2, P-07). Draws the same scene as webgl2.js from scene.frame() draw lists:
-// nebula image, pre-rendered star sprites (additive), dashed orbit rings, Soul sprites from the atlas
-// (normal alpha), entrance trail / glow (additive) and a soft foreground vignette. The canvas element is sized
-// to the Galaxy region only, so nothing can be painted at x >= panelX (safe zone).
+// the space backdrop (stage 15, D-36: the Blender plate, the constellation lines and their stars, the meteors - all
+// still here, space.js at rest; a plain dark sky without space.json), pre-rendered star sprites (additive), dashed
+// orbit rings, Soul sprites from the atlas (normal alpha), entrance trail / glow (additive), the say-hi visit, the
+// meteors in front and a soft foreground vignette. The canvas element is sized to the Galaxy region only, so nothing
+// can be painted at x >= panelX (safe zone).
 import { makeStarSprite, hexToRgba } from './atlas.js';
+import { backdropPlacement, constellationPlacement, constellationStars, meteorPose } from './space.js';
 import { PALETTES, resolveSoul } from '../../../../packages/ui/soul-renderer.js';
 
-export function createCanvas2dRenderer({ container, atlas, nebula = null, background = '#0B0F1F', dpr = 1, staticMode = false } = {}) {
+export function createCanvas2dRenderer({ container, atlas, space = null, background = '#0B0F1F', dpr = 1, staticMode = false } = {}) {
   const canvas = document.createElement('canvas');
   canvas.className = 'galaxy__canvas';
   canvas.setAttribute('aria-hidden', 'true');
@@ -28,13 +31,31 @@ export function createCanvas2dRenderer({ container, atlas, nebula = null, backgr
     canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
   }
 
-  function drawNebula(f) {
-    if (!nebula || !f.nebula) return;
-    // "cover" fit anchored at the centre so the baked ring hairlines stay concentric with the drawn rings.
-    const s = Math.max(width / nebula.width, height / nebula.height);
-    const w = nebula.width * s, h = nebula.height * s;
+  // ---- space (still): the plate, the constellation lines and stars, the meteors behind / in front of the Souls ----
+  const spec = space && space.spec ? space.spec : null;
+  const simg = (space && space.images) || {};
+  const aspect = (img) => img.width / img.height || 1;
+  function drawMeteors(front) {
+    if (!spec) return;
+    spec.meteors.forEach((m, i) => {
+      const img = (simg.meteors || [])[i];
+      if (!img || m.front !== front) return;
+      const p = meteorPose(m, width, height, 0, { reducedMotion: true });
+      const h = p.size, w = h * aspect(img);
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate((p.rotDeg * Math.PI) / 180); ctx.drawImage(img, -w / 2, -h / 2, w, h); ctx.restore();
+    });
+  }
+  function drawSpace() {
+    if (!spec) return;
     ctx.globalAlpha = 1;
-    ctx.drawImage(nebula, (width - w) / 2 + f.camera.dx * 0.1, (height - h) / 2 + f.camera.dy * 0.1, w, h);
+    if (simg.backdrop) { const b = backdropPlacement(spec, width, height, 0, { reducedMotion: true, aspect: aspect(simg.backdrop) }); ctx.drawImage(simg.backdrop, b.x - b.w / 2, b.y - b.h / 2, b.w, b.h); }
+    const plate = constellationPlacement(spec, width, height, 0, { reducedMotion: true, aspect: simg.constellations ? aspect(simg.constellations) : undefined });
+    if (simg.constellations) ctx.drawImage(simg.constellations, plate.x - plate.w / 2, plate.y - plate.h / 2, plate.w, plate.h);
+    ctx.globalCompositeOperation = 'lighter';
+    const sprite = starSprite('#EEF2FF');
+    for (const s of constellationStars(spec, plate, height, 0, { reducedMotion: true })) { const d = s.r * 6; ctx.globalAlpha = s.a; ctx.drawImage(sprite, s.x - d / 2, s.y - d / 2, d, d); }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    drawMeteors(false);
   }
 
   function drawStars(f) {
@@ -101,6 +122,15 @@ export function createCanvas2dRenderer({ container, atlas, nebula = null, backgr
     }
   }
 
+  /** The Soul visiting the front to say hi (stage 15): its sprite at the drawn size (a cell to match) and a soft glow. */
+  function drawVisits(f) {
+    for (const v of f.visits || []) {
+      const big = { ...v, size: v.size * (v.scale || 1) };
+      drawGlow(big, 0.6);
+      drawSprite(big, 'full', big.size, v.alpha ?? 1, 1);
+    }
+  }
+
   function drawClusters(f) {
     if (!f.clusters.length) return;
     ctx.font = `600 ${Math.round(14 * f.layout.scale + 6)}px system-ui, sans-serif`;
@@ -125,12 +155,14 @@ export function createCanvas2dRenderer({ container, atlas, nebula = null, backgr
     ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
     ctx.fillStyle = background; ctx.fillRect(0, 0, width, height);
-    drawNebula(f);
+    drawSpace();
     drawStars(f);
     drawRings(f);
     for (const item of f.souls) drawSprite(item, item.detail, item.size, item.alpha, item.scale);
     drawClusters(f);
     drawEntrances(f);
+    drawVisits(f);
+    drawMeteors(true);
     if (!staticMode) drawVignette();
   }
 

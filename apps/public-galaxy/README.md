@@ -1,6 +1,6 @@
 # Public Galaxy (`/public`) - AriSkill Skill Bingo public event screen
 
-Workflow stage 6.4, game-experience upgrade 9.1 (D-22). Left 65 % persistent Arise Galaxy, right 35 %
+Workflow stage 6.4, game-experience upgrade 9.1 (D-22). Left 70 % persistent Arise Galaxy, right 30 % (D-52; 65 / 35 before)
 information panel with Waiting / Playing / Winner states. Native ESM, no build step, CSP-safe (no inline
 scripts; the Soul atlas rasterises SVG through `data:` image URLs, allowed by `img-src 'self' data: blob:`).
 The only third-party code is the vendored Three.js 0.186.0 (`/packages/vendor/three`, D-22), imported by
@@ -8,28 +8,31 @@ absolute path from `src/renderer/three.js` - never a CDN, import map or npm inst
 
 ```
 index.html                 <html class="theme-venue">; galaxy region + panel + footer; no inline script
-app.css                    65/35 grid, safe-zone panel (opaque, 32 px inner margin), venue type sizes
+app.css                    70/30 grid (D-52), safe-zone panel (opaque, 32 px inner margin), venue type sizes
 src/main.js                bootstrap: clock sync, snapshot + SSE (acknowledge pattern), audio, panel, galaxy
 src/state.js               public projection reducer + panel view-model (pure, tested)
 src/panel.js               panel DOM (dom.h only; QR via renderQr), auto-fit for long names / many co-winners
+src/greeting-bubble.js     "say hi" speech bubble (D-36): text, size, reading time and placement (pure, tested) + the DOM bubble
 src/copy.js                t()/exception() re-exports + fallbacks for control labels missing from copy.json
 src/galaxy.js              renderer selection (three -> webgl2 -> canvas2d -> static), lazy Three import, loop, perf auto-downgrade, resize
 src/entrance-queue.js      Float entrance queue: max 6 concurrent, 12 queued, overflow settles instantly (tested)
-src/renderer/scene.js      renderer-agnostic scene model: layout, LOD, orbit placement + collision, drift, clusters
+src/renderer/scene.js      renderer-agnostic scene model: layout, LOD, orbit placement + collision, drift, clusters; D-36: float,
+                           depth (scale / haze / parallax), idle micro actions (acts) and the "say hi" visit timeline
+src/renderer/space.js      D-36 space backdrop: space.json schema + loader, drift / twinkle / spin / falling stars (pure, tested)
+src/renderer/impostor.js   3D impostors + live tiles (entrances, the visit, performers) on soul3d rigs; the winner's crown
 src/renderer/atlas.js      renderSoulSvg -> Image -> offscreen canvas atlas at the 'simple' sticker (48..192 px cells = 1.5 x the
                            device size, scene.js#atlasCellFor; keyed by soulId+detail+badge+cell; 'full' is capped to 'simple')
-src/renderer/three.js      PRIMARY: Three.js scene - nebula + aurora shader plane (sum clamped), 3 star Points layers, dashed ring
-                           LineLoops, fireflies, additive palette halos behind the stickers, entrance trail / winner burst particles,
-                           procedural forest frame; EffectComposer (RenderPass -> UnrealBloomPass -> RenderPass(overlay, no clear) ->
-                           OutputPass): the overlay holds the Soul stickers (die-cut hull + winner outline flash in the fragment
-                           shader) and the doodads, drawn AFTER bloom so they stay crisp print; DOM overlay for cluster labels
-src/renderer/aurora.js     aurora band parameters, contrast caps (auroraContrast / skyCapContrast) and the GLSL hosted by the nebula
-src/renderer/doodads-layout.js  doodad set, tier gating, polar placement outside the outermost open orbit, exclusion zones, bob (pure, tested)
-src/renderer/forest.js     deterministic forest-silhouette layout (pure, tested) + offscreen-canvas painter (no image assets)
-src/renderer/three-quality.js  resolution scale / bloom / firefly counts per quality level, bloom pulse, outline flash + hull helpers (pure, tested)
+src/renderer/three.js      PRIMARY: Three.js scene - the space backdrop (D-36: Blender plate, constellations, meteors, falling
+                           stars), 3 star Points layers, dashed ring LineLoops, additive palette halos behind the stickers (a
+                           winner's gold one, WINNER_LOOK), entrance trail / winner burst particles; EffectComposer (RenderPass ->
+                           UnrealBloomPass -> RenderPass(overlay, no clear) -> OutputPass): the overlay holds the Soul stickers (no
+                           die-cut on the big screen; the winner outline flash in the fragment shader) and the live 3D tiles, drawn
+                           AFTER bloom so they stay crisp; DOM overlays for cluster labels and the greeting bubble
+src/renderer/aurora.js, doodads-layout.js, forest.js  kept, but no longer drawn on the big screen (D-36 replaced them with the space)
+src/renderer/three-quality.js  resolution scale / bloom per quality level, bloom pulse, WINNER_LOOK, outline flash + hull helpers (pure, tested)
 src/renderer/webgl2.js     tier 2 (kept): batched textured quads via a single VAO, point-sprite stars, GL_LINES rings, context-loss hand-over
 src/renderer/canvas2d.js   same scene with drawImage from the atlas, additive stars/glow, dashed rings
-src/renderer/static.js     one composed frame (nebula + star layer 1 + rings + Souls at `simple`), no loop
+src/renderer/static.js     one composed frame (space backdrop at rest + star layer 1 + rings + Souls at `simple`), no loop
 test/*.test.js             node:test for scene, entrance queue and state
 ```
 
@@ -52,12 +55,12 @@ alias of `three`), `?quality=high|medium|low` sets the starting performance leve
 
 ## Behaviour summary
 
-- **Panel states** come from `panelViewModel(state, now)`: Waiting (next round title, lock countdown via clock
-  sync, QR >= 420 px + `public.waiting.scan` + host/path of the join URL, previous winners, cancelled/exhausted
-  notice, or E1 copy when nothing is scheduled), Playing (`public.playing.draw`, kind chip with icon, auto-fit
-  skill name, `public.playing.matched`, pacing/live, last 5 draws), Winner (`public.winner.title`,
-  `public.winner.round`, co-winner labels; auto-return follows `round.closed`, with `scheduleAt(resultWindowEndsAt)`
-  as a display-only fallback).
+- **Panel states** come from `panelViewModel(state, now)`: Waiting (next round title, "Registration ends"
+  countdown via clock sync, the QR card with "Scan to join" only, previous winners, cancelled/exhausted notice,
+  or E1 copy when nothing is scheduled), Playing (`public.playing.draw`, auto-fit skill name - never its kind -,
+  `public.playing.matched`, and a card with the previous five draws), Winner (the Blender "BINGO!" badge,
+  winner and co-winner labels; auto-return follows `round.closed`, with `scheduleAt(resultWindowEndsAt)` as a
+  display-only fallback). Stage 15 (D-36) layout and type: see the section below.
 - **Realtime**: `GET /snapshot` -> `applyPublicSnapshot` -> `createSseClient({ since })`; on reconnect (epoch > 1)
   or gap the snapshot is refetched, applied and acknowledged; the celebration guard + id keys make draws, bingo,
   and Float entrances celebrate exactly once. Reconnect banner uses `t('reconnect')` (E12) and retains the last
@@ -113,6 +116,14 @@ alias of `three`), `?quality=high|medium|low` sets the starting performance leve
   round ends or when the first v2 Soul appears; screens with only v1 Souls never load them (D-28). The canvas2d, static
   and webgl2 tiers draw the 2D composition: the SVG without images, then the face and charm sprites drawn onto the cell.
   The static tier now repaints after a resize (it went blank before, a pre-stage-12 bug).
+- **v3 Souls (stage 13, D-31, `docs/art/soul-faces.md`).** The impostor stage (`src/renderer/impostor.js`) loads both
+  body variants when it starts (the baseline and the v3 body of `packages/ui/soul-face-data.js`, each cached) and
+  builds every decorated Soul on the body and die-cut hull of its own variant (`soulBodyVariant`): a v3 Soul bakes and
+  flies its Float entrance on the v3 body with its face plate, eyes, refitted face kit and antenna charm, like the phone.
+  When the v3 body cannot load (the face data is still the stub, a 404) v2 Souls stay 3D and v3 Souls keep the 2D
+  composition in their cell and their atlas sprite in the entrance; the stage only fails when no body loads at all.
+  A variant still loading 9 s into start-up (`IMPOSTOR.variantWaitMs`) counts as missing, so one hung download cannot
+  trip the 12 s init timeout; it joins the stage when it lands, and later bakes and entrances use it. The keeper rig (the shader programs kept for the stage's lifetime) is unchanged: every variant shares its programs.
 - **Souls = die-cut stickers in the sky.** The atlas is rebuilt from soul-renderer 3.0.0 at detail `simple`: the Arise
   Soul baseline character of D-27, drawn from its 3D model. The taller figure with the antenna orb spans y 19.8 .. 180.1
   of the 200 x 200 cell viewBox before the die-cut, so nothing is clipped (checked at 48-128 px cells,
@@ -150,6 +161,58 @@ alias of `three`), `?quality=high|medium|low` sets the starting performance leve
   die-cut + shadow around the QR, lime label with navy ink; previous-winner rows unchanged. DOM untouched.
   Contrast: pill ink 10.1:1, gold on badge 8.0:1, core 8.2:1, critical 7.9:1, navy on lime 15.4:1, body text on the
   panel background 13.3:1 (measured on the screenshots' padding column).
+
+## Stage 15 (D-36): the living Galaxy, space, "say hi", the winner's crown, the panel
+
+- **Motion.** Every Soul orbits (0.04 rad/s) with a slow float on top (`assets-src/scene/scene-params.json`
+  `orbit.float`: up to 0.22 of its size, periods 4-19 s, a 5-8 s bob). Depth: a Soul near the bottom of its ring is
+  nearer - bigger (0.64-1.36), clearer (haze 0.74-1), more parallax (0.6-1.4) - and the sky draws far to near; every
+  Soul averages the same over an orbit (BR-17). Idle micro actions (`packages/ui/soul3d/actions.js`: wink 1.5 s, wave
+  3.2 s, step 2.2 s, turn 4 s, sway 3 s) play on the impostor stage's live tiles, one per lane per 6 s slot: 3 lanes
+  on `high`, 2 on `medium`, none on `low`. Nothing new starts during an entrance; reduced motion turns all of it off.
+- **Say hi.** Every 3-7 s one Soul flies to the front (1.6 s), grows to at least 30 % of the Galaxy's height, waves
+  and shows "Hi, I'm {name}, {greeting}" in a speech bubble (`src/greeting-bubble.js`; the name is the public label:
+  the display name only with consent), then flies back (1.6 s). The bubble takes up to 40 words / 280 characters: its
+  type shrinks (26 -> 19 px at 1080 rows) and its width grows (380 -> 580 px) with the text, and it stays for the
+  reading time (3 words/s + 1.2 s, 3.8-16 s); the visitor winks after 8 s and sways after 12 s. A Soul without a
+  greeting says "Hi, I'm {name}!" ("Hi!" without a public name). A Soul that just floated in live takes the next turn,
+  in arrival order (`scene.queueHi`, from `galaxy.enter` with `celebrate`), so its player sees the greeting within
+  moments; random Souls fill the gaps. Greetings come from the phone (D-42, `SoulEntrance.greeting`);
+  `BINGO_GREETINGS=off` removes them. Moderation sign-off: OD-24.
+- **Space.** The sky is `assets/space/` - built with `blender -b -P tools/ai/blender/galaxy_space.py`, then
+  `python3 tools/assets/build-galaxy-space.py`; `node tools/assets/build-galaxy-space.js` (in build-all) checks the
+  pack against its provenance and lists it in the manifest: a Blender plate (nebula, milky way, a distant galaxy, a
+  planet limb) that drifts and breathes, four constellations whose stars twinkle, five meteors (the two big ones at
+  the corners in front of the Souls) and a falling star every 6-12 s. Reduced motion: at rest, no falling stars;
+  `low`: no falling stars, no meteor spin. The doodads, forest, fireflies, aurora and the "ARISE / SOUL
+  CONSTELLATION" caption are gone from the big screen, and so is the white die-cut (`dieCut: false`).
+- **Winner.** A Bingo winner (badge `bingo-star`) wears a gold crown instead of the medallion
+  (`packages/ui/soul3d/winner.js`: the Blender GLB `assets/souls/winner/crown.glb`, the same crown from primitives
+  until it loads) and is drawn 1.3x in a gold glow (`WINNER_LOOK`, three.js tier only; the phone and the 2D tiers keep
+  every Soul equal). This is an exception to BR-17's equal size and brightness: OD-25.
+- **Panel.** The phone's fonts (Electrolize UI; Asleepytiming / Comfortaa titles, OD-23) under the AriSkill sign
+  (`art/ariskill-sign.webp`, the phone's D-41 sign); a round sound button top right (turn sound on, then mute /
+  unmute); no reconnect banner or reconnect text, and no "LIVE MISSION" caption. Sound captions go to screen readers
+  only (`#caption`, visually hidden); the footer shows only the stale-data pill. Waiting: the round, "Registration ends" and the
+  countdown, then the QR card (min(22vh, 240 px)) with "Scan to join" only. Playing: the draw card (number and
+  skill, never its kind; no "Bingo is live" badge) and a card with the previous five draws. Winner: the Blender
+  "BINGO!" badge (`art/bingo-badge.webp`, `tools/ai/blender/bingo_badge.py`), then the winners and the co-winner
+  line as one group. Every state spreads evenly under the same top zone (the sign, then the round and "Live" over
+  a hairline).
+
+## Validation record (2026-09-27, stage 15)
+
+- Tests: public Galaxy 92/92 (state, scene, scene-life incl. arrivals first, space, greeting bubble, impostor-live incl. the winner look,
+  three renderer), UI kit 157/157 (actions, acting rig, die-cut, crown incl. the shipped GLB), assets 92/92
+  (galaxy-space, winner-crown, integration), accessibility 49/49; release gate 18/18 (build id: `docs/release-report.md`, v1.6).
+- Panel: the computed styles and boxes of all 103 panel elements match the approved review build in Waiting / Playing
+  / Winner at 1920 x 1080 (only the QR differs: another join URL). `reports/qa/screens/big-screen-stage15-panel.png`.
+- 70 / 30 split (D-52, the owner's request in the stage session): scene config aligned (`safeZone` 0.7 / 0.3, panelX
+  1344); the 576 px panel checked in all three states and the Galaxy at 1920 x 1080 with the space plate cover-fitted.
+- Live (port 8093, scratch database): three.js tier; every space layer, the sign and the crown GLB loaded (200); a
+  visitor said hi in its bubble and the winner wore the crown in its gold glow; no console errors. A Soul floated in
+  live ("Nok", "Good luck, everyone! 🚀") said hi 13.6 s after its Float, after one visit already under way.
+  `reports/qa/screens/big-screen-stage15.webp`.
 
 ## Validation record (run-20260923, stage 10 - sticker language)
 

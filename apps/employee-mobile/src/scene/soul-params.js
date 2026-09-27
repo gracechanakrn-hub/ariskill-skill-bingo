@@ -211,8 +211,9 @@ export function revealScale(silP, peelP) {
 // Baseline Soul (D-27, docs/art/soul-baseline.md): one sculpted character for everyone (assets/souls/baseline/*.glb,
 // built by tools/ai/blender/soul_baseline.py). Per player the colour (v1 palette or v2 / v3 body gradient), the glow
 // style, the face kit and charms (D-29; v3 adds the face plate, eyes and antenna charm on the v3 body, D-31) and the
-// Bingo Star badge vary; body / eyes / antenna / mouth stay in v1 configs but are not drawn. Size, brightness, outline and motion amplitudes are shared constants (BR-17), defined once in
-// packages/ui/soul3d/studio.js (SOUL_VIEW) for the phone and the public Galaxy.
+// Bingo Star badge vary; body / eyes / antenna / mouth stay in v1 configs but are not drawn. Size, brightness, outline
+// and motion amplitudes are shared constants (BR-17), defined once in packages/ui/soul3d/studio.js (SOUL_VIEW) for the
+// phone and the public Galaxy.
 
 export const BASELINE = SOUL_VIEW;
 /** Glow trait -> halo style drawn around the Soul (same peak opacity for all three, BR-17). */

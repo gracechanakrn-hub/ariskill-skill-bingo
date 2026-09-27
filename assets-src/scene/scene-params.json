@@ -3,7 +3,7 @@
   "seed": "arise-galaxy-2026",
   "background": "#0B0F1F",
   "canvas": { "width": 1920, "height": 1080, "note": "OD-14 assumption: 1920x1080 public display; renderers scale by viewport height" },
-  "safeZone": { "galaxyFraction": 0.65, "panelFraction": 0.35, "innerMarginPx": 32, "note": "Right 35 % is the information panel; effects are clipped to the Galaxy viewport" },
+  "safeZone": { "galaxyFraction": 0.7, "panelFraction": 0.3, "innerMarginPx": 32, "note": "Right 30 % is the information panel (D-52; 35 % before); effects are clipped to the Galaxy viewport" },
   "starLayers": [
     { "name": "far", "count": 420, "parallax": 0.15, "minRadius": 0.6, "maxRadius": 1.2, "minBrightness": 0.25, "maxBrightness": 0.55, "twinkleAmplitude": 0.08, "twinklePeriodSeconds": 9, "color": "#DCE6FF" },
     { "name": "mid", "count": 220, "parallax": 0.35, "minRadius": 0.9, "maxRadius": 1.8, "minBrightness": 0.35, "maxBrightness": 0.75, "twinkleAmplitude": 0.12, "twinklePeriodSeconds": 7, "color": "#EAF2FF" },
@@ -17,7 +17,8 @@
       { "cx": 180, "cy": 900, "r": 360, "color": "#2C7F66", "opacity": 0.16 }
     ]
   },
-  "orbit": { "aspect": 1.35, "color": "#A9BEFF", "opacity": 0.14, "angularSpeedRadPerSec": 0.02, "driftAmplitude": 0.012, "clusterAbove": 300 },
+  "orbit": { "aspect": 1.35, "color": "#A9BEFF", "opacity": 0.14, "angularSpeedRadPerSec": 0.04, "driftAmplitude": 0.012, "clusterAbove": 300,
+    "float": { "amplitude": 0.22, "slowPeriodS": [9, 19], "fastPeriodS": [4, 9], "bobPeriodS": [5, 8] } },
   "camera": { "type": "fixed-orthographic", "driftRadiusFraction": 0.015, "driftPeriodSeconds": 40, "maxAngularSpeedDegPerSec": 0.5, "shake": "forbidden", "zoom": "fixed" },
   "entrance": { "defaultEdge": "bottom", "edges": ["left", "right", "top", "bottom"], "arcDurationMs": 2200, "pulseDurationMs": 600, "settleDurationMs": 1200, "maxConcurrent": 6, "queueOverflow": "settle-instantly" },
   "lod": { "fullBelowCount": 120, "simpleBelowCount": 300, "dotAbove": 300, "fullMinPx": 56, "simpleMinPx": 24, "clusterAbove": 300, "clusterGridPx": 96 },

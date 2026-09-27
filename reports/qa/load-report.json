@@ -1,6 +1,6 @@
 {
   "runId": "run-20260922-113339",
-  "generatedAt": "2026-09-25T03:14:43.144Z",
+  "generatedAt": "2026-09-27T15:40:50.402Z",
   "node": "v26.8.2",
   "params": {
     "players": 150,
@@ -20,25 +20,25 @@
   "results": {
     "setupApi": {
       "n": 450,
-      "p50": 7.82,
-      "p95": 38.13,
-      "max": 54.6,
-      "totalMs": 134,
+      "p50": 8.45,
+      "p95": 37.12,
+      "max": 53.53,
+      "totalMs": 128,
       "calls": 450
     },
     "streamsOpenMs": 30,
     "drawFanout": {
       "n": 1800,
-      "p50": 9.61,
-      "p95": 13.13,
-      "max": 13.94,
+      "p50": 9.73,
+      "p95": 13.34,
+      "max": 14.14,
       "draws": 6,
       "perDraw": [
         {
           "number": 1,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 13.83,
+          "p95Ms": 14.03,
           "maxMs": 14,
           "commandMs": 12
         },
@@ -46,7 +46,7 @@
           "number": 2,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 10.43,
+          "p95Ms": 10.8,
           "maxMs": 11,
           "commandMs": 8
         },
@@ -54,7 +54,7 @@
           "number": 3,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 10.65,
+          "p95Ms": 10.7,
           "maxMs": 11,
           "commandMs": 8
         },
@@ -62,15 +62,15 @@
           "number": 4,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 10.28,
-          "maxMs": 10,
-          "commandMs": 8
+          "p95Ms": 10.94,
+          "maxMs": 11,
+          "commandMs": 9
         },
         {
           "number": 5,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 10.1,
+          "p95Ms": 10.12,
           "maxMs": 10,
           "commandMs": 8
         },
@@ -78,43 +78,43 @@
           "number": 6,
           "delivered": 300,
           "complete": true,
-          "p95Ms": 10.98,
-          "maxMs": 11,
-          "commandMs": 9
+          "p95Ms": 10.04,
+          "maxMs": 10,
+          "commandMs": 8
         }
       ],
       "allDelivered": true
     },
     "drawCommand": {
       "n": 6,
-      "p50": 8.02,
-      "p95": 11.59,
-      "max": 11.59
+      "p50": 8.26,
+      "p95": 12.29,
+      "max": 12.29
     },
     "reconnectStorm": {
       "streams": 300,
-      "dropMs": 7,
+      "dropMs": 8,
       "offlineDraw": 7,
       "recovered": 300,
-      "recoveryAllMs": 100,
+      "recoveryAllMs": 95,
       "n": 300,
-      "p50": 94.12,
-      "p95": 94.17,
-      "max": 100.19,
+      "p50": 90.47,
+      "p95": 90.5,
+      "max": 95.23,
       "replayedBelowLastEventId": 0,
       "nonMonotonicStreams": 0
     },
     "publicSnapshot": {
       "n": 150,
-      "p50": 6.36,
-      "p95": 7.85,
-      "max": 7.95
+      "p50": 6.05,
+      "p95": 7.81,
+      "max": 7.94
     },
     "stageSnapshot": {
       "n": 50,
-      "p50": 94.53,
-      "p95": 95.07,
-      "max": 95.11
+      "p50": 82.92,
+      "p95": 83.51,
+      "max": 83.55
     }
   },
   "invariants": {

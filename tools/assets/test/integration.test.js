@@ -16,6 +16,8 @@ import { buildAll } from '../build-all.js';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 // D-29 decoration entries (one per built charm and face kit; the count grows as charm icons land).
 const DECOR_ENTRIES = (readFileSync(join(ROOT, 'assets', 'manifest', 'assets.yaml'), 'utf8').match(/\bid: soul_(charm|face)_/g) || []).length;
+// Stage 15 (D-36): the big screen's space backdrop (9 entries, tools/assets/build-galaxy-space.js) and the winner's crown.
+const STAGE15_ENTRIES = (readFileSync(join(ROOT, 'assets', 'manifest', 'assets.yaml'), 'utf8').match(/\bid: (space_[a-z0-9_]+|soul_winner_crown)$/gm) || []).length;
 const DEFAULT_SCRATCH = '/private/tmp/claude-501/-Users-grc-Desktop-claudecodetest-Ariskill-Bingo/312520a1-70d6-4efd-9438-4e9be7bd9617/scratchpad/asset-int/';
 function scratchDir() {
   const want = process.env.ASSET_INT_SCRATCH || DEFAULT_SCRATCH;
@@ -40,7 +42,8 @@ describe('validator on the current tree', () => {
   test('passes with no critical/major problems and reports approval + budget summaries', () => {
     const res = validateManifests({ root: ROOT });
     assert.equal(res.ok, true, JSON.stringify(res.problems.filter((p) => p.severity === 'critical' || p.severity === 'major'), null, 2));
-    assert.equal(res.summary.entries, 35 + DECOR_ENTRIES, '33 scene/soul entries + 2 baseline Soul models (D-27) + the D-29 charms and face kits');
+    assert.equal(res.summary.entries, 35 + DECOR_ENTRIES + STAGE15_ENTRIES, '33 scene/soul entries + 2 baseline Soul models (D-27) + the D-29 charms and face kits + stage 15');
+    assert.equal(STAGE15_ENTRIES, 10, 'the space pack (9) and the winner crown (1)');
     assert.ok(DECOR_ENTRIES >= 137, `decoration entries ${DECOR_ENTRIES}`);
     assert.equal(res.summary.cues, 12);
     assert.ok(res.summary.files >= 110, `runtime files ${res.summary.files}`);
@@ -51,7 +54,7 @@ describe('validator on the current tree', () => {
     for (const p of res.problems) assert.ok(['critical', 'major', 'minor', 'info'].includes(p.severity) && p.check && 'path' in p && p.detail);
   });
 
-  test('total budgets hold: assets <= 6 MB, audio <= 1.6 MB, single file <= 1.2 MB, soul svg <= 6 KB, scene data <= 120 KB, apps <= 600 KB', () => {
+  test('total budgets hold: assets <= 7 MB, audio <= 1.6 MB, single file <= 1.2 MB, soul svg <= 6 KB, scene data <= 120 KB, apps <= 600 KB', () => {
     const { summary } = validateManifests({ root: ROOT });
     const b = summary.budgets;
     assert.equal(b.assetsBytes.limit, 7 * 1024 * 1024); assert.ok(b.assetsBytes.used <= b.assetsBytes.limit);
@@ -112,7 +115,11 @@ describe('validator detects corruption (temporary copies)', () => {
 
   test('unknown license -> critical license.disallowed (assets and audio)', () => {
     const dir = tempTree();
-    replaceIn(join(dir, 'assets/manifest/assets.yaml'), 'id: scene_nebula\n    kind: sprite\n    source_file: assets-src/scene/scene-params.json\n    source_format: json-parameters\n    runtime_file: assets/scene/nebula.svg\n    runtime_format: svg\n    fallback_file: null\n    fallback_format: null\n    version: 1.0.0\n    checksum: sha256:60e5ccb51f907f75c2d721e0c451c4db7b28ad85623f8c8149636ece0f3c8abf\n    license: internal-original', 'id: scene_nebula\n    kind: sprite\n    source_file: assets-src/scene/scene-params.json\n    source_format: json-parameters\n    runtime_file: assets/scene/nebula.svg\n    runtime_format: svg\n    fallback_file: null\n    fallback_format: null\n    version: 1.0.0\n    checksum: sha256:60e5ccb51f907f75c2d721e0c451c4db7b28ad85623f8c8149636ece0f3c8abf\n    license: CC-BY-4.0');
+    // an entry's license, found by position (not by its checksum, which follows the generated file)
+    const man = join(dir, 'assets/manifest/assets.yaml'), text = readFileSync(man, 'utf8');
+    const at = text.indexOf('id: scene_nebula\n'), licAt = text.indexOf('    license: internal-original', at);
+    assert.ok(at >= 0 && licAt > at, 'scene_nebula entry and its license');
+    writeFileSync(man, text.slice(0, licAt) + '    license: CC-BY-4.0' + text.slice(licAt + '    license: internal-original'.length));
     // audio: change the license on one cue in both twins
     const json = JSON.parse(readFileSync(join(dir, 'assets/manifest/audio.json'), 'utf8'));
     json.cues.find((c) => c.id === 'bingo').license = 'sampled-third-party';
@@ -210,7 +217,7 @@ describe('asset map', () => {
     assert.equal(A.scene.nebula, '/assets/scene/nebula.svg');
     assert.deepEqual([...A.scene.starfield], ['/assets/scene/starfield-layer-1.json', '/assets/scene/starfield-layer-2.json', '/assets/scene/starfield-layer-3.json']);
     assert.equal(A.scene.orbitRings, '/assets/scene/orbit-rings.json');
-    assert.equal(A.scene.defaults.safeZone.panelX, 1248);
+    assert.equal(A.scene.defaults.safeZone.panelX, 1344, '70 / 30 (D-52)');
     assert.deepEqual(A.scene.defaults, JSON.parse(readFileSync(join(ROOT, 'assets/scene/scene-config.json'), 'utf8')));
     assert.equal(A.souls.cohort, '/assets/souls/cohort.json');
     assert.equal(A.souls.thumbnailDir, '/assets/souls/thumbnails/');
@@ -225,7 +232,8 @@ describe('asset map', () => {
       assert.ok(c.loop === null || (c.loop.startSample === 0 && c.loop.endSample > 0 && c.loop.sampleRate === 22050));
     }
     assert.equal(A.audio.ambient_galaxy.loop.endSample, 154350);
-    assert.equal(Object.keys(A.entries).length, 35, 'the decoration entries stay out of the asset map (soul-decor-data.js carries them)');
+    assert.equal(Object.keys(A.entries).length, 35 + STAGE15_ENTRIES, 'the decoration entries stay out of the asset map (soul-decor-data.js carries them); the stage-15 space pack and crown are in');
+    assert.equal(m.assetUrl('soul_winner_crown'), '/assets/souls/winner/crown.glb');
     // helpers
     assert.equal(m.assetUrl('scene_nebula'), '/assets/scene/nebula.svg');
     assert.equal(m.assetUrl('bingo'), '/assets/audio/bingo.wav');

@@ -37,7 +37,7 @@ test('LOCKED shows the waiting-for-host text instead of a countdown; notices sur
   assert.equal(e.state.notice.text, t('public.exhausted')); assert.equal(panelViewModel(e.state, NOW).mode, 'Waiting');
 });
 
-test('Playing: draw.accepted updates the card, recent list (last 5), matched count and pacing', () => {
+test('Playing: draw.accepted updates the card, the previous five draws, matched count and pacing', () => {
   let s = applyPublicSnapshot(initialState(), { sequence: 1, publicState: 'Waiting', round: round('LOCKED'), galaxy: { souls: [], count: 0 } });
   s = reduceEvent(s, env('round.started', { round: round('PLAYING', { startedAt: '2026-09-22T10:05:00Z' }), poolSize: 30 }, 2)).state;
   assert.equal(s.publicState, 'Playing');
@@ -47,9 +47,21 @@ test('Playing: draw.accepted updates the card, recent list (last 5), matched cou
   const vm = panelViewModel(s, NOW);
   assert.equal(vm.mode, 'Playing'); assert.equal(vm.drawLabel, t('public.playing.draw', { number: 7 })); assert.equal(vm.skillName, 'Skill 7'); assert.equal(vm.kind, 'Core');
   assert.equal(vm.matched, t('public.playing.matched', { count: 21 })); assert.equal(vm.pacing, t('public.playing.live')); assert.equal(vm.live, true);
-  assert.equal(vm.recentDraws.length, 5); assert.equal(vm.recentDraws[0].number, 7); assert.equal(vm.recentDraws[4].number, 3);
+  // D-36: the panel lists the previous five draws, newest first; the current one is on the card, not in the list
+  assert.deepEqual(vm.recentDraws.map((r) => r.number), [6, 5, 4, 3, 2]);
+  assert.equal(s.recentDraws.length, 6, 'the state keeps six: the current draw and the five before it');
   const early = reduceEvent(s, env('draw.match_counts_updated', { drawNumber: 7, matchedBoards: 25 }, 20)).state;
   assert.equal(panelViewModel(early, NOW).matched, t('public.playing.matched', { count: 25 }));
+});
+
+test('Playing: the first draws - no previous draw on the first, then the ones before the current, newest first', () => {
+  let s = applyPublicSnapshot(initialState(), { sequence: 1, publicState: 'Waiting', round: round('LOCKED'), galaxy: { souls: [], count: 0 } });
+  s = reduceEvent(s, env('round.started', { round: round('PLAYING', { startedAt: '2026-09-22T10:05:00Z' }), poolSize: 30 }, 2)).state;
+  const draw = (n, seq) => env('draw.accepted', { draw: { drawId: `d${n}`, number: n, skill: { id: `sk${n}`, name: `Skill ${n}`, kind: 'Core', domain: 'Dev' }, drawnAt: 'x' }, poolRemaining: 30 - n, matchedBoards: 0 }, seq);
+  s = reduceEvent(s, draw(1, 3)).state;
+  assert.deepEqual(panelViewModel(s, NOW).recentDraws, []);
+  s = reduceEvent(reduceEvent(s, draw(2, 4)).state, draw(3, 5)).state;
+  assert.deepEqual(panelViewModel(s, NOW).recentDraws.map((r) => [r.number, r.skillName]), [[2, 'Skill 2'], [1, 'Skill 1']]);
 });
 
 test('pacing reads "Bingo unlocks at draw 5" before draw 5', () => {

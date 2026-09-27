@@ -199,7 +199,7 @@ Recommended document skeleton:
 <div class="toast-region" aria-live="polite"></div>
 ```
 
-### soul-renderer.js (v4.0.0, the Arise Soul baseline character, decorated since D-29)
+### soul-renderer.js (v5.0.0, the Arise Soul baseline character, decorated since D-29, v3 faces since D-31)
 
 ```js
 import { renderSoulSvg, soulAltText, resolveSoul, TRAITS, PALETTES, STICKER, EYE_WHITE, BADGE_LABEL, BADGE_CENTER, soulOrbitSlot } from '/packages/ui/soul-renderer.js';
@@ -207,10 +207,10 @@ const svg = renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: '
 ```
 
 Deterministic: same config -> byte-identical SVG (viewBox `0 0 200 200`, no DOM). Since D-27 every Soul is the one
-baseline character of `docs/art/soul-baseline.md`, drawn from its 3D model: the only import is
+baseline character of `docs/art/soul-baseline.md`, drawn from its 3D model. Its imports are pure data:
 `soul-baseline-shape.js`, a generated, checked-in data module (silhouette, drips, eyes, orb, chin crease and arm slits
 as a front orthographic projection of `tools/ai/blender/soul_baseline.py`, written by `tools/assets/build-soul-shape.py`;
-see "Flat 2D Soul" in that doc). The look keeps the `docs/art/sticker-art-direction.md` sticker language: radial clay
+see "Flat 2D Soul" in that doc), `soul-decor-data.js`, `soul-face-data.js` and the catalog. The look keeps the `docs/art/sticker-art-direction.md` sticker language: radial clay
 gradient body (palette light top-left -> base -> `--sticker-violet-deep` at the bottom edge) with a thin palette outline,
 2 px peach rim on the lower right, goo drips in the palette light (soft edge), near-white `EYE_WHITE` button eyes ringed
 by a groove in the palette outline colour, the antenna neck with a lit orb (glow: white core -> palette light ->
@@ -225,6 +225,9 @@ transparent), a blurred key-light highlight, and the whole figure duplicated bel
 | `reducedMotion` | `false` | removes the only animation (4.8 s glow breath) |
 | `label` | `null` | overrides the alt text (must follow the same no-Platform/Role/rank rule) |
 | `idPrefix` | `soul-<seed>` | namespaces gradient/clip/filter ids so many Souls can be inlined |
+| `images` | `true` | v2+: `false` leaves out the sprite `<image>` layers (SVG rasterised through a `data:` URL cannot load them; composite `soulSpriteLayers()` instead) |
+| `decor` | `SOUL_DECOR` | charm slots, charm sprites and v2 face-kit sprites (`soul-decor-data.js`); stub data draws none |
+| `face` | `SOUL_FACE` | v3 outline, plate / eyes / kit sprites and the antenna slot (`soul-face-data.js`); stub data draws v3 Souls as v2 Souls |
 
 Per player only the palette, the glow style (`soft` / `ring` / `halo`) and the badge flag change the drawing. The
 seeded body / eyes / antenna / mouth traits and the constellation stay in the config (no contract change) and in
@@ -248,6 +251,28 @@ charm. Alt text: "Arise Soul, Aurora colour, with round glasses. 10 charms: 4 te
 kinds always in `ALT_KIND_ORDER`, never sorted by count). v1 configs render byte-identically to 3.0.0. A v2 SVG with
 eleven image layers stays under 8 KB.
 
+**v3 Souls (v5.0.0, D-31, `docs/art/soul-faces.md`).** A v3 config (v2 + `plate`, `eyes`, `topper`; `resolveSoul`
+returns them as ids / `{ id, kind }` or `null`) is drawn on the v3 body: `SOUL_FACE.shape.silhouette` from the generated
+`soul-face-data.js` replaces the baseline outline under the same die-cut, gradient body and light/shade, rim, chin crease
+and arm slits, drips and highlight, with no button eyes, no antenna orb and no orb glow. The sprite layers follow in
+paint order: face plate, eyes and face kit (`SOUL_FACE.plates / eyes / faces[id].sprite` at `rect` [x, y, w, h] of the
+200 viewBox), the 10 charms (as v2), then the antenna charm (its `SOUL_DECOR.charm.files[id].png`, 2 r wide centred on
+`SOUL_FACE.topper.front2d`). `renderSoulSvg` and `soulSpriteLayers` take a `face` option (default `SOUL_FACE`) next to
+`decor`; layers are `{ kind: 'plate' | 'eyes' | 'face' | 'charm' | 'topper', href, x, y, w, h }` (plus `plate` /
+`eyes` / `face`, or `slot` and `id`, or `id`), so the Galaxy atlas composites them like the v2 layers. A piece without a
+file (`charm.missing` included), slot or rect is left out on its own. `faceUsable()` is false while `soul-face-data.js`
+is the stub placeholder (or its outline is not plain path data): a v3 Soul then draws exactly as the v2 Soul with the
+same gradient, face kit and charms (baseline outline, button eyes, orb), so it never looks broken. Decorated Souls (v2
+and v3) never draw the `halo` glow style and always put the Bingo Star on the medallion. Alt text v3: "Arise Soul,
+Aurora colour, with a bean face, heart eyes and round glasses. 10 charms: 4 technical, 4 core, 2 soft. A lemon classic
+star charm on its antenna" (plate and eye names from catalog 2; `FACE_ALT_V3`, where the angel is "a glowing halo" with
+no blush; a serial comma before the kit when the eyes or the kit already read "x and y": "..., a blue eye and a cross
+eye, and an eye patch and a bandana"; `charmAltName` reads a star shade first, "lemon classic star";
+`indefiniteArticle` picks "a" / "an" by sound: "an apple", "a USB stick"). Like the charm counts, the alt text describes
+the config, so it is the same on every screen whether or not the face data is usable. v1 and v2 configs render
+byte-identically to 4.0.0 (pinned by hash in `test/soul-renderer-v5.test.js`); a v3 SVG with fourteen image layers stays
+under 8 KB (7.3 KB worst case with the delivered data, badge and glow breath).
+
 ### soul3d/ (shared 3D Soul, phone and public Galaxy)
 
 ```js
@@ -261,12 +286,16 @@ impostors), so both show the same decorated Soul. Three.js is always passed in.
 |---|---|
 | `tint.js` | pure colour maths: `tintGradientColors(mask, heights, gradient)` (sRGB mix of the gradient over height, then linear, then the D-27 mask mixes) and the v1 palette tint |
 | `placement.js` | pure: `charmPlacement(slot, thickness)` -> position, basis, scale for a charm at a slot |
-| `model.js` | baseline GLB load and cache (`loadSoulModel(s)`), with per-vertex heights |
-| `decor.js` | `loadSoulDecor(mods, config)` never rejects: each charm and the face kit load (or are skipped) on their own; a failed URL waits 60 s before a retry |
-| `figure.js`, `rig.js`, `badge.js` | `buildSoulFigure` / `buildSoulRig`: body, die-cut hull, orb glow, charms at their slots, face kit at identity, the medallion badge, the phone's 3/4 rest pose |
+| `model.js` | body GLB load and cache per variant + LOD (`loadSoulModel(mods, lod, variant)`, `loadSoulModels(mods, quality, { variant })`, `prefetchSoulModels(mods, lods, variant)`), with per-vertex heights and landmarks (`topper` on the v3 body). `soulBodyVariant(config)` is `'v3'` for a v3 config (the v3 body of `soul-face-data.js`), else `'v2'` (the baseline); no v3 URL (the stub face data) rejects, so callers fall back as for the baseline |
+| `decor.js` | `loadSoulDecor(mods, config, { decor, face })` never rejects: each charm and the face kit load (or are skipped) on their own; a failed URL waits 60 s before a retry. For a v3 Soul also `plate`, `eyes` (model space, their own emissive; a material flagged `emissiveFromVertexColor` multiplies it by the vertex colour), the refitted v3 kit and the antenna charm (`topper`: a charm at `charmPlacement(SOUL_FACE.topper, charm thickness)`), each skipped on its own (`missing`: `plate:<id>`, `eyes:<id>`, `face:<face>`, `topper:<id>`); unusable face data leaves the charms only (`reason: 'face-stub'`) |
+| `figure.js`, `rig.js`, `badge.js` | `buildSoulFigure` / `buildSoulRig`: body, die-cut hull (`dieCut: false` leaves it out: the big screen, D-36), orb glow, charms at their slots, face kit at identity, the medallion badge (v2 and v3), the phone's 3/4 rest pose. A v3 Soul has no orb glow sprite and no orb emissive; its plate and eyes sit at identity and the antenna charm at its slot. Draw order (`RENDER_ORDER`): body < charms and antenna charm < plate < eyes < face kit |
 | `studio.js`, `card.js` | `LOOK` (AgX, exposure, lights, studio reflections) and a square card stage the Galaxy uses to bake impostors |
+| `skeleton.js`, `actions.js` | stage 15 (D-36): a 9-bone procedural skeleton with smooth skin weights (`SOUL_BONES`, `boneWeights`) and the idle micro actions (`SOUL_ACTIONS` wink / wave / step / turn / sway, `actionPose(action, t, { side })`, `REST_POSE`). A rig built with `{ actions: true }` gets `setPose(pose)` and `rest()`; at rest it draws exactly what a plain rig draws, so a live tile hands back to the baked impostor without a pop. Rigs without it are unchanged |
+| `winner.js` | stage 15 (D-36): the Bingo winner's gold crown for the public Galaxy. `loadWinnerCrown(mods)` loads the Blender GLB (manifest id `soul_winner_crown`) once and never rejects (null: use the crown from primitives); `buildWinnerCrown(THREE, template)` places it on the head. `buildSoulRig({ badge: 'bingo-star', winnerCrown })` wears it instead of the medallion (true: from primitives; a scene: the GLB, cloned); the phone passes no `winnerCrown` and keeps the medallion |
 
 The phone's `apps/employee-mobile/src/scene/soul-model.js` and `soul-tint.js` are thin re-exports of these modules.
+Stage 13 (D-31, `docs/art/soul-faces.md`): the phone and the Galaxy load the body of each Soul's variant, so a v3 Soul
+looks the same on both screens.
 
 ### doodads.js
 

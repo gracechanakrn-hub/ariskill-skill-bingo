@@ -3,7 +3,9 @@
 // and the public Galaxy's Float entrance and atlas impostors (apps/public-galaxy/src/renderer) build their Souls from
 // these modules. Three.js is always passed in
 // (mods = { THREE, addons: { GLTFLoader } }), so nothing here imports the vendored library and the pure parts
-// (tint, placement, framing, decor plans) run under node --test.
+// (tint, placement, framing, decor plans) run under node --test. Stage 15 (D-36) adds the idle micro actions:
+// skeleton.js (procedural bones and skin weights) and actions.js (the action poses), played by a rig built with
+// { actions: true }; rigs without it are unchanged.
 export * from './tint.js';
 export * from './studio.js';
 export * from './placement.js';
@@ -13,3 +15,6 @@ export * from './badge.js';
 export * from './figure.js';
 export * from './rig.js';
 export * from './card.js';
+export * from './skeleton.js';
+export * from './actions.js';
+export * from './winner.js';

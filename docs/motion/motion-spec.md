@@ -53,6 +53,12 @@ CSS exposure: `motion.css` sets `--motion-*` custom properties on `:root`; `--mo
 | Galaxy entrance | edge -> short arc -> pulse -> stable orbit | arc 1800, pulse 400, settle 600 | `.m-entrance-arc` then `.m-orbit` | fade, static orbit |
 | Orbit / camera | slow, bounded | 6 deg/s max angular speed (60 s period), camera drift <= 12 px/s, yaw <= 8 deg | `.m-orbit` | static |
 | Ambient pulse | calm continuity | 2.4 s period (0.42 Hz), opacity 0.82-1 | `.m-pulse-soft` | static |
+| Soul float (D-36) | calm, bounded | on top of the orbit (0.04 rad/s): a two-frequency drift of up to 0.22 of the Soul's size (periods 4-9 s and 9-19 s) and a 5-8 s bob, per Soul | `scene.js` (`orbit.float`, `scene-params.json`) | static orbit |
+| Depth (D-36) | layers, nobody favoured | near the bottom of its ring a Soul is nearer: scale 0.64-1.36, haze 0.74-1, parallax 0.6-1.4, drawn far to near; every Soul averages the same over an orbit (BR-17) | `scene.js` `DEPTH` | flat |
+| Idle micro action (D-36) | occasional, calm | wink 1.5 s, wave 3.2 s, step 2.2 s, turn 4 s, sway 3 s; one per lane per 6 s slot (3 lanes on `high`, 2 on `medium`, none on `low`); none starts during an entrance | `soul3d/actions.js` on the live tiles | none |
+| Say hi (D-36) | one at a time, readable across the room | fly out 1.6 s; hi for the reading time (3 words/s + 1.2 s, 3.8-16 s: a wave, a wink after 8 s, a sway after 12 s); fly back 1.6 s; 3-7 s between visits, none during an entrance; a Soul that just floated in goes next (arrival order), random Souls otherwise; the bubble fades in / out in 250 ms | `scene.js` visits, `greeting-bubble.js` | none |
+| Space backdrop (D-36) | cinematic, barely moving | plate drift 12 px / 80 s and breathe 1.2 % / 50 s; constellation shimmer 9 s, star twinkle 5.5 s; meteors drift (17-31 s) and spin at most 4 deg/s; a falling star every 6-12 s (0.9-1.5 s, one fade in and out) | `renderer/space.js` (`assets/space/space.json`) | at rest, no falling stars (`low`: no falling stars, no spin) |
+| Winner on the Galaxy (D-36) | visible, restrained | the winner's Soul is drawn 1.3x in a steady gold glow and wears a gold crown; no extra pulse beyond the 250 ms outline flash | `three.js` `WINNER_LOOK`, `soul3d/winner.js` | same, static |
 
 ## 3. Motion state diagrams per surface
 
@@ -90,6 +96,10 @@ stateDiagram-v2
     Orbit --> Entrance: soul.float_accepted live -> scheduleAt(enteredAt+300) .m-entrance-arc
     Entrance --> Orbit: 2.8 s -> settle into orbit ring
     Orbit --> Orbit: soul.float_accepted replay/snapshot -> add to orbit silently
+    Orbit --> Act: a lane's 6 s slot (D-36) -> wink / wave / step / turn / sway on a live tile, then rest
+    Act --> Orbit: action ends -> the baked impostor again
+    Orbit --> Visit: every 3-7 s, never during an entrance (D-36) -> fly out 1.6 s
+    Visit --> Orbit: hi (bubble, reading time 3.8-16 s) -> fly back 1.6 s
   }
 ```
 

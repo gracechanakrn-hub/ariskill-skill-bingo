@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// tools/assets/build-all.js - one command for the asset pipeline (workflow 13.6): scene -> souls -> soul-baseline (GLB) -> soul-decor -> audio ->
-// asset map -> validate.
+// tools/assets/build-all.js - one command for the asset pipeline (workflow 13.6): scene -> souls -> soul-baseline (GLB) -> soul-decor ->
+// soul-face -> galaxy-space -> winner-crown -> audio -> asset map -> validate.
 // Zero third-party code. Every generator is deterministic, so running twice is a no-op.
 //
 //   node tools/assets/build-all.js            regenerate everything in place, then validate (exit 1 on critical/major)
@@ -28,6 +28,11 @@ export const GENERATORS = Object.freeze([
   { id: 'soul-decor', cmd: 'node', args: ['tools/assets/build-soul-decor.js'], outputs: ['assets/souls/charms', 'assets/souls/faces', 'assets/manifest/assets.yaml'] },
   // Soul faces v3 (D-31): copies + checks the Blender body, plates, eyes, kits and sprites in assets-src/generated/soul-face/v1.
   { id: 'soul-face', cmd: 'node', args: ['tools/assets/build-soul-face.js'], outputs: ['assets/souls/v3', 'assets/manifest/assets.yaml'] },
+  // The big screen's space backdrop (D-36): checks the pack in assets/space/ against the packer's provenance.json (the Blender
+  // renders and the Pillow packer run by hand) and lists it in the manifest.
+  { id: 'galaxy-space', cmd: 'node', args: ['tools/assets/build-galaxy-space.js'], outputs: ['assets/space', 'assets/manifest/assets.yaml'] },
+  // Bingo winner's crown (stage 15, D-36): copies + checks the Blender GLB in assets-src/generated/winner.
+  { id: 'winner-crown', cmd: 'node', args: ['tools/assets/build-winner-crown.js'], outputs: ['assets/souls/winner', 'assets/manifest/assets.yaml'] },
   { id: 'audio', cmd: 'python3', args: ['tools/assets/build-audio.py'], outputs: ['assets/audio', 'assets/manifest/audio.yaml', 'assets/manifest/audio.json'], check: ['--check'] },
 ]);
 // What the JS generators need to run inside a temporary copy (imports are relative to tools/assets/).

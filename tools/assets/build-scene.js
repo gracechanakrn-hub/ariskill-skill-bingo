@@ -65,6 +65,7 @@ entry('scene_nebula', 'sprite', nebPath, { bounds: [galaxyW, H, 0], pivot: [gala
 const orbit = {
   source: 'packages/ui/soul-renderer.js#ORBIT_RINGS', radiusUnit: 'fraction of Galaxy half-height', aspect: P.orbit.aspect,
   totalCapacity: ORBIT_CAPACITY, clusterAbove: P.orbit.clusterAbove, angularSpeedRadPerSec: P.orbit.angularSpeedRadPerSec, driftAmplitude: P.orbit.driftAmplitude,
+  float: P.orbit.float,
   rings: ORBIT_RINGS.map((r) => ({ ...r, angularSpeedRadPerSec: r3(P.orbit.angularSpeedRadPerSec * (1 - r.ring * 0.06)) })),
 };
 const orbitPath = join(OUT, 'orbit-rings.json');

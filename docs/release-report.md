@@ -17,6 +17,68 @@
 | Approved waivers | none requested |
 | **Go-live decision** | **Not claimed.** Blocked on the human sign-offs below (decision D-09). |
 
+## v1.6 big-screen candidate (stage 15, D-36, branch `mobile-v2`)
+
+Build `bingo-be2a06b4c257` (two consecutive assemblies gave the same id), 715 files, assets 6.63 of 7 MiB, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs pending. Tests: 804 passing (npm test 232, public Galaxy 92, UI kit 157, phone 65, stage 35, admin 20, accessibility 49, asset pipeline 92, AI tools 52, design tokens 10). Assembled from the working tree: commit `6df5873` plus the uncommitted stage-13 and stage-15 files.
+
+The big screen (each change approved from a render first; `apps/public-galaxy/README.md` "Stage 15"):
+- **A living Galaxy:** Souls float on their orbits with depth (nearer Souls bigger and clearer), and a few do idle micro actions in 3D (wink, wave, step, turn, sway).
+- **Say hi:** every few seconds one Soul flies to the front, waves and says "Hi, I'm {name}, {greeting}" in a speech bubble (up to 40 words, shown for its reading time). A Soul that just floated in goes next, so its player sees the greeting within moments (13.6 s in the live check).
+- **Space:** a Blender sky - nebula, milky way, a galaxy, a planet limb, constellations, meteors, falling stars - that moves very slowly. The stickers, forest, fireflies, aurora and the white Soul border are gone from the big screen.
+- **Winner:** a gold crown (Blender GLB) instead of the medallion, drawn 1.3x in a gold glow.
+- **Panel:** the phone's fonts, the AriSkill sign, "Registration ends", a smaller QR with "Scan to join", a sound icon top right, a card with the previous five draws and the Blender "BINGO!" badge; no reconnect banner or text, "LIVE MISSION", skill kind or "Bingo is live"; sound captions go to screen readers only.
+- **Also in this build (the other session, owner requests):** the screen split is 70 / 30 (D-52; the scene config follows, panelX 1344) and a full-screen button sits top left, fading when the mouse is still (D-51).
+
+How it is built:
+- **Assets:** `assets/space/` (178 KB, texture rather than scene data) from `tools/ai/blender/galaxy_space.py` and `tools/assets/build-galaxy-space.py`; `assets/souls/winner/crown.glb` (33 KB, 2,176 triangles) from `tools/ai/blender/winner_crown.py`. build-all checks both (`galaxy-space`, `winner-crown`) and lists them in the manifest (10 entries).
+- **Code:** `packages/ui/soul3d` gains the skeleton, the actions and the crown (the `winnerCrown` rig option is the Galaxy's only; the phone keeps the medallion). The Galaxy gains the depth, float and visit timeline, the greeting bubble and the space layers. Reduced motion: no float, depth, actions or visits, and the sky at rest.
+- **Panel CSS:** consolidated after review; the computed styles of all 103 panel elements match the approved review build in every state.
+
+Live check on a test server (port 8093, scratch database, never the 8080 demo): the three.js tier loaded every space layer, the sign and the crown GLB; a visitor said hi in its bubble and the winner wore the crown; no console errors.
+
+Open:
+- **OD-24, greetings:** players' text reaches the whole room after an automatic filter only; needs an owner and HR / comms decision.
+- **OD-25, winner emphasis vs BR-17:** the approved 1.3x gold winner bends the equal-size rule; needs a product sign-off (one constant turns the size back).
+- **Greeting length:** the phone accepts 40 characters (D-42) while the bubble takes up to 40 words; raise the phone's limit if longer greetings are wanted.
+
+Screens: `reports/qa/screens/big-screen-stage15.webp` (live), `big-screen-stage15-panel.png` (Waiting, Playing, Winner).
+
+## v1.5 Soul faces candidate (stage 13, D-31 / D-32, branch `mobile-v2`)
+
+Build `bingo-de93dd1b250e` (reproducible: two consecutive assemblies produced the same id), 670 files, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs pending. Tests: 710 passing (game-rules 59, design-tokens 10, UI kit 138, game-service 78, employee 64, admin 20, public 62, stage 35, asset tools 72, AI tools 52, e2e + contracts + accessibility 120).
+
+The build was assembled from a copy of the tree: commit `a697d55` (tag `stage-13-review`) plus the uncommitted stage-13 files. The in-progress 16-skill change (D-33 / D-34) was being edited in the same folder at the time, so it is not in this build. `build/` in the repo keeps the stage-12 files until the next `npm run assemble` there.
+
+Every Soul created under contract 1.2.0 is a SoulConfig v3 (`docs/art/soul-faces.md`):
+- **Face plate:** one of 10 white face shapes from the partner's sheet, picked from the Soul seed.
+- **Eyes:** one of 10 eye designs, picked from the seed.
+- **Antenna charm:** one of the 150 catalog charms replaces the glowing orb, picked from the seed, never one of the Soul's own 10 charms.
+- **Face kit:** the skill face kit stays on top, refitted to the new face (glasses around the new eyes, eye patch and bandana, halo; no blush). Gradient, glow and the 10 body charms are as in v2.
+
+The three picks are cosmetic and never come from skills (BR-17). Stored v1 and v2 Souls render as before, and the neutral fallback stays v2.
+
+How it is built and drawn:
+- **Art:** made in Blender by `tools/ai/blender/soul_face.py` and published to `assets/souls/v3/` (1315.5 KB of its 1.5 MiB budget).
+- **Budget:** the runtime-asset budget rose from 6 to 7 MiB (D-31); the build uses 6.73 MB.
+- **3D:** the phone and the Galaxy draw each Soul on the body of its own version (the new body for v3 Souls) through the shared `packages/ui/soul3d`.
+- **2D:** the flat fallback is soul-renderer 5.0.0, which draws v2 Souls exactly as 4.0.0 did.
+- **Robustness:** a hung body download no longer drops the Galaxy to 2D.
+- **Contracts:** moved to 1.2.0 (D-32).
+
+Live check on a test server (port 8093, scratch database, never the 8080 demo):
+- **Configs:** 6 players over 2 rounds all got valid v3 Souls, and each plate, eye design and antenna charm matched its seed pick.
+- **Screens:** the phone reveal and the Galaxy (impostors and a Float entrance) drew them in 3D with no console errors.
+- **Galaxy timing:** under software rendering, the 3D stage was ready 2.7 to 3.4 s after load. Each impostor then took 4.4 ms, after one 0.5 s shader compile.
+
+Open:
+- **OD-20, skull and cross-eye designs:** two face plates are skulls and one eye design has a cross eye. They are the partner's designs, but at a workplace event they may read as death imagery and need a brand sign-off.
+- **OD-18, face rule:** still open.
+- **Backlog:** high-tier phones still prefetch the baseline hero body (330 KB) that v3 Souls do not use. `packages/ui/test` has two overlapping v3 fixtures.
+
+Screens:
+- `reports/qa/screens/decor-v3-{plates,eyes,examples,example-soul}.png` (Blender)
+- `decor-v3-{phone-reveal,phone-reveal-closeup,public-entrance,public-galaxy,public-galaxy-closeup}.png` (live)
+
 ## v1.4 decorated Soul candidate (stage 12, D-29 / D-30, branch `after-gem`)
 
 Build `bingo-5a3d6c80c6a1` (reproducible: two consecutive assemblies produced the same id), 621 files, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs pending. Tests: 647 passing (game-rules 48, design-tokens 10, UI kit 109, game-service 75, employee 61, admin 20, public 57, stage 35, asset tools 72, AI tools 45, e2e + contracts + accessibility 115).

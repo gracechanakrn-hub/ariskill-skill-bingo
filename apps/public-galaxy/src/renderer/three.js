@@ -3,79 +3,44 @@
 // import failure falls through to the raw WebGL2 / Canvas 2D / static renderers.
 //
 // Composition (back to front, all in the Galaxy region only - the canvas never extends past panelX):
-//   nebula shader plane (domain-warped noise, violet / blue / magenta, low contrast)
+//   space backdrop (stage 15, D-36: a Blender plate from /assets/space via space.js, drifting and breathing very
+//   slowly with the camera parallax; a plain dark sky without space.json), the constellation lines (shimmering) and
+//   their stars (each twinkling on its own), the meteors behind the orbit
 //   three star layers as Points (per-star twinkle phase, parallax to the camera drift, additive)
-//   faint orbit rings (dashed LineLoops, additive)
-//   fireflies (Points, per-particle phase, warm gold + violet, additive; warm tint on winner)
-//   aurora band (aurora.js: teal -> lime ribbon over the upper third, additive, capped, 0.01 rad/s drift)
+//   faint orbit rings (dashed LineLoops, additive), the occasional falling star
 //   Soul halos (additive palette light BEHIND each sticker, bloomed)
 //   clusters above 300 Souls (neutral glow sprite; the count label lives in a DOM overlay)
 //   entrance trail / burst particles (short-lived additive points)
-//   forest silhouettes (procedural alpha textures from forest.js, slight parallax)
 // then EffectComposer: RenderPass(sky) -> UnrealBloomPass (off on `low`) -> RenderPass(overlay, no clear) -> OutputPass.
 // The overlay scene is drawn AFTER bloom so the stickers stay flat, crisp print on the glowing sky (art direction v2):
-//   Souls (instanced atlas quads at detail 'simple', die-cut hull + winner outline flash in the fragment shader)
+//   Souls far to near (stage 15, D-36: depth sets their size and haze; instanced atlas quads at detail 'simple', drawn
+//   in runs so a Soul acting live from the impostor stage keeps its place in the depth order; no white die-cut, only
+//   the winner's gold outline flash in the fragment shader)
 //   Float entrances of decorated Souls (the live 3D figure from the impostor stage, same sticker shader)
-//   doodads (rocket / UFO / planet / comet / stars from packages/ui/doodads.js, high tier only, doodads-layout.js)
+//   the Soul visiting the front to say hi (live, front-most, with a soft aura)
+//   the meteors in front, at the corners and edges where Souls never go
 // Decorated (v2 / v3) Souls (D-29, D-31): the impostor stage (impostor.js) renders the phone's 3D Soul - shared soul3d
 // rig on the body of the Soul's variant (the v3 body for a v3 Soul), lights, tone mapping - live for each Float
-// entrance's hero moment, and bakes settled decorated Souls into their atlas cells after each frame (afterFrame), so the
-// Galaxy shows the same decorated Soul as the phone; GLTFLoader and the models load only when the first decorated Soul
-// appears. v1 Souls keep their 2D sprites; so does a Soul whose body variant could not load.
+// entrance's hero moment, for the say-hi visit and for the Souls doing an idle micro action (stage 15), and bakes
+// settled decorated Souls into their atlas cells after each frame (afterFrame), so the Galaxy shows the same decorated
+// Soul as the phone; GLTFLoader and the models load only when the first decorated Soul appears. v1 Souls keep their 2D
+// sprites; so does a Soul whose body variant could not load, and any live item that finds no free tile.
 // BR-17: nothing here tints, scales or reorders a Soul by anything but config / badge / soulId.
 import * as THREE from '/packages/vendor/three/index.js';
 import { EffectComposer, RenderPass, UnrealBloomPass, OutputPass } from '/packages/vendor/three/addons.js';
 import { resolveSoul, PALETTES } from '../../../../packages/ui/soul-renderer.js';
-import { doodadSvg } from '../../../../packages/ui/doodads.js';
-import { qualitySettings, pixelRatioFor, bloomStrength, pulseValue, BLOOM_PULSE, outlineFlash, hullPx, HULL } from './three-quality.js';
-import { FOREST_LAYERS, forestLayout, paintForest } from './forest.js';
+import { qualitySettings, pixelRatioFor, bloomStrength, pulseValue, BLOOM_PULSE, WINNER_LOOK, outlineFlash, hullPx, HULL } from './three-quality.js';
 import { seededRandom } from './forest.js';
-import { activeRingCount } from './scene.js';
-import { AURORA, AURORA_GLSL, auroraPhase, auroraTierGain } from './aurora.js';
-import { DOODAD_SET, DOODAD_RULES, doodadLayout, doodadExclusions, doodadOffset, doodadRect, rectsIntersect } from './doodads-layout.js';
+import { activeRingCount, DEPTH } from './scene.js';
+import { backdropPlacement, constellationPlacement, constellationStars, meteorPose, fallingStarAt } from './space.js';
 import { createImpostorStage } from './impostor.js';
 import { IMPOSTOR } from './impostor-plan.js';
 
 export const THREE_RENDERER_KIND = 'three';
-const FOREST_REF = { width: 1248, height: 1080 };
+/** Glow of the Soul visiting the front (its soft aura; entrances glow from their own pulse). */
+const VISIT_GLOW = 0.5;
 const PARTICLE_MAX = 2400;
-const NEBULA_OVERSCAN = 1.1;   // the nebula plane is 10 % larger than the region (parallax headroom)
-const DOODAD_CELL = 128;      // doodad atlas cell (the 64 px viewBox drawn at 104 px, rotation baked in)
 const ATLAS_UPLOAD_MS = 200;  // at most ~5 atlas page re-uploads per second while cells land
-
-const NEBULA_VS = /* glsl */`
-varying vec2 vUv;
-void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-const NEBULA_FS = /* glsl */`
-precision highp float;
-varying vec2 vUv;
-uniform float uTime; uniform float uAspect; uniform vec3 uBase; uniform vec3 uViolet; uniform vec3 uBlue; uniform vec3 uMagenta;
-uniform float uAuroraPhase; uniform vec3 uTeal; uniform vec3 uLime; uniform float uAuroraCap; uniform float uRightFade; uniform float uCentre; uniform float uHalfWidth; uniform float uSkyLumCap; uniform float uOverscan;
-float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
-float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }
-float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }
-` + AURORA_GLSL + /* glsl */`
-void main(){
-  vec2 p = vec2(vUv.x * uAspect, vUv.y);
-  float t = uTime * 0.010;
-  vec2 q = vec2(fbm(p * 1.5 + vec2(t, -t * 0.7)), fbm(p * 1.5 + vec2(5.2 - t * 0.5, 1.3 + t)));
-  vec2 r = vec2(fbm(p * 2.1 + 3.5 * q + vec2(1.7, 9.2) + t * 0.6), fbm(p * 2.1 + 3.5 * q + vec2(8.3, 2.8) - t * 0.4));
-  float n = fbm(p * 1.7 + 2.6 * r);
-  float band = smoothstep(0.34, 0.78, n);
-  vec3 col = uBase;
-  col = mix(col, uViolet, band * 0.70);
-  col = mix(col, uBlue, smoothstep(0.32, 0.72, q.y) * 0.42 * (1.0 - band));
-  col = mix(col, uMagenta, smoothstep(0.50, 0.92, r.x) * 0.42);
-  float vign = smoothstep(1.3, 0.3, distance(vUv, vec2(0.5, 0.5)) * 1.7);
-  col = mix(uBase * 0.8, col, 0.5 + 0.5 * vign);
-  // aurora band (aurora.js) added here so the SUM can be clamped: the sky never exceeds uSkyLumCap luminance
-  vec2 ruv = (vUv - 0.5) * uOverscan + 0.5;                       // plane uv -> region uv
-  col += auroraLight(ruv, uAspect, uAuroraPhase, uTeal, uLime, uAuroraCap, uRightFade, uCentre, uHalfWidth);
-  float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
-  col *= min(1.0, uSkyLumCap / max(lum, 1e-4));
-  gl_FragColor = vec4(col, 1.0);
-}`;
 
 const STAR_VS = /* glsl */`
 attribute float aR; attribute float aB; attribute float aT;
@@ -93,27 +58,6 @@ precision mediump float;
 uniform vec3 uColor; varying float vA;
 void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d) * 2.0; float a = smoothstep(1.0, 0.2, r); a *= a; gl_FragColor = vec4(uColor * a * vA, a * vA); }`;
 
-const FIREFLY_VS = /* glsl */`
-attribute float aPhase; attribute float aSpeed; attribute float aSize; attribute float aWarm;
-uniform vec2 uRes; uniform vec2 uOffset; uniform float uTime; uniform float uScale; uniform float uPixelRatio; uniform float uWarm;
-varying float vA; varying vec3 vCol;
-void main(){
-  float t = uTime * aSpeed + aPhase * 6.2831853;
-  vec2 drift = vec2(sin(t) * 0.6 + sin(t * 0.37 + aPhase * 3.0) * 0.4, cos(t * 0.8) * 0.5 + sin(t * 0.23) * 0.5) * 34.0 * uScale;
-  float rise = fract(position.y - uTime * 0.0045 * aSpeed + aPhase);
-  vec2 px = vec2(position.x * uRes.x, rise * uRes.y) + drift + uOffset;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(px.x, -px.y, 0.0, 1.0);
-  float tw = 0.5 + 0.5 * sin(uTime * (0.9 + aSpeed * 0.4) + aPhase * 12.0);
-  float edge = smoothstep(0.0, 0.06, rise) * smoothstep(1.0, 0.94, rise);
-  vA = (0.32 + 0.68 * tw * tw) * edge * (1.0 + 0.45 * uWarm);
-  vCol = mix(vec3(0.62, 0.42, 1.0), vec3(1.0, 0.60, 0.20), clamp(aWarm + uWarm * 0.75, 0.0, 1.0));
-  gl_PointSize = aSize * uScale * uPixelRatio * (1.0 + 0.25 * uWarm);
-}`;
-const FIREFLY_FS = /* glsl */`
-precision mediump float;
-varying float vA; varying vec3 vCol;
-void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d) * 2.0; float a = smoothstep(1.0, 0.15, r); a *= a; gl_FragColor = vec4(vCol * a * vA, a * vA); }`;
-
 const SPRITE_VS = /* glsl */`
 attribute vec2 iCenter; attribute float iSize; attribute vec4 iUv; attribute vec4 iTint; attribute vec2 iFx;
 varying vec2 vUv; varying vec4 vTint; varying vec2 vFx;
@@ -122,30 +66,31 @@ void main(){
   vUv = mix(iUv.xy, iUv.zw, uv); vTint = iTint; vFx = iFx;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(w, 0.0, 1.0);
 }`;
-// Sticker print: the atlas cell already carries the v2 die-cut; a screen-space hull (max alpha over 8 taps at
-// vFx.x texels, the 2D analogue of the 3D spec's 1.06 inverted hull) keeps that white band readable at any sprite
-// size, low-alpha texels (the flat offset shadow) are dropped so the sky shows through, and vFx.y (0..1) is the
-// winner outline flash: the hull widens and turns gold for 250 ms.
+// Sticker print: the big screen's Souls have no white die-cut (stage 15, D-36: the atlas cells and the live tiles are
+// drawn without it). The page textures are premultiplied, so the colour is recovered exactly at filtered edges (no dark
+// or white fringe) and low-alpha texels are dropped so the sky shows through. vFx.x > 0 only during the winner outline
+// flash: a screen-space hull (max alpha over 8 taps at vFx.x texels) in gold (vFx.y, 0..1) for 250 ms.
 const STICKER_FS = /* glsl */`
 precision mediump float;
 uniform sampler2D uMap; uniform float uTexel; uniform vec3 uFlashColor;
 varying vec2 vUv; varying vec4 vTint; varying vec2 vFx;
 void main(){
   vec4 c = texture2D(uMap, vUv);
+  vec3 base = c.a > 0.0 ? c.rgb / c.a : vec3(0.0);
+  float a = smoothstep(0.30, 0.60, c.a);
   float r = vFx.x * (1.0 + vFx.y) * uTexel;
-  float m = c.a;
+  vec3 rgb = base;
+  float outA = a;
   if (r > 0.0) {
-    float d = 0.7071 * r;
+    float m = c.a, d = 0.7071 * r;
     m = max(m, texture2D(uMap, vUv + vec2( r, 0.0)).a); m = max(m, texture2D(uMap, vUv + vec2(-r, 0.0)).a);
     m = max(m, texture2D(uMap, vUv + vec2(0.0,  r)).a); m = max(m, texture2D(uMap, vUv + vec2(0.0, -r)).a);
     m = max(m, texture2D(uMap, vUv + vec2( d,  d)).a); m = max(m, texture2D(uMap, vUv + vec2(-d,  d)).a);
     m = max(m, texture2D(uMap, vUv + vec2( d, -d)).a); m = max(m, texture2D(uMap, vUv + vec2(-d, -d)).a);
+    float hull = smoothstep(0.45, 0.75, m);
+    rgb = mix(mix(vec3(1.0), uFlashColor, vFx.y), base, a);
+    outA = max(a, hull * vFx.y);
   }
-  float hull = smoothstep(0.45, 0.75, m);
-  float a = smoothstep(0.30, 0.60, c.a);
-  vec3 hullColor = mix(vec3(1.0), uFlashColor, vFx.y);
-  vec3 rgb = mix(hullColor, c.rgb, a);
-  float outA = max(a, hull);
   gl_FragColor = vec4(rgb * vTint.rgb, outA * vTint.a);
 }`;
 const SPRITE_FS_NORMAL = /* glsl */`
@@ -168,9 +113,9 @@ function discCanvas(size = 128) {
   return c;
 }
 
-function canvasTexture(canvas, { flipY = true } = {}) {
+function canvasTexture(canvas, { flipY = true, premultiplied = false } = {}) {
   const t = new THREE.CanvasTexture(canvas);
-  t.colorSpace = THREE.SRGBColorSpace; t.flipY = flipY; t.generateMipmaps = false;
+  t.colorSpace = THREE.SRGBColorSpace; t.flipY = flipY; t.generateMipmaps = false; t.premultiplyAlpha = premultiplied;
   t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
   return t;
 }
@@ -211,37 +156,12 @@ function createSpriteBatch({ texture, additive, capacity, renderOrder, fragmentS
       if (n) for (const a of Object.values(attrs)) a.needsUpdate = true;
     },
     get count() { return n; },
+    get full() { return n >= capacity; },
     dispose() { geo.dispose(); mat.dispose(); base.dispose(); },
   };
 }
 
-/**
- * Rasterises the doodad set once into a strip atlas (one DOODAD_CELL cell per entry, rotation baked in).
- * `cells[i]` holds the uv rect for DOODAD_SET[i]; `ready` resolves when every SVG landed. No image assets.
- */
-function buildDoodadAtlas() {
-  const canvas = document.createElement('canvas');
-  canvas.width = DOODAD_CELL * DOODAD_SET.length; canvas.height = DOODAD_CELL;
-  const ctx = canvas.getContext('2d');
-  const cells = DOODAD_SET.map((_, i) => ({ x: i * DOODAD_CELL, y: 0, w: DOODAD_CELL, h: DOODAD_CELL }));
-  const inner = 104;
-  const jobs = DOODAD_SET.map((spec, i) => new Promise((resolve) => {
-    const svg = doodadSvg(spec.name, inner);
-    if (!svg) { resolve(false); return; }
-    const img = new Image();
-    img.onload = () => {
-      const c = cells[i];
-      ctx.save(); ctx.translate(c.x + c.w / 2, c.y + c.h / 2); ctx.rotate((spec.rotDeg * Math.PI) / 180);
-      ctx.drawImage(img, -inner / 2, -inner / 2, inner, inner); ctx.restore();
-      resolve(true);
-    };
-    img.onerror = () => resolve(false);
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  }));
-  return { canvas, cells, ready: Promise.all(jobs) };
-}
-
-export function createThreeRenderer({ container, atlas, starLayers = [], background = '#0B0F1F', dpr = 1, quality = 'high', seed = 'arise-galaxy-2026', pulseMs = 400, reducedMotion = false, onLost = null } = {}) {
+export function createThreeRenderer({ container, atlas, starLayers = [], space = null, background = '#0B0F1F', dpr = 1, quality = 'high', seed = 'arise-galaxy-2026', pulseMs = 400, reducedMotion = false, onLost = null } = {}) {
   if (typeof document === 'undefined') throw new Error('three renderer needs a DOM');
   const canvas = document.createElement('canvas');
   canvas.className = 'galaxy__canvas';
@@ -269,19 +189,29 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
   let width = 1, height = 1, disposed = false, lost = false;
   let currentQuality = null, pr = 1;
 
-  // ---- nebula ----
-  const nebula = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: { value: 0 }, uAspect: { value: 1.155 }, uBase: { value: new THREE.Color('#0D0822') }, uViolet: { value: new THREE.Color('#2B1660') }, uBlue: { value: new THREE.Color('#132A66') }, uMagenta: { value: new THREE.Color('#4E1A63') },
-      // aurora band (upper third, additive, capped: aurora.js) lives in the same fragment so the sum is clamped
-      uAuroraPhase: { value: 0 }, uTeal: { value: new THREE.Color(AURORA.teal) }, uLime: { value: new THREE.Color(AURORA.lime) }, uAuroraCap: { value: AURORA.intensityCap },
-      uRightFade: { value: AURORA.rightFade }, uCentre: { value: AURORA.band.centre }, uHalfWidth: { value: AURORA.band.halfWidth }, uSkyLumCap: { value: AURORA.skyLumCap }, uOverscan: { value: NEBULA_OVERSCAN },
-    },
-    vertexShader: NEBULA_VS, fragmentShader: NEBULA_FS, depthTest: false, depthWrite: false,
-  }));
-  nebula.frustumCulled = false; nebula.renderOrder = 0;
-  scene.add(nebula);
-  const auroraU = nebula.material.uniforms;
+  // ---- space (stage 15, D-36): the Blender plates of space.json; no file, a plain dark sky (the clear colour) ----
+  const spec = space && space.spec ? space.spec : null;
+  const spaceImages = (space && space.images) || {};
+  const spaceTextures = [], spaceMeshes = [];
+  /** A textured quad for one space image (null when the image is missing: that layer is left out). */
+  function spacePlane(img, { renderOrder, parent = scene, transparent = true, additive = false, mipmaps = false }) {
+    if (!img) return null;
+    const map = new THREE.Texture(img);
+    map.colorSpace = THREE.SRGBColorSpace; map.generateMipmaps = mipmaps; map.needsUpdate = true;
+    map.minFilter = mipmaps ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter; map.magFilter = THREE.LinearFilter;
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map, transparent, depthTest: false, depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending }));
+    mesh.frustumCulled = false; mesh.renderOrder = renderOrder;
+    parent.add(mesh);
+    spaceTextures.push(map); spaceMeshes.push(mesh);
+    return { mesh, aspect: img.width / img.height || 1 };
+  }
+  const backdrop = spec ? spacePlane(spaceImages.backdrop, { renderOrder: 0, transparent: false }) : null;
+  const constLines = spec ? spacePlane(spaceImages.constellations, { renderOrder: 1 }) : null;
+  // meteors: behind the orbit in the sky (bloomed), or in front of the Souls in the overlay (at the corners and edges)
+  const meteors = spec ? spec.meteors.map((m, i) => { const q = spacePlane((spaceImages.meteors || [])[i], { renderOrder: m.front ? 70 : 5, parent: m.front ? overlay : scene, mipmaps: true }); return q ? { m, ...q } : null; }).filter(Boolean) : [];
+  const fallingStar = spec && spec.fallingStars ? spacePlane(spaceImages.fallingStar, { renderOrder: 12, additive: true }) : null;
+  if (fallingStar) fallingStar.mesh.visible = false;
+  let spaceInfo = { layers: spaceMeshes.length, fallingStar: null };
 
   // ---- stars ----
   const starMeshes = starLayers.map((layer, i) => {
@@ -316,105 +246,57 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     }
   }
 
-  // ---- fireflies ----
-  const FF_MAX = 320;
-  const ffRnd = seededRandom(`${seed}:fireflies`);
-  const ffPos = new Float32Array(FF_MAX * 3), ffPhase = new Float32Array(FF_MAX), ffSpeed = new Float32Array(FF_MAX), ffSize = new Float32Array(FF_MAX), ffWarm = new Float32Array(FF_MAX);
-  for (let i = 0; i < FF_MAX; i++) {
-    ffPos[i * 3] = ffRnd(); ffPos[i * 3 + 1] = Math.pow(ffRnd(), 0.8); ffPhase[i] = ffRnd(); ffSpeed[i] = 0.25 + ffRnd() * 0.6;
-    ffSize[i] = 3.2 + ffRnd() * 4.6; ffWarm[i] = ffRnd() < 0.62 ? 0.75 + ffRnd() * 0.25 : ffRnd() * 0.25;
-  }
-  const ffGeo = new THREE.BufferGeometry();
-  ffGeo.setAttribute('position', new THREE.BufferAttribute(ffPos, 3)); ffGeo.setAttribute('aPhase', new THREE.BufferAttribute(ffPhase, 1)); ffGeo.setAttribute('aSpeed', new THREE.BufferAttribute(ffSpeed, 1)); ffGeo.setAttribute('aSize', new THREE.BufferAttribute(ffSize, 1)); ffGeo.setAttribute('aWarm', new THREE.BufferAttribute(ffWarm, 1));
-  const ffMat = new THREE.ShaderMaterial({
-    uniforms: { uRes: { value: new THREE.Vector2(1, 1) }, uOffset: { value: new THREE.Vector2() }, uTime: { value: 0 }, uScale: { value: 1 }, uPixelRatio: { value: 1 }, uWarm: { value: 0 } },
-    vertexShader: FIREFLY_VS, fragmentShader: FIREFLY_FS, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, premultipliedAlpha: true,
-  });
-  const fireflies = new THREE.Points(ffGeo, ffMat); fireflies.frustumCulled = false; fireflies.renderOrder = 20; scene.add(fireflies);
-
   // ---- sprite batches ----
   const glowTex = canvasTexture(discCanvas(128), { flipY: false });
   const halo = createSpriteBatch({ texture: glowTex, additive: true, capacity: 1400, renderOrder: 30 });
   const clusterBatch = createSpriteBatch({ texture: glowTex, additive: true, capacity: 600, renderOrder: 34 });
   const particleBatch = createSpriteBatch({ texture: glowTex, additive: true, capacity: PARTICLE_MAX + 64, renderOrder: 60 });
-  scene.add(halo.mesh, clusterBatch.mesh, particleBatch.mesh);
-  const soulBatches = []; const pageTex = []; let atlasVersion = -1;
+  // the constellation stars: one twinkling glow each, on the lines (the lines image carries no stars)
+  const constStars = createSpriteBatch({ texture: glowTex, additive: true, capacity: Math.max(1, spec ? spec.constellations.stars.length : 1), renderOrder: 1.5 });
+  scene.add(halo.mesh, clusterBatch.mesh, particleBatch.mesh, constStars.mesh);
+  const pageTex = []; let atlasVersion = -1;
   const flashColor = new THREE.Color('#F6C453'); // --sticker-gold
+  // Sticker runs: the stickers are drawn in order (Souls far to near, then entrances, then the visit) in as few
+  // instanced batches as possible - a new batch only where the texture changes (an atlas page, or the impostor stage's
+  // live tiles), so a Soul acting live keeps its place in the depth order. The pool grows to the most runs a frame used.
+  const runs = []; let runN = 0;
+  function beginRuns() { runN = 0; }
+  function pushSticker(tex, texel, x, y, s, u0, v0, u1, v1, a, hull, flash) {
+    let b = runN ? runs[runN - 1] : null;
+    if (!b || b.material.uniforms.uMap.value !== tex || b.full) {
+      if (!runs[runN]) {
+        runs[runN] = createSpriteBatch({ texture: tex, additive: false, capacity: 1024, renderOrder: 40, fragmentShader: STICKER_FS, uniforms: { uTexel: { value: texel }, uFlashColor: { value: flashColor } } });
+        overlay.add(runs[runN].mesh);
+      }
+      b = runs[runN];
+      b.material.uniforms.uMap.value = tex; b.material.uniforms.uTexel.value = texel;
+      b.mesh.renderOrder = 40 + runN * 0.001;
+      b.begin();
+      runN++;
+    }
+    b.push(x, y, s, u0, v0, u1, v1, 1, 1, 1, a, hull, flash);
+  }
+  function endRuns() { runs.forEach((b, i) => { if (i >= runN) b.begin(); b.end(); }); }
   // While cells keep landing (impostor bakes a few per frame, sprite decodes) a 2048^2 page would be re-uploaded
   // (16 MB) every frame; new cells are batched into one upload per ATLAS_UPLOAD_MS instead. New pages upload at once.
   let lastUploadAt = -Infinity;
   function ensureAtlas(now = performance.now()) {
-    if (atlas.version === atlasVersion && soulBatches.length === atlas.pages.length) return;
-    if (soulBatches.length === atlas.pages.length && now - lastUploadAt < ATLAS_UPLOAD_MS) return;
+    if (atlas.version === atlasVersion && pageTex.length === atlas.pages.length) return;
+    if (pageTex.length === atlas.pages.length && now - lastUploadAt < ATLAS_UPLOAD_MS) return;
     lastUploadAt = now;
     atlasVersion = atlas.version;
     atlas.pages.forEach((p, i) => {
-      if (!pageTex[i]) {
-        pageTex[i] = canvasTexture(p.canvas, { flipY: false });
-        soulBatches[i] = createSpriteBatch({ texture: pageTex[i], additive: false, capacity: 1024, renderOrder: 40 + i, fragmentShader: STICKER_FS, uniforms: { uTexel: { value: 1 / atlas.pageSize }, uFlashColor: { value: flashColor } } });
-        overlay.add(soulBatches[i].mesh);
-      } else pageTex[i].needsUpdate = true;
+      if (!pageTex[i]) pageTex[i] = canvasTexture(p.canvas, { flipY: false, premultiplied: true });
+      else pageTex[i].needsUpdate = true;
     });
   }
 
-  // ---- decorated Souls: the 3D impostor stage (lazy: nothing loads until a decorated Soul asks) and the live entrance quads ----
+  // ---- decorated Souls: the 3D impostor stage (lazy: nothing loads until a decorated Soul asks) and its live tiles ----
   const impostors = createImpostorStage({ THREE });   // attached to the atlas once this renderer is fully built (below)
-  let liveTex = null, heroBatch = null;
-  function ensureLive() {
-    if (heroBatch || !impostors.canvas) return;
-    liveTex = canvasTexture(impostors.canvas, { flipY: false });
-    heroBatch = createSpriteBatch({ texture: liveTex, additive: false, capacity: 16, renderOrder: 48, fragmentShader: STICKER_FS, uniforms: { uTexel: { value: 1 / IMPOSTOR.stage }, uFlashColor: { value: flashColor } } });
-    overlay.add(heroBatch.mesh);
-  }
+  let liveTex = null;
+  function ensureLive() { if (!liveTex && impostors.canvas) liveTex = canvasTexture(impostors.canvas, { flipY: false, premultiplied: true }); }
 
-  // ---- doodads (high tier only; strip atlas built once, stickers drawn in the overlay) ----
-  const doodadAtlas = buildDoodadAtlas();
-  const doodadTex = canvasTexture(doodadAtlas.canvas, { flipY: false });
-  let doodadReady = false;
-  doodadAtlas.ready.then(() => { doodadTex.needsUpdate = true; doodadReady = true; });
-  const doodadBatch = createSpriteBatch({ texture: doodadTex, additive: false, capacity: DOODAD_SET.length, renderOrder: 36 });
-  overlay.add(doodadBatch.mesh);
-  let doodadHomes = [], doodadKey = '';
-  const doodadState = DOODAD_SET.map(() => ({ x: NaN, y: NaN, alpha: 0 }));
-  function updateDoodads(f, t, dt) {
-    doodadBatch.begin();
-    if (f.quality !== 'high' || !doodadReady) { doodadBatch.end(); return; }
-    const L = f.layout;
-    const ringIdx = Math.max(0, activeRingCount(f.count) - 1);
-    const ring = f.rings[ringIdx];
-    const outer = ring ? { rx: ring.rx, ry: ring.ry } : { rx: 0.22 * L.halfH * 1.35, ry: 0.22 * L.halfH };
-    const key = `${ringIdx}|${width}x${height}`;
-    if (key !== doodadKey) { doodadKey = key; doodadHomes = doodadLayout({ seed, width, height, outer, quality: 'high' }); }
-    const zones = doodadExclusions({ clusters: f.clusters });
-    const ease = 1 - Math.pow(1 - DOODAD_RULES.settleLerp, dt * 60);
-    const aw = doodadAtlas.canvas.width, ah = doodadAtlas.canvas.height;
-    doodadHomes.forEach((d, i) => {
-      const st = doodadState[i];
-      if (!Number.isFinite(st.x)) { st.x = d.x; st.y = d.y; }
-      st.x += (d.x - st.x) * ease; st.y += (d.y - st.y) * ease;
-      const off = doodadOffset(d, t, reducedMotion, L.scale);
-      const x = st.x + off.dx + cam.dx * 0.6, y = st.y + off.dy + cam.dy * 0.6;
-      const rect = doodadRect(d, x, y);
-      const show = d.visible && !zones.some(z => rectsIntersect(rect, z));
-      st.alpha += ((show ? 1 : 0) - st.alpha) * Math.min(1, dt * 4);
-      if (st.alpha <= 0.01) return;
-      const c = doodadAtlas.cells[i];
-      doodadBatch.push(x, y, d.size, c.x / aw, (c.y + c.h) / ah, (c.x + c.w) / aw, c.y / ah, 1, 1, 1, st.alpha);
-    });
-    doodadBatch.end();
-  }
   let cam = { dx: 0, dy: 0 };
-
-  // ---- forest frame ----
-  const forestPlanes = FOREST_LAYERS.map((layer, i) => {
-    const c = document.createElement('canvas'); c.width = FOREST_REF.width; c.height = FOREST_REF.height;
-    paintForest(c, forestLayout(seed, FOREST_REF.width, FOREST_REF.height, i), i);
-    const mat = new THREE.MeshBasicMaterial({ map: canvasTexture(c), transparent: true, opacity: layer.alpha, depthTest: false, depthWrite: false });
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
-    mesh.frustumCulled = false; mesh.renderOrder = 80 + i;
-    scene.add(mesh);
-    return { mesh, layer };
-  });
 
   // ---- particles (entrance trail, winner burst) ----
   const P = { x: new Float32Array(PARTICLE_MAX), y: new Float32Array(PARTICLE_MAX), vx: new Float32Array(PARTICLE_MAX), vy: new Float32Array(PARTICLE_MAX), life: new Float32Array(PARTICLE_MAX), max: new Float32Array(PARTICLE_MAX), size: new Float32Array(PARTICLE_MAX), r: new Float32Array(PARTICLE_MAX), g: new Float32Array(PARTICLE_MAX), b: new Float32Array(PARTICLE_MAX), a: new Float32Array(PARTICLE_MAX) };
@@ -462,7 +344,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
   overlayPass.clear = false;            // composes the stickers over the bloomed sky in the same buffer
   const outputPass = new OutputPass();
   composer.addPass(renderPass); composer.addPass(bloomPass); composer.addPass(overlayPass); composer.addPass(outputPass);
-  let pulseAt = NaN, pulsePeak = 0, pulseDur = pulseMs, warmAt = NaN;
+  let pulseAt = NaN, pulsePeak = 0, pulseDur = pulseMs;
   const pulsed = new Set();
   let flashIds = new Set(), flashAt = NaN, lastFlashDrawn = 0;
 
@@ -481,11 +363,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     renderer.setPixelRatio(pr); composer.setPixelRatio(pr);
     bloomPass.enabled = !!s.bloom;
     if (s.bloom) { bloomPass.radius = s.bloom.radius; bloomPass.threshold = s.bloom.threshold; bloomPass.strength = s.bloom.strength; }
-    ffGeo.setDrawRange(0, Math.min(FF_MAX, s.fireflies));
-    auroraU.uAuroraCap.value = AURORA.intensityCap * auroraTierGain(q);
-    forestPlanes.forEach((fp, i) => { fp.mesh.visible = i >= FOREST_LAYERS.length - s.forestLayers; });
     for (const sm of starMeshes) sm.pts.material.uniforms.uPixelRatio.value = pr;
-    ffMat.uniforms.uPixelRatio.value = pr;
     resize(width, height);
   }
 
@@ -494,30 +372,33 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     renderer.setSize(width, height, false); composer.setSize(width, height);
     canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
     camera.left = 0; camera.right = width; camera.top = 0; camera.bottom = -height; camera.updateProjectionMatrix();
-    nebula.scale.set(width * NEBULA_OVERSCAN, height * NEBULA_OVERSCAN, 1); nebula.material.uniforms.uAspect.value = width / height;
-    const fs = Math.max(width / FOREST_REF.width, height / FOREST_REF.height) * 1.05;
-    for (const fp of forestPlanes) fp.mesh.scale.set(FOREST_REF.width * fs, FOREST_REF.height * fs, 1);
     for (const sm of starMeshes) sm.pts.material.uniforms.uRes.value.set(width, height);
-    ffMat.uniforms.uRes.value.set(width, height);
   }
 
-  function drawSoul(item, detail, alpha, scale, glow, now, entering = false, live = null) {
-    const size = item.size * (scale || 1);
+  /**
+   * One sticker: the palette light behind it (bloomed) and the sticker itself in the overlay, from its live tile when it
+   * has one, else from its atlas cell (a placeholder glow until the cell lands). opts: { detail, alpha, scale, glow,
+   * now, priority (1: bake ahead, an entrance), live (uv rect), cellScale (a visit asks for a cell at its drawn size) }.
+   */
+  function drawSoul(item, { detail, alpha = 1, scale = 1, glow = 0, now, priority = 0, live = null, cellScale = 1 }) {
+    const won = item.badge === 'bingo-star';            // a Bingo winner: bigger, in a gold glow (WINNER_LOOK, D-36)
+    const size = item.size * (scale || 1) * (won ? WINNER_LOOK.scale : 1);
     const [r, g, b] = glowOf(item);
     const flash = flashIds.size && flashIds.has(String(item.soulId)) ? outlineFlash(flashAt, now) : 0;
     if (flash > 0) lastFlashDrawn = flash;
-    // palette light behind the sticker (bloomed); the sticker itself is drawn crisp in the overlay pass
+    // palette light behind the sticker (bloomed); the sticker itself is drawn crisp in the overlay pass. A winner's gold
+    // glow lies under it, wider
+    if (won) halo.push(item.x, item.y + size * 0.04, size * WINNER_LOOK.halo, 0, 0, 1, 1, ...WINNER_LOOK.rgb, (WINNER_LOOK.alpha + 0.25 * flash) * alpha);
     halo.push(item.x, item.y + size * 0.04, size * 2.1, 0, 0, 1, 1, r, g, b, (0.30 + 0.34 * glow + 0.25 * flash) * alpha);
-    // entrances ask first (priority 1): a decorated Soul's impostor is baked before it settles
-    const entry = atlas.get(item, detail, item.size * pr, { priority: entering ? 1 : 0 });
-    if (live && heroBatch) {
-      heroBatch.push(item.x, item.y, size, live.u0, live.v0, live.u1, live.v1, 1, 1, 1, alpha, hullPx(size) * (live.size / size), flash);
-      return;
-    }
-    if (entry.ready && entry.page >= 0 && soulBatches[entry.page]) {
+    // the die-cut hull only shows as the winner's outline flash (the big screen has no white border)
+    const hull = (texelsPerPx) => (flash > 0 ? hullPx(size) * texelsPerPx : 0);
+    // the atlas cell, even while live: an entrance bakes its impostor ahead of settling (priority 1); a live visit needs
+    // none (its orbit cell exists), and without a live tile it asks for a cell at its drawn size
+    const entry = live && cellScale !== 1 ? null : atlas.get(item, detail, item.size * cellScale * pr, { priority });
+    if (live && liveTex) { pushSticker(liveTex, 1 / IMPOSTOR.stage, item.x, item.y, size, live.u0, live.v0, live.u1, live.v1, alpha, hull(live.size / size), flash); return; }
+    if (entry && entry.ready && entry.page >= 0 && pageTex[entry.page]) {
       const ps = atlas.pageSize;
-      const hullTexels = hullPx(size) * (entry.w / size);
-      soulBatches[entry.page].push(item.x, item.y, size, entry.x / ps, (entry.y + entry.h) / ps, (entry.x + entry.w) / ps, entry.y / ps, 1, 1, 1, alpha, hullTexels, flash);
+      pushSticker(pageTex[entry.page], 1 / ps, item.x, item.y, size, entry.x / ps, (entry.y + entry.h) / ps, (entry.x + entry.w) / ps, entry.y / ps, alpha, hull(entry.w / size), flash);
     } else halo.push(item.x, item.y, size * 0.8, 0, 0, 1, 1, 0.8, 0.85, 1, 0.5 * alpha);
   }
 
@@ -534,6 +415,42 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     for (const [k, el] of labelEls) if (!seen.has(k)) { el.remove(); labelEls.delete(k); }
   }
 
+  /**
+   * The space layers at t (space.js): the backdrop's drift and breathing, the lines' shimmer, each star's twinkle, the
+   * meteors' spin and drift loop, the falling star. Reduced motion: all still, no falling star; 'low': no falling star,
+   * no spin.
+   */
+  function updateSpace(f, t) {
+    constStars.begin();
+    if (!spec) { constStars.end(); return; }
+    const opts = { camera: reducedMotion ? null : f.camera, reducedMotion };
+    if (backdrop) {
+      const b = backdropPlacement(spec, width, height, t, { ...opts, aspect: backdrop.aspect });
+      backdrop.mesh.position.set(b.x, -b.y, 0); backdrop.mesh.scale.set(b.w, b.h, 1);
+    }
+    const plate = constellationPlacement(spec, width, height, t, { ...opts, aspect: constLines ? constLines.aspect : undefined });
+    if (constLines) { constLines.mesh.position.set(plate.x, -plate.y, 0); constLines.mesh.scale.set(plate.w, plate.h, 1); constLines.mesh.material.opacity = plate.alpha; }
+    for (const st of constellationStars(spec, plate, height, t, opts)) constStars.push(st.x, st.y, st.r * 6, 0, 0, 1, 1, 0.93, 0.95, 1, st.a);
+    constStars.end();
+    for (const me of meteors) {
+      const q = meteorPose(me.m, width, height, t, { ...opts, quality: f.quality });
+      me.mesh.position.set(q.x, -q.y, 0); me.mesh.scale.set(q.size * me.aspect, q.size, 1); me.mesh.rotation.z = (-q.rotDeg * Math.PI) / 180;
+    }
+    if (fallingStar) {
+      const fs = fallingStarAt(spec, width, height, t, { seed, reducedMotion, quality: f.quality });
+      fallingStar.mesh.visible = !!fs && fs.alpha > 0;
+      spaceInfo.fallingStar = fs ? { k: fs.k, alpha: Number(fs.alpha.toFixed(2)) } : null;
+      if (fs) {
+        // the streak's head (its right end) sits on the path; the sprite is centred half a length behind it
+        const a = (fs.angleDeg * Math.PI) / 180;
+        fallingStar.mesh.position.set(fs.x - Math.cos(a) * fs.length / 2, -(fs.y - Math.sin(a) * fs.length / 2), 0);
+        fallingStar.mesh.scale.set(fs.length, fs.length / fallingStar.aspect, 1);
+        fallingStar.mesh.rotation.z = -a;
+        fallingStar.mesh.material.opacity = fs.alpha;
+      }
+    }
+  }
+
   let lastNow = 0;
   function render(f) {
     if (disposed || lost) return;
@@ -544,11 +461,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     lastNow = now;
     const t = f.timeSec || 0, L = f.layout;
     cam = f.camera;
-    // nebula + parallax
-    nebula.material.uniforms.uTime.value = t;
-    nebula.position.set(width / 2 + cam.dx * 0.1, -(height / 2 + cam.dy * 0.1), 0);
-    // aurora: 0.01 rad/s drift (still under reduced motion); it rides the nebula plane's parallax
-    auroraU.uAuroraPhase.value = auroraPhase(t, reducedMotion);
+    updateSpace(f, t);
     if (Number.isFinite(flashAt) && now - flashAt > 1000) { flashIds = new Set(); flashAt = NaN; }
     // stars
     starMeshes.forEach((sm, i) => {
@@ -561,14 +474,21 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     // rings
     ringGroup.visible = f.rings.length > 0;
     if (f.rings.length) { buildRings(f.rings); ringGroup.position.set(f.rings[0].cx, -f.rings[0].cy, 0); }
-    // fireflies
-    const warm = Number.isFinite(warmAt) ? Math.min(1, (now - warmAt) / 200) * pulseValue(1, warmAt, 2600, now) : 0;
-    ffMat.uniforms.uTime.value = reducedMotion ? 0 : t; ffMat.uniforms.uScale.value = L.scale; ffMat.uniforms.uWarm.value = warm;
-    ffMat.uniforms.uOffset.value.set(cam.dx * 0.8, cam.dy * 0.8);
-    // souls
-    for (const b of soulBatches) b.begin();
+    // live 3D figures from the impostor stage: Float entrances, the say-hi visit and the Souls acting in orbit
+    const visits = f.visits || [];
+    const liveItems = [];
+    for (const e of f.entrances) liveItems.push({ ...e, role: 'entrance' });
+    for (const v of visits) liveItems.push({ ...v, role: 'visit' });
+    for (const item of f.souls) if (item.act) liveItems.push({ ...item, role: 'performer' });
+    const live = liveItems.length && impostors.state === 'ready' ? impostors.renderLive(liveItems, pr, { reducedMotion }) : null;
+    if (live && live.size) { ensureLive(); if (liveTex) liveTex.needsUpdate = true; }
+    const liveOf = (item) => (live ? live.get(String(item.soulId)) || null : null);
+    // souls, far to near (an acting Soul from its live tile, in its place)
+    beginRuns();
     halo.begin(); clusterBatch.begin(); particleBatch.begin();
-    for (const item of f.souls) drawSoul(item, item.detail, item.alpha ?? 1, item.scale ?? 1, 0, now);
+    // orbit cells are baked at the nearest depth size (D-36), so a near Soul is as sharp as its live tile and one cell
+    // serves the whole orbit
+    for (const item of f.souls) drawSoul(item, { detail: item.detail, alpha: item.alpha ?? 1, scale: item.scale ?? 1, now, live: item.act ? liveOf(item) : null, cellScale: item.depth === undefined || item.detail === 'dot' ? 1 : DEPTH.scale[1] });
     for (const c of f.clusters) {
       // neutral lilac glow, identical for every cluster (only the DOM count label differs)
       clusterBatch.push(c.x, c.y, c.size * 1.7, 0, 0, 1, 1, 0.72, 0.62, 1, 0.34);
@@ -577,9 +497,6 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     updateLabels(f.clusters);
     // entrances (a decorated Soul is the live 3D figure while the stage is ready; the rest keep their atlas sprite)
     const active = new Set();
-    const live = f.entrances.length && impostors.state === 'ready' ? impostors.renderEntrances(f.entrances, pr, { reducedMotion }) : null;
-    if (live && live.size) { ensureLive(); if (liveTex) liveTex.needsUpdate = true; }
-    if (heroBatch) heroBatch.begin();
     for (const e of f.entrances) {
       active.add(e.soulId);
       const glow = e.glow || 0;
@@ -589,20 +506,15 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
         if (e.phase === 'arc') emitTrail(e.soulId, e.x, e.y, e.size, r, g, b, L.scale);
       }
       if (e.phase === 'pulse' && !pulsed.has(e.soulId) && !reducedMotion) { pulsed.add(e.soulId); pulseAt = now; pulsePeak = BLOOM_PULSE.entrance; pulseDur = pulseMs; }
-      drawSoul(e, 'full', e.alpha ?? 1, e.scale ?? 1, glow, now, true, live ? live.get(String(e.soulId)) || null : null);
+      drawSoul(e, { detail: 'full', alpha: e.alpha ?? 1, scale: e.scale ?? 1, glow, now, priority: 1, live: liveOf(e) });
     }
-    if (heroBatch) heroBatch.end();
+    // the visit, front-most: out of the orbit to the front, waves hi (live), and back; a soft aura, no trail
+    for (const v of visits) drawSoul(v, { detail: 'full', alpha: v.alpha ?? 1, scale: v.scale ?? 1, glow: VISIT_GLOW, now, priority: 1, live: liveOf(v), cellScale: v.scale ?? 1 });
     for (const id of pulsed) if (!active.has(id)) pulsed.delete(id);
     for (const id of trailPrev.keys()) if (!active.has(id)) trailPrev.delete(id);
     stepParticles(dt); drawParticles();
-    for (const b of soulBatches) b.end();
+    endRuns();
     halo.end(); clusterBatch.end(); particleBatch.end();
-    updateDoodads(f, t, dt);
-    // forest parallax
-    for (const fp of forestPlanes) {
-      const p = reducedMotion ? 0 : fp.layer.parallax;
-      fp.mesh.position.set(width / 2 + cam.dx * p, -(height / 2 + cam.dy * p), 0);
-    }
     // bloom (single, decaying pulses only: never repeats faster than the entrance queue / winner cadence)
     if (bloomPass.enabled) bloomPass.strength = bloomStrength(f.quality, pulseValue(pulsePeak, pulseAt, pulseDur, now));
     composer.render();
@@ -627,8 +539,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
       const c = i % 5 === 0 ? lilac : i % 2 ? gold : amber;
       spawn(L.cx + Math.cos(a) * 12, L.cy + Math.sin(a) * 12, Math.cos(a) * sp, Math.sin(a) * sp, 0.9 + pRnd() * 0.7, (9 + pRnd() * 16) * L.scale, c[0], c[1], c[2]);
     }
-    warmAt = performance.now();
-    pulseAt = warmAt; pulsePeak = BLOOM_PULSE.winner; pulseDur = 800;
+    pulseAt = performance.now(); pulsePeak = BLOOM_PULSE.winner; pulseDur = 800;
   }
 
   function handleLost(ev) {
@@ -648,8 +559,8 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
 
   return {
     kind: THREE_RENDERER_KIND, canvas, resize, render, winner, flash, afterFrame, prewarm,
-    /** Rehearsal instrumentation: doodad homes / visibility, the atlas cells in use and the impostor stage. */
-    debug() { return { doodads: doodadHomes.map((d, i) => ({ name: d.name, x: Math.round(doodadState[i].x), y: Math.round(doodadState[i].y), size: d.size, visible: d.visible, alpha: Number(doodadState[i].alpha.toFixed(2)) })), aurora: { cap: auroraU.uAuroraCap.value, skyLumCap: auroraU.uSkyLumCap.value, phase: auroraU.uAuroraPhase.value }, hull: HULL, flash: { ids: [...flashIds], at: flashAt, value: outlineFlash(flashAt, performance.now()), lastDrawn: lastFlashDrawn }, impostors: { ...impostors.stats, pending: impostors.pending } }; },
+    /** Rehearsal instrumentation: the space layers, the winner flash and the impostor stage. */
+    debug() { return { space: { loaded: !!spec, ...spaceInfo, meteors: meteors.length }, hull: HULL, flash: { ids: [...flashIds], at: flashAt, value: outlineFlash(flashAt, performance.now()), lastDrawn: lastFlashDrawn }, impostors: { ...impostors.stats, pending: impostors.pending } }; },
     get lost() { return lost; },
     get quality() { return currentQuality; },
     /** Rehearsal instrumentation: simulate a context loss so the canvas2d hand-over can be checked. */
@@ -660,15 +571,15 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
       canvas.removeEventListener('webglcontextlost', handleLost);
       if (atlas.impostors === impostors) atlas.setImpostors(null); // later cells (canvas2d / static) use the 2D composition
       impostors.dispose();
-      if (heroBatch) heroBatch.dispose();
+      for (const b of runs) b.dispose();
       if (liveTex) liveTex.dispose();
       try { composer.dispose(); } catch { /* ignore */ }
-      for (const b of [halo, clusterBatch, particleBatch, doodadBatch, ...soulBatches]) b.dispose();
+      for (const b of [halo, clusterBatch, particleBatch, constStars]) b.dispose();
       for (const tx of pageTex) tx.dispose();
-      doodadTex.dispose();
-      glowTex.dispose(); nebula.geometry.dispose(); nebula.material.dispose(); ffGeo.dispose(); ffMat.dispose(); ringMat.dispose();
+      glowTex.dispose(); ringMat.dispose();
+      for (const m of spaceMeshes) { m.geometry.dispose(); m.material.dispose(); }
+      for (const tx of spaceTextures) tx.dispose();
       for (const sm of starMeshes) { sm.pts.geometry.dispose(); sm.pts.material.dispose(); }
-      for (const fp of forestPlanes) { fp.mesh.geometry.dispose(); fp.mesh.material.map.dispose(); fp.mesh.material.dispose(); }
       try { renderer.dispose(); if (!lost) renderer.forceContextLoss(); } catch { /* ignore */ }
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
       if (labels.parentNode) labels.parentNode.removeChild(labels);

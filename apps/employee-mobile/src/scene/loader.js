@@ -53,7 +53,7 @@ export function prefetchThree() {
  */
 let bodyPrefetched = false;
 export function prefetchSoulBody(config) {
-  if (!config || typeof config !== 'object' || Number(config.version) < 3 || bodyPrefetched) return;
+  if (!config || typeof config !== 'object' || !(Number(config.version) >= 3) || bodyPrefetched) return; // soulBodyVariant's rule
   bodyPrefetched = true;
   whenIdle(() => { loadThree().then((mods) => prefetchModels(mods, config)).catch(() => { bodyPrefetched = false; }); }, 1500, 300);
 }

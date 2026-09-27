@@ -238,7 +238,7 @@ test('cohort: 24 neutral seeds, valid configs, files equal a fresh render (deter
   assert.ok(sheet.includes('<svg') && sheet.includes('neutral test cohort'));
 });
 
-test('scene assets: star layers normalised, orbit rings mirror the renderer, safe zone is the right 35 %', () => {
+test('scene assets: star layers normalised, orbit rings mirror the renderer, safe zone is the right 30 % (D-52)', () => {
   for (let i = 1; i <= 3; i++) {
     const L = JSON.parse(readFileSync(join(ROOT, 'assets', 'scene', `starfield-layer-${i}.json`), 'utf8'));
     assert.equal(L.layer, i); assert.ok(L.stars.length > 50);
@@ -248,10 +248,10 @@ test('scene assets: star layers normalised, orbit rings mirror the renderer, saf
   assert.deepEqual(rings.rings.map((r) => [r.ring, r.radius, r.capacity]), ORBIT_RINGS.map((r) => [r.ring, r.radius, r.capacity]));
   assert.equal(rings.totalCapacity, ORBIT_CAPACITY);
   const cfg = JSON.parse(readFileSync(join(ROOT, 'assets', 'scene', 'scene-config.json'), 'utf8'));
-  assert.equal(cfg.safeZone.galaxyWidthPx, 1248); assert.equal(cfg.safeZone.panelX, 1248); assert.equal(cfg.safeZone.panelWidthPx, 672);
+  assert.equal(cfg.safeZone.galaxyWidthPx, 1344); assert.equal(cfg.safeZone.panelX, 1344); assert.equal(cfg.safeZone.panelWidthPx, 576); // 70 / 30 (D-52)
   assert.ok(cfg.performance.high && cfg.performance.medium && cfg.performance.low);
   assert.ok(cfg.performance.medium.maxSouls >= 450, 'medium level must hold the 450-Soul soak');
   assert.equal(cfg.camera.shake, 'forbidden');
   const nebula = readFileSync(join(ROOT, 'assets', 'scene', 'nebula.svg'), 'utf8');
-  assert.ok(nebula.includes('viewBox="0 0 1248 1080"') && nebula.includes('clip-path'));
+  assert.ok(nebula.includes('viewBox="0 0 1344 1080"') && nebula.includes('clip-path'));
 });

@@ -337,7 +337,7 @@ test('delivered face data in 2D: every plate / eyes / kit sprite on disk at a re
   assert.ok(Math.hypot(BADGE_CENTER.cx - x, BADGE_CENTER.cy - y) > BADGE_MEDALLION.r + 1.3 + r + 4, 'clear of the Bingo Star');
 });
 
-test('delivered face data: a v3 Soul with every layer stays under 10 KB and draws the v3 outline with no eyes or orb', { skip }, () => {
+test('delivered face data: a v3 Soul with all fourteen layers stays under 8 KB (the v2 budget) and draws the v3 outline with no eyes or orb', { skip }, () => {
   let max = 0;
   for (const [i, plate] of PLATE_IDS.entries()) {
     const cfg = v3Config({ plate, eyes: EYE_IDS[9 - i], face: FACES[i % 3], seed: `delivered-${plate}` });
@@ -348,5 +348,5 @@ test('delivered face data: a v3 Soul with every layer stays under 10 KB and draw
     if (decorUsable(SOUL_DECOR) && !(SOUL_DECOR.charm.missing || []).length) assert.equal(layers.length, 14);
     max = Math.max(max, Buffer.byteLength(svg));
   }
-  assert.ok(max <= 10 * 1024, `worst case ${max} bytes`);
+  assert.ok(max <= 8 * 1024, `worst case ${max} bytes`);
 });

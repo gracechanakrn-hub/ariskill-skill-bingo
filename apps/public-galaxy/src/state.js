@@ -109,7 +109,7 @@ export function reduceEvent(state, envelope) {
     case 'draw.accepted': {
       const d = p.draw || {};
       s.currentDraw = { number: d.number, skill: d.skill, drawnAt: d.drawnAt, poolRemaining: p.poolRemaining ?? 0, bingoEvaluationActive: !!p.bingoEvaluationActive || d.number >= BINGO_UNLOCK_DRAW };
-      s.recentDraws = [...(s.recentDraws || []), { number: d.number, skillName: d.skill && d.skill.name, kind: d.skill && d.skill.kind }].slice(-5);
+      s.recentDraws = [...(s.recentDraws || []), { number: d.number, skillName: d.skill && d.skill.name, kind: d.skill && d.skill.kind }].slice(-6);
       if (typeof p.matchedBoards === 'number') s.counts = { ...s.counts, matchedBoards: p.matchedBoards };
       s.publicState = 'Playing';
       s.pacingMessage = d.number < BINGO_UNLOCK_DRAW ? t('public.playing.pacing') : t('public.playing.live');
@@ -198,7 +198,7 @@ export function panelViewModel(state, nowMs = Date.now()) {
       matched: t('public.playing.matched', { count: state.counts.matchedBoards ?? 0 }),
       pacing: d && d.bingoEvaluationActive ? t('public.playing.live') : t('public.playing.pacing'),
       live: !!(d && d.bingoEvaluationActive),
-      recentDraws: (state.recentDraws || []).slice(-5).reverse(),
+      recentDraws: (state.recentDraws || []).filter((r) => !d || r.number !== d.number).slice(-5).reverse(),
       waitingForDraw: !d,
     };
   }

@@ -5,11 +5,13 @@
 // star twinkle / parallax, bounded camera drift, entrance interpolation and cluster aggregation. It never
 // scales, tints or reorders a Soul by anything but config / badge / soulId (BR-17).
 import { ORBIT_RINGS, soulOrbitSlot, hash32 } from '../../../../packages/ui/soul-renderer.js';
+import { SOUL_ACTIONS, actionDuration, actionSide } from '../../../../packages/ui/soul3d/actions.js';
+import { readingSeconds } from '../greeting-bubble.js';
 
 export const DEFAULT_SCENE_CONFIG = Object.freeze({
   background: '#0B0F1F',
   canvas: { width: 1920, height: 1080 },
-  safeZone: { galaxyFraction: 0.65, panelFraction: 0.35, innerMarginPx: 32, galaxyWidthPx: 1248, panelX: 1248 },
+  safeZone: { galaxyFraction: 0.7, panelFraction: 0.3, innerMarginPx: 32, galaxyWidthPx: 1344, panelX: 1344 },   // 70 / 30 (D-52)
   camera: { driftRadiusFraction: 0.015, driftPeriodSeconds: 40, maxAngularSpeedDegPerSec: 0.5, shake: 'forbidden' },
   entrance: { defaultEdge: 'bottom', edges: ['left', 'right', 'top', 'bottom'], arcDurationMs: 2200, pulseDurationMs: 600, settleDurationMs: 1200, maxConcurrent: 6, queueOverflow: 'settle-instantly' },
   lod: { fullBelowCount: 120, simpleBelowCount: 300, dotAbove: 300, fullMinPx: 56, simpleMinPx: 24, clusterAbove: 300, clusterGridPx: 96 },
@@ -22,10 +24,14 @@ export const DEFAULT_SCENE_CONFIG = Object.freeze({
   fallback: { order: ['webgl2', 'canvas2d', 'static'] },
 });
 
+// Mirrors assets/scene/orbit-rings.json (tools/assets/build-scene.js): ring 0 turns at 0.04 rad/s, 6 % slower per ring
+// outward; `float` is the per-Soul drift (D-36): +-amplitude x the sprite size on a slow and a fast sine per axis, and a
+// bob of driftAmplitude x the viewport height, each Soul with its own periods (seconds) and phases.
 export const DEFAULT_RINGS = Object.freeze({
   aspect: 1.35,
   driftAmplitude: 0.012,
-  rings: ORBIT_RINGS.map((r, i) => ({ ring: r.ring, radius: r.radius, capacity: r.capacity, angularSpeedRadPerSec: Number((0.02 * Math.pow(0.94, i)).toFixed(3)) })),
+  float: Object.freeze({ amplitude: 0.22, slowPeriodS: [9, 19], fastPeriodS: [4, 9], bobPeriodS: [5, 8] }),
+  rings: ORBIT_RINGS.map((r, i) => ({ ring: r.ring, radius: r.radius, capacity: r.capacity, angularSpeedRadPerSec: Number((0.04 * (1 - i * 0.06)).toFixed(3)) })),
 });
 
 const TAU = Math.PI * 2;
@@ -117,12 +123,33 @@ export function placeSouls(souls, existing = new Map(), ringsData = DEFAULT_RING
     const cap = rings[found.ring].capacity;
     const jitter = ((hash32(id + ':jitter') % 1000) / 1000 - 0.5) * 0.5;
     const angle = ((found.slot + 0.5 + jitter) / cap) * TAU;
-    claim(id, { ring: found.ring, slot: found.slot, angle, radius: rings[found.ring].radius });
+    claim(id, { ring: found.ring, slot: found.slot, angle, radius: rings[found.ring].radius, float: floatParams(id, ringsData.float) });
   }
   return placements;
 }
 
-/** Orbit position of a placed Soul at time `tSec` (0 = static). */
+/**
+ * Per-Soul float parameters (D-36), fixed by the Soul id: periods (seconds) and phases (0..1) of a slow and a fast sine
+ * per axis, and the bob period. Cosmetic only; never derived from anything but the id (BR-17).
+ */
+export function floatParams(soulId, float = DEFAULT_RINGS.float) {
+  const f = float || DEFAULT_RINGS.float;
+  const u = (k) => (hash32(`${soulId}:float:${k}`) % 10007) / 10007;
+  const span = ([lo, hi], k) => lo + (hi - lo) * u(k);
+  return {
+    x: [span(f.slowPeriodS, 0), span(f.fastPeriodS, 1)], y: [span(f.slowPeriodS, 2), span(f.fastPeriodS, 3)],
+    phase: [u(4), u(5), u(6), u(7)], bob: span(f.bobPeriodS, 8),
+  };
+}
+
+/** The float offset (px) of a placed Soul at `tSec`: +-amplitude x `size` per axis, a slow sine plus a fast one. */
+export function floatOffset(fp, tSec, size, amplitude = DEFAULT_RINGS.float.amplitude) {
+  const w = amplitude * size;
+  const wave = (periods, p0, p1) => 0.65 * Math.sin(TAU * (tSec / periods[0] + p0)) + 0.35 * Math.sin(TAU * (tSec / periods[1] + p1));
+  return { dx: w * wave(fp.x, fp.phase[0], fp.phase[1]), dy: w * wave(fp.y, fp.phase[2], fp.phase[3]) };
+}
+
+/** Orbit position of a placed Soul at time `tSec` (0 = static): its ring's turn, its own float and bob. */
 export function orbitPosition(placement, tSec, layout, opts = {}) {
   const ringsData = opts.rings || DEFAULT_RINGS;
   const r = ringsData.rings[placement.ring];
@@ -130,12 +157,79 @@ export function orbitPosition(placement, tSec, layout, opts = {}) {
   const rot = motion * r.angularSpeedRadPerSec * tSec;
   const aspect = ringAspect(placement.ring, layout, ringsData, opts.spriteHalf || 0);
   const a = placement.angle + rot;
-  const bob = motion * (ringsData.driftAmplitude || 0.012) * layout.height * Math.sin(TAU * (tSec / 6 + (opts.driftPhase || 0)));
+  const fp = placement.float;
+  const bob = motion * (ringsData.driftAmplitude || 0.012) * layout.height * Math.sin(TAU * (tSec / (fp ? fp.bob : 6) + (opts.driftPhase || 0)));
+  const drift = fp && motion ? floatOffset(fp, tSec, 2 * (opts.spriteHalf || 0), (ringsData.float || DEFAULT_RINGS.float).amplitude) : { dx: 0, dy: 0 };
   return {
-    x: layout.cx + placement.radius * layout.halfH * aspect * Math.cos(a),
-    y: layout.cy + placement.radius * layout.halfH * Math.sin(a) + bob,
+    x: layout.cx + placement.radius * layout.halfH * aspect * Math.cos(a) + drift.dx,
+    y: layout.cy + placement.radius * layout.halfH * Math.sin(a) + bob + drift.dy,
   };
 }
+
+// ---- Depth and life (D-36) ------------------------------------------------------------------------------------
+// The rings are a tilted disc: the lower half of each ellipse is near the viewer, the upper half far away. A Soul's
+// depth follows its place on the ring plus a slow per-Soul drift in and out, and sets its size, haze and parallax, and
+// the draw order (far first). Every Soul orbits through the same range, so over time none is bigger or brighter than
+// another (BR-17); under reduced motion everything stays flat, as before.
+export const DEPTH = Object.freeze({ scale: [0.64, 1.36], alpha: [0.74, 1], parallax: [0.6, 1.4], wobble: 0.12 });
+
+const clamp01 = (v) => (v > 0 ? (v < 1 ? v : 1) : 0);
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/** Depth of a placed Soul at `tSec`: 0 = far (top of its ring) .. 1 = near (bottom). */
+export function soulDepth(placement, tSec, ringsData = DEFAULT_RINGS) {
+  const r = ringsData.rings[placement.ring];
+  const a = placement.angle + r.angularSpeedRadPerSec * tSec;
+  const fp = placement.float;
+  const wobble = fp ? DEPTH.wobble * Math.sin(TAU * (tSec / (fp.x[0] * 1.7) + fp.phase[1])) : 0;
+  return clamp01(0.5 + 0.44 * Math.sin(a) + wobble);
+}
+export const depthScale = (d) => lerp(DEPTH.scale[0], DEPTH.scale[1], d);
+export const depthAlpha = (d) => lerp(DEPTH.alpha[0], DEPTH.alpha[1], d);
+export const depthParallax = (d) => lerp(DEPTH.parallax[0], DEPTH.parallax[1], d);
+
+// Life: a few Souls at a time do a micro action where they orbit (up to 3 lanes, one action per lane every 6 s; fewer on
+// the lower quality levels), and one Soul at a time floats out to the front and says hi: it stays there as long as its
+// bubble takes to read (3.8 s for a plain hi, up to 16 s for a 40-word greeting), then floats back, and the next one
+// comes out a few seconds later. Who and what come from the time and the Soul ids only (random, never skills or
+// results). Nothing starts in the first seconds (a static render, t = 0, stays calm) or while a Float entrance is in
+// flight (entrances keep every live 3D tile).
+export const LIFE = Object.freeze({
+  startDelayS: 6, actLanes: 3, actLanesByQuality: Object.freeze({ high: 3, medium: 2, low: 0 }), actSlotS: 6, actLeadS: 0.5,
+  visitDelayS: 4, visitGapS: Object.freeze([3, 7]), visitOutS: 1.6, visitBackS: 1.6, visitScale: 3.2,
+  visitHeight: 0.3,        // the visitor is at least this fraction of the Galaxy height, however crowded the sky is
+});
+
+/**
+ * What a visitor does while it says hi for `hiS` seconds: wave first; a wink halfway through a long hi (>= 8 s); a sway
+ * before the end of a very long one (>= 12 s). Returns [{ action, at }] (seconds into the hi), never overlapping.
+ */
+export function visitActions(hiS) {
+  const out = [{ action: 'wave', at: 0 }];
+  if (hiS >= 8) out.push({ action: 'wink', at: hiS / 2 - actionDuration('wink') / 2 });
+  if (hiS >= 12) out.push({ action: 'sway', at: hiS - actionDuration('sway') - 1.2 });
+  return out;
+}
+
+/** Act lane `lane` at `tSec`: { key, action, t (seconds into the action) } or null between actions. */
+export function actLaneAt(lane, tSec, life = LIFE) {
+  const t0 = tSec - life.startDelayS - lane * (life.actSlotS / life.actLanes);
+  if (t0 < 0) return null;
+  const slot = Math.floor(t0 / life.actSlotS);
+  const action = SOUL_ACTIONS[hash32(`act:${lane}:${slot}:a`) % SOUL_ACTIONS.length];
+  const t = t0 - slot * life.actSlotS - life.actLeadS;
+  if (t < 0 || t >= actionDuration(action)) return null;
+  return { key: `act:${lane}:${slot}`, action, t };
+}
+
+/** Rendezvous pick: the id with the highest hash for `key` (uniform; adding a Soul rarely changes an earlier pick). */
+export function pickSoul(key, ids) {
+  let best = null, bestH = -1;
+  for (const id of ids) { const h = hash32(`${key}:${id}`); if (h > bestH) { bestH = h; best = id; } }
+  return best;
+}
+
+const easeInOut = (t) => { const x = clamp01(t); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
 
 /** Bounded Lissajous camera drift (never a shake). */
 export function cameraOffset(tSec, layout, camera = DEFAULT_SCENE_CONFIG.camera, reducedMotion = false) {
@@ -211,6 +305,10 @@ export function createScene(opts = {}) {
   let placements = new Map();
   let maxDetail = 'full';
   let brightnessRipple = 0;            // 0..1, decays over 350 ms after a draw
+  const picks = new Map();             // life slot key -> soulId | null (decided once, at the slot's first frame)
+  let visitPlan = null;                // { key, soulId, start, hiS, end, u }: the current "say hi" visit
+  const hiQueue = [];                  // D-36: Souls that just floated in live, in arrival order - they say hi first
+  let nextVisitAt = LIFE.startDelayS + LIFE.visitDelayS, visitCount = 0;
 
   function level() { return config.performance[quality] || config.performance.high; }
 
@@ -226,6 +324,16 @@ export function createScene(opts = {}) {
     return true;
   }
 
+  /**
+   * A Soul that just floated in live (galaxy.enter with celebrate): it takes the next "say hi" turn, after any earlier
+   * arrivals, so its player sees the greeting soon. Only decorated Souls can visit; snapshot and replayed Souls never queue.
+   */
+  function queueHi(soulId) {
+    const id = String(soulId), s = byId.get(id);
+    if (reducedMotion || !s || !(s.config && Number(s.config.version) >= 2) || hiQueue.includes(id)) return false;   // no visits under reduced motion
+    hiQueue.push(id);
+    return true;
+  }
   function resize(width, height) { layout = layoutViewport(width, height, config); }
   function spritePx() { return spriteSizePx(layout, souls.length, ringsData); }
   function lodFor(count, px) {
@@ -258,18 +366,29 @@ export function createScene(opts = {}) {
     const rings = lv.orbitRings ? ringsData.rings.map((r, i) => ({ ring: i, cx: layout.cx + cam.dx, cy: layout.cy + cam.dy, rx: r.radius * layout.halfH * ringAspect(i, layout, ringsData, size / 2), ry: r.radius * layout.halfH })) : [];
     const items = [];
     const entrances = [];
+    const visits = [];
+    const entering = new Set();
+    if (queue) for (const s of souls) { const pr = queue.progress(String(s.soulId), nowMs); if (pr && pr.phase !== 'done') entering.add(String(s.soulId)); }
+    const life = reducedMotion ? { acts: new Map(), visit: null } : lifeAt(tSec, entering, detail);
     for (const s of souls) {
       const id = String(s.soulId);
       const p = placements.get(id);
       if (!p) continue;
       const home = orbitPosition(p, tSec, layout, { rings: ringsData, reducedMotion, spriteHalf: size / 2, driftPhase: s.config && s.config.driftPhase });
-      home.x += cam.dx; home.y += cam.dy;
-      const prog = queue ? queue.progress(id, nowMs) : null;
-      if (prog && prog.phase !== 'done') {
+      const depth = reducedMotion ? 0.5 : soulDepth(p, tSec, ringsData);
+      const par = reducedMotion ? 1 : depthParallax(depth);
+      home.x += cam.dx * par; home.y += cam.dy * par;
+      const prog = entering.has(id) ? queue.progress(id, nowMs) : null;
+      if (prog) {
         entrances.push(entranceItem(s, p, home, prog, size));
         continue;
       }
-      items.push({ soulId: id, config: s.config, badge: s.badge || null, x: home.x, y: home.y, size, scale: 1, alpha: 1, detail, ring: p.ring });
+      if (life.visit && life.visit.soulId === id) { visits.push(visitItem(s, p, home, depth, life.visit, size)); continue; }
+      const scale = reducedMotion ? 1 : depthScale(depth), alpha = reducedMotion ? 1 : depthAlpha(depth);
+      const item = { soulId: id, config: s.config, badge: s.badge || null, x: home.x, y: home.y, size, scale, alpha, detail, ring: p.ring, depth };
+      const act = life.acts.get(id);
+      if (act) item.act = act;
+      items.push(item);
     }
     let clusters = [];
     let visible = items;
@@ -277,9 +396,106 @@ export function createScene(opts = {}) {
       const c = clusterSouls(items, config.lod.clusterGridPx);
       visible = c.souls; clusters = c.clusters.map(k => ({ ...k, size: Math.max(size, 28), detail: 'dot', label: k.count > 1 ? `x ${k.count}` : null }));
     }
-    // Outer rings first, then slot, so inner Souls draw last (nearest).
-    visible.sort((a, b) => b.ring - a.ring || a.x - b.x);
-    return { layout, camera: cam, level: lv, quality, count, timeSec: tSec, spritePx: size, detail, stars, rings, souls: visible, clusters, entrances, nebula: lv.nebula, ripple: brightnessRipple };
+    // Far first, so nearer Souls draw over farther ones (D-36); flat under reduced motion: outer rings first, as before.
+    if (reducedMotion) visible.sort((a, b) => b.ring - a.ring || a.x - b.x);
+    else visible.sort((a, b) => a.depth - b.depth || a.x - b.x);
+    return { layout, camera: cam, level: lv, quality, count, timeSec: tSec, spritePx: size, detail, stars, rings, souls: visible, clusters, entrances, visits, nebula: lv.nebula, ripple: brightnessRipple };
+  }
+
+  /** Who acts and who visits at `tSec`: decorated Souls not entering; one decision per life slot. */
+  function lifeAt(tSec, entering, detail) {
+    const ids = [];
+    for (const s of souls) if (s.config && Number(s.config.version) >= 2) ids.push(String(s.soulId));
+    const decide = (key, exclude) => {
+      if (!picks.has(key)) {
+        const pool = entering.size ? [] : ids.filter((id) => !exclude.has(id)); // nothing new starts during an entrance
+        picks.set(key, pool.length ? pickSoul(key, pool) : null);
+        if (picks.size > 64) picks.delete(picks.keys().next().value);
+      }
+      const id = picks.get(key);
+      return id && byId.has(id) && !entering.has(id) ? id : null;
+    };
+    // the Soul out front (if any) never acts in a lane; a new visitor is never one that is mid-action; a Soul waiting for
+    // its first hi does not start an action either
+    const taken = new Set(hiQueue);
+    if (visitPlan && tSec >= visitPlan.start - 1 && tSec < visitPlan.end) taken.add(visitPlan.soulId);
+    const acts = new Map();
+    const lanes = LIFE.actLanesByQuality[quality] ?? LIFE.actLanes;
+    if (detail !== 'dot') {
+      for (let lane = 0; lane < lanes; lane++) {
+        const a = actLaneAt(lane, tSec);
+        if (!a) continue;
+        const id = decide(a.key, taken);
+        if (!id || taken.has(id)) continue;
+        taken.add(id);
+        const cfg = byId.get(id).config;
+        acts.set(id, { action: a.action, t: a.t, side: actionSide(`${cfg.seed}:${a.key}`, { action: a.action, face: cfg.face }) });
+      }
+    }
+    const visit = visitNow(tSec, ids.filter((id) => !acts.has(id)), entering);
+    if (visit) acts.delete(visit.soulId);
+    return { acts, visit };
+  }
+
+  /**
+   * The visit timeline: when the current visit is over, the next one starts a random 3-7 s later (later while a Float
+   * entrance is in flight). The visitor is the earliest Soul still waiting in hiQueue (a new arrival), else a random
+   * decorated Soul; its hi lasts as long as its bubble takes to read.
+   * Returns { key, soulId, phase, t (0..1 in the phase), hiT, hiS, u } or null.
+   */
+  function visitNow(tSec, ids, entering) {
+    if (visitPlan && tSec >= visitPlan.end) {
+      nextVisitAt = visitPlan.end + LIFE.visitGapS[0] + (LIFE.visitGapS[1] - LIFE.visitGapS[0]) * ((hash32(`${visitPlan.key}:gap`) % 1000) / 1000);
+      visitPlan = null;
+    }
+    if (visitPlan && tSec < visitPlan.start - 1) { visitPlan = null; nextVisitAt = tSec + LIFE.visitGapS[0]; } // time went back
+    if (!visitPlan && tSec >= nextVisitAt) {
+      const pool = entering.size ? [] : ids;
+      const key = `visit:${visitCount}`;
+      while (hiQueue.length && !byId.has(hiQueue[0])) hiQueue.shift();       // left the sky before its turn
+      const waiting = hiQueue.length ? hiQueue[0] : null;
+      // a new arrival first (it waits while it is still entering or finishing an action); else a random decorated Soul
+      const id = waiting ? (pool.includes(waiting) ? waiting : null) : (pool.length ? pickSoul(key, pool) : null);
+      if (id && id === waiting) hiQueue.shift();
+      if (!id) nextVisitAt = tSec + 1;
+      else {
+        visitCount++;
+        const s = byId.get(id);
+        const hiS = readingSeconds({ label: s.label ?? null, greeting: s.greeting ?? null });
+        visitPlan = { key, soulId: id, start: tSec, hiS, end: tSec + LIFE.visitOutS + hiS + LIFE.visitBackS, u: (hash32(`${key}:x`) % 1000) / 1000 };
+      }
+    }
+    if (!visitPlan || !byId.has(visitPlan.soulId) || entering.has(visitPlan.soulId)) return null;
+    const el = tSec - visitPlan.start;
+    if (el < 0) return null;
+    const { key, soulId, hiS, u } = visitPlan;
+    if (el < LIFE.visitOutS) return { key, soulId, phase: 'out', t: el / LIFE.visitOutS, hiT: 0, hiS, u };
+    if (el < LIFE.visitOutS + hiS) return { key, soulId, phase: 'hi', t: (el - LIFE.visitOutS) / hiS, hiT: el - LIFE.visitOutS, hiS, u };
+    return { key, soulId, phase: 'back', t: Math.min(1, (el - LIFE.visitOutS - hiS) / LIFE.visitBackS), hiT: 0, hiS, u };
+  }
+
+  /** A Soul visiting the front: out to a spot low in the middle (near the viewer), says hi big, back home. */
+  function visitItem(s, p, home, depth, v, size) {
+    const id = String(s.soulId);
+    const big = Math.max(LIFE.visitScale, (LIFE.visitHeight * layout.height) / size);
+    const half = (size * big) / 2, m = layout.innerMargin;
+    const front = {
+      x: Math.min(layout.width - half - m, Math.max(half + m, layout.cx + (v.u - 0.5) * 0.45 * layout.width)),
+      y: Math.min(layout.height - half * 0.95, Math.max(half + m, layout.cy + 0.16 * layout.height)),
+    };
+    const homeScale = depthScale(depth);
+    const base = { soulId: id, key: v.key, config: s.config, badge: s.badge || null, label: s.label ?? null, greeting: s.greeting ?? null, size, detail: 'full', ring: p.ring, alpha: 1, depth: 2, phase: v.phase, t: v.t, hiS: v.hiS, act: null, visit: true };
+    if (v.phase === 'hi') {
+      const bob = Math.sin(TAU * v.hiT / 2.4) * 0.03 * size * big;
+      const cfg = s.config;
+      const now = visitActions(v.hiS).find((a) => v.hiT >= a.at && v.hiT < a.at + actionDuration(a.action));
+      const act = now ? { action: now.action, t: v.hiT - now.at, side: actionSide(`${cfg.seed}:${v.key}:${now.action}`, { action: now.action, face: cfg.face }) } : null;
+      return { ...base, x: front.x, y: front.y + bob, scale: big, act };
+    }
+    const e = easeInOut(v.t);
+    const k = v.phase === 'out' ? e : 1 - e;           // 0 at home .. 1 at the front
+    const lift = Math.sin(Math.PI * k) * 0.05 * layout.height;
+    return { ...base, x: lerp(home.x, front.x, k), y: lerp(home.y, front.y, k) - lift, scale: lerp(homeScale, big, k) };
   }
 
   function entranceItem(s, p, home, prog, size) {
@@ -306,7 +522,7 @@ export function createScene(opts = {}) {
   }
 
   return {
-    setSouls, addSoul, resize, frame, spritePx,
+    setSouls, addSoul, queueHi, resize, frame, spritePx,
     get layout() { return layout; },
     get count() { return souls.length; },
     get placements() { return placements; },

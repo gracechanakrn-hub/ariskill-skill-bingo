@@ -17,10 +17,10 @@ const ASSETS_DATA = {
   "audioManifestId": "ariskill-skill-bingo/assets/manifest/audio",
   "license": "internal-original",
   "sha256OfManifests": {
-    "assets/manifest/assets.yaml": "ee8dbfd4e0aaecf69fff5b76e1102c9e89562992a1126cf0b11f537513b5099d",
+    "assets/manifest/assets.yaml": "9f45975375782108165d0aae2e07997b6558be4db787a11dd52415e2c3d17e9a",
     "assets/manifest/audio.yaml": "029d35157a1aa2fe7f7fdf6ac4ce8f29825fd80d935786e7dcf961c98f7c1aa1",
     "assets/manifest/audio.json": "d5a0b96fe5b41e503d63dc00bbf0bdf977e0dbd950eaae430a4bce4f2e57b732",
-    "combined": "d48e0a7a49cce41b2e15e7f28e65e134e0886284e00c3d4d15a52102b37d16dd"
+    "combined": "3355de07fc849acb35801f31d79c4d0aef355093f1815d09f3b5c0b59ec54197"
   },
   "baseUrl": "/assets",
   "manifests": {
@@ -52,9 +52,9 @@ const ASSETS_DATA = {
     ],
     "orbitRings": "/assets/scene/orbit-rings.json",
     "sha256": {
-      "config": "47797eada0e6b79d207aa2e5128bd619e330504707ac7166172e0a013a248f53",
-      "nebula": "60e5ccb51f907f75c2d721e0c451c4db7b28ad85623f8c8149636ece0f3c8abf",
-      "orbitRings": "3e1511cf66d275a8dd0932f65350f3c30693808d6fa725739442cd83298b5489",
+      "config": "2190ca66c99b67b4f4451bfdbfb20af7c352c07e0156ef98fc97f13626c0cb0e",
+      "nebula": "f61889d54fc0861619c9611d987ac7a540f0db6c5fb681d38e014330bba91e78",
+      "orbitRings": "3432bf65e2760e464d25a064e98247db272a1ffdf36425487ded219628109bef",
       "starfield": [
         "e355485aa3a7f11694233f61efb48f8a8ca5a1383cbd13ec4d21eff8b06e5965",
         "4faaf256aa5b928212ffe6d60cb692cf1417c2a9363d9aa9ec1a5a05c41f3704",
@@ -71,13 +71,13 @@ const ASSETS_DATA = {
         "note": "OD-14 assumption: 1920x1080 public display; renderers scale by viewport height"
       },
       "safeZone": {
-        "galaxyFraction": 0.65,
-        "panelFraction": 0.35,
+        "galaxyFraction": 0.7,
+        "panelFraction": 0.3,
         "innerMarginPx": 32,
-        "note": "Right 35 % is the information panel; effects are clipped to the Galaxy viewport",
-        "galaxyWidthPx": 1248,
-        "panelX": 1248,
-        "panelWidthPx": 672,
+        "note": "Right 30 % is the information panel (D-52; 35 % before); effects are clipped to the Galaxy viewport",
+        "galaxyWidthPx": 1344,
+        "panelX": 1344,
+        "panelWidthPx": 576,
         "rule": "No glow, particle, Soul, nebula or ring pixel may be drawn at x >= panelX. Renderers clip the Galaxy viewport to [0, galaxyWidthPx)."
       },
       "camera": {
@@ -210,7 +210,7 @@ const ASSETS_DATA = {
   },
   "souls": {
     "cohort": "/assets/souls/cohort.json",
-    "cohortSha256": "0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61",
+    "cohortSha256": "929afb3907cf17c3677c001595fff57337df684823d8b4ade3825bba650c891c",
     "cohortDir": "/assets/souls/cohort/",
     "thumbnailDir": "/assets/souls/thumbnails/",
     "fallbackDir": "/assets/souls/fallback/",
@@ -566,8 +566,8 @@ const ASSETS_DATA = {
       "format": "json",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "47797eada0e6b79d207aa2e5128bd619e330504707ac7166172e0a013a248f53",
-      "bytes": 3272,
+      "sha256": "2190ca66c99b67b4f4451bfdbfb20af7c352c07e0156ef98fc97f13626c0cb0e",
+      "bytes": 3290,
       "lods": []
     },
     "scene_doodads": {
@@ -586,7 +586,7 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "60e5ccb51f907f75c2d721e0c451c4db7b28ad85623f8c8149636ece0f3c8abf",
+      "sha256": "f61889d54fc0861619c9611d987ac7a540f0db6c5fb681d38e014330bba91e78",
       "bytes": 2947,
       "lods": []
     },
@@ -596,8 +596,8 @@ const ASSETS_DATA = {
       "format": "json",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "3e1511cf66d275a8dd0932f65350f3c30693808d6fa725739442cd83298b5489",
-      "bytes": 1249,
+      "sha256": "3432bf65e2760e464d25a064e98247db272a1ffdf36425487ded219628109bef",
+      "bytes": 1424,
       "lods": []
     },
     "scene_starfield_layer_1": {
@@ -1021,7 +1021,7 @@ const ASSETS_DATA = {
       "format": "json",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61",
+      "sha256": "929afb3907cf17c3677c001595fff57337df684823d8b4ade3825bba650c891c",
       "bytes": 18842,
       "lods": []
     },
@@ -1031,8 +1031,110 @@ const ASSETS_DATA = {
       "format": "html",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "1bdb5a8bc855a66703b8c94dd2bf0de75a905955f2a2496a7b2753f9b4597534",
-      "bytes": 319246,
+      "sha256": "242e3927ae65c830d80b156b90a7a1ed5b12cee8b880852cb57a76b9f6aa57ce",
+      "bytes": 324005,
+      "lods": []
+    },
+    "soul_winner_crown": {
+      "kind": "model",
+      "url": "/assets/souls/winner/crown.glb",
+      "format": "glb",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "e615e37b5c97dd4b375f31bfc4e657736acb201c3df69db942c3c82b29ecb59b",
+      "bytes": 33620,
+      "lods": [
+        "/assets/souls/winner/crown.glb"
+      ]
+    },
+    "space_backdrop": {
+      "kind": "texture",
+      "url": "/assets/space/backdrop.jpg",
+      "format": "jpeg",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "9e1697e261f708b895458c6fc133024c758541c0964a4cf1a923e9537b66d231",
+      "bytes": 84503,
+      "lods": []
+    },
+    "space_config": {
+      "kind": "data",
+      "url": "/assets/space/space.json",
+      "format": "json",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "057af0c1e215d860e4cbbeebd65bb5cfcb38162eb6fc1e25be1c07a49ec58db2",
+      "bytes": 5152,
+      "lods": []
+    },
+    "space_constellations": {
+      "kind": "texture",
+      "url": "/assets/space/constellations.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "e4bb5896ccb27e01ec87193ff69f64c99fb47964b946bdb5c260c14fe820de04",
+      "bytes": 22220,
+      "lods": []
+    },
+    "space_falling_star": {
+      "kind": "texture",
+      "url": "/assets/space/falling-star.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "eb1e3c7d23d0c22e657c7fb600d041f3719f3c76b83ff0515cf24aec82a6df21",
+      "bytes": 2528,
+      "lods": []
+    },
+    "space_meteor_1": {
+      "kind": "texture",
+      "url": "/assets/space/meteor-1.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "f946e86911fe0e08a328e59df41d6a0204703d9a83076d5dcb74f2397bf95c82",
+      "bytes": 14610,
+      "lods": []
+    },
+    "space_meteor_2": {
+      "kind": "texture",
+      "url": "/assets/space/meteor-2.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "ccfb689548064210d40ae957ce808c6420b3e004267d2ab11eeda9d695f4e92c",
+      "bytes": 11800,
+      "lods": []
+    },
+    "space_meteor_3": {
+      "kind": "texture",
+      "url": "/assets/space/meteor-3.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "8249494eaa774e5b2e08fbcb78740de2c74898635253c1b83adc517fe058a247",
+      "bytes": 15664,
+      "lods": []
+    },
+    "space_meteor_4": {
+      "kind": "texture",
+      "url": "/assets/space/meteor-4.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "51a36fe40f38f4dcce169af27ad99c2313f87f0f57f0db3c46dd2e839c088751",
+      "bytes": 13482,
+      "lods": []
+    },
+    "space_meteor_5": {
+      "kind": "texture",
+      "url": "/assets/space/meteor-5.webp",
+      "format": "webp",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "10ab6b8a252646b644b266fe3e378f4d6651e446482add19969cb8d7c5f5b1f8",
+      "bytes": 12676,
       "lods": []
     }
   }

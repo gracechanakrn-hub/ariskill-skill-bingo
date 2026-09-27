@@ -15,7 +15,7 @@ export function tt(key, vars = {}, fallback = key) {
 
 /** Operator control labels with catalog fallbacks (keys proposed for copy.json). */
 export const LOCAL = Object.freeze({
-  enableSound: ['public.audio.enable', 'Click to enable sound'],
+  enableSound: ['public.audio.enable', 'Turn sound on'],
   mute: ['public.audio.mute', 'Mute'],
   unmute: ['public.audio.unmute', 'Unmute'],
   volume: ['public.audio.volume', 'Volume'],
@@ -27,9 +27,10 @@ export const LOCAL = Object.freeze({
   error: ['public.error', 'The Galaxy is unavailable. Retrying...'],
   eventName: ['public.eventName', 'AriSkill Skill Bingo'],
   roundLabel: ['public.round', 'Round {number}'],
-  locksIn: ['public.waiting.locksIn', 'Registration locks in'],
+  locksIn: ['public.waiting.locksIn', 'Registration ends'],
   waitingStart: ['play.waitingStart', 'Board locked. Waiting for the host to start...'],
   coWinners: ['public.winner.coWinners', '{count} co-winners'],
+  previousDraws: ['public.playing.previous', 'Previous draws'],
   live: ['public.connection.live', 'Live'],
   quality: ['public.renderer.quality', 'Quality {level}'],
 });

@@ -1,7 +1,7 @@
 {
   "runId": "run-20260922-113339",
-  "buildId": "bingo-5a3d6c80c6a1",
-  "generatedAt": "2026-09-25T03:14:47.311Z",
+  "buildId": "bingo-be2a06b4c257",
+  "generatedAt": "2026-09-27T15:40:54.773Z",
   "automated": {
     "total": 18,
     "passed": 18,
@@ -18,8 +18,8 @@
       "command": "node --test packages/game-rules/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 102,
-      "evidence": "✔ all eight states exist, terminals have no commands, every state maps to a public state (1.278458ms)\n✔ no unreachable state and every transition target is a known state (0.733042ms)\n✔ every command listed for a state has at least one transition, and vice versa (0.247833ms)\n✔ illegal transitions throw with code (0.505166ms)\nℹ tests 48\nℹ suites 0\nℹ pass 48\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.864459"
+      "durationMs": 408,
+      "evidence": "✔ all eight states exist, terminals have no commands, every state maps to a public state (0.90875ms)\n✔ no unreachable state and every transition target is a known state (0.67ms)\n✔ every command listed for a state has at least one transition, and vice versa (0.217959ms)\n✔ illegal transitions throw with code (0.375ms)\nℹ tests 75\nℹ suites 0\nℹ pass 75\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 384.406209"
     },
     {
       "category": "functional",
@@ -27,8 +27,8 @@
       "command": "node --test services/game-service/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 2727,
-      "evidence": "  ✔ .glb models are model/gltf-binary, gzipped when accepted, ETag/304 and revalidated like every other asset (D-27) (2.210791ms)\n  ✔ path traversal is still blocked (404) including encoded forms; unknown files 404 (0.881125ms)\n  ✔ integration through the app: the real skill-master JSON is gzipped with security headers and an ETag; small package.json is not (13.553333ms)\n✔ static serving: gzip negotiation, ETag/304, cache headers (D-22) (63.922583ms)\nℹ tests 75\nℹ suites 11\nℹ pass 75\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2704.144375"
+      "durationMs": 2756,
+      "evidence": "  ✔ .glb models are model/gltf-binary, gzipped when accepted, ETag/304 and revalidated like every other asset (D-27) (2.474375ms)\n  ✔ path traversal is still blocked (404) including encoded forms; unknown files 404 (1.051625ms)\n  ✔ integration through the app: the real skill-master JSON is gzipped with security headers and an ETag; small package.json is not (16.436125ms)\n✔ static serving: gzip negotiation, ETag/304, cache headers (D-22) (66.877709ms)\nℹ tests 86\nℹ suites 14\nℹ pass 86\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2731.270875"
     },
     {
       "category": "functional",
@@ -36,8 +36,8 @@
       "command": "node --test packages/ui/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 10098,
-      "evidence": "✔ select fires only when the derived value changes (0.114917ms)\n✔ track drops private props (employeeRef/email/selectedSkillIds) and email-looking values (0.783166ms)\n✔ track never ships lists or nested objects, tolerates a throwing sink, rejects empty names (0.0825ms)\n✔ default track is a no-op sink that does not throw without a window (0.063291ms)\nℹ tests 109\nℹ suites 0\nℹ pass 109\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10071.137916"
+      "durationMs": 10109,
+      "evidence": "✔ select fires only when the derived value changes (0.086166ms)\n✔ track drops private props (employeeRef/email/selectedSkillIds) and email-looking values (0.710709ms)\n✔ track never ships lists or nested objects, tolerates a throwing sink, rejects empty names (0.08725ms)\n✔ default track is a no-op sink that does not throw without a window (0.063916ms)\nℹ tests 157\nℹ suites 0\nℹ pass 157\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 10080.471583"
     },
     {
       "category": "functional",
@@ -45,8 +45,8 @@
       "command": "node --test apps/employee-mobile/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 128,
-      "evidence": "✔ outline scale per tier: ~1.06 on high, thinner on low, low as the fallback (0.049583ms)\n✔ sticker peel: 0.92 -> 1 scale, 6 deg -> 0 tilt, one 250 ms flash, and a continuous reveal scale (0.141125ms)\n✔ aurora: teal -> lime, drift bounded by 0.01 rad/s, static under reduced motion (0.309541ms)\n✔ doodad placement rules: rocket by the join orb, planet on waiting screens, none on dense screens or at 320 px (0.123458ms)\nℹ tests 61\nℹ suites 0\nℹ pass 61\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 85.707417"
+      "durationMs": 134,
+      "evidence": "✔ outline scale per tier: ~1.06 on high, thinner on low, low as the fallback (0.047583ms)\n✔ sticker peel: 0.92 -> 1 scale, 6 deg -> 0 tilt, one 250 ms flash, and a continuous reveal scale (0.142833ms)\n✔ aurora: teal -> lime, drift bounded by 0.01 rad/s, static under reduced motion (0.287208ms)\n✔ doodad placement rules: rocket by the join orb, planet on waiting screens, none on dense screens or at 320 px (0.106375ms)\nℹ tests 65\nℹ suites 0\nℹ pass 65\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 91.543667"
     },
     {
       "category": "functional",
@@ -54,8 +54,8 @@
       "command": "node --test apps/admin-portal/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 62,
-      "evidence": "✔ upsertRound keeps order and merges (0.045167ms)\n✔ datetime-local <-> ISO and result window clamp (0.618167ms)\n✔ pills, connection view, audit filter, density bars (0.151334ms)\n✔ UX-03: irreversible controls require confirmation; reschedule is the unconfirmed safe default (0.053584ms)\nℹ tests 20\nℹ suites 0\nℹ pass 20\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 38.193541"
+      "durationMs": 61,
+      "evidence": "✔ upsertRound keeps order and merges (0.04425ms)\n✔ datetime-local <-> ISO and result window clamp (0.592958ms)\n✔ pills, connection view, audit filter, density bars (0.150875ms)\n✔ UX-03: irreversible controls require confirmation; reschedule is the unconfirmed safe default (0.050917ms)\nℹ tests 20\nℹ suites 0\nℹ pass 20\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 37.506125"
     },
     {
       "category": "functional",
@@ -63,8 +63,8 @@
       "command": "node --test apps/public-galaxy/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 139,
-      "evidence": "✔ three renderer imports the vendored library by absolute path only (no CDN, no import map, no npm) (0.399792ms)\n✔ three renderer module exports createThreeRenderer (resolved through the vendored path) (17.363125ms)\n✔ quality table: bloom off on low, resolution scale per level, pixel ratio bounded (0.082834ms)\n✔ bloom strength: base plus a clamped transient boost; pulses decay to zero (single, non-repeating) (0.058583ms)\nℹ tests 57\nℹ suites 0\nℹ pass 57\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 115.855375"
+      "durationMs": 363,
+      "evidence": "✔ three renderer imports the vendored library by absolute path only (no CDN, no import map, no npm) (0.496125ms)\n✔ three renderer module exports createThreeRenderer (resolved through the vendored path) (25.971375ms)\n✔ quality table: bloom off on low, resolution scale per level, pixel ratio bounded (0.102375ms)\n✔ bloom strength: base plus a clamped transient boost; pulses decay to zero (single, non-repeating) (0.07625ms)\nℹ tests 92\nℹ suites 0\nℹ pass 92\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 339.902292"
     },
     {
       "category": "functional",
@@ -72,8 +72,8 @@
       "command": "node --test apps/stage-dashboard/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 69,
-      "evidence": "✔ soul.float_accepted increments the galaxy count once per soulId (0.058791ms)\n✔ deriveView hero variants: none, scheduled (nextRound), countdown, locked with overdue note, closed (0.123167ms)\n✔ changedTiles reports counts, status, draw, winners and insights changes (0.123542ms)\n✔ isStale uses a 10 s threshold against the server time (0.035834ms)\nℹ tests 35\nℹ suites 0\nℹ pass 35\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 47.053916"
+      "durationMs": 73,
+      "evidence": "✔ soul.float_accepted increments the galaxy count once per soulId (0.137625ms)\n✔ deriveView hero variants: none, scheduled (nextRound), countdown, locked with overdue note, closed (0.1525ms)\n✔ changedTiles reports counts, status, draw, winners and insights changes (0.142709ms)\n✔ isStale uses a 10 s threshold against the server time (0.039208ms)\nℹ tests 35\nℹ suites 0\nℹ pass 35\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 48.679292"
     },
     {
       "category": "accessibility",
@@ -81,8 +81,8 @@
       "command": "node --test packages/design-tokens/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 67,
-      "evidence": "✔ light: Core vs Critical remain distinguishable under protanopia, deuteranopia and tritanopia (0.044834ms)\n✔ sticker tokens carry the brief values, the violet dark palette is untouched and nothing was renamed (0.313209ms)\n✔ sticker contrast pairs: pill ink on pill fill, navy on lime label, body text on every tile surface incl. sticker sky (0.111416ms)\n✔ --font-display leads with the vendored Fredoka (OFL) and falls back to Plus Jakarta Sans; no remote font URLs (0.229584ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 43.492541"
+      "durationMs": 62,
+      "evidence": "✔ light: Core vs Critical remain distinguishable under protanopia, deuteranopia and tritanopia (0.047584ms)\n✔ sticker tokens carry the brief values, the violet dark palette is untouched and nothing was renamed (0.306375ms)\n✔ sticker contrast pairs: pill ink on pill fill, navy on lime label, body text on every tile surface incl. sticker sky (0.151583ms)\n✔ --font-display leads with the vendored Fredoka (OFL) and falls back to Plus Jakarta Sans; no remote font URLs (0.27875ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 39.032291"
     },
     {
       "category": "functional",
@@ -90,8 +90,8 @@
       "command": "node --test tests/contracts",
       "status": "pass",
       "severity": null,
-      "durationMs": 820,
-      "evidence": "  ✔ winner shapes and consent policy per audience: public {label, soulId}; stage + winningDrawNumber; admin participantId + lineIds; galaxy label only with consent (0.238375ms)\n  ✔ insights (admin + stage) are aggregate only: no participant ids, names, references or per-participant arrays; cohorts < 5 suppressed (0.138125ms)\n  ✔ every SSE payload of every audience is redacted by contract; event types respect the audience lists; participant streams are isolated (2.748417ms)\n✔ projection redaction across audiences (175.456417ms)\nℹ tests 38\nℹ suites 2\nℹ pass 38\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 795.266833"
+      "durationMs": 829,
+      "evidence": "  ✔ winner shapes and consent policy per audience: public {label, soulId}; stage + winningDrawNumber; admin participantId + lineIds; galaxy label only with consent (0.216209ms)\n  ✔ insights (admin + stage) are aggregate only: no participant ids, names, references or per-participant arrays; cohorts < 5 suppressed (0.120958ms)\n  ✔ every SSE payload of every audience is redacted by contract; event types respect the audience lists; participant streams are isolated (1.803541ms)\n✔ projection redaction across audiences (170.227875ms)\nℹ tests 39\nℹ suites 2\nℹ pass 39\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 801.468875"
     },
     {
       "category": "functional",
@@ -99,8 +99,8 @@
       "command": "node --test tests/e2e",
       "status": "pass",
       "severity": null,
-      "durationMs": 1334,
-      "evidence": "  ✔ co-winners: all and only the expected participants, with the expected line ids and consent-based labels (AC 7, A-06) (4.6055ms)\n  ✔ WINNER closes further draws: draw-next is ILLEGAL_TRANSITION (E10) and nothing is persisted (1.711083ms)\n  ✔ result.published carries the same co-winners on public, stage, admin and both winners' participant streams; bingo.detected exactly once at the winning draw (4.074333ms)\n✔ seeded round replay (BINGO_RNG_SEED=fixture-1) (100.325792ms)\nℹ tests 32\nℹ suites 5\nℹ pass 32\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1292.61775"
+      "durationMs": 1323,
+      "evidence": "  ✔ co-winners: all and only the expected participants, with the expected line ids and consent-based labels (AC 7, A-06) (5.251542ms)\n  ✔ WINNER closes further draws: draw-next is ILLEGAL_TRANSITION (E10) and nothing is persisted (0.809583ms)\n  ✔ result.published carries the same co-winners on public, stage, admin and both winners' participant streams; bingo.detected exactly once at the winning draw (3.647375ms)\n✔ seeded round replay (BINGO_RNG_SEED=fixture-1) (82.894167ms)\nℹ tests 32\nℹ suites 5\nℹ pass 32\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1282.541666"
     },
     {
       "category": "data",
@@ -116,8 +116,8 @@
       "command": "node --test services/game-service/test/draw.test.js services/game-service/test/float.test.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 959,
-      "evidence": "  ✔ every finished participant has a Soul; config validates (no rank traits); badge only for winners; token only in participant projection (3.672083ms)\n  ✔ float once creates exactly one entrance + one soul.float_accepted event; replay returns the original; other token is FLOAT_FAILED (812.281791ms)\n  ✔ expired float token is FLOAT_FAILED and never creates an entrance; a non-consented Soul enters without a label (4.8255ms)\n✔ Soul + Float (M-13, P-05, BR-16, BR-17, D-11) (857.39225ms)\nℹ tests 10\nℹ suites 2\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 912.783084"
+      "durationMs": 1701,
+      "evidence": "▶ Float greeting (D-42)\n  ✔ a rejected greeting is E24 with a reason and does not spend the token; a clean one reaches the public screen; none is null (31.555ms)\n  ✔ BINGO_GREETINGS=off hides greetings from public payloads; the owner still gets their own back (714.859625ms)\n✔ Float greeting (D-42) (746.682708ms)\nℹ tests 14\nℹ suites 4\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1658.967292"
     },
     {
       "category": "concurrency",
@@ -125,8 +125,8 @@
       "command": "node --test tests/e2e/reconnect.test.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 756,
-      "evidence": "  ✔ drop both streams, generate events while disconnected, resume with Last-Event-ID: only missed events replay, in order, then live continues (AC 10) (23.372125ms)\n  ✔ stale resume beyond the replay window -> system.snapshot_required; snapshot sequence >= last event and equals the live state (32.759041ms)\n  ✔ no duplicate soul.float_accepted across live + replay; a replayed Float request emits nothing (AC 11, motion contract) (171.963208ms)\n✔ reconnect: drop, resume with Last-Event-ID, stale resume -> snapshot_required, no duplicate celebrations (660.535916ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 715.967667"
+      "durationMs": 744,
+      "evidence": "  ✔ drop both streams, generate events while disconnected, resume with Last-Event-ID: only missed events replay, in order, then live continues (AC 10) (24.458417ms)\n  ✔ stale resume beyond the replay window -> system.snapshot_required; snapshot sequence >= last event and equals the live state (33.493333ms)\n  ✔ no duplicate soul.float_accepted across live + replay; a replayed Float request emits nothing (AC 11, motion contract) (168.542667ms)\n✔ reconnect: drop, resume with Last-Event-ID, stale resume -> snapshot_required, no duplicate celebrations (659.234916ms)\nℹ tests 4\nℹ suites 1\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 712.394791"
     },
     {
       "category": "security",
@@ -134,8 +134,8 @@
       "command": "node --test services/game-service/test/authz.test.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 136,
-      "evidence": "  ✔ security headers on every response; JSON body limit; invalid JSON; unknown route 404 (2.097792ms)\n  ✔ static serving: index page, shared trees with MIME types, path traversal blocked, absent app dirs give 404 (4.212791ms)\n  ✔ client authority: participants cannot post commands, mark cells, choose draws or alter time; draw params never carry a skill (1.2655ms)\n✔ authorization boundaries, tokens, rate limits, headers, static serving (BR-11, BR-20, 15.2) (49.671167ms)\nℹ tests 9\nℹ suites 1\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 99.967459"
+      "durationMs": 139,
+      "evidence": "  ✔ security headers on every response; JSON body limit; invalid JSON; unknown route 404 (2.156583ms)\n  ✔ static serving: index page, shared trees with MIME types, path traversal blocked, absent app dirs give 404 (3.822583ms)\n  ✔ client authority: participants cannot post commands, mark cells, choose draws or alter time; draw params never carry a skill (1.231166ms)\n✔ authorization boundaries, tokens, rate limits, headers, static serving (BR-11, BR-20, 15.2) (54.422167ms)\nℹ tests 9\nℹ suites 1\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 104.350833"
     },
     {
       "category": "security",
@@ -143,8 +143,8 @@
       "command": "node tools/assembly/assemble.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 346,
-      "evidence": "{\n  \"buildId\": \"bingo-5a3d6c80c6a1\",\n  \"files\": 621,\n  \"assetsBytes\": 5384865,\n  \"audioBytes\": 688488,\n  \"critical\": 0,\n  \"major\": 0,\n  \"minor\": 0,\n  \"status\": \"ok\"\n}"
+      "durationMs": 423,
+      "evidence": "{\n  \"buildId\": \"bingo-be2a06b4c257\",\n  \"files\": 715,\n  \"assetsBytes\": 6948297,\n  \"audioBytes\": 688488,\n  \"critical\": 0,\n  \"major\": 0,\n  \"minor\": 0,\n  \"status\": \"ok\"\n}"
     },
     {
       "category": "security",
@@ -160,8 +160,8 @@
       "command": "node --test tests/contracts/projection-redaction.test.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 243,
-      "evidence": "  ✔ winner shapes and consent policy per audience: public {label, soulId}; stage + winningDrawNumber; admin participantId + lineIds; galaxy label only with consent (0.249583ms)\n  ✔ insights (admin + stage) are aggregate only: no participant ids, names, references or per-participant arrays; cohorts < 5 suppressed (0.128ms)\n  ✔ every SSE payload of every audience is redacted by contract; event types respect the audience lists; participant streams are isolated (2.724667ms)\n✔ projection redaction across audiences (170.903875ms)\nℹ tests 6\nℹ suites 1\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 220.234375"
+      "durationMs": 239,
+      "evidence": "  ✔ winner shapes and consent policy per audience: public {label, soulId}; stage + winningDrawNumber; admin participantId + lineIds; galaxy label only with consent (0.206458ms)\n  ✔ insights (admin + stage) are aggregate only: no participant ids, names, references or per-participant arrays; cohorts < 5 suppressed (0.113667ms)\n  ✔ every SSE payload of every audience is redacted by contract; event types respect the audience lists; participant streams are isolated (1.841084ms)\n✔ projection redaction across audiences (166.257958ms)\nℹ tests 6\nℹ suites 1\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 215.820791"
     },
     {
       "category": "privacy",
@@ -177,8 +177,8 @@
       "command": "node --test tests/accessibility",
       "status": "pass",
       "severity": null,
-      "durationMs": 104,
-      "evidence": "    ✔ app CSS: no focus outline removal without :focus-visible, touch target token never lowered, reflow-friendly units (10.664ms)\n    ✔ copy comes from the shared catalog (no hard-coded exception copy) and server authority is respected (0.17275ms)\n  ✔ stage-dashboard (/stage) (12.002875ms)\n✔ accessibility static checks (37.992125ms)\nℹ tests 45\nℹ suites 6\nℹ pass 45\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 77.54275"
+      "durationMs": 109,
+      "evidence": "    ✔ app CSS: no focus outline removal without :focus-visible, touch target token never lowered, reflow-friendly units (13.897125ms)\n    ✔ copy comes from the shared catalog (no hard-coded exception copy) and server authority is respected (0.214834ms)\n  ✔ stage-dashboard (/stage) (15.515917ms)\n✔ accessibility static checks (44.410625ms)\nℹ tests 49\nℹ suites 7\nℹ pass 49\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.847459"
     },
     {
       "category": "accessibility",
@@ -194,8 +194,8 @@
       "command": "node tests/load/reconnect-storm.js",
       "status": "pass",
       "severity": null,
-      "durationMs": 614,
-      "evidence": "setup: 150 boards READY in 134 ms; API p95 38.13 ms\nstreams: 300 open in 30 ms (server sees 300)\ndraw 1: delivered to 300/300 streams, p95 13.83 ms, max 14 ms, command 12 ms\ndraw 2: delivered to 300/300 streams, p95 10.43 ms, max 11 ms, command 8 ms\ndraw 3: delivered to 300/300 streams, p95 10.65 ms, max 11 ms, command 8 ms\ndraw 4: delivered to 300/300 streams, p95 10.28 ms, max 10 ms, command 8 ms\ndraw 5: delivered to 300/300 streams, p95 10.1 ms, max 10 ms, command 8 ms\ndraw 6: delivered to 300/300 streams, p95 10.98 ms, max 11 ms, command 9 ms\nreconnect storm: 300 streams dropped in 7 ms; 300/300 recovered; all caught up in 100 ms (p95 94.17 ms)\nsnapshots: public p95 7.85 ms (n=150), stage p95 95.07 ms\nreport: /Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/qa/load-report.json\n{\"pass\":true,\"drawFanoutP95Ms\":13.13,\"drawFanoutMaxMs\":13.94,\"reconnectRecoveryAllMs\":100,\"reconnectP95Ms\":94.17,\"publicSnapshotP95Ms\":7.85,\"setupApiP95Ms\":38.13,\"checks\":{\"drawFanoutP95\":true,\"reconnectRecovery\":true,\"snapshotP95\":true,\"noDuplicateDraws\":true,\"noReplayBelowLastEventId\":true}}"
+      "durationMs": 603,
+      "evidence": "setup: 150 boards READY in 128 ms; API p95 37.12 ms\nstreams: 300 open in 30 ms (server sees 300)\ndraw 1: delivered to 300/300 streams, p95 14.03 ms, max 14 ms, command 12 ms\ndraw 2: delivered to 300/300 streams, p95 10.8 ms, max 11 ms, command 8 ms\ndraw 3: delivered to 300/300 streams, p95 10.7 ms, max 11 ms, command 8 ms\ndraw 4: delivered to 300/300 streams, p95 10.94 ms, max 11 ms, command 9 ms\ndraw 5: delivered to 300/300 streams, p95 10.12 ms, max 10 ms, command 8 ms\ndraw 6: delivered to 300/300 streams, p95 10.04 ms, max 10 ms, command 8 ms\nreconnect storm: 300 streams dropped in 8 ms; 300/300 recovered; all caught up in 95 ms (p95 90.5 ms)\nsnapshots: public p95 7.81 ms (n=150), stage p95 83.51 ms\nreport: /Users/grc/Desktop/claudecodetest/Ariskill Bingo/ariskill-skill-bingo/reports/qa/load-report.json\n{\"pass\":true,\"drawFanoutP95Ms\":13.34,\"drawFanoutMaxMs\":14.14,\"reconnectRecoveryAllMs\":95,\"reconnectP95Ms\":90.5,\"publicSnapshotP95Ms\":7.81,\"setupApiP95Ms\":37.12,\"checks\":{\"drawFanoutP95\":true,\"reconnectRecovery\":true,\"snapshotP95\":true,\"noDuplicateDraws\":true,\"noReplayBelowLastEventId\":true}}"
     },
     {
       "category": "performance",
@@ -219,8 +219,8 @@
       "command": "node --test tools/assets/test",
       "status": "pass",
       "severity": null,
-      "durationMs": 3582,
-      "evidence": "✔ soulOrbitSlot is deterministic and within ring capacity (4.114916ms)\n✔ manifest exists, has every workflow 5.2 field, and checksums/sizes match the files on disk (13.323ms)\n✔ cohort: 24 neutral seeds, valid configs, files equal a fresh render (determinism), alt text clean (1.818875ms)\n✔ scene assets: star layers normalised, orbit rings mirror the renderer, safe zone is the right 35 % (0.445125ms)\nℹ tests 72\nℹ suites 14\nℹ pass 72\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3559.722292"
+      "durationMs": 3808,
+      "evidence": "  ✔ copies the GLB byte for byte and merges one entry; a rerun changes nothing (36.42075ms)\n  ✔ refuses a GLB that is not the approved crown: nothing is published, the manifest is untouched (5.907708ms)\n  ✔ reports a stray file next to the published crown instead of deleting it (3.848375ms)\n✔ publish step (build-winner-crown.js, disposable copies) (46.269292ms)\nℹ tests 92\nℹ suites 17\nℹ pass 92\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3785.356209"
     },
     {
       "category": "resilience",

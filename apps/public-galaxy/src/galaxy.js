@@ -3,11 +3,13 @@
 // imported lazily so a failed vendor import degrades to the raw WebGL2 / Canvas 2D renderers. The panel is
 // independent of this module: if the Galaxy throws, the container keeps its flat --color-bg background.
 import { createScene, DEFAULT_SCENE_CONFIG, DEFAULT_RINGS } from './renderer/scene.js';
-import { createAtlas, loadImage } from './renderer/atlas.js';
+import { createAtlas } from './renderer/atlas.js';
+import { loadSpace, SPACE_BASE } from './renderer/space.js';
 import { createWebgl2Renderer } from './renderer/webgl2.js';
 import { createCanvas2dRenderer } from './renderer/canvas2d.js';
 import { createStaticRenderer } from './renderer/static.js';
 import { createEntranceQueue } from './entrance-queue.js';
+import { createGreetingBubble } from './greeting-bubble.js';
 import { pumpBudget } from './renderer/impostor-plan.js';
 import { track } from '../../../packages/ui/telemetry.js';
 
@@ -54,8 +56,11 @@ export function entranceTimings(config = DEFAULT_SCENE_CONFIG, motion = null) {
   return { arcMs: pick(g && g.arcMs, e.arcDurationMs), pulseMs: pick(g && g.pulseMs, e.pulseDurationMs), settleMs: pick(g && g.settleMs, e.settleDurationMs) };
 }
 
-/** Loads scene-config.json and the files it links (star layers, orbit rings, nebula) plus the motion tokens. */
-export async function loadSceneAssets(base = '/assets/scene', tokensBase = '/tokens') {
+/**
+ * Loads scene-config.json and the files it links (star layers, orbit rings), the space backdrop (space.json and its
+ * Blender renders under spaceBase, stage 15: null means a plain dark sky) plus the motion tokens.
+ */
+export async function loadSceneAssets(base = '/assets/scene', tokensBase = '/tokens', spaceBase = SPACE_BASE) {
   let config = DEFAULT_SCENE_CONFIG;
   try { config = await (await fetch(`${base}/scene-config.json`)).json(); } catch { /* defaults */ }
   const layerFiles = (config.starfield || []).map(l => l.file.replace(/^assets\/scene/, base));
@@ -63,11 +68,10 @@ export async function loadSceneAssets(base = '/assets/scene', tokensBase = '/tok
   for (const f of layerFiles) { try { starLayers.push(await (await fetch(f)).json()); } catch { /* skip layer */ } }
   let rings = DEFAULT_RINGS;
   try { rings = await (await fetch(`${base}/orbit-rings.json`)).json(); } catch { /* defaults */ }
-  let nebula = null;
-  try { nebula = await loadImage(`${base}/nebula.svg`); } catch { nebula = null; }
+  const space = await loadSpace({ base: spaceBase });
   let motion = null;
   try { motion = await (await fetch(`${tokensBase}/motion.json`)).json(); } catch { motion = null; }
-  return { config, starLayers, rings, nebula, motion };
+  return { config, starLayers, rings, space, motion };
 }
 
 let threeModule = null;
@@ -78,7 +82,7 @@ async function loadThree() {
 }
 
 export function createGalaxy({ container, assets, mode = null, quality = 'high', reducedMotion = false, onModeChange = null, onQualityChange = null, monoNow = () => performance.now() }) {
-  const { config, starLayers, rings, nebula, motion = null } = assets;
+  const { config, starLayers, rings, space = null, motion = null } = assets;
   const dpr = Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1);
   const timings = entranceTimings(config, motion);
   const queue = createEntranceQueue({
@@ -89,6 +93,9 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
   const scene = createScene({ config, rings, starLayers, quality: QUALITY_ORDER.includes(quality) ? quality : 'high', reducedMotion, queue });
   const atlas = createAtlas({ maxDetail: 'simple' }); // art direction v2: the Galaxy atlas is the 'simple' sticker
   let renderer = null;
+  // the "say hi" speech bubble (D-36): DOM over the canvas, fed each frame's visit (none without a DOM, e.g. in tests)
+  let bubble = null;
+  try { if (typeof document !== 'undefined' && container && container.appendChild) bubble = createGreetingBubble(container); } catch { bubble = null; }
   let raf = 0, running = false, startedAt = 0, lastFrameAt = 0;
   const frameTimes = [];
   let lastDowngradeAt = -Infinity;
@@ -99,7 +106,7 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
   function order() { return rendererOrder({ mode, reducedMotion, fallback: config.fallback && config.fallback.order }); }
 
   function make(kind) {
-    const common = { container, atlas, nebula, background: config.background, dpr, starLayers };
+    const common = { container, atlas, space, background: config.background, dpr, starLayers };
     if (kind === 'three') {
       if (!threeFactory) throw new Error('three module not loaded');
       return threeFactory({ ...common, quality: scene.quality, reducedMotion, seed: SCENE_SEED, pulseMs: timings.pulseMs, onLost: () => switchTo('canvas2d', 'context-lost') });
@@ -163,7 +170,9 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
     queue.update(now);
     const t0 = performance.now();
     try {
-      renderer.render(scene.frame((now - startedAt) / 1000, now));
+      const f = scene.frame((now - startedAt) / 1000, now);
+      renderer.render(f);
+      if (bubble) bubble.update(f.visits && f.visits[0], f.layout);
     } catch (err) {
       console.error('[galaxy] render failed, falling back', err);
       const idx = order().indexOf(renderer ? renderer.kind : 'static');
@@ -222,13 +231,13 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
       raf = requestAnimationFrame(loop);
       return true;
     },
-    stop() { running = false; if (raf) cancelAnimationFrame(raf); },
+    stop() { running = false; if (raf) cancelAnimationFrame(raf); if (bubble) bubble.hide(); },
     /** Snapshot Souls: render in orbit, no entrance. */
     setSouls(list) { scene.setSouls(list); if (isStatic()) renderOnce(); },
-    /** Live Float: add and animate once (celebrate === true) or add silently. */
+    /** Live Float: add and animate once (celebrate === true), then say hi soon (D-36); or add silently (replays). */
     enter(entrance, { celebrate = false, notBefore = null } = {}) {
       const added = scene.addSoul(entrance);
-      if (celebrate && !isStatic()) queue.enqueue(entrance.soulId, monoNow(), notBefore ?? monoNow());
+      if (celebrate && !isStatic()) { queue.enqueue(entrance.soulId, monoNow(), notBefore ?? monoNow()); scene.queueHi(entrance.soulId); }
       if (isStatic()) renderOnce();
       return added;
     },
@@ -249,7 +258,7 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
     debug() { return renderer && typeof renderer.debug === 'function' ? renderer.debug() : null; },
     /** Rehearsal instrumentation: simulate a GPU context loss (hand-over to canvas2d). */
     loseContext() { if (renderer && typeof renderer.loseContext === 'function') { renderer.loseContext(); return true; } return false; },
-    dispose() { api.stop(); if (renderer) renderer.dispose(); renderer = null; },
+    dispose() { api.stop(); if (renderer) renderer.dispose(); renderer = null; if (bubble) bubble.dispose(); bubble = null; },
   };
   return api;
 }

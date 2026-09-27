@@ -44,7 +44,8 @@ test('quality table: bloom off on low, resolution scale per level, pixel ratio b
   assert.equal(pixelRatioFor('low', 2), 0.7);
   assert.equal(pixelRatioFor('unknown', 1), 1);
   assert.equal(qualitySettings('nope'), THREE_QUALITY.high);
-  assert.ok(THREE_QUALITY.high.fireflies >= THREE_QUALITY.medium.fireflies && THREE_QUALITY.medium.fireflies >= THREE_QUALITY.low.fireflies);
+  // stage 15: the fireflies and the forest are gone (the space backdrop replaced them), so the table has no counts for them
+  for (const q of ['high', 'medium', 'low']) assert.ok(!('fireflies' in THREE_QUALITY[q]) && !('forestLayers' in THREE_QUALITY[q]));
 });
 
 test('bloom strength: base plus a clamped transient boost; pulses decay to zero (single, non-repeating)', () => {

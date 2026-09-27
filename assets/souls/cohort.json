@@ -1,7 +1,7 @@
 {
-  "rendererVersion": "4.0.0",
+  "rendererVersion": "5.0.0",
   "generator": "tools/assets/build-souls.js",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "members": [
     {
       "index": 1,

@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
-import { renderSoulSvg, soulAltText, resolveSoul, decorUsable, TRAITS, SOUL_RENDERER_VERSION } from '../../packages/ui/soul-renderer.js';
+import { renderSoulSvg, soulAltText, resolveSoul, decorUsable, faceUsable, TRAITS, SOUL_RENDERER_VERSION } from '../../packages/ui/soul-renderer.js';
 import { soulSeed, soulConfigFromSeed, decoratedSoulConfig, validateSoulConfig, SOUL_TRAITS } from '../../packages/game-rules/src/soul.js';
 import { GRADIENTS, FACES } from '../../packages/game-rules/src/soul-catalog.js';
 import { seededRng } from '../../packages/game-rules/src/random.js';
@@ -13,7 +13,7 @@ import { mergeManifest, fileChecksum, fileSize, writeIfChanged } from './lib/man
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const GENERATOR = 'tools/assets/build-souls.js';
-const VERSION = '4.0.0'; // v4: renderer 4 (D-29 decorations); the v1 cohort files are byte-identical to v3 (docs/art/soul-baseline.md, D-27)
+const VERSION = '5.0.0'; // v5: renderer 5 (D-31 faces v3); the v1 cohort files are byte-identical to v3 (docs/art/soul-baseline.md, D-27)
 const OUT = join(ROOT, 'assets', 'souls');
 const SRC = join(ROOT, 'assets-src', 'souls');
 const MANIFEST = join(ROOT, 'assets', 'manifest', 'assets.yaml');
@@ -100,10 +100,12 @@ const cohortCards = members.map((m) => {
 const lodCards = members.slice(0, 6).map((m) => `<figure><div class="sp lod">${renderSoulSvg(m.config, { size: 120, badge: m.badge, idPrefix: `l1${m.seed}`, reducedMotion: true })}${renderSoulSvg(m.config, { size: 72, badge: m.badge, detail: 'simple', idPrefix: `l2${m.seed}` })}${renderSoulSvg(m.config, { size: 28, detail: 'dot', idPrefix: `l3${m.seed}` })}</div><figcaption>full / simple / dot</figcaption></figure>`).join('');
 const badgeCards = [null, 'bingo-star'].map((badge, i) => `<figure><div class="sp">${renderSoulSvg({ ...base, seed: `badge-${i}` }, { size: 112, badge, reducedMotion: true, idPrefix: `bd${i}` })}</div><figcaption>badge: ${badge || 'none'}</figcaption></figure>`).join('');
 
-// ---- Decorated Souls (renderer v4, D-29): body gradients, then one Soul per face with 10 charms (review rows only; the
-// v1 cohort above is unchanged). Charm and face sprites use absolute /assets URLs: they show when the sheet is served
-// and only once packages/ui/soul-decor-data.js is generated (the stub draws the plain gradient Soul).
-const decorState = decorUsable() ? 'generated decor data: face and charm sprites drawn' : 'decor data is still the stub: face and charm sprites not drawn';
+// ---- Decorated Souls (renderer v5): body gradients (v2, D-29), then one v3 Soul per face kit (D-31) with its face plate,
+// eyes, 10 charms and antenna charm (review rows only; the v1 cohort above is unchanged). Sprites use absolute /assets
+// URLs: they show when the sheet is served and only once packages/ui/soul-decor-data.js and soul-face-data.js are
+// generated (stubs draw the plain gradient Soul).
+const decorState = !decorUsable() ? 'decor data is still the stub: face and charm sprites not drawn'
+  : faceUsable() ? 'generated decor and face data: plate, eye, kit and charm sprites drawn' : 'face data is still the stub: v3 Souls drawn as v2 Souls';
 const gradientCards = GRADIENTS.map((g, i) => {
   const cfg = { version: 2, catalog: 1, seed: `grad-${g.id}`, gradient: i, glow: 0, face: null, charms: [], constellation: [], driftPhase: 0 };
   return `<figure><div class="sp">${renderSoulSvg(cfg, { size: 112, detail: 'full', reducedMotion: true, idPrefix: `gr-${i}` })}</div><figcaption>gradient: ${g.name}</figcaption></figure>`;
@@ -135,8 +137,8 @@ figure{margin:0;width:160px;background:#121833;border:1px solid #2A3560;border-r
 <h2>Glow</h2><div class="grid">${traitRow('glow', base)}</div>
 <h2>Badge</h2><div class="grid">${badgeCards}</div>
 <h2>Level of detail</h2><div class="grid">${lodCards}</div>
-<h2>Decorated Souls (v2, D-29)</h2>
-<p>Renderer ${SOUL_RENDERER_VERSION}: the body gradient as a vertical gradient over the catalog span (every gradient one mean brightness), the face kit and 10 skill charms as sprites at the decor slots, the Bingo Star on a round medallion (${decorState}). Review checklist: no gradient, face or charm reads as rank, status or rarity; every charm is the same size; the medallion badge never reads as a star charm.</p>
+<h2>Decorated Souls (gradients v2, D-29; faces v3, D-31)</h2>
+<p>Renderer ${SOUL_RENDERER_VERSION}: the body gradient as a vertical gradient over the catalog span (every gradient one mean brightness), v3 Souls on the v3 body outline (no button eyes, no orb) with the face plate, eyes and face kit, the 10 skill charms at the decor slots and one antenna charm, all as sprites; the Bingo Star on a round medallion (${decorState}). Review checklist: no gradient, face plate, eyes or charm reads as rank, status or rarity; every body charm is the same size; the medallion badge never reads as a star charm.</p>
 <div class="grid">${gradientCards}</div>
 <div class="grid gap">${faceCards}</div>
 </body></html>

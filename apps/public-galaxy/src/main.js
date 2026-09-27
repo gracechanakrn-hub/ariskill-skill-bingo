@@ -8,6 +8,7 @@ import { h, mount, announce } from '../../../packages/ui/dom.js';
 import { createAudioManager, PRELOAD_BY_APP } from '../../../packages/ui/audio.js';
 import { prefersReducedMotion, restoreReducedMotion, createCelebrationGuard, scheduleAt, entranceStartMs } from '../../../packages/ui/motion.js';
 import { track } from '../../../packages/ui/telemetry.js';
+import { mountFullscreenButton } from '../../../packages/ui/fullscreen.js'; // D-51 (added by the 16-skill session)
 import { initialState, applyPublicSnapshot, reduceEvent, panelViewModel, effectivePublicState } from './state.js';
 import { createPanel } from './panel.js';
 import { createGalaxy, loadSceneAssets, normaliseMode } from './galaxy.js';
@@ -29,11 +30,9 @@ const clockNow = () => clock.now();
 
 const panelMain = document.getElementById('panel-main');
 const footer = document.getElementById('panel-footer');
-const banner = document.getElementById('banner');
 const galaxyHost = document.getElementById('galaxy');
 const summary = document.getElementById('galaxy-summary');
 const panel = createPanel(panelMain);
-document.getElementById('banner-text').textContent = t('reconnect');
 
 let state = initialState();
 let sse = null, galaxy = null, audio = null;
@@ -59,27 +58,36 @@ let refreshTimer = null;
 let everOpen = false;
 const guard = createCelebrationGuard({ getConnectionEpoch: () => (sse ? sse.connectionEpoch : 0) });
 
-// ---- footer: sound controls, mode indicator, captions, stale indicator ----------------------------------
-const captionEl = h('p', { className: 'panel__caption', 'aria-live': 'polite', id: 'caption' });
+// ---- footer: stale indicator and renderer mode; sound captions for screen readers only (D-36) ------------------
+const captionEl = h('p', { className: 'panel__caption visually-hidden', 'aria-live': 'polite', id: 'caption' });
 const modeEl = h('span', { className: 'panel__mode', id: 'mode-indicator' });
 const staleEl = h('span', { className: 'pill pill--warning panel__stale', hidden: true, id: 'stale-indicator' }, label('stale'));
-const enableBtn = h('button', { type: 'button', className: 'btn btn--primary panel__enable', id: 'enable-sound', onClick: enableSound }, label('enableSound'));
-const muteBtn = h('button', { type: 'button', className: 'btn btn--ghost panel__mute', id: 'mute', 'aria-pressed': false, hidden: true, onClick: toggleMute }, label('mute'));
+// sound: one round icon button - speaker with a cross until sound is on, then speaker with waves (click to mute)
+const SPEAKER = 'M4 9h4l5-4v14l-5-4H4z';
+const soundIcon = (on) => h('svg', { class: 'panel__sound-icon', viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' },
+  h('path', { d: SPEAKER, fill: 'currentColor' }),
+  on ? h('path', { d: 'M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round' })
+     : h('path', { d: 'M16.5 9.5l5 5M21.5 9.5l-5 5', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round' }));
+const enableBtn = h('button', { type: 'button', className: 'panel__sound', id: 'enable-sound', 'aria-label': label('enableSound'), onClick: enableSound }, soundIcon(false));
+const muteBtn = h('button', { type: 'button', className: 'panel__sound', id: 'mute', 'aria-pressed': false, 'aria-label': label('mute'), hidden: true, onClick: toggleMute }, soundIcon(true));
 const volume = h('input', { type: 'range', min: 0, max: 100, step: 5, value: 70, className: 'panel__volume', id: 'volume', 'aria-label': label('volume'), hidden: true, onInput: (ev) => audio && audio.setMasterVolume(Number(ev.target.value) / 100) });
-mount(footer, [h('div', { className: 'panel__controls' }, enableBtn, muteBtn, volume), h('div', { className: 'panel__status' }, staleEl, modeEl), captionEl]);
+mount(footer, [h('div', { className: 'panel__status' }, staleEl, modeEl)]);
+document.getElementById('panel').appendChild(h('div', { className: 'panel__sound-slot' }, enableBtn, muteBtn));
+document.getElementById('panel').appendChild(captionEl); // off screen: the panel already shows the draw, the winners and the arrivals
 
 async function enableSound() {
   if (!audio) return;
   const ok = await audio.unlock();
   if (ok) { audio.startAmbient(); }
-  enableBtn.hidden = true; muteBtn.hidden = false; volume.hidden = false;
+  enableBtn.hidden = true; muteBtn.hidden = false;
   syncMute();
 }
 function toggleMute() { if (!audio) return; audio.setMuted(!audio.state().muted); syncMute(); }
 function syncMute() {
   const muted = audio ? audio.state().muted : true;
   muteBtn.setAttribute('aria-pressed', String(muted));
-  muteBtn.textContent = muted ? label('unmute') : label('mute');
+  muteBtn.setAttribute('aria-label', muted ? label('unmute') : label('mute'));
+  muteBtn.replaceChildren(soundIcon(!muted));
 }
 
 // ---- rendering ---------------------------------------------------------------------------------------------
@@ -89,7 +97,6 @@ function render(opts = {}) {
   panel.render(vm, clockNow(), { celebrateDraw: !!opts.celebrateDraw, celebrateWinner });
   if (celebrateWinner) pendingWinnerBurst = false;
   summary.textContent = label('galaxySummary', { count: vm.galaxyCount });
-  banner.hidden = vm.connection === 'open' || !everOpen;
   staleEl.hidden = !vm.stale;
   document.body.dataset.publicState = vm.mode.toLowerCase();
   manageWinnerFallback();
@@ -138,7 +145,7 @@ function onEvent(envelope, meta) {
       if (guard.shouldCelebrate(key, guardMeta)) {
         celebrateDraw = true;
         if (galaxy) galaxy.ripple();
-        if (audio) { audio.play('draw_reveal', { fresh: true, sequence: envelope.sequence }); if (p.draw && p.draw.number === BINGO_UNLOCK_DRAW) audio.play('draw5_unlock', { fresh: true, sequence: envelope.sequence }); }
+        if (audio) { audio.play('draw_reveal', { fresh: true, sequence: envelope.sequence, vars: { number: p.draw && p.draw.number } }); if (p.draw && p.draw.number === BINGO_UNLOCK_DRAW) audio.play('draw5_unlock', { fresh: true, sequence: envelope.sequence }); }
         announce(`${t('public.playing.draw', { number: p.draw && p.draw.number })}. ${p.draw && p.draw.skill ? p.draw.skill.kind + ' ' + p.draw.skill.name : ''}`);
       }
       break;
@@ -181,7 +188,7 @@ function onStatus(status, info) {
     if (info.connectionEpoch > 1) { track('client.reconnect', { audience: 'public' }); refreshSnapshot({ replaying: true }).catch(() => {}); }
   } else if ((status === 'reconnecting' || status === 'closed') && prev !== status && everOpen) {
     if (audio) audio.play('reconnect', { fresh: true });
-    captionEl.textContent = exception('E12').copy;
+    announce(exception('E12').copy); // D-36: no reconnect text on the big screen; screen readers still hear it
   }
   render();
 }
@@ -191,7 +198,7 @@ async function boot() {
   mount(panelMain, h('p', { className: 'panel__body panel__muted', text: label('loading') }));
   try { await clock.sync(); clock.startAutoResync(60_000); } catch { /* countdown shows syncing copy through clockSync.isSynced */ }
 
-  audio = createAudioManager({ app: 'public', clockNow, translate: t, onCaption: ({ caption }) => { if (caption) captionEl.textContent = caption; }, volume: 0.7 });
+  audio = createAudioManager({ app: 'public', clockNow, translate: t, onCaption: ({ id, caption }) => { if (caption && id !== 'reconnect') captionEl.textContent = caption; }, volume: 0.7 });
   audio.preload(PRELOAD_BY_APP.public);
   volume.value = String(Math.round(audio.state().volume * 100));
 
@@ -235,3 +242,6 @@ async function boot() {
 }
 
 boot();
+
+// D-51 (added by the 16-skill session): corner full-screen button + F key, hides the browser UI on the venue display.
+mountFullscreenButton({ corner: 'left' }); // top-left, over the galaxy: the panel's sound button owns the top-right

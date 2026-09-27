@@ -12,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..', '..');
 const RUNTIME_DIRS = ['apps', 'services', 'packages', 'contracts', 'assets', 'tokens'];
 const EXCLUDE_DIRS = new Set(['node_modules', 'test', 'tests', '.git', 'data']);
-const BUDGETS = { assetsBytes: 6 * 1024 * 1024, audioBytes: 1.6 * 1024 * 1024, appBytesEach: 600 * 1024, singleFileBytes: 1.2 * 1024 * 1024, vendorBytes: 3 * 1024 * 1024 };
+// assetsBytes: 7 MiB since the stage-13 Soul faces (D-31; 6 MiB before), the same limit as tools/assets/validate-manifest.js.
+const BUDGETS = { assetsBytes: 7 * 1024 * 1024, audioBytes: 1.6 * 1024 * 1024, appBytesEach: 600 * 1024, singleFileBytes: 1.2 * 1024 * 1024, vendorBytes: 3 * 1024 * 1024 };
 // Vendored third-party libraries (packages/vendor/**) are exempt from the single-file budget but capped in total and must carry VENDOR.json provenance (D-22).
 const SECRET_PATTERNS = [/-----BEGIN (RSA|EC|OPENSSH) PRIVATE KEY-----/, /AKIA[0-9A-Z]{16}/, /sk-[A-Za-z0-9]{32,}/, /BINGO_[A-Z_]*TOKEN\s*=\s*['"][^'"]{12,}['"]/];
 

@@ -14,19 +14,6 @@ export function displayUrl(url) {
   try { const u = new URL(url); return `${u.host}${u.pathname}`; } catch { return String(url).replace(/^https?:\/\//, '').split('?')[0]; }
 }
 
-function kindIcon(kind) {
-  const k = String(kind || '').toLowerCase();
-  const cls = `kind-icon kind-icon--${k}`;
-  if (k === 'core') return h('svg', { class: cls, viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' }, h('path', { d: 'M12 2 22 12 12 22 2 12Z', fill: 'currentColor' }));
-  if (k === 'critical') return h('svg', { class: cls, viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' }, h('circle', { cx: 12, cy: 12, r: 10, fill: 'currentColor' }));
-  return h('svg', { class: cls, viewBox: '0 0 24 24', 'aria-hidden': 'true', focusable: 'false' }, h('circle', { cx: 12, cy: 12, r: 9, fill: 'none', stroke: 'currentColor', 'stroke-width': 3 }));
-}
-
-function kindChip(kind) {
-  const k = String(kind || '').toLowerCase();
-  return h('span', { className: `chip chip--${k} panel__kind` }, kindIcon(k), h('span', { className: 'chip__label' }, String(kind || '')));
-}
-
 /** Shrinks the font of `el` until its text fits its box (long skill names, many co-winners). */
 export function fitText(el, { maxPx, minPx, maxLines = 2 } = {}) {
   if (!el || !el.isConnected) return;
@@ -51,23 +38,25 @@ export function createPanel(root) {
 
   function waiting(vm, nowMs) {
     const parts = [];
+    const info = [];                                   // the round and its timer, one group (D-36)
     if (vm.scheduled) {
-      parts.push(h('h1', { className: 'panel__headline', text: vm.roundTitle || label('roundLabel', { number: vm.roundNumber }) }));
-      if (vm.locked) parts.push(h('p', { className: 'panel__body panel__muted', text: vm.lockedText }));
+      info.push(h('h1', { className: 'panel__headline', text: vm.roundTitle || label('roundLabel', { number: vm.roundNumber }) }));
+      if (vm.locked) info.push(h('p', { className: 'panel__body panel__muted', text: vm.lockedText }));
       else if (vm.lockAt) {
-        parts.push(h('p', { className: 'countdown__label panel__countdown-label', text: label('locksIn') }));
+        info.push(h('p', { className: 'countdown__label panel__countdown-label', text: label('locksIn') }));
         countdownTarget = vm.lockAt;
         countdownEl = h('p', { className: `countdown tabular panel__countdown${vm.countdownUrgent ? ' is-urgent' : ''}`, text: formatCountdown(vm.lockAt, nowMs), 'aria-live': 'off' });
-        parts.push(countdownEl);
+        info.push(countdownEl);
       }
     } else {
-      parts.push(h('h1', { className: 'panel__headline panel__headline--sm', text: vm.notScheduled }));
+      info.push(h('h1', { className: 'panel__headline panel__headline--sm', text: vm.notScheduled }));
     }
+    parts.push(h('div', { className: 'panel__info' }, ...info));
     if (vm.notice) parts.push(h('p', { className: `panel__notice panel__notice--${vm.notice.kind}`, role: 'status', text: vm.notice.text }));
     if (vm.joinUrl) {
       const qrHost = h('div', { className: 'qr panel__qr' });
       renderQr(qrHost, vm.joinUrl, { size: QR_SIZE, margin: 3, ariaLabel: `${vm.scan}: ${vm.joinUrl}` });
-      parts.push(h('div', { className: 'panel__join' }, qrHost, h('p', { className: 'panel__scan', text: vm.scan }), h('p', { className: 'panel__url', text: displayUrl(vm.joinUrl) })));
+      parts.push(h('div', { className: 'panel__join' }, qrHost, h('p', { className: 'panel__scan', text: vm.scan })));
     }
     if (vm.previous.length) {
       parts.push(h('section', { className: 'panel__previous', 'aria-label': vm.previousTitle },
@@ -79,26 +68,28 @@ export function createPanel(root) {
   }
 
   function playing(vm) {
-    const card = h('div', { className: `draw-card panel__draw draw-card--${String(vm.kind || '').toLowerCase()}` },
+    // D-36: the screen never says a skill's kind (core / critical / optional), and shows the
+    // previous five draws below the current one
+    const card = h('div', { className: 'draw-card panel__draw' },
       h('p', { className: 'panel__draw-number', text: vm.drawLabel }),
-      vm.kind ? kindChip(vm.kind) : null,
       h('h1', { className: 'panel__skill', text: vm.skillName || '', ref: (el) => { els.skill = el; } }),
     );
-    const live = h('p', { className: `panel__pacing${vm.live ? ' is-live' : ''}` }, vm.live ? h('span', { className: 'pill pill--live' }, vm.pacing) : vm.pacing);
-    const recent = h('ul', { className: 'draw-list panel__recent', 'aria-label': t('public.playing.draw', { number: '' }).trim() },
-      ...vm.recentDraws.map(d => h('li', { className: `panel__recent-item panel__recent-item--${String(d.kind || '').toLowerCase()}` }, kindIcon(d.kind), h('span', { className: 'panel__recent-num tabular', text: String(d.number) }), h('span', { className: 'panel__recent-name', text: d.skillName || '' }))));
+    const recent = vm.recentDraws.length ? h('section', { className: 'panel__recent-card', 'aria-label': label('previousDraws') },
+      h('p', { className: 'panel__eyebrow panel__recent-title', text: label('previousDraws') }),
+      h('ul', { className: 'draw-list panel__recent' },
+        ...vm.recentDraws.map(d => h('li', { className: 'panel__recent-item' }, h('span', { className: 'panel__recent-num tabular', text: String(d.number) }), h('span', { className: 'panel__recent-name', text: d.skillName || '' }))))) : null;
     return h('section', { className: 'panel__state panel__state--playing', 'aria-label': vm.roundLabel },
-      card, h('p', { className: 'panel__matched tabular', text: vm.matched }), live, recent);
+      h('div', { className: 'panel__current' }, card, h('p', { className: 'panel__matched tabular', text: vm.matched })), recent);
   }
 
   function winner(vm) {
     const labels = vm.labels.length ? vm.labels : [];
     const list = h('ul', { className: `panel__winners panel__winners--${labels.length > 4 ? 'many' : 'few'}`, ref: (el) => { els.winners = el; } }, ...labels.map(l => h('li', { className: 'panel__winner', text: l })));
     return h('section', { className: 'panel__state panel__state--winner', 'aria-label': vm.title, ref: (el) => { els.burst = el; } },
-      h('h1', { className: 'panel__bingo', text: vm.title }),
-      h('p', { className: 'panel__round', text: vm.roundLabel }),
-      list,
-      labels.length > 1 ? h('p', { className: 'panel__muted panel__body', text: label('coWinners', { count: labels.length }) }) : null);
+      h('div', { className: 'panel__celebration' },
+        h('h1', { className: 'panel__bingo-badge' }, h('img', { src: '/public/art/bingo-badge.webp', alt: vm.title, width: 1137, height: 292 })),
+        list,
+        labels.length > 1 ? h('p', { className: 'panel__muted panel__body panel__cowinners', text: label('coWinners', { count: labels.length }) }) : null));
   }
 
   /** Re-renders when the structural view-model changes; returns the state section element. */
@@ -110,8 +101,8 @@ export function createPanel(root) {
       const body = vm.mode === 'Playing' ? playing(vm) : vm.mode === 'Winner' ? winner(vm) : waiting(vm, nowMs);
       const eyebrow = vm.mode === 'Playing' ? vm.roundLabel : vm.mode === 'Winner' ? vm.roundLabel : vm.title;
       mount(root, [header(vm, eyebrow), body]);
-      if (els.skill) fitText(els.skill, { maxPx: 96, minPx: 48, maxLines: 2 });
-      if (els.winners) for (const li of els.winners.children) fitText(li, { maxPx: labels(vm) > 4 ? 48 : 64, minPx: 40, maxLines: 1 });
+      if (els.skill) fitText(els.skill, { maxPx: 64, minPx: 36, maxLines: 2 });
+      if (els.winners) for (const li of els.winners.children) fitText(li, { maxPx: labels(vm) > 4 ? 36 : 48, minPx: 28, maxLines: 1 });
       if (!celebrateDraw && !celebrateWinner) animateOnce(body, 'm-fade', { durationMs: MOTION.durations.base });
     }
     const pill = root.querySelector('.panel__conn');

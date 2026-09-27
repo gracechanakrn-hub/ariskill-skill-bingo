@@ -8,13 +8,13 @@
     "note": "OD-14 assumption: 1920x1080 public display; renderers scale by viewport height"
   },
   "safeZone": {
-    "galaxyFraction": 0.65,
-    "panelFraction": 0.35,
+    "galaxyFraction": 0.7,
+    "panelFraction": 0.3,
     "innerMarginPx": 32,
-    "note": "Right 35 % is the information panel; effects are clipped to the Galaxy viewport",
-    "galaxyWidthPx": 1248,
-    "panelX": 1248,
-    "panelWidthPx": 672,
+    "note": "Right 30 % is the information panel (D-52; 35 % before); effects are clipped to the Galaxy viewport",
+    "galaxyWidthPx": 1344,
+    "panelX": 1344,
+    "panelWidthPx": 576,
     "rule": "No glow, particle, Soul, nebula or ring pixel may be drawn at x >= panelX. Renderers clip the Galaxy viewport to [0, galaxyWidthPx)."
   },
   "camera": {

@@ -1,0 +1,74 @@
+{
+  "generator": "tools/assets/build-galaxy-space.py",
+  "renders": "tools/ai/blender/galaxy_space.py",
+  "files": {
+    "backdrop.jpg": {
+      "bytes": 84503,
+      "sha256": "9e1697e261f708b895458c6fc133024c758541c0964a4cf1a923e9537b66d231",
+      "px": [
+        1373,
+        1188
+      ]
+    },
+    "constellations.webp": {
+      "bytes": 22220,
+      "sha256": "e4bb5896ccb27e01ec87193ff69f64c99fb47964b946bdb5c260c14fe820de04",
+      "px": [
+        1373,
+        1188
+      ]
+    },
+    "falling-star.webp": {
+      "bytes": 2528,
+      "sha256": "eb1e3c7d23d0c22e657c7fb600d041f3719f3c76b83ff0515cf24aec82a6df21",
+      "px": [
+        512,
+        48
+      ]
+    },
+    "meteor-1.webp": {
+      "bytes": 14610,
+      "sha256": "f946e86911fe0e08a328e59df41d6a0204703d9a83076d5dcb74f2397bf95c82",
+      "px": [
+        353,
+        484
+      ]
+    },
+    "meteor-2.webp": {
+      "bytes": 11800,
+      "sha256": "ccfb689548064210d40ae957ce808c6420b3e004267d2ab11eeda9d695f4e92c",
+      "px": [
+        208,
+        468
+      ]
+    },
+    "meteor-3.webp": {
+      "bytes": 15664,
+      "sha256": "8249494eaa774e5b2e08fbcb78740de2c74898635253c1b83adc517fe058a247",
+      "px": [
+        402,
+        462
+      ]
+    },
+    "meteor-4.webp": {
+      "bytes": 13482,
+      "sha256": "51a36fe40f38f4dcce169af27ad99c2313f87f0f57f0db3c46dd2e839c088751",
+      "px": [
+        406,
+        392
+      ]
+    },
+    "meteor-5.webp": {
+      "bytes": 12676,
+      "sha256": "10ab6b8a252646b644b266fe3e378f4d6651e446482add19969cb8d7c5f5b1f8",
+      "px": [
+        314,
+        489
+      ]
+    },
+    "space.json": {
+      "bytes": 5152,
+      "sha256": "057af0c1e215d860e4cbbeebd65bb5cfcb38162eb6fc1e25be1c07a49ec58db2"
+    }
+  }
+}

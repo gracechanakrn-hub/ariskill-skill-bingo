@@ -1,6 +1,7 @@
 # Soul faces v3: face plates, eyes and the antenna charm (stage 13, D-31)
 
-Status: approved look (partner, 2026-09-27, on `reports/qa/screens/decor-v3-*.png`). This page is the contract for the
+Status: approved look (partner, 2026-09-27, on `reports/qa/screens/decor-v3-*.png`), wired into the game on the phone,
+the Galaxy and the 2D fallback (release report v1.5, build `bingo-de93dd1b250e`). This page is the contract for the
 code; `docs/art/soul-decorations.md` (stage 12, D-29) still describes gradients, charms and face kits.
 
 ## What changes
@@ -109,8 +110,10 @@ export const SOUL_FACE = deepFreeze({
 });
 ```
 
-`stub: true` (the checked-in placeholder before the first build) means "not usable": renderers then draw a v3 Soul as
-the plain gradient Soul (v3 body if it loads, else the 2D gradient body) with its charms, and no plate, eyes or topper.
+`stub: true` (the checked-in placeholder before the first build) means "not usable". There is then no v3 body to load,
+so the phone and the Galaxy keep a v3 Soul in 2D, and the 2D renderer draws it exactly as the v2 Soul with the same
+gradient, face kit and charms (baseline outline, button eyes, orb), with no plate, eyes or antenna charm. (A v3 body
+that loads next to unusable face data, which the generator never produces, gets the charms only in 3D.)
 
 ## Rendering: one Soul everywhere
 
@@ -134,7 +137,10 @@ plate, eyes, face kit, charms, topper (the topper charm PNG drawn 2r wide centre
 
 **Alt text v3**: `Arise Soul, <gradient> colour, with a <plate name> face, <eyes name> and <kit>. 10 charms: <n>
 technical, <n> core, <n> soft. A <charm name> charm on its antenna` (kit: nerdy `round glasses`, pirate `an eye patch
-and a bandana`, angel `a glowing halo`).
+and a bandana`, angel `a glowing halo`). When the eyes or the kit already read "x and y", a comma goes before the kit
+(`with a bean face, a blue eye and a cross eye, and an eye patch and a bandana`). A star charm reads its shade first
+(`lemon classic star`), and "a" / "an" follows the sound (`An apple charm on its antenna`, `a USB stick`). The alt text
+describes the config, so it reads the same on every screen, even while the face data is the stub.
 
 ## Budgets
 

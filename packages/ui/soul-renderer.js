@@ -418,7 +418,7 @@ function badgeSvg(medallion = false) {
 /**
  * Render a Soul as a complete <svg> string.
  * @param {object} config SoulConfig v1, v2 or v3 (indices or names) - see packages/game-rules/src/soul.js
- * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face }
+ * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face, dieCut=true }
  *   size          CSS px of the square output (viewBox is always 200); the die-cut and shadow scale with it.
  *   badge         'bingo-star' draws the gold star (upper right; on a medallion for v2+); never part of the config (BR-17).
  *   detail        'full' = gradients, filters (soft drips, highlight blur, drop shadow), ambient glow style, optional
@@ -428,10 +428,12 @@ function badgeSvg(medallion = false) {
  *                 composite soulSpriteLayers() instead). 'dot' never has them.
  *   decor         the decor data (default ./soul-decor-data.js); unusable data (the stub) draws no charms or v2 face kit.
  *   face          the v3 face data (default ./soul-face-data.js); unusable data (the stub) draws v3 Souls as v2 Souls.
+ *   dieCut        false leaves out the white die-cut outline and its sticker shadow (the big screen, D-36); the phone
+ *                 and every other caller keep the default (true), byte for byte.
  *   reducedMotion removes the glow breath <animate>; label overrides the alt text; idPrefix namespaces defs ids.
  */
 export function renderSoulSvg(config, opts = {}) {
-  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE } = opts;
+  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE, dieCut: withDieCut = true } = opts;
   const s = resolveSoul(config);
   const pal = s.pal;
   const decorated = s.version >= 2;               // v2+: gradient body, soft glow for halo, medallion badge
@@ -462,14 +464,15 @@ export function renderSoulSvg(config, opts = {}) {
     (v3 ? '' : `<radialGradient id="${id}-o"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="${pal.highlight}"/><stop offset="1" stop-color="${pal.highlight}" stop-opacity="0"/></radialGradient>`);
   if (full) {
     defs += `<radialGradient id="${id}-g"><stop offset="0" stop-color="${pal.glow}" stop-opacity=".55"/><stop offset=".55" stop-color="${pal.glow}" stop-opacity=".18"/><stop offset="1" stop-color="${pal.glow}" stop-opacity="0"/></radialGradient>` +
-      `<filter id="${id}-d" x="-.3" y="-.2" width="1.6" height="1.45"><feDropShadow dx="0" dy="${n(sh.dy * REF_PX)}" stdDeviation="${n((sh.blur / 2) * REF_PX)}" flood-color="${sh.color}" flood-opacity="${sh.opacity}"/></filter>` +
+      (withDieCut ? `<filter id="${id}-d" x="-.3" y="-.2" width="1.6" height="1.45"><feDropShadow dx="0" dy="${n(sh.dy * REF_PX)}" stdDeviation="${n((sh.blur / 2) * REF_PX)}" flood-color="${sh.color}" flood-opacity="${sh.opacity}"/></filter>` : '') +
       `<filter id="${id}-h" x="-.5" y="-.5" width="2" height="2"><feGaussianBlur stdDeviation="${n(2 * REF_PX)}"/></filter>` +
       `<filter id="${id}-k"><feGaussianBlur stdDeviation=".3"/></filter>`;
   }
   defs += '</defs>';
 
-  // die-cut: the whole figure as a white stroke + shadow (full: soft drop shadow; simple: flat offset copy)
-  const dieCut = full
+  // die-cut: the whole figure as a white stroke + shadow (full: soft drop shadow; simple: flat offset copy); none when
+  // the caller turns it off (the big screen)
+  const dieCut = !withDieCut ? '' : full
     ? `<use href="#${id}-p" fill="${W}" stroke="${W}" stroke-width="${n(DIECUT_FULL)}" stroke-linejoin="round" filter="url(#${id}-d)"/>`
     : `<use href="#${id}-p" fill="${sh.color}" stroke="${sh.color}" stroke-width="${n(DIECUT_SIMPLE)}" stroke-linejoin="round" transform="translate(0 ${n(sh.dy * REF_PX)})" opacity=".45"/>` +
       `<use href="#${id}-p" fill="${W}" stroke="${W}" stroke-width="${n(DIECUT_SIMPLE)}" stroke-linejoin="round"/>`;
