@@ -21,18 +21,19 @@ test('copy system prompt embeds every hard rule, the OD-11 proposal-only stateme
   assert.match(s, /OD-11/);
   assert.match(s, /non-ranking/);
   assert.match(s, /English only/);
-  assert.match(s, /E1-E23/);
+  assert.match(s, /E1-E24/);
   assert.match(s, /### 8\.2 Key copy/);
   assert.match(s, /### 9\.1 Theme/);
   assert.match(s, /\| Arise Soul \|/);
 });
 
-test('catalogue items cover every copy key and all 23 exceptions with trigger/recovery context; batches keep order', () => {
+test('catalogue items cover every copy key and every exception with trigger/recovery context; batches keep order', () => {
   const items = catalogueItems(copy);
-  assert.equal(items.length, Object.keys(copy.key).length + 23);
+  assert.equal(Object.keys(copy.exceptions).length, 24, 'E1-E24 (E24 greeting rejected, D-42)');
+  assert.equal(items.length, Object.keys(copy.key).length + Object.keys(copy.exceptions).length);
   const e5 = items.find((i) => i.key === 'exception.E5');
   assert.equal(e5.current, copy.exceptions.E5.copy);
-  assert.match(e5.context, /Trigger: Fewer than 25 at lock\. Recovery: Mark DEFERRED\./);
+  assert.match(e5.context, /Trigger: Fewer than 16 at lock\. Recovery: Mark DEFERRED\./);
   const batches = chunk(items, 24);
   assert.equal(batches.flat().length, items.length);
   const user = buildBatchUserPrompt(batches[0], 0, batches.length);

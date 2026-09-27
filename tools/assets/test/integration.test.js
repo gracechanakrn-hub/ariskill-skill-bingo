@@ -60,7 +60,7 @@ describe('validator on the current tree', () => {
     assert.equal(b.singleFileBytes.limit, Math.round(1.2 * 1024 * 1024)); assert.ok(b.singleFileBytes.used <= b.singleFileBytes.limit);
     assert.equal(b.soulSvgBytes.limit, 6 * 1024); assert.ok(b.soulSvgBytes.used <= b.soulSvgBytes.limit);
     assert.equal(b.sceneDataBytes.limit, 120 * 1024); assert.ok(b.sceneDataBytes.used <= b.sceneDataBytes.limit);
-    for (const app of APPS) { assert.equal(b.apps[app].limit, 600 * 1024); assert.ok(b.apps[app].used <= b.apps[app].limit, `${app} bundle ${b.apps[app].used}`); }
+    for (const app of APPS) { assert.equal(b.apps[app].limit, app === 'participant' ? 700 * 1024 : 600 * 1024, 'phone 700 KB (D-49), others 600 KB'); assert.ok(b.apps[app].used <= b.apps[app].limit, `${app} bundle ${b.apps[app].used}`); }
     assert.equal(b.glbBytes.limit, 400 * 1024); assert.ok(b.glbBytes.used <= b.glbBytes.limit);
     assert.deepEqual(Object.keys(DEFAULT_BUDGETS).sort(), ['appBytesEach', 'assetsBytes', 'audioBytes', 'audioOneshotBytes', 'glbBytes', 'sceneDataBytes', 'singleFileBytes', 'soulSvgBytes']);
   });

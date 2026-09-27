@@ -100,7 +100,7 @@ def build_suit():
     bpy.context.view_layer.objects.active = ob; ob.select_set(True)
     bpy.ops.object.convert(target='MESH')
     ob = bpy.context.view_layer.objects.active
-    dec = ob.modifiers.new('dec', 'DECIMATE'); dec.ratio = 0.3
+    dec = ob.modifiers.new('dec', 'DECIMATE'); dec.ratio = 0.07   # web budget (D-49): ~5k faces, still smooth at phone size
     bpy.ops.object.modifier_apply(modifier='dec')
     bpy.ops.object.shade_smooth()
     colour_suit(ob)
@@ -270,8 +270,8 @@ def export(sc):
     for o in bpy.context.scene.objects: o.select_set(o.type in ('MESH', 'EMPTY'))
     path = os.path.join(OUT, 'soul-hi.glb')
     bpy.ops.export_scene.gltf(filepath=path, export_format='GLB', use_selection=True, export_animations=True,
-                              export_animation_mode='SCENE', export_frame_range=True, export_force_sampling=True,
-                              export_apply=True, export_yup=True, export_image_format='AUTO')
+                              export_animation_mode='SCENE', export_frame_range=True, export_force_sampling=False,
+                              export_apply=True, export_yup=True, export_image_format='WEBP', export_image_quality=82)
     print('wrote', path, os.path.getsize(path), 'bytes')
 
 

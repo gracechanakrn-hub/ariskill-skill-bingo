@@ -25,6 +25,9 @@ export const APP_DIRS = Object.freeze({ participant: 'apps/employee-mobile', adm
 export const ORPHAN_EXEMPT = /(^|\/)(README(\.md)?|sheet\.html|\.gitkeep)$/;
 export const AUDIO_REQUIRED_FIELDS = Object.freeze(['id', 'kind', 'runtime_file', 'checksum', 'bytes', 'duration_s', 'license', 'generator_script', 'source_file', 'source_format', 'runtime_format', 'version', 'sample_rate', 'channels', 'bit_depth', 'loop', 'preload', 'audiences', 'caption', 'approved_by']);
 export const AUDIO_FORMAT = Object.freeze({ sampleRate: 22050, channels: 1, bitsPerSample: 16, pcmFormat: 1 });
+/** Per-app bundle budgets that differ from appBytesEach (D-49: the phone carries the 3D landing mascot and the sky layers). */
+export const APP_BUDGET_OVERRIDES = Object.freeze({ participant: 700 * 1024 });
+
 export const DEFAULT_BUDGETS = Object.freeze({
   assetsBytes: 7 * 1024 * 1024,          // everything under assets/ except assets/manifest/ (6 -> 7 MiB for the v3 faces, D-31)
   audioBytes: 1600 * 1024,               // 1.6 MB as the sound spec counts it (audio.yaml budgets.max_total_bytes = 1638400)
@@ -434,11 +437,12 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
   if (sceneBytes > B.sceneDataBytes) add('major', 'budget.sceneData', 'assets/scene/', `${sceneBytes} bytes > ${B.sceneDataBytes}`);
   summary.budgets.apps = {};
   for (const [app, dir] of Object.entries(APP_DIRS)) {
+    const limit = APP_BUDGET_OVERRIDES[app] ?? B.appBytesEach;
     const files = walkFiles(abs(dir));
     const bytes = files.reduce((a, f) => a + f.bytes, 0);
-    summary.budgets.apps[app] = { path: dir, used: bytes, limit: B.appBytesEach, files: files.length };
+    summary.budgets.apps[app] = { path: dir, used: bytes, limit, files: files.length };
     if (!files.length) add('info', 'app.empty', dir, `no files yet for ${app}; bundle budget not evaluated`);
-    else if (bytes > B.appBytesEach) add('major', 'budget.app', dir, `${bytes} bytes > ${B.appBytesEach}`);
+    else if (bytes > limit) add('major', 'budget.app', dir, `${bytes} bytes > ${limit}`);
   }
 
   // ---------------------------------------------------------------- generated asset map in sync

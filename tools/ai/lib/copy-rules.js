@@ -12,7 +12,7 @@ export const HARD_RULES = [
   'Souls are non-ranking: never use level, tier, rank, score, points, XP, leaderboard, unlock-by-merit, "stronger", "better than" or any language that implies one participant, Platform or Role is worth more than another (requirement BR-17, section 9.1).',
   'No analyst or export language: no "export", "download report", "CSV", "dashboard", "analytics", "assessment", "evaluate your skills", "gap analysis". This is discovery, not assessment.',
   'All interface names, labels and copy are provisional working names pending content/design-system review (requirement 8.1). Do not invent new features, screens, sections or product scope.',
-  'Exception copy E1-E23 must keep its exact meaning, trigger and recovery: alternatives may reword, never change what the user is told to do or what happened.',
+  'Exception copy E1-E24 must keep its exact meaning, trigger and recovery: alternatives may reword, never change what the user is told to do or what happened.',
   'English only. Thai or bilingual text is not required and must not be produced.',
   'Keep every {placeholder} exactly as in the current text, in the same order, with the same meaning.',
   'Copy is calm, warm, plain, inclusive and short: no exclamation-mark stacking, no shouting, no jokes at the user, no gambling language ("jackpot", "bet", "odds"), no competition-first framing.',

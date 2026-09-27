@@ -83,7 +83,7 @@ if (audioBytes > BUDGETS.audioBytes) problems.push({ severity: 'major', check: '
 for (const app of ['employee-mobile', 'admin-portal', 'public-galaxy', 'stage-dashboard']) {
   const bytes = files.filter(f => f.path.startsWith(`apps/${app}/`)).reduce((a, f) => a + f.bytes, 0);
   if (bytes === 0) problems.push({ severity: 'critical', check: 'app.missing', path: `apps/${app}` });
-  if (bytes > BUDGETS.appBytesEach) problems.push({ severity: 'major', check: 'budget.app', path: `apps/${app}`, bytes });
+  if (bytes > (app === 'employee-mobile' ? 700 * 1024 : BUDGETS.appBytesEach)) problems.push({ severity: 'major', check: 'budget.app', path: `apps/${app}`, bytes }); // phone 700 KB (D-49)
 }
 // Dependency check: zero third-party runtime dependencies.
 const rootPkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
