@@ -16,7 +16,7 @@ src/copy.js                t()/exception() re-exports + fallbacks for control la
 src/galaxy.js              renderer selection (three -> webgl2 -> canvas2d -> static), lazy Three import, loop, perf auto-downgrade, resize
 src/entrance-queue.js      Float entrance queue: max 6 concurrent, 12 queued, overflow settles instantly (tested)
 src/renderer/scene.js      renderer-agnostic scene model: layout, LOD, orbit placement + collision, drift, clusters
-src/renderer/atlas.js      renderSoulSvg -> Image -> offscreen canvas atlas at the v2 'simple' sticker (48..192 px cells = 1.5 x the
+src/renderer/atlas.js      renderSoulSvg -> Image -> offscreen canvas atlas at the 'simple' sticker (48..192 px cells = 1.5 x the
                            device size, scene.js#atlasCellFor; keyed by soulId+detail+badge+cell; 'full' is capped to 'simple')
 src/renderer/three.js      PRIMARY: Three.js scene - nebula + aurora shader plane (sum clamped), 3 star Points layers, dashed ring
                            LineLoops, fireflies, additive palette halos behind the stickers, entrance trail / winner burst particles,
@@ -106,10 +106,20 @@ alias of `three`), `?quality=high|medium|low` sets the starting performance leve
 
 ## Sticker language (stage 10 / D-25, docs/art/sticker-art-direction.md)
 
-- **Souls = die-cut stickers in the sky.** The atlas is rebuilt from soul-renderer 2.0.0 at detail `simple` (the `full`
-  level is capped: its SVG filters blur at cell size and rasterise slowly) in cells of 1.5 x the on-screen device size
+- **Decorated Souls (stage 12, D-29, `docs/art/soul-decorations.md`).** A v2 Soul is the same decorated 3D Soul the
+  phone showed, built by the shared `packages/ui/soul3d` rig: the Float entrance flies the live 3D figure, turning from
+  side-on to the rest pose along its arc, and settled Souls are impostors of that figure baked into their atlas cell
+  (within the frame budget, entrances first, page uploads capped at 5 per second). GLTFLoader and the models load when a
+  round ends or when the first v2 Soul appears; screens with only v1 Souls never load them (D-28). The canvas2d, static
+  and webgl2 tiers draw the 2D composition: the SVG without images, then the face and charm sprites drawn onto the cell.
+  The static tier now repaints after a resize (it went blank before, a pre-stage-12 bug).
+- **Souls = die-cut stickers in the sky.** The atlas is rebuilt from soul-renderer 3.0.0 at detail `simple`: the Arise
+  Soul baseline character of D-27, drawn from its 3D model. The taller figure with the antenna orb spans y 19.8 .. 180.1
+  of the 200 x 200 cell viewBox before the die-cut, so nothing is clipped (checked at 48-128 px cells,
+  `reports/qa/screens/public-baseline-galaxy.png`). The `full` level is capped (its SVG filters blur at cell size and
+  rasterise slowly). Cells are 1.5 x the on-screen device size
   (`ATLAS_CELLS` 48/64/96/128/192). Measured at 1920x1080, dpr 1: 12-16 Souls draw at 72 px -> 128 px cells (die-cut
-  1.6 px, large speckles 3.2 px in the texture); 22 -> 61 px -> 96; 120 -> 46 px -> 96; 300 -> 34 px -> 64; 450 -> 26 px
+  1.6 px, drips 1.3-5.8 px wide in the texture); 22 -> 61 px -> 96; 120 -> 46 px -> 96; 300 -> 34 px -> 64; 450 -> 26 px
   -> 48 px cells = 11 shelf rows of one 2048^2 page (16 MB, 4.1 MB used; the dpr 2 worst case, 600 Souls at 96 px cells,
   is 2 pages of the 3-page budget). The Three tier draws the stickers in a second `RenderPass` after `UnrealBloomPass`
   (`overlayPass.clear = false` composes them into the bloomed buffer), so they are flat, crisp print on a glowing sky;

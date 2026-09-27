@@ -26,7 +26,7 @@ import { t, exception } from '/packages/contracts/index.js';
 Everything runs in modern browsers as native ESM. The modules also import in Node (used by the tests);
 `dom.js` and `telemetry.js` guard every `window` / `document` access.
 
-Sibling modules owned by other agents (`soul-renderer.js`, `doodads.js`, `audio.js`, `motion.js`, `motion.css`) live in
+Sibling modules owned by other agents (`soul-renderer.js` with its generated `soul-baseline-shape.js`, `doodads.js`, `audio.js`, `motion.js`, `motion.css`) live in
 the same folder and are exported by the same `"./*"` rule. `soul-renderer.js` and `doodads.js` are documented below.
 
 ## Modules
@@ -199,33 +199,74 @@ Recommended document skeleton:
 <div class="toast-region" aria-live="polite"></div>
 ```
 
-### soul-renderer.js (v2.0.0, sticker language)
+### soul-renderer.js (v4.0.0, the Arise Soul baseline character, decorated since D-29)
 
 ```js
-import { renderSoulSvg, soulAltText, resolveSoul, TRAITS, PALETTES, BODY_PATHS, STICKER, BADGE_LABEL, BADGE_CENTER, soulOrbitSlot } from '/packages/ui/soul-renderer.js';
+import { renderSoulSvg, soulAltText, resolveSoul, TRAITS, PALETTES, STICKER, EYE_WHITE, BADGE_LABEL, BADGE_CENTER, soulOrbitSlot } from '/packages/ui/soul-renderer.js';
 const svg = renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: 'full', reducedMotion: prefersReducedMotion(), label: alt, idPrefix: `soul-${soul.soulId}` });
 ```
 
-Deterministic: same config -> byte-identical SVG (viewBox `0 0 200 200`, no DOM, no imports). The look follows
-`docs/art/sticker-art-direction.md` "Soul renderer spec": radial clay gradient body (palette light top-left -> base ->
-`--sticker-violet-deep` at the bottom edge), 2 px peach rim on the lower right, blurred 22 % white top highlight,
-9-14 seeded speckles (mint / cyan / lilac tint, two sizes) clipped to the body, glowing antenna orb (white core ->
-palette light -> transparent, 2 px outline), rose heart belly, and the whole figure duplicated below as a white die-cut
-stroke (6 px at 240 px, round joins) with `--sticker-shadow`.
+Deterministic: same config -> byte-identical SVG (viewBox `0 0 200 200`, no DOM). Since D-27 every Soul is the one
+baseline character of `docs/art/soul-baseline.md`, drawn from its 3D model: the only import is
+`soul-baseline-shape.js`, a generated, checked-in data module (silhouette, drips, eyes, orb, chin crease and arm slits
+as a front orthographic projection of `tools/ai/blender/soul_baseline.py`, written by `tools/assets/build-soul-shape.py`;
+see "Flat 2D Soul" in that doc). The look keeps the `docs/art/sticker-art-direction.md` sticker language: radial clay
+gradient body (palette light top-left -> base -> `--sticker-violet-deep` at the bottom edge) with a thin palette outline,
+2 px peach rim on the lower right, goo drips in the palette light (soft edge), near-white `EYE_WHITE` button eyes ringed
+by a groove in the palette outline colour, the antenna neck with a lit orb (glow: white core -> palette light ->
+transparent), a blurred key-light highlight, and the whole figure duplicated below as a white die-cut stroke (6 px at
+240 px, round joins) with `--sticker-shadow`.
 
 | Option | Default | Meaning |
 |---|---|---|
 | `size` | `160` | CSS px of the square output; die-cut, rim and shadow scale with it |
-| `badge` | `null` | `'bingo-star'` draws the gold five-point star (white outline, upper right at `BADGE_CENTER`); never part of the config (BR-17) |
-| `detail` | `'full'` | `'full'` gradients + filters (highlight blur, speckle blur, drop shadow), constellation, glow breath; `'simple'` same look without any filter (3 px die-cut, flat offset shadow, unblurred speckles) for thumbnails and the Galaxy atlas; `'dot'` 24 px glowing disc, no badge |
+| `badge` | `null` | `'bingo-star'` draws the gold five-point star (white outline, upper right at `BADGE_CENTER`, beside the antenna orb); never part of the config (BR-17) |
+| `detail` | `'full'` | `'full'` gradients + filters (soft drips and fold lines, highlight blur, drop shadow), glow style, glow breath; `'simple'` same character without any filter (3 px die-cut, flat offset shadow, crisp drips) for thumbnails and the Galaxy atlas; `'dot'` 24 px glowing disc, no badge |
 | `reducedMotion` | `false` | removes the only animation (4.8 s glow breath) |
 | `label` | `null` | overrides the alt text (must follow the same no-Platform/Role/rank rule) |
 | `idPrefix` | `soul-<seed>` | namespaces gradient/clip/filter ids so many Souls can be inlined |
 
-Invariants (tested in `test/soul-renderer.test.js` and `tools/assets/test/souls.test.js`): every Soul has the same
-silhouette scale, glow radius, line weight, die-cut width and highlight; speckle count/size/colour derive from the seed
-only; forbidden inputs (`platformId`, `roleId`, `rank`, `isWinner`, ...) are ignored; output stays under 6 KB; no
-`<text>`, no raster. `STICKER` mirrors the design-tokens 1.2.0 `--sticker-*` values.
+Per player only the palette, the glow style (`soft` / `ring` / `halo`) and the badge flag change the drawing. The
+seeded body / eyes / antenna / mouth traits and the constellation stay in the config (no contract change) and in
+`resolveSoul`, but are not drawn on the baseline yet; `BODY_PATHS` (the six v2 silhouettes) stays exported for
+backward compatibility only. Invariants (tested in `test/soul-renderer.test.js` and `tools/assets/test/souls.test.js`):
+same figure, glow radius, line weights, die-cut width and highlight for every Soul; forbidden inputs (`platformId`,
+`roleId`, `rank`, `isWinner`, ...) are ignored; every SVG stays under 6 KB (worst case about 5.6 KB with a 19-character
+id prefix, badge and glow breath); no `<text>`, no raster, no inline style. `STICKER` mirrors the design-tokens 1.2.0
+`--sticker-*` values. The shape module records the sha256 of the model script and drip list it was projected from, and
+the tests fail when the 3D model changes without a regenerated shape.
+
+**Decorated Souls (v4.0.0, D-29, `docs/art/soul-decorations.md`).** A v2 config (`isDecoratedConfig`) is drawn as the
+same baseline with its catalog gradient instead of a palette: a vertical `linearGradient` over the model's height span
+(`GRADIENT_SPAN`, `gradientY(h)` maps a model height to viewBox y) under a light/shade overlay, drips, orb and groove in
+the gradient's highlight / outline, then the face sprite and the charm sprites as `<image>` layers at the slots of
+`soul-decor-data.js` (`front2d`). `{ images: false }` omits the external images (SVG rasterised through a `data:` URL
+cannot load them); `soulSpriteLayers(config)` returns the same layers in paint order for canvas compositing.
+`decorUsable()` is false while `soul-decor-data.js` is the hand-written stub, so stub geometry never ships. The Bingo
+Star badge on a decorated Soul sits on a round medallion (`BADGE_MEDALLION`) so it cannot be mistaken for a core star
+charm. Alt text: "Arise Soul, Aurora colour, with round glasses. 10 charms: 4 technical, 4 core, 2 soft" (`FACE_ALT`,
+kinds always in `ALT_KIND_ORDER`, never sorted by count). v1 configs render byte-identically to 3.0.0. A v2 SVG with
+eleven image layers stays under 8 KB.
+
+### soul3d/ (shared 3D Soul, phone and public Galaxy)
+
+```js
+import { loadSoulModels, loadSoulDecor, buildSoulRig, createSoulCardStage, LOOK } from '/packages/ui/soul3d/index.js';
+```
+
+One code path draws the 3D Soul on the phone (reveal, Float) and on the public Galaxy (Float entrance, settled
+impostors), so both show the same decorated Soul. Three.js is always passed in.
+
+| Module | Holds |
+|---|---|
+| `tint.js` | pure colour maths: `tintGradientColors(mask, heights, gradient)` (sRGB mix of the gradient over height, then linear, then the D-27 mask mixes) and the v1 palette tint |
+| `placement.js` | pure: `charmPlacement(slot, thickness)` -> position, basis, scale for a charm at a slot |
+| `model.js` | baseline GLB load and cache (`loadSoulModel(s)`), with per-vertex heights |
+| `decor.js` | `loadSoulDecor(mods, config)` never rejects: each charm and the face kit load (or are skipped) on their own; a failed URL waits 60 s before a retry |
+| `figure.js`, `rig.js`, `badge.js` | `buildSoulFigure` / `buildSoulRig`: body, die-cut hull, orb glow, charms at their slots, face kit at identity, the medallion badge, the phone's 3/4 rest pose |
+| `studio.js`, `card.js` | `LOOK` (AgX, exposure, lights, studio reflections) and a square card stage the Galaxy uses to bake impostors |
+
+The phone's `apps/employee-mobile/src/scene/soul-model.js` and `soul-tint.js` are thin re-exports of these modules.
 
 ### doodads.js
 

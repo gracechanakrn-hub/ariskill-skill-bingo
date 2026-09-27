@@ -17,10 +17,10 @@ const ASSETS_DATA = {
   "audioManifestId": "ariskill-skill-bingo/assets/manifest/audio",
   "license": "internal-original",
   "sha256OfManifests": {
-    "assets/manifest/assets.yaml": "48a75816777c85b27f1e793667efec597b2207b4cd42385a61378fec0b500c43",
+    "assets/manifest/assets.yaml": "ee8dbfd4e0aaecf69fff5b76e1102c9e89562992a1126cf0b11f537513b5099d",
     "assets/manifest/audio.yaml": "029d35157a1aa2fe7f7fdf6ac4ce8f29825fd80d935786e7dcf961c98f7c1aa1",
     "assets/manifest/audio.json": "d5a0b96fe5b41e503d63dc00bbf0bdf977e0dbd950eaae430a4bce4f2e57b732",
-    "combined": "19f16976aa7a788cafe894179458583e7b5e0db245eed271eb5ee47e5484705d"
+    "combined": "d48e0a7a49cce41b2e15e7f28e65e134e0886284e00c3d4d15a52102b37d16dd"
   },
   "baseUrl": "/assets",
   "manifests": {
@@ -210,7 +210,7 @@ const ASSETS_DATA = {
   },
   "souls": {
     "cohort": "/assets/souls/cohort.json",
-    "cohortSha256": "c512939c7b76e0decba26e63447df17c57c9fbd43b560060029c23215c675df5",
+    "cohortSha256": "0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61",
     "cohortDir": "/assets/souls/cohort/",
     "thumbnailDir": "/assets/souls/thumbnails/",
     "fallbackDir": "/assets/souls/fallback/",
@@ -247,7 +247,24 @@ const ASSETS_DATA = {
       "15b36949ab1524",
       "0bc49cd4fd7217"
     ],
-    "maxSpriteBytes": 5577
+    "maxSpriteBytes": 5496,
+    "baseline": {
+      "format": "glb",
+      "hero": "/assets/souls/baseline/soul-baseline-hero.glb",
+      "lite": "/assets/souls/baseline/soul-baseline-lite.glb",
+      "sha256": {
+        "hero": "ef698a388bffb9c0b9a19f07c05655a8b6ead0b8cd479eaaad0423fe212df22a",
+        "lite": "d2607c3a49f678ae873fc0d86782956eef5dc05610557ff9a4fec2dfea6e5161"
+      },
+      "bytes": {
+        "hero": 338168,
+        "lite": 86152
+      },
+      "triangles": {
+        "hero": 24000,
+        "lite": 6000
+      }
+    }
   },
   "audio": {
     "ambient_galaxy": {
@@ -613,14 +630,39 @@ const ASSETS_DATA = {
       "bytes": 4873,
       "lods": []
     },
+    "soul_baseline_hero": {
+      "kind": "model",
+      "url": "/assets/souls/baseline/soul-baseline-hero.glb",
+      "format": "glb",
+      "fallbackUrl": "/assets/souls/baseline/soul-baseline-lite.glb",
+      "fallbackFormat": "glb",
+      "sha256": "ef698a388bffb9c0b9a19f07c05655a8b6ead0b8cd479eaaad0423fe212df22a",
+      "bytes": 338168,
+      "lods": [
+        "/assets/souls/baseline/soul-baseline-hero.glb",
+        "/assets/souls/baseline/soul-baseline-lite.glb"
+      ]
+    },
+    "soul_baseline_lite": {
+      "kind": "model",
+      "url": "/assets/souls/baseline/soul-baseline-lite.glb",
+      "format": "glb",
+      "fallbackUrl": null,
+      "fallbackFormat": null,
+      "sha256": "d2607c3a49f678ae873fc0d86782956eef5dc05610557ff9a4fec2dfea6e5161",
+      "bytes": 86152,
+      "lods": [
+        "/assets/souls/baseline/soul-baseline-lite.glb"
+      ]
+    },
     "soul_cohort_01_140e6ebb0fff0f": {
       "kind": "sprite",
       "url": "/assets/souls/cohort/140e6ebb0fff0f.svg",
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/140e6ebb0fff0f-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "724b1fe46b0ac50397b4e9f80018820a14c4754862189f57a0c27ead8c88e6d4",
-      "bytes": 5014,
+      "sha256": "36559eb5f1ef8590c432a29d5be0027ca7efeb6c068beba342d4c4330ef9ce4a",
+      "bytes": 4994,
       "lods": [
         "/assets/souls/cohort/140e6ebb0fff0f.svg",
         "/assets/souls/fallback/140e6ebb0fff0f-simple.svg",
@@ -634,8 +676,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0e7c71a4f4779e-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "16ff65528a5d45f4f102a0e3d9d443d2b233444446e65bd541f28f6e2f5d6adc",
-      "bytes": 4886,
+      "sha256": "6271fd53b5d22dca8701da9c8a7e929a340c4c8009df040ee9e54aaa3591878b",
+      "bytes": 4875,
       "lods": [
         "/assets/souls/cohort/0e7c71a4f4779e.svg",
         "/assets/souls/fallback/0e7c71a4f4779e-simple.svg",
@@ -649,8 +691,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/185edf81266a86-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "bad92ea203ff29011965ab9fcfcb32c3c75f4a93a01b582f54f4f119f9775122",
-      "bytes": 5577,
+      "sha256": "82c80f62bad8b1a0b641b87ea7f886dabb958bedd55017aa97153123eec0c35d",
+      "bytes": 5390,
       "lods": [
         "/assets/souls/cohort/185edf81266a86.svg",
         "/assets/souls/fallback/185edf81266a86-simple.svg",
@@ -664,8 +706,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0c8fda8ffef1d5-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "bd5f94209888e7b1a2e93c3c427f66acad17bcbb7123924be2e8da41fde39932",
-      "bytes": 4564,
+      "sha256": "b3c85355ec3d17b66f435b5f8e4d0d0a5514b7adcdf64d1bef68dc2e41a84b86",
+      "bytes": 4993,
       "lods": [
         "/assets/souls/cohort/0c8fda8ffef1d5.svg",
         "/assets/souls/fallback/0c8fda8ffef1d5-simple.svg",
@@ -679,8 +721,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0e39e2f5047a44-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "ea3c3c31d77634077a8ae9666ff3f84bd049f59449382b45543a6641124f7b70",
-      "bytes": 4597,
+      "sha256": "9074d5d6353c534180136cdf731e2c6f6401dfb7e7a3e01ae281ed7d23662594",
+      "bytes": 4980,
       "lods": [
         "/assets/souls/cohort/0e39e2f5047a44.svg",
         "/assets/souls/fallback/0e39e2f5047a44-simple.svg",
@@ -694,8 +736,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/1a094e030d5e89-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "56f787d3b55cd83b0ff90013ae96852de291f29ea868737978de89f04c51631a",
-      "bytes": 4404,
+      "sha256": "a92c1a4d44a5f908dec6f1694ac91c075207f9defdc2c41770d944fbe04fa5aa",
+      "bytes": 4977,
       "lods": [
         "/assets/souls/cohort/1a094e030d5e89.svg",
         "/assets/souls/fallback/1a094e030d5e89-simple.svg",
@@ -709,8 +751,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/045e48e3566287-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "aa3ac117fc87ec4b6abeef9d04a30bb03abc84c3a7300073bf62a8fd7e609f85",
-      "bytes": 5096,
+      "sha256": "6315477100d2a9e42b78d5c6b1a46a37f5a41fd591ad1a167e9500962b3c6cc0",
+      "bytes": 4979,
       "lods": [
         "/assets/souls/cohort/045e48e3566287.svg",
         "/assets/souls/fallback/045e48e3566287-simple.svg",
@@ -724,8 +766,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/1ef9240343b1a0-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "c23cca4ee4f990702a03f12678ac51361d74cd59d8d95697d6097168dfa7a103",
-      "bytes": 5081,
+      "sha256": "1ec7e8995752e9300e7b768cd297670f79809e65dbfa5619bcbb4e20b46c9d8f",
+      "bytes": 4875,
       "lods": [
         "/assets/souls/cohort/1ef9240343b1a0.svg",
         "/assets/souls/fallback/1ef9240343b1a0-simple.svg",
@@ -739,8 +781,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0f1be17ca9df8f-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "0d2e1d51566fab983a3785c42716fb99bb0b6a1ddd8a4f426ec4ccc6c2268ac8",
-      "bytes": 4838,
+      "sha256": "de863e5ec0b34169385d7411207c9ed4e33f9a64fb380171a4b60b7b1bed27f6",
+      "bytes": 4979,
       "lods": [
         "/assets/souls/cohort/0f1be17ca9df8f.svg",
         "/assets/souls/fallback/0f1be17ca9df8f-simple.svg",
@@ -754,8 +796,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0539dc0c10513f-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "7decaceee6f7a3984759870a4b9871f3c40dd1664bbe9e1ed79c5bce0ac22a95",
-      "bytes": 5362,
+      "sha256": "e9d1b0d1a18867e50ff338911d250ed6d686abc81f3085148bc0fd756539b0d3",
+      "bytes": 4978,
       "lods": [
         "/assets/souls/cohort/0539dc0c10513f.svg",
         "/assets/souls/fallback/0539dc0c10513f-simple.svg",
@@ -769,8 +811,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/1d2e20987152b0-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "d3a4070e353cefd1bff3a7b09849f946f4f0d2574838b451317130ebfe0942a9",
-      "bytes": 5168,
+      "sha256": "4812ea2cadafb535e415de3ce1f3b60022f9c7aef8170cb5654b0b3d568fcde4",
+      "bytes": 5496,
       "lods": [
         "/assets/souls/cohort/1d2e20987152b0.svg",
         "/assets/souls/fallback/1d2e20987152b0-simple.svg",
@@ -784,8 +826,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/064b5af3ba69c3-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "123fe6aed207840fc848affd2215a045c36831260de81e540374e2f00f7dd421",
-      "bytes": 5103,
+      "sha256": "965b290af1d99626b3766c6520e0dff26c6daa3eacea36cdf7cb4896cf0dbf24",
+      "bytes": 4875,
       "lods": [
         "/assets/souls/cohort/064b5af3ba69c3.svg",
         "/assets/souls/fallback/064b5af3ba69c3-simple.svg",
@@ -799,8 +841,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/1cdc2b005f78f8-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "c82806f2d85255c38fb4ee45374d348dda6636c3e06c574f7aa527509db208e8",
-      "bytes": 4878,
+      "sha256": "0a8d4ff8cdab83807bc3202f9cf2410c4ec5daa63c054b6c568f58d3e7529927",
+      "bytes": 4978,
       "lods": [
         "/assets/souls/cohort/1cdc2b005f78f8.svg",
         "/assets/souls/fallback/1cdc2b005f78f8-simple.svg",
@@ -814,8 +856,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/08ff91eabc6d43-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "97055862342e670831702554cf588282c4a09d6e87d3b69e3d95f083ec9a844c",
-      "bytes": 4770,
+      "sha256": "59337f207c811c4ccececc34989a72f55d53b08b5d8fd8ca6b1f1cc7ef848acd",
+      "bytes": 4874,
       "lods": [
         "/assets/souls/cohort/08ff91eabc6d43.svg",
         "/assets/souls/fallback/08ff91eabc6d43-simple.svg",
@@ -829,8 +871,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/01a5bc0af65924-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "fd2fbbe3ca4c185f6d49117f416d2da4f1f211e837eb4e231e15aa35080d8303",
-      "bytes": 4294,
+      "sha256": "cc0a3e9ec7d784b9a79f2e12b2da1cf2bda2db37cb7a2a47d92c09de57f95198",
+      "bytes": 4995,
       "lods": [
         "/assets/souls/cohort/01a5bc0af65924.svg",
         "/assets/souls/fallback/01a5bc0af65924-simple.svg",
@@ -844,8 +886,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/1ec3a1b6539cad-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "2dd1e2e70286d457df7c0e615690e81f90dffbc2358a33881c0d793950afffa7",
-      "bytes": 5029,
+      "sha256": "f73227821ac9bee731cff6692f3b7c99a3e667d73738478c4afb7594da6194e9",
+      "bytes": 4977,
       "lods": [
         "/assets/souls/cohort/1ec3a1b6539cad.svg",
         "/assets/souls/fallback/1ec3a1b6539cad-simple.svg",
@@ -859,8 +901,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0cf1c4f541ecc5-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "264b8e91d8e707f2bee2ed4b2eb6d26e877586d8633f83e102e8272593192b3c",
-      "bytes": 4533,
+      "sha256": "882f7cd20b941f870c8d0bac6b957017799d25dff975649accbcf29a85d660a8",
+      "bytes": 4993,
       "lods": [
         "/assets/souls/cohort/0cf1c4f541ecc5.svg",
         "/assets/souls/fallback/0cf1c4f541ecc5-simple.svg",
@@ -874,8 +916,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/10e619a585d80a-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "a3480b3d66a041eca4546b4370f83d8a694582a12c104fdd8f0d063a4633bfee",
-      "bytes": 5387,
+      "sha256": "9db5f12d9219c5d4ad4adb4fc64b90408757e2532fa8c7fdf67736b081e08e86",
+      "bytes": 4992,
       "lods": [
         "/assets/souls/cohort/10e619a585d80a.svg",
         "/assets/souls/fallback/10e619a585d80a-simple.svg",
@@ -889,8 +931,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/12ce33f272ee40-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "6c6f770e8b913940e1780e62b369f58292dd7925d668f472a75e97b1ec26fa83",
-      "bytes": 5025,
+      "sha256": "86a9d2ebb27dd6493ae51f09926e322d0e6edb508b98d347aea07d52681b2493",
+      "bytes": 5388,
       "lods": [
         "/assets/souls/cohort/12ce33f272ee40.svg",
         "/assets/souls/fallback/12ce33f272ee40-simple.svg",
@@ -904,8 +946,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0406b542e700a1-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "8c19cad53d5095760c46cbd6ed48073627a35b868df18461a7083d1983913b12",
-      "bytes": 4819,
+      "sha256": "98a602abcd557cc55ebdc913d0a0da167d9cd6c4b89d62e7970735f7075e0700",
+      "bytes": 4978,
       "lods": [
         "/assets/souls/cohort/0406b542e700a1.svg",
         "/assets/souls/fallback/0406b542e700a1-simple.svg",
@@ -919,8 +961,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/19c576aacf1ebd-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "3652ed2bc91915f1198b59290275718ad1c05299d57abd73242bbd25d7be63c6",
-      "bytes": 4674,
+      "sha256": "19247667bc384ce4ba60391cf956285d3102ee719e1a2d35fd45a05255baf127",
+      "bytes": 4873,
       "lods": [
         "/assets/souls/cohort/19c576aacf1ebd.svg",
         "/assets/souls/fallback/19c576aacf1ebd-simple.svg",
@@ -934,8 +976,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/06f6f233f18448-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "dd4e80656e10f0fed1ed20b2c321ff10d2796d3156508091aec610d771f2a5c4",
-      "bytes": 4911,
+      "sha256": "e640405d0ae40ea6df0e031e6881e4cfe9d19e2c53ef9d386f67a0ba4e0bb5d0",
+      "bytes": 4979,
       "lods": [
         "/assets/souls/cohort/06f6f233f18448.svg",
         "/assets/souls/fallback/06f6f233f18448-simple.svg",
@@ -949,8 +991,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/15b36949ab1524-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "e9d0898ace7188d41ff955b99f27767c69c0958f4ac243ff575d22d13efd6d29",
-      "bytes": 4468,
+      "sha256": "5c2d647b9f89f6545cb9e3c8117621a2a710e9ed10509dcc114736c76037416f",
+      "bytes": 4995,
       "lods": [
         "/assets/souls/cohort/15b36949ab1524.svg",
         "/assets/souls/fallback/15b36949ab1524-simple.svg",
@@ -964,8 +1006,8 @@ const ASSETS_DATA = {
       "format": "svg",
       "fallbackUrl": "/assets/souls/fallback/0bc49cd4fd7217-simple.svg",
       "fallbackFormat": "svg",
-      "sha256": "dcd2c82399e68f6508941bdbc37b0b74bb094988552a1b165d091d1d0dd76517",
-      "bytes": 4485,
+      "sha256": "9959237297210574d4609d44e43e2a78db524c2ed7221491c6b398ca58d0cc98",
+      "bytes": 4875,
       "lods": [
         "/assets/souls/cohort/0bc49cd4fd7217.svg",
         "/assets/souls/fallback/0bc49cd4fd7217-simple.svg",
@@ -979,8 +1021,8 @@ const ASSETS_DATA = {
       "format": "json",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "c512939c7b76e0decba26e63447df17c57c9fbd43b560060029c23215c675df5",
-      "bytes": 17999,
+      "sha256": "0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61",
+      "bytes": 18842,
       "lods": []
     },
     "soul_cohort_sheet": {
@@ -989,8 +1031,8 @@ const ASSETS_DATA = {
       "format": "html",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "e2f6d41b6428805c78104ec66fbdfcfe0069d6dfd3b16fce33ff803105dd9bad",
-      "bytes": 304543,
+      "sha256": "1bdb5a8bc855a66703b8c94dd2bf0de75a905955f2a2496a7b2753f9b4597534",
+      "bytes": 319246,
       "lods": []
     }
   }
@@ -1017,6 +1059,12 @@ export function soulSpriteUrls(seed) {
   const s = String(seed || '').replace(/[^0-9a-z]/gi, '');
   const { cohortDir, fallbackDir, thumbnailDir, suffix } = ASSETS.souls;
   return { full: cohortDir + s + suffix.full, simple: fallbackDir + s + suffix.simple, dot: fallbackDir + s + suffix.dot, thumbnail: thumbnailDir + s + suffix.thumbnail };
+}
+
+/** URL of the baseline Soul model (D-27) for a level of detail ('hero' | 'lite'); null when the tree has none. */
+export function soulModelUrl(lod = 'hero') {
+  const b = ASSETS.souls.baseline; if (!b) return null;
+  return (lod === 'lite' ? b.lite : b.hero) || null;
 }
 
 /** Cue ids an app should preload right after createAudioManager(): priority descending, then manifest order. */

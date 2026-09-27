@@ -66,6 +66,21 @@
       "sha256": "353479f77a8d7e2629d49ccac9fc2f5dbfdda5442e0adf867b00377a2fcb0cb2"
     },
     {
+      "path": "packages/vendor/three/examples/jsm/loaders/GLTFLoader.js",
+      "bytes": 117595,
+      "sha256": "e2ca07cacfa4f5b0572310bd26dce2deacf8f4dfa375d3020a476448d635dafa"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/utils/BufferGeometryUtils.js",
+      "bytes": 37737,
+      "sha256": "25d8fffde3d48fa5a219e1ff9ffa02566f99222c71e3e57ae979075eaf52f2d6"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/utils/SkeletonUtils.js",
+      "bytes": 11560,
+      "sha256": "9e53f7de94e1a632b88113536c1c404e243dac973bad2e8e6d514ff49b569e65"
+    },
+    {
       "path": "packages/vendor/three/LICENSE",
       "bytes": 1081,
       "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"

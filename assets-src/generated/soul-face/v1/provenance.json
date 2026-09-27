@@ -1,0 +1,457 @@
+{
+  "files": {
+    "body/body-hero.glb": {
+      "triangles": 24000,
+      "vertices": 12002,
+      "bytes": 338096,
+      "sha256": "91a5884245ff8e53c39b2a1273160a9985eac425ab2b12beafeac1781ecfffef"
+    },
+    "body/body-lite.glb": {
+      "triangles": 6000,
+      "vertices": 3002,
+      "bytes": 86088,
+      "sha256": "5a81b6c2218ca770d7b7039753cbed4994734a99d03b24d00e2e327701055ae6"
+    },
+    "eyes/eyes-bead.glb": {
+      "triangles": 1500,
+      "bytes": 21800,
+      "sha256": "372a41ad9f3c65875d03f4fa4ffa7c2a369441a7dfb0dbd57117e528eaf8c68a"
+    },
+    "eyes/eyes-button.glb": {
+      "triangles": 1500,
+      "bytes": 21804,
+      "sha256": "f0895f84f946b9c4f1d8bb412169cf19a720410418b28ad7bfcb3ec76a6e785a"
+    },
+    "eyes/eyes-fierce-red.glb": {
+      "triangles": 1500,
+      "bytes": 24944,
+      "sha256": "d22478224cb698ae805b4e3c77a274df5b880c294ff9b8d446b040cde71e7601"
+    },
+    "eyes/eyes-fierce.glb": {
+      "triangles": 1500,
+      "bytes": 24932,
+      "sha256": "d32b8031fbb4c217ef74a172f679fcfc9a75b8dba2b5740022d86cb1e2af5f9c"
+    },
+    "eyes/eyes-happy.glb": {
+      "triangles": 1500,
+      "bytes": 24700,
+      "sha256": "7d16ecdcf9926477d1229811c7a84d797b2ee0d362236c2cca0783e0d1642a95"
+    },
+    "eyes/eyes-hearts.glb": {
+      "triangles": 2100,
+      "bytes": 34468,
+      "sha256": "a620750b87a879583250abc23fb958718fa5ba208f85fee5894ad22a2edf56cc"
+    },
+    "eyes/eyes-lashes.glb": {
+      "triangles": 1500,
+      "bytes": 25412,
+      "sha256": "0e8d3efbdd561b08af4579ab66689a819285381e7f62577de66da8913979de39"
+    },
+    "eyes/eyes-sleepy.glb": {
+      "triangles": 1500,
+      "bytes": 21796,
+      "sha256": "c70f88fde496dffb9fa70a4c0a4dafb21d86a68d3244bec43e60569226386bd3"
+    },
+    "eyes/eyes-sparkle.glb": {
+      "triangles": 2100,
+      "bytes": 32404,
+      "sha256": "a2bfc2a53bafc6a071201f09585c26a939dd78971f8d188ee32b288616f913bc"
+    },
+    "eyes/eyes-wink.glb": {
+      "triangles": 3000,
+      "bytes": 47668,
+      "sha256": "9682055caded5fa5cf41e38eda9634d315694394117b413405251876a386cf5f"
+    },
+    "kits/face-angel.glb": {
+      "triangles": 1100,
+      "bytes": 14608,
+      "sha256": "717414e9dda81f8e1eb06ab6aa7e53c825cd9e9f989dc5f7c65ccca275e62801"
+    },
+    "kits/face-nerdy.glb": {
+      "triangles": 3000,
+      "bytes": 39924,
+      "sha256": "b28918d77491e5768c3a2f6d4a48f6db65b2734e669291c5982ce5c2b8cfea4a"
+    },
+    "kits/face-pirate.glb": {
+      "triangles": 5848,
+      "bytes": 76560,
+      "sha256": "a5e63c6c59723fa481950af4a97a8b68befa71a0a59ddb4823b3ade091a96211"
+    },
+    "plates/plate-bat.glb": {
+      "triangles": 2000,
+      "bytes": 27884,
+      "sha256": "cd84fefdd789f806a841fc43d929d2824a02937254801aa2a24a3b7ecd5e9061"
+    },
+    "plates/plate-bean.glb": {
+      "triangles": 2000,
+      "bytes": 27276,
+      "sha256": "a959eb143e609395b0d1abba4516dad3f997992edf6973492086706022cee200"
+    },
+    "plates/plate-bow.glb": {
+      "triangles": 2000,
+      "bytes": 27652,
+      "sha256": "8baaede8eeeeec31c86fe0d5c30b88b1a12587bd6a63a28ff5d73b698cab20b9"
+    },
+    "plates/plate-crack.glb": {
+      "triangles": 2700,
+      "bytes": 36316,
+      "sha256": "aa6ee8424dc901fd9a81f2a5676042184fed7e6e6335744b23f82077818d0b16"
+    },
+    "plates/plate-cracked-bow.glb": {
+      "triangles": 2700,
+      "bytes": 36944,
+      "sha256": "e5826811fabd44a2e399d325b18c8434c106937b6a02a2e982158ccd1a29b80e"
+    },
+    "plates/plate-dome.glb": {
+      "triangles": 2000,
+      "bytes": 27276,
+      "sha256": "dde77cd1eea783c4fa669c0d86854d2107529599289f233666369e4b9f2247d2"
+    },
+    "plates/plate-notch.glb": {
+      "triangles": 1998,
+      "bytes": 27564,
+      "sha256": "e0a4a1ed69a0ffaee95dd237f6dc9cab375a9682d59d758b1b4b658317a91cb0"
+    },
+    "plates/plate-round.glb": {
+      "triangles": 1998,
+      "bytes": 27180,
+      "sha256": "94f36de40f20f2dd78d1707732c967750c88a3574c97bdd25bffe0e122ce2d3f"
+    },
+    "plates/plate-skull-x.glb": {
+      "triangles": 2700,
+      "bytes": 37124,
+      "sha256": "7edbb5eea358de425fc4d119908ce4ac2e04eb740991258ef6638fb6890a7e24"
+    },
+    "plates/plate-skull.glb": {
+      "triangles": 2000,
+      "bytes": 27636,
+      "sha256": "27d8dda5ce2f811e7529f273adf82f505b35854a7bbe821f6b43cacab4458587"
+    },
+    "sprites/eyes-bead.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.5,
+        13.5
+      ],
+      "px": [
+        142,
+        54
+      ],
+      "bytes": 8381,
+      "sha256": "4f451cc3e0306d4af7dfabd4d3e2545924a668285fc29337ed346d6c31e0ed5a"
+    },
+    "sprites/eyes-button.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.5,
+        13.5
+      ],
+      "px": [
+        142,
+        54
+      ],
+      "bytes": 4504,
+      "sha256": "7e02b4fe3819930e6723e4f01bdf782f346925c518b00fc9add27875eed3b93b"
+    },
+    "sprites/eyes-fierce-red.png": {
+      "rect": [
+        81.5,
+        93.25,
+        37.0,
+        9.75
+      ],
+      "px": [
+        148,
+        39
+      ],
+      "bytes": 7349,
+      "sha256": "ebeb571b794b21cd6b0e98d858546fd7a4360b906871e9d62e11c6c53d5a327f"
+    },
+    "sprites/eyes-fierce.png": {
+      "rect": [
+        81.5,
+        93.25,
+        37.0,
+        9.75
+      ],
+      "px": [
+        148,
+        39
+      ],
+      "bytes": 3131,
+      "sha256": "e3640dca011ab2da9600ee26ee510e010f3c9de13779e29f827249762d7080e4"
+    },
+    "sprites/eyes-happy.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.5,
+        11.75
+      ],
+      "px": [
+        142,
+        47
+      ],
+      "bytes": 3403,
+      "sha256": "795a27ff9f1bac605b40e422c024def570bc5a6ea6e928e2ca5d7992a2c61ebf"
+    },
+    "sprites/eyes-hearts.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.5,
+        13.5
+      ],
+      "px": [
+        142,
+        54
+      ],
+      "bytes": 4650,
+      "sha256": "a03d065a8cc880e216e910913d92433cb0bde7d92f51fad6a5909bfb5cbe6a2a"
+    },
+    "sprites/eyes-lashes.png": {
+      "rect": [
+        83.0,
+        94.5,
+        34.0,
+        6.5
+      ],
+      "px": [
+        136,
+        26
+      ],
+      "bytes": 2296,
+      "sha256": "bb70d857e1dcae102fa19375283181d665102a5f89ae303e09714d341a123fe2"
+    },
+    "sprites/eyes-sleepy.png": {
+      "rect": [
+        82.25,
+        94.0,
+        35.5,
+        9.0
+      ],
+      "px": [
+        142,
+        36
+      ],
+      "bytes": 3377,
+      "sha256": "7f1127a0e8c1f15f7647642b5f867a4e60cbfa7b45ffc15972ad2d3ba79926a0"
+    },
+    "sprites/eyes-sparkle.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.5,
+        13.5
+      ],
+      "px": [
+        142,
+        54
+      ],
+      "bytes": 10190,
+      "sha256": "ae72b69a07b3b3a371ecf36c7945a9b662d955a821f0d1f165b90b6cd119b54c"
+    },
+    "sprites/eyes-wink.png": {
+      "rect": [
+        82.25,
+        89.5,
+        35.25,
+        13.5
+      ],
+      "px": [
+        141,
+        54
+      ],
+      "bytes": 8318,
+      "sha256": "71be621bc78ab768eadb8791eec6c82e184de6f8ffe7fb3d6290839a692ad715"
+    },
+    "sprites/face-angel.png": {
+      "rect": [
+        83.0,
+        36.5,
+        48.0,
+        26.5
+      ],
+      "px": [
+        192,
+        106
+      ],
+      "bytes": 9824,
+      "sha256": "45f2c4491e04f9d20b05c516c5407ffdf173b538a14e697fe84d234eba5c2fcb"
+    },
+    "sprites/face-nerdy.png": {
+      "rect": [
+        69.25,
+        86.25,
+        61.75,
+        20.5
+      ],
+      "px": [
+        247,
+        82
+      ],
+      "bytes": 6908,
+      "sha256": "fb7cd851bb8f95f415f984a5b7d3e01251ffb7c84739b1543122fe7360661c78"
+    },
+    "sprites/face-pirate.png": {
+      "rect": [
+        66.25,
+        67.25,
+        65.0,
+        38.25
+      ],
+      "px": [
+        260,
+        153
+      ],
+      "bytes": 31642,
+      "sha256": "a66b242a34eb5ba4ca844bb035060be1355c2f0a72a7cd3ea73659fd3357256d"
+    },
+    "sprites/plate-bat.png": {
+      "rect": [
+        79.0,
+        78.75,
+        42.0,
+        33.5
+      ],
+      "px": [
+        168,
+        134
+      ],
+      "bytes": 9984,
+      "sha256": "a1a14468d88ab1e3952753a4bb8ca6c1ef9f92c33d20d96b5c3d7c3631095137"
+    },
+    "sprites/plate-bean.png": {
+      "rect": [
+        79.0,
+        83.25,
+        42.0,
+        29.0
+      ],
+      "px": [
+        168,
+        116
+      ],
+      "bytes": 9575,
+      "sha256": "395e0abe44c6578f521903e4245fb18700fd318123132d2aee60c14c34f355ee"
+    },
+    "sprites/plate-bow.png": {
+      "rect": [
+        79.0,
+        83.75,
+        42.0,
+        26.75
+      ],
+      "px": [
+        168,
+        107
+      ],
+      "bytes": 8863,
+      "sha256": "0d07eec2ae83acd55de202b43421babb9eea189553f1bb82dd4d1cbda32143d6"
+    },
+    "sprites/plate-crack.png": {
+      "rect": [
+        79.0,
+        76.5,
+        42.0,
+        40.25
+      ],
+      "px": [
+        168,
+        161
+      ],
+      "bytes": 11934,
+      "sha256": "e346c3be0825e30529701df95e1627b853e9f6f87d63c1f54a394268ac17c479"
+    },
+    "sprites/plate-cracked-bow.png": {
+      "rect": [
+        79.0,
+        83.5,
+        42.0,
+        26.5
+      ],
+      "px": [
+        168,
+        106
+      ],
+      "bytes": 9514,
+      "sha256": "69a6901ff2330db7b788862885fad419c08800dfec1f9f60eecefedacd7c54bd"
+    },
+    "sprites/plate-dome.png": {
+      "rect": [
+        79.0,
+        78.0,
+        42.0,
+        34.0
+      ],
+      "px": [
+        168,
+        136
+      ],
+      "bytes": 10196,
+      "sha256": "3e527d348a78a52bc9b7902aa49401a7402c3f89d70e15433daca4f6f8d9db6f"
+    },
+    "sprites/plate-notch.png": {
+      "rect": [
+        79.0,
+        77.0,
+        42.0,
+        35.25
+      ],
+      "px": [
+        168,
+        141
+      ],
+      "bytes": 10249,
+      "sha256": "57a4102252ed47b5b678823a9b7f0df05042aed0d3c07579784c6c062529944d"
+    },
+    "sprites/plate-round.png": {
+      "rect": [
+        79.0,
+        76.0,
+        42.0,
+        40.75
+      ],
+      "px": [
+        168,
+        163
+      ],
+      "bytes": 11831,
+      "sha256": "f039e7a8282891c57ab4e6bcf2e2dd758fc37a8a8dfd3bc8471475dd1cbe260d"
+    },
+    "sprites/plate-skull-x.png": {
+      "rect": [
+        79.25,
+        77.0,
+        41.5,
+        39.75
+      ],
+      "px": [
+        166,
+        159
+      ],
+      "bytes": 11302,
+      "sha256": "9807e8166ea4f18ca377d29b8b60c7ba6db2683ede27c186a8abb9e5ad29ae6e"
+    },
+    "sprites/plate-skull.png": {
+      "rect": [
+        79.0,
+        76.75,
+        42.0,
+        40.0
+      ],
+      "px": [
+        168,
+        160
+      ],
+      "bytes": 11597,
+      "sha256": "ed3a3f90c6ae4a2692186724c3fc46ea042dd11e40be39cee2eaccdacf0acccc"
+    }
+  },
+  "generator": "tools/ai/blender/soul_face.py",
+  "catalogVersion": 2,
+  "spec": "docs/art/soul-faces.md",
+  "license": "internal original; traced from the partner-supplied sheets docs/art/reference/soul-{faces,eyes}-reference.png"
+}

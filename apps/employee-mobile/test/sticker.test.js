@@ -1,4 +1,6 @@
 // node --test apps/employee-mobile/test - sticker language helpers (pure; no DOM, no Three.js).
+// stickerPeel / revealScale drive the baseline Soul reveal (D-27). speckleLayout / speckleCount / outlineScale belong to the
+// LEGACY lathe Soul (no longer drawn); they stay tested because tools/ai (Blender turnaround port) still imports soul-params.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {

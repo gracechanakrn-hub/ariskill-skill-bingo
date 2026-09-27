@@ -5,9 +5,17 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { startServer, command, tryCommand, openStream, nextKey } from './helpers.js';
+import { startServer, command, tryCommand, openStream, nextKey, SOUL_CONFIG_V3_KEYS, charmSplit, expectedDecor, expectedSeedPicks } from './helpers.js';
 
 const fixture = JSON.parse(readFileSync(new URL('../fixtures/seeded-round.json', import.meta.url), 'utf8'));
+// Soul decoration per fixture board (D-29), worked by hand: the kinds of the 25 selected skills give the charm split (floor
+// quota, largest remainder, at least one per kind picked); every board's matched tiles are mostly technical, so every face is pirate.
+// The v3 plate, eyes and antenna charm (D-31) come from the Soul seed, whose participant id is random per run: checked against the seed picks.
+const DECOR = {
+  'fixture-001': { core: 2, technical: 7, soft: 1 }, 'fixture-002': { core: 2, technical: 7, soft: 1 }, // 4 core / 18 technical / 3 soft
+  'fixture-003': { core: 0, technical: 8, soft: 2 }, 'fixture-004': { core: 0, technical: 8, soft: 2 }, // 21 technical / 4 soft
+  'fixture-005': { core: 0, technical: 9, soft: 1 }, 'fixture-006': { core: 0, technical: 9, soft: 1 }, // 24/1 and 23/2
+};
 
 describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
   let t, round, streams, players, refOf;
@@ -107,6 +115,10 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
       const isWinner = fixture.expected.coWinnerRefs.includes(p.employeeRef);
       assert.equal(m.result.isWinner, isWinner, p.employeeRef); assert.equal(m.result.winningDrawNumber, fixture.expected.winningDrawNumber); assert.equal(m.result.coWinnerCount, winners.length);
       assert.equal(m.board.state, 'FINISHED'); assert.ok(m.soul, 'every finished board gets a Soul'); assert.equal(m.soul.badge, isWinner ? 'bingo-star' : null);
+      assert.equal(m.soul.config.version, 3); assert.deepEqual(Object.keys(m.soul.config).sort(), SOUL_CONFIG_V3_KEYS, `${p.employeeRef} SoulConfig v3 keys`);
+      assert.deepEqual(charmSplit(m.soul.config.charms), DECOR[p.employeeRef], `${p.employeeRef} charm split`); assert.equal(m.soul.config.face, 'pirate', `${p.employeeRef} face`);
+      assert.deepEqual({ plate: m.soul.config.plate, eyes: m.soul.config.eyes, topper: m.soul.config.topper }, expectedSeedPicks(m.soul.config), `${p.employeeRef} seed picks`);
+      assert.deepEqual(expectedDecor(m.board), { split: DECOR[p.employeeRef], face: 'pirate' }, `${p.employeeRef} decoration follows the board`);
       assert.equal(m.draws.length, fixture.expected.totalDraws);
       assert.deepEqual(m.draws.map(d => d.skill.id), fixture.expected.draws.map(d => d.skillId), 'participant sees the same draw order');
     }

@@ -14,18 +14,21 @@ import { buildAssetMapSource, writeAssetMap, ASSET_MAP_PATH, APPS } from '../bui
 import { buildAll } from '../build-all.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+// D-29 decoration entries (one per built charm and face kit; the count grows as charm icons land).
+const DECOR_ENTRIES = (readFileSync(join(ROOT, 'assets', 'manifest', 'assets.yaml'), 'utf8').match(/\bid: soul_(charm|face)_/g) || []).length;
 const DEFAULT_SCRATCH = '/private/tmp/claude-501/-Users-grc-Desktop-claudecodetest-Ariskill-Bingo/312520a1-70d6-4efd-9438-4e9be7bd9617/scratchpad/asset-int/';
 function scratchDir() {
   const want = process.env.ASSET_INT_SCRATCH || DEFAULT_SCRATCH;
   try { mkdirSync(want, { recursive: true }); return want; } catch (_) { const d = join(tmpdir(), 'asset-int'); mkdirSync(d, { recursive: true }); return d; }
 }
 const SCRATCH = scratchDir();
-const COPY = ['assets', 'assets-src', 'tools/assets', 'packages/ui', 'packages/game-rules', 'packages/skill-master', 'docs/audio'];
+const COPY = ['assets', 'assets-src', 'tools/assets', 'tools/ai/blender', 'packages/ui', 'packages/game-rules', 'packages/skill-master', 'docs/audio'];
 const SKIP = new Set(['node_modules', 'test', '.git']);
+const SKIP_FILES = /\.(blend|blend1|npy)$/; // Blender masters (~66 MB, git-ignored) are not inputs of any check
 const made = [];
 function tempTree() {
   const dir = mkdtempSync(join(SCRATCH, 'tree-'));
-  for (const d of COPY) if (existsSync(join(ROOT, d))) cpSync(join(ROOT, d), join(dir, d), { recursive: true, filter: (src) => !SKIP.has(relative(ROOT, src).split(sep).pop()) });
+  for (const d of COPY) if (existsSync(join(ROOT, d))) cpSync(join(ROOT, d), join(dir, d), { recursive: true, filter: (src) => { const name = relative(ROOT, src).split(sep).pop(); return !SKIP.has(name) && !SKIP_FILES.test(name); } });
   made.push(dir);
   return dir;
 }
@@ -37,7 +40,8 @@ describe('validator on the current tree', () => {
   test('passes with no critical/major problems and reports approval + budget summaries', () => {
     const res = validateManifests({ root: ROOT });
     assert.equal(res.ok, true, JSON.stringify(res.problems.filter((p) => p.severity === 'critical' || p.severity === 'major'), null, 2));
-    assert.equal(res.summary.entries, 33);
+    assert.equal(res.summary.entries, 35 + DECOR_ENTRIES, '33 scene/soul entries + 2 baseline Soul models (D-27) + the D-29 charms and face kits');
+    assert.ok(DECOR_ENTRIES >= 137, `decoration entries ${DECOR_ENTRIES}`);
     assert.equal(res.summary.cues, 12);
     assert.ok(res.summary.files >= 110, `runtime files ${res.summary.files}`);
     const pending = find(res, 'approval.pending');
@@ -50,14 +54,15 @@ describe('validator on the current tree', () => {
   test('total budgets hold: assets <= 6 MB, audio <= 1.6 MB, single file <= 1.2 MB, soul svg <= 6 KB, scene data <= 120 KB, apps <= 600 KB', () => {
     const { summary } = validateManifests({ root: ROOT });
     const b = summary.budgets;
-    assert.equal(b.assetsBytes.limit, 6 * 1024 * 1024); assert.ok(b.assetsBytes.used <= b.assetsBytes.limit);
+    assert.equal(b.assetsBytes.limit, 7 * 1024 * 1024); assert.ok(b.assetsBytes.used <= b.assetsBytes.limit);
     assert.equal(b.audioBytes.limit, 1600 * 1024); assert.ok(b.audioBytes.used <= b.audioBytes.limit);
     assert.equal(b.audioBytes.limit, JSON.parse(readFileSync(join(ROOT, 'assets/manifest/audio.json'), 'utf8')).budgets.max_total_bytes, 'same number the sound agent budgets against');
     assert.equal(b.singleFileBytes.limit, Math.round(1.2 * 1024 * 1024)); assert.ok(b.singleFileBytes.used <= b.singleFileBytes.limit);
     assert.equal(b.soulSvgBytes.limit, 6 * 1024); assert.ok(b.soulSvgBytes.used <= b.soulSvgBytes.limit);
     assert.equal(b.sceneDataBytes.limit, 120 * 1024); assert.ok(b.sceneDataBytes.used <= b.sceneDataBytes.limit);
     for (const app of APPS) { assert.equal(b.apps[app].limit, 600 * 1024); assert.ok(b.apps[app].used <= b.apps[app].limit, `${app} bundle ${b.apps[app].used}`); }
-    assert.deepEqual(Object.keys(DEFAULT_BUDGETS).sort(), ['appBytesEach', 'assetsBytes', 'audioBytes', 'audioOneshotBytes', 'sceneDataBytes', 'singleFileBytes', 'soulSvgBytes']);
+    assert.equal(b.glbBytes.limit, 400 * 1024); assert.ok(b.glbBytes.used <= b.glbBytes.limit);
+    assert.deepEqual(Object.keys(DEFAULT_BUDGETS).sort(), ['appBytesEach', 'assetsBytes', 'audioBytes', 'audioOneshotBytes', 'glbBytes', 'sceneDataBytes', 'singleFileBytes', 'soulSvgBytes']);
   });
 
   test('audio.yaml parses with the subset parser and equals audio.json (canonical twin)', () => {
@@ -220,7 +225,7 @@ describe('asset map', () => {
       assert.ok(c.loop === null || (c.loop.startSample === 0 && c.loop.endSample > 0 && c.loop.sampleRate === 22050));
     }
     assert.equal(A.audio.ambient_galaxy.loop.endSample, 154350);
-    assert.equal(Object.keys(A.entries).length, 33);
+    assert.equal(Object.keys(A.entries).length, 35, 'the decoration entries stay out of the asset map (soul-decor-data.js carries them)');
     // helpers
     assert.equal(m.assetUrl('scene_nebula'), '/assets/scene/nebula.svg');
     assert.equal(m.assetUrl('bingo'), '/assets/audio/bingo.wav');

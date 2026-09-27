@@ -1,15 +1,18 @@
-// apps/employee-mobile/src/scene/join-scene.js - ambient sticker Soul behind the Join form (E1). Loaded lazily by
-// views/join.js only when the Join screen mounts; disposed on unmount. Low cost: one lathe gumdrop in glossy clay
-// (sticker art direction: clearcoat, peach sheen, seeded speckles, lit antenna orb, white die-cut hull), one fresnel
-// aura, two rings, ~300 points, bloom only on the 'high' tier. The figure is the generic Arise mascot (lilac base, no
-// face): it is nobody's Soul and carries no rank or label. Static (no rotation / drift) under reduced motion.
+// apps/employee-mobile/src/scene/join-scene.js - ambient sticker mascot behind the Join form (E1). Loaded lazily by
+// views/join.js only when the Join screen mounts; disposed on unmount. The mascot is the baseline Arise Soul character
+// (D-27, docs/art/soul-baseline.md; the brand character, which supersedes the old "faceless mascot" rule) from the
+// lite GLB in the lilac palette: glossy clay, lit antenna orb + additive glow, white die-cut hull. It is nobody's Soul
+// and carries no name, rank or label. Around it: two rings and ~300 motes, bloom only on the 'high' tier. Motion is a
+// gentle idle bob + sway (no spin), a small pulse on tap and a lagging camera on pointer move; one settled frame
+// under reduced motion. When WebGL, the modules or the model are unavailable the CSS orb stays.
 import { loadThree } from './loader.js';
 import { detectQuality, pixelRatioFor } from './capability.js';
-import { latheProfile, radiusAt, HEM_Y, HEAD_CENTER_Y, UNIT, speckleLayout, speckleCount, outlineScale } from './soul-params.js';
+import { mascotPalette, outlineWidth, BASELINE } from './soul-params.js';
+import { loadSoulModel, buildSoulFigure, makeGlowTexture, makeStudioEnvironment, applySoulToneMapping, addStudioLights, LOOK } from './soul-model.js';
 
 const PARTICLE_COUNT = 300;
-const LILAC = 0x8b7cf0, PEACH = 0xffb27a, MINT = 0x7cf5c8, OUTLINE = 0xf2f2f6;
-const JOIN_SEED = 'arise-join-orb';
+const MASCOT_HEIGHT = 3.1;       // scene units: fills the join orb like the old gumdrop did
+const MASCOT_YAW = 0.42;         // 3/4 view with the face turned toward the hero copy on the right
 
 function isReduced() {
   try {
@@ -21,8 +24,9 @@ function isReduced() {
 }
 
 /**
- * createJoinSoulScene(host) -> { dispose() }. Never throws: when WebGL / the modules are unavailable the CSS orb stays.
- * The renderer is created after the modules resolve; `dispose()` before that simply cancels the mount.
+ * createJoinSoulScene(host) -> { dispose() }. Never throws: when WebGL / the modules / the model are unavailable the
+ * CSS orb stays. The renderer is created after the modules and the lite model resolve; `dispose()` before that
+ * simply cancels the mount.
  */
 export function createJoinSoulScene(host) {
   let disposed = false;
@@ -30,22 +34,14 @@ export function createJoinSoulScene(host) {
   if (!host) return { dispose() {} };
   const quality = detectQuality();
   if (quality === 'off') return { dispose() {} };
-  loadThree().then((mods) => { if (!disposed && host.isConnected) live = build(host, mods, quality); }).catch(() => { /* CSS orb remains */ });
+  loadThree()
+    .then((mods) => loadSoulModel(mods, 'lite').then((model) => ({ mods, model })))
+    .then(({ mods, model }) => { if (!disposed && host.isConnected) live = build(host, mods, model, quality); })
+    .catch(() => { /* CSS orb remains */ });
   return { dispose() { disposed = true; if (live) { live.dispose(); live = null; } } };
 }
 
-function makeGlowTexture(THREE, size = 96) {
-  const c = document.createElement('canvas'); c.width = c.height = size;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.3, 'rgba(255,235,210,0.8)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
-  g.fillStyle = grad; g.fillRect(0, 0, size, size);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-function build(host, { THREE, addons }, quality) {
+function build(host, { THREE, addons }, model, quality) {
   const reduced = isReduced();
   const high = quality === 'high';
   const scene = new THREE.Scene();
@@ -55,87 +51,37 @@ function build(host, { THREE, addons }, quality) {
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: high, powerPreference: 'low-power' });
   renderer.setPixelRatio(pixelRatioFor(quality, devicePixelRatio || 1));
   renderer.setClearColor(0x000000, 0);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  applySoulToneMapping(THREE, renderer, 0.72); // a touch darker than the Soul stage: the pale lilac keeps its hue on the violet sky
   host.appendChild(renderer.domElement);
 
   let composer = null, bloom = null;
   if (high) {
     composer = new addons.EffectComposer(renderer);
     composer.addPass(new addons.RenderPass(scene, camera));
-    bloom = new addons.UnrealBloomPass(new THREE.Vector2(256, 256), reduced ? 0.2 : 0.4, 0.2, 0.9);
+    bloom = new addons.UnrealBloomPass(new THREE.Vector2(256, 256), reduced ? 0.2 : 0.3, 0.25, LOOK.bloomThreshold);
     composer.addPass(bloom);
     composer.addPass(new addons.OutputPass());
   }
 
+  const envTarget = makeStudioEnvironment(THREE, renderer, { size: 64 });
+  scene.environment = envTarget.texture;
+
   const rig = new THREE.Group();
-  rig.rotation.set(-0.08, -0.35, -0.06);
+  rig.rotation.set(-0.06, 0, -0.17); // cancels the .join-orb CSS rotate(-10deg) so the mascot stands upright
   scene.add(rig);
 
-  // ---- sticker gumdrop: 'drop' lathe silhouette in glossy lilac clay, scaled to the old orb's footprint ----
-  const profile = latheProfile('drop');
-  const height = profile.reduce((m, p) => Math.max(m, p.y), 0);
-  const FIG = 1.7;
-  const figure = new THREE.Group();
-  figure.scale.setScalar(FIG);
-  figure.position.y = -height * FIG * 0.5;
-  rig.add(figure);
-  const lathe = new THREE.LatheGeometry(profile.map((p) => new THREE.Vector2(p.r, p.y)), high ? 56 : 36);
-  const clay = new THREE.MeshPhysicalMaterial({
-    color: LILAC, emissive: LILAC, emissiveIntensity: 0.22, roughness: 0.35, metalness: 0,
-    clearcoat: high ? 1 : 0, clearcoatRoughness: 0.15, sheen: 0.6, sheenColor: new THREE.Color(PEACH), sheenRoughness: 0.55,
+  // ---- the mascot: baseline Soul, lite LOD, lilac palette, centred on the orb ----
+  const glowTex = makeGlowTexture(THREE, 'rgba(255,255,255,1)', 'rgba(208,188,255,0.85)', 96);
+  const figure = buildSoulFigure(THREE, {
+    body: model, hull: model, palette: mascotPalette(), quality, fitHeight: MASCOT_HEIGHT,
+    outline: outlineWidth(quality), orbGlowStrength: BASELINE.orbGlow, glowTexture: glowTex,
   });
-  const body = new THREE.Mesh(lathe, clay);
-  figure.add(body);
-  // die-cut hull (white back faces) scaled about mid-height
-  const OS = outlineScale(quality);
-  const outlineMat = new THREE.MeshBasicMaterial({ color: OUTLINE, side: THREE.BackSide, toneMapped: false });
-  const hull = new THREE.Mesh(lathe, outlineMat);
-  hull.scale.setScalar(OS); hull.position.y = (1 - OS) * height / 2; hull.renderOrder = -1;
-  figure.add(hull);
-  // seeded speckles (mint / cyan / lilac), face band kept clear like the Souls even though this mascot has no face
-  const headY = (HEM_Y - HEAD_CENTER_Y) * UNIT, headR = radiusAt(profile, headY);
-  const speckleGeo = new THREE.SphereGeometry(1, high ? 14 : 10, high ? 10 : 8);
-  const mats = new Map();
-  for (const sp of speckleLayout(JOIN_SEED, profile, speckleCount(quality), { headY, headR })) {
-    if (!mats.has(sp.color)) mats.set(sp.color, new THREE.MeshStandardMaterial({ color: sp.color, emissive: sp.color, emissiveIntensity: 0.3, roughness: 0.45 }));
-    const m = new THREE.Mesh(speckleGeo, mats.get(sp.color));
-    m.position.set(sp.r * Math.cos(sp.theta) * 0.985, sp.y, sp.r * Math.sin(sp.theta) * 0.985);
-    m.lookAt(0, sp.y, 0);
-    m.scale.set(sp.size, sp.size, sp.size * 0.55);
-    figure.add(m);
-  }
-  // antenna: stalk + lit orb + additive glow sprite
-  const stalkLen = 0.16, orbR = 0.075;
-  const stalk = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.026, stalkLen, 10), clay);
-  stalk.position.set(0, height + stalkLen / 2 - 0.02, 0);
-  figure.add(stalk);
-  const stalkHull = new THREE.Mesh(stalk.geometry, outlineMat);
-  stalkHull.position.copy(stalk.position); stalkHull.scale.set(OS * 2.6, 1.02, OS * 2.6); stalkHull.renderOrder = -1;
-  figure.add(stalkHull);
-  const orbMat = new THREE.MeshStandardMaterial({ color: 0xfff4e0, emissive: 0xffe9c2, emissiveIntensity: 1.6, roughness: 0.3 });
-  const orbGeo = new THREE.SphereGeometry(orbR, 18, 14);
-  const orb = new THREE.Mesh(orbGeo, orbMat);
-  orb.position.set(0, height + stalkLen + orbR * 0.6, 0);
-  figure.add(orb);
-  const orbHull = new THREE.Mesh(orbGeo, outlineMat);
-  orbHull.position.copy(orb.position); orbHull.scale.setScalar(OS * 1.12); orbHull.renderOrder = -1;
-  figure.add(orbHull);
-  const glowTex = makeGlowTexture(THREE);
-  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffe9c2, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }));
-  glow.position.copy(orb.position); glow.scale.setScalar(orbR * 7);
-  figure.add(glow);
-
-  const auraMaterial = new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    uniforms: { uColor: { value: new THREE.Color(PEACH).lerp(new THREE.Color(MINT), 0.4) }, uPower: { value: 2.8 } },
-    vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vec4 w=modelMatrix*vec4(position,1.); vN=normalize(mat3(modelMatrix)*normal); vV=normalize(cameraPosition-w.xyz); gl_Position=projectionMatrix*viewMatrix*w; }',
-    fragmentShader: 'uniform vec3 uColor; uniform float uPower; varying vec3 vN; varying vec3 vV; void main(){ float f=pow(1.-max(dot(normalize(vN),normalize(vV)),0.),uPower); gl_FragColor=vec4(uColor*f,f*.55); }',
-  });
-  const aura = new THREE.Mesh(lathe, auraMaterial);
-  aura.scale.setScalar(1.03);
-  figure.add(aura);
+  const turn = new THREE.Group();
+  turn.rotation.y = MASCOT_YAW;
+  turn.add(figure.root);
+  const baseY = -MASCOT_HEIGHT * 0.5;
+  turn.position.y = baseY;
+  rig.add(turn);
 
   const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
   const ring = new THREE.Mesh(new THREE.TorusGeometry(1.82, 0.018, 8, 96), ringMaterial);
@@ -172,16 +118,10 @@ function build(host, { THREE, addons }, quality) {
   const particles = new THREE.Points(particleGeo, particleMat);
   scene.add(particles);
 
-  scene.add(new THREE.HemisphereLight(0xcfd8ff, 0x2a1259, 0.7));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 3.0);
-  keyLight.position.set(-2.5, 4.5, 3);
-  scene.add(keyLight);
-  const warm = new THREE.PointLight(PEACH, 8, 10, 2);
-  warm.position.set(2.6, -0.6, 2.4);
-  scene.add(warm);
-  const accent = new THREE.PointLight(0x4fe3c1, 8, 11, 2);
-  accent.position.set(-2.4, 1.2, -2.5);
-  scene.add(accent);
+  // Light: the same studio rig as the Soul scene (warm key upper left, cool fill, lavender rim) + a teal accent
+  // behind so the lilac clay reads against the violet sky.
+  addStudioLights(THREE, scene);
+  const accent = new THREE.PointLight(0x4fe3c1, 14, 11, 2); accent.position.set(-2.4, 1.2, -2.5); scene.add(accent);
 
   const pointer = new THREE.Vector2();
   const cameraDrift = new THREE.Vector2();
@@ -228,15 +168,17 @@ function build(host, { THREE, addons }, quality) {
     camera.position.z += ((reduced ? 6.1 : 5.7) - camera.position.z) * (1 - Math.pow(0.04, delta));
     camera.lookAt(0, 0, 0);
     if (!reduced) {
-      rig.rotation.y += delta * (0.16 + energy * 0.8);
-      rig.rotation.x = -0.08 + Math.sin(elapsed * 0.7) * 0.035;
-      figure.position.y = -height * FIG * 0.5 + 0.05 * Math.sin(elapsed * Math.PI * 2 * 0.25);
+      // gentle idle: bob (0.25 Hz) + slow sway around the 3/4 view; a tap adds a short pulse and a little extra sway
+      turn.position.y = baseY + 0.05 * Math.sin(elapsed * Math.PI * 2 * 0.25);
+      turn.rotation.y = MASCOT_YAW + 0.22 * Math.sin(elapsed * 0.5) + energy * 0.25 * Math.sin(elapsed * 9);
+      rig.rotation.x = -0.06 + Math.sin(elapsed * 0.7) * 0.03;
+      ring.rotation.z -= delta * 0.12;
+      ringTwo.rotation.z += delta * 0.09;
       particles.rotation.z -= delta * 0.025;
       particles.rotation.y += delta * 0.04;
       energy = Math.max(0, energy - delta * 1.7);
-      const pulse = FIG * (1 + energy * 0.075);
-      figure.scale.setScalar(pulse);
-      if (bloom) bloom.strength = 0.4 + energy * 0.3;
+      turn.scale.setScalar(1 + energy * 0.06);
+      if (bloom) bloom.strength = 0.35 + energy * 0.3;
     }
     render();
     // Reduced motion: one settled frame is enough (no ambient loop).
@@ -257,11 +199,14 @@ function build(host, { THREE, addons }, quality) {
       host.removeEventListener('pointermove', onPointerMove);
       host.removeEventListener('pointerleave', onPointerLeave);
       host.removeEventListener('pointerdown', onPointerDown);
+      figure.dispose();
       scene.traverse((object) => {
         if (object.geometry) object.geometry.dispose();
-        if (object.material) (Array.isArray(object.material) ? object.material : [object.material]).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); });
+        if (object.material) (Array.isArray(object.material) ? object.material : [object.material]).forEach((m) => m.dispose());
       });
       glowTex.dispose();
+      envTarget.dispose();
+      scene.environment = null;
       if (composer) composer.dispose();
       renderer.dispose();
       renderer.forceContextLoss();

@@ -8,6 +8,7 @@ import { createWebgl2Renderer } from './renderer/webgl2.js';
 import { createCanvas2dRenderer } from './renderer/canvas2d.js';
 import { createStaticRenderer } from './renderer/static.js';
 import { createEntranceQueue } from './entrance-queue.js';
+import { pumpBudget } from './renderer/impostor-plan.js';
 import { track } from '../../../packages/ui/telemetry.js';
 
 const FRAME_BUDGET_MS = 25;      // auto-downgrade when the 2 s average exceeds this
@@ -119,6 +120,7 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
       } catch (err) {
         track('client.renderer_mode', { mode: kind, failed: true, error: String(err && err.message) });
         renderer = null;
+        atlas.setImpostors(null); // decorated Souls fall back to the 2D composition on the next tier
       }
     }
     return null;
@@ -171,6 +173,10 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
     }
     const cost = performance.now() - t0;
     sample(now, cost);
+    // background work the frame itself does not wait for (decorated Souls' 3D impostors), in what is left of the budget
+    if (renderer && typeof renderer.afterFrame === 'function') {
+      try { renderer.afterFrame(pumpBudget(cost)); } catch (err) { console.warn('[galaxy] impostor bake failed', err); }
+    }
   }
 
   function sample(now, cost) {
@@ -227,12 +233,15 @@ export function createGalaxy({ container, assets, mode = null, quality = 'high',
       return added;
     },
     ripple() { if (!reducedMotion) scene.ripple(); },
+    /** A round ended: decorated Souls are about to Float, so the renderer may load their 3D stage now (Three tier only). */
+    prewarm() { if (renderer && typeof renderer.prewarm === 'function') { try { renderer.prewarm(); } catch { /* the stage loads on demand instead */ } } },
     /** Winner moment (guarded by the caller): restrained radial burst + warm firefly tint on renderers that support it;
      *  `soulIds` (from result.published) adds the 250 ms outline flash on the winning Souls (Three tier). */
     winner({ soulIds = [] } = {}) { if (reducedMotion || !renderer || typeof renderer.winner !== 'function') return false; renderer.winner(scene.layout, { soulIds }); return true; },
     /** Outline flash only (when the winner ids arrive after the burst already fired). */
     flash(soulIds) { if (reducedMotion || !renderer || typeof renderer.flash !== 'function') return false; return renderer.flash(soulIds); },
-    resize: fit,
+    /** Container resized: refit; the static tier paints once, and resizing its canvas clears it, so it repaints. */
+    resize() { fit(); if (isStatic()) renderOnce(); },
     get mode() { return renderer ? renderer.kind : null; },
     get quality() { return scene.quality; },
     setQuality(q) { scene.setQuality(q); stats.quality = scene.quality; },

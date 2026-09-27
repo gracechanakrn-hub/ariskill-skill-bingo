@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "note": "Family style and per-id prompt overrides for tools/ai/gemini-charms.js (docs/art/soul-decorations.md, D-29). The prompt for a charm is the 5-part style below with {look} replaced by the charm's catalog look (packages/game-rules/src/soul-catalog.js), {key}/{keyHex} by the key colour, and the override's detail appended to the subject. The icons ship as game art (owner sign-off OD-19); provenance per icon in assets-src/charms/provenance.json.",
+  "model": "gemini-3.1-flash-image",
+  "modelChoice": "Pilot 2026-09-24: gemini-3.1-flash-image (GA) against gemini-3-pro-image on tech-laptop, soft-earphones and soft-clover. Flash followed the looks more faithfully (pro drew a three-leaf clover, a headband instead of wireless earbuds and a gradient screen), kept flatter cel shading and answered in about half the time, so flash is the family model.",
+  "budget": 260,
+  "maxAttempts": 3,
+  "defaults": {
+    "temperature": 0.7
+  },
+  "key": {
+    "name": "chroma-key green",
+    "hex": "#00FF00",
+    "rgb": [0, 255, 0]
+  },
+  "cutout": {
+    "size": 256,
+    "pad": 0.06
+  },
+  "pilot": ["tech-hammer", "tech-laptop", "tech-magnifier", "soft-earphones", "soft-clover", "soft-donut"],
+  "style": {
+    "type": "A single die-cut sticker icon from a cute, cohesive sticker set: one chunky, rounded, simplified cartoon object drawn as a clean flat illustration.",
+    "subject": "The object is {look}. Draw it as one chunky, rounded, simplified object with friendly, slightly squashed proportions, big simple shapes and only the few details needed to recognise it at a glance, even when the sticker is shown very small.",
+    "environment": "The sticker lies alone on a perfectly flat, uniform {key} background ({keyHex}) that fills the whole square edge to edge: one solid colour with no gradient, texture, vignette, shadow, floor, reflection or scenery.",
+    "technical": "Style: a bold, even, dark plum outline (#2B2350) around the object and its main parts; soft two-tone cel shading on every colour (a flat base tone plus one slightly darker shadow tone, no gradients) and one small white highlight near the upper left; 3 to 4 friendly colours taken from peach #FFB27A, gold #F6C453, rose #FF6FA5, cherry red #FF5A6E, mint #7CF5C8, leaf green #5FC77A, sky blue #7FB2FF, cyan #63E6FF, lilac #8B7CF0, warm wood #C98B5A and cool grey #C3C8DE. Die-cut: a thick, even, pure white sticker border, about 3% of the image width, surrounds the whole object and follows its silhouette with smooth rounded curves, so the object and all its parts form one single sticker shape; gaps and holes between parts are filled with white; the white border has no outline, shadow or glow, and its outer edge is crisp against the {key}. Framing: the whole sticker, white border included, is centred in the square and fills about 75% of the frame, with an even {key} margin on every side. Square 1:1.",
+    "constraints": "Exactly one object on one sticker. No text, letters, numbers, logos, brand marks or watermarks anywhere: screens, covers, keys, labels and dials stay blank or show simple shapes. No human faces, no hands, no people, and no cartoon face on the object unless its description asks for eyes. No scenery, no extra objects, no sparkles or decorations around the sticker, no drop shadow."
+  },
+  "references": {
+    "use": [],
+    "note": "Off. A pilot A/B (tech-keyboard, soft-bicycle, soft-sunflower with tech-hammer, soft-donut and tech-laptop attempt 1 as references) matched the style but pulled the palette toward the references' lilac; the text-only style is already consistent, so references stay off. Example: [{ \"id\": \"tech-hammer\", \"attempt\": 1 }].",
+    "intro": "The attached images are finished stickers from the same set. Match their style exactly: outline weight and colour, two-tone cel shading, small highlight, white die-cut border width, flat {key} background and framing. Do not copy their objects: draw only the new object described below."
+  },
+  "overrides": {
+    "tech-laptop": { "detail": "The screen is blank (a soft cyan glow, at most one simple shape) and the lid has no logo." },
+    "tech-book": { "detail": "The cover is plain with no title; a few page edges show on the side." },
+    "tech-magnifier": { "detail": "The lens is filled with pale cyan glass with a white shine, not see-through." },
+    "tech-ruler": { "detail": "Exactly one single straight ruler lying diagonally (not two crossed rulers), with tick marks only and no numbers." },
+    "tech-calculator": { "detail": "The display is blank and the buttons carry no digits or symbols." },
+    "tech-keyboard": { "detail": "The keys are blank, with no letters or symbols." },
+    "tech-monitor": { "detail": "The screen is blank (a soft cyan glow) and there is no logo." },
+    "tech-smartphone": { "detail": "The screen is blank (a soft cyan glow) with no app icons or text." },
+    "tech-tablet": { "detail": "The screen is blank (a soft cyan glow); the stylus lies across the tablet's lower corner so they form one sticker." },
+    "tech-server": { "detail": "A few round status lights and plain slots, no labels." },
+    "tech-camera": { "detail": "No brand name or text anywhere." },
+    "tech-floppy": { "detail": "The label area is blank." },
+    "tech-stopwatch": { "detail": "The dial has simple tick marks and one hand, no numbers." },
+    "tech-tape-measure": { "detail": "The pulled-out tape has tick marks only, no numbers." },
+    "tech-bar-chart": { "detail": "Three or four chunky bars on a rounded card, no axis labels or numbers." },
+    "tech-clipboard": { "detail": "The checklist is drawn as check marks and simple lines, no writing." },
+    "tech-battery": { "detail": "It shows a small lightning bolt, no plus sign, letters or numbers." },
+    "tech-usb": { "detail": "No logo or text." },
+    "tech-lightbulb": { "detail": "The glass is filled with warm gold light, not see-through." },
+    "tech-flask": { "detail": "The glass is tinted and filled with bubbling liquid, not see-through." },
+    "tech-set-square": { "detail": "Solid coloured plastic with tick marks only, no numbers; its centre cut-out shows white sticker paper." },
+    "tech-printer-3d": { "detail": "No text or logo." },
+    "tech-microchip": { "detail": "The top of the chip is plain, with no markings or text." },
+    "tech-robot": { "detail": "Its round lamp eyes are simple glowing circles and it has a short antenna." },
+    "soft-daisy": { "detail": "A classic daisy: white petals around a round yellow centre, with a short green stem and one leaf." },
+    "soft-lavender": { "detail": "Every little flower on the sprig is lavender purple or lilac; the stem and leaves are green." },
+    "soft-paper-plane": { "detail": "A simple folded paper dart made of white and pale sky-blue paper, with crisp fold lines; no windows, engines or propellers." },
+    "soft-rubber-duck": { "detail": "A classic yellow rubber duck with one simple dot eye and an orange beak." },
+    "soft-sleep-mask": { "detail": "A soft sleep mask with its strap, decorated with a small crescent moon; no eyes drawn on it." },
+    "soft-juice": { "detail": "The glass is tinted, not see-through." },
+    "soft-water-bottle": { "detail": "No label text." },
+    "soft-mug": { "detail": "No text or logo on the mug." },
+    "soft-vinyl": { "detail": "A glossy black vinyl record with fine concentric grooves and a small plain coloured centre label (no text), slightly tilted so it reads as a record, not a plate." },
+    "soft-seashell": { "detail": "A scallop seashell: a fan shape with radiating ridges and a small hinge at the bottom, in soft peach and pink." },
+    "soft-running-shoe": { "detail": "No brand logo or swoosh." },
+    "soft-speech-bubble": { "detail": "Completely empty: no text, dots or symbols inside." }
+  },
+  "ship": {},
+  "review": {
+    "tech-ruler": { "attempt": 1, "note": "two crossed rulers read as an X; regenerate as one ruler" },
+    "soft-daisy": { "attempt": 1, "note": "orange petals read as a generic flower; regenerate with white petals" },
+    "soft-lavender": { "attempt": 1, "note": "rainbow-coloured sprig; regenerate in lavender purple" },
+    "soft-paper-plane": { "attempt": 1, "note": "drawn as a toy aeroplane with windows; regenerate as folded paper" },
+    "soft-vinyl": { "attempt": 2, "note": "grey disc with a yellow centre reads as a fried egg; regenerate as a black grooved record" },
+    "soft-seashell": { "attempt": 1, "note": "reads as a ball with a cap; regenerate as a scallop shell" }
+  },
+  "reject": {
+    "tech-keyboard": [2],
+    "soft-bicycle": [2],
+    "soft-sunflower": [2]
+  }
+}

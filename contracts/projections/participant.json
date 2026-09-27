@@ -1,6 +1,6 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/participant",
-  "version": "1.0.2",
+  "version": "1.2.0",
   "audience": "participant (self only)",
   "allow": {
     "sequence": "int",
@@ -22,7 +22,7 @@
     "board": "ParticipantBoard|null",
     "draws": "[Draw] for the attached round",
     "result": "{ isWinner:bool, lineIds:string[], winningDrawNumber:int, coWinnerCount:int } | null",
-    "soul": "SoulPrivate|null",
+    "soul": "SoulPrivate|null (config: SoulConfig v3 from contract 1.2.0, D-31; SoulConfigV2 for Souls created under 1.1.0 and for the neutral fallback; SoulConfigV1 before)",
     "insightAvailable": "bool"
   },
   "forbidden": [

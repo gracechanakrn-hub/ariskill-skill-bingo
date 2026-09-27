@@ -32,6 +32,8 @@ describe('static serving: gzip negotiation, ETag/304, cache headers (D-22)', () 
   const bigJs = 'export const pad = "' + 'abcdefghij'.repeat(3000) + '";\n'; // ~30 KB, compressible
   const bigVendor = '/* vendored */ ' + 'const x = 1;\n'.repeat(2000);
   const smallJson = '{"ok":true}';
+  // A fake baseline Soul model (D-27): GLB magic + a quantised-looking payload, well above the 8 KB gzip floor.
+  const fakeGlb = Buffer.concat([Buffer.from('glTF'), Buffer.from([2, 0, 0, 0]), Buffer.alloc(4), Buffer.from(Array.from({ length: 40000 }, (_, i) => (i * 7) % 61))]);
   before(async () => {
     root = mkdtempSync(join(tmpdir(), 'bingo-static-'));
     mkdirSync(join(root, 'packages/vendor/three/build'), { recursive: true });
@@ -42,6 +44,9 @@ describe('static serving: gzip negotiation, ETag/304, cache headers (D-22)', () 
     writeFileSync(join(root, 'packages/contracts/big.js'), bigJs);
     writeFileSync(join(root, 'packages/contracts/small.json'), smallJson);
     writeFileSync(join(root, 'assets/blob.png'), Buffer.alloc(20000, 7));
+    mkdirSync(join(root, 'assets/souls/baseline'), { recursive: true });
+    writeFileSync(join(root, 'assets/souls/baseline/soul-baseline-hero.glb'), fakeGlb);
+    writeFileSync(join(root, 'assets/souls/baseline/tiny.glb'), fakeGlb.subarray(0, 4096));
     writeFileSync(join(root, 'apps/employee-mobile/index.html'), '<!doctype html><title>x</title>' + '<p>hello</p>'.repeat(2000));
     writeFileSync(join(root, 'package.json'), '{"secret":true}');
     clearStaticCache();
@@ -118,6 +123,25 @@ describe('static serving: gzip negotiation, ETag/304, cache headers (D-22)', () 
     assert.equal(vendorish.status, 404);
   });
 
+  test('.glb models are model/gltf-binary, gzipped when accepted, ETag/304 and revalidated like every other asset (D-27)', async () => {
+    const url = `${srv.base}/assets/souls/baseline/soul-baseline-hero.glb`;
+    const gz = await raw(url, { 'Accept-Encoding': 'gzip, deflate, br' });
+    assert.equal(gz.status, 200); assert.equal(gz.headers['content-type'], 'model/gltf-binary'); assert.equal(gz.headers['content-encoding'], 'gzip');
+    assert.equal(gz.headers.vary, 'Accept-Encoding'); assert.equal(gz.headers['cache-control'], CACHE_REVALIDATE); assert.match(gz.headers.etag, /^"[0-9a-f]{40}"$/);
+    assert.equal(Number(gz.headers['content-length']), gz.body.length); assert.ok(gz.body.length < fakeGlb.length / 2, 'compressed');
+    assert.deepEqual(gunzipSync(gz.body), fakeGlb, 'bytes round-trip');
+    const again = await raw(url, { 'Accept-Encoding': 'gzip', 'If-None-Match': gz.headers.etag });
+    assert.equal(again.status, 304); assert.equal(again.body.length, 0); assert.equal(again.headers.etag, gz.headers.etag);
+    const plain = await raw(url, { 'Accept-Encoding': 'identity' });
+    assert.equal(plain.status, 200); assert.equal(plain.headers['content-encoding'], undefined); assert.equal(plain.headers['content-type'], 'model/gltf-binary'); assert.deepEqual(plain.body, fakeGlb);
+    assert.equal(plain.headers.etag, gz.headers.etag, 'one ETag per file regardless of encoding');
+    const head = await fetch(url, { method: 'HEAD', headers: { 'Accept-Encoding': 'gzip' } });
+    assert.equal(head.status, 200); assert.equal(head.headers.get('content-type'), 'model/gltf-binary'); assert.equal(head.headers.get('content-encoding'), 'gzip');
+    const tiny = await raw(`${srv.base}/assets/souls/baseline/tiny.glb`, { 'Accept-Encoding': 'gzip' });
+    assert.equal(tiny.status, 200); assert.equal(tiny.headers['content-encoding'], undefined, 'below 8 KB stays raw'); assert.equal(tiny.headers['content-type'], 'model/gltf-binary');
+    assert.equal((await raw(`${srv.base}/assets/souls/baseline/missing.glb`)).status, 404);
+  });
+
   test('path traversal is still blocked (404) including encoded forms; unknown files 404', async () => {
     for (const path of ['/packages/../package.json', '/packages/vendor/../../package.json', '/play/../../package.json', '/contracts/%2e%2e/package.json', '/assets/..%2f..%2fpackage.json', '/packages/vendor/%00x']) {
       const r = await raw(`${srv.base}${path}`, { 'Accept-Encoding': 'gzip' });
@@ -140,6 +164,13 @@ describe('static serving: gzip negotiation, ETag/304, cache headers (D-22)', () 
       assert.equal(js.status, 200); assert.ok(js.headers['content-type'].startsWith('text/javascript')); assert.equal(js.headers['content-encoding'], undefined, 'below 8 KB');
       const api = await fetch(`${t.baseUrl}/api/v1/time`, { headers: { 'Accept-Encoding': 'gzip' } });
       assert.equal(api.status, 200);
+      // the real baseline Soul model (D-27): gzipped glTF binary with the security headers and an ETag
+      const glb = await raw(`${t.baseUrl}/assets/souls/baseline/soul-baseline-hero.glb`, { 'Accept-Encoding': 'gzip' });
+      assert.equal(glb.status, 200); assert.equal(glb.headers['content-type'], 'model/gltf-binary'); assert.equal(glb.headers['content-encoding'], 'gzip');
+      assert.equal(glb.headers['x-content-type-options'], 'nosniff'); assert.equal(glb.headers['cache-control'], CACHE_REVALIDATE); assert.ok(glb.headers.etag);
+      const bytes = gunzipSync(glb.body);
+      assert.equal(bytes.toString('latin1', 0, 4), 'glTF'); assert.equal(bytes.readUInt32LE(4), 2); assert.equal(bytes.readUInt32LE(8), bytes.length);
+      assert.equal((await raw(`${t.baseUrl}/assets/souls/baseline/soul-baseline-lite.glb`, { 'If-None-Match': (await raw(`${t.baseUrl}/assets/souls/baseline/soul-baseline-lite.glb`)).headers.etag })).status, 304);
     } finally { await t.close(); }
   });
 });

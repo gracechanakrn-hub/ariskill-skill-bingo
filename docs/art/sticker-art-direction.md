@@ -48,6 +48,12 @@ Contrast rule unchanged: body text >= 4.5:1 on any tile surface; pill text #E7DF
 5. Die-cut: whole figure duplicated below as a white stroke (6 px round joins) + `--sticker-shadow`. `detail: 'simple'` (thumbnails, Galaxy atlas) keeps the outline at 3 px and drops the speckle blur.
 6. Bingo Star badge: gold five-point star with white outline at the upper right, unchanged semantics.
 
+v3 (2026-09-24, D-27, renderer 3.0.0): the body path is the front view of the Arise Soul baseline model
+(`docs/art/soul-baseline.md` "Flat 2D Soul") instead of the six silhouettes, and the character's own surface replaces the
+v2 decorations: goo drips in the palette light (soft edge) take the place of the seeded speckles, near-white button eyes
+with a groove ring in the palette outline colour replace the trait eyes, and there is no heart belly or mouth. Items 1,
+2, 4, 5 and 6 stand (gradient, rim + blurred highlight, lit orb, die-cut and 3 px `simple` die-cut, badge).
+
 ## 3D Soul spec (employee soul-scene / join-scene, public Galaxy sprites)
 - Same body profiles (soul-params.js) but MeshPhysicalMaterial: color = palette base, clearcoat 1, clearcoatRoughness 0.15, roughness 0.35, sheen 0.6 sheenColor peach, transmission 0. Speckle as an emissive-lit vertex-color or small spheres (<= 14) from the same seed.
 - Antenna orb: emissive sphere + additive sprite glow; bloom already exists.

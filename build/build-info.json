@@ -1,23 +1,23 @@
 {
-  "buildId": "bingo-05efbe9c7c4e",
-  "treeHash": "05efbe9c7c4e3d7b16981c6db106cfe0d73960a842cf3b5d1eb5a5239e12a575",
+  "buildId": "bingo-5a3d6c80c6a1",
+  "treeHash": "5a3d6c80c6a10dba771c61e78356e92ad8960bdeacf665548ecf480abf86c923",
   "runId": "run-20260922-113339",
   "name": "ariskill-skill-bingo",
   "version": "1.0.0",
-  "assembledAt": "2026-09-23T08:01:13.390Z",
+  "assembledAt": "2026-09-25T03:14:42.459Z",
   "node": "v26.8.2",
   "contractVersions": {
     "round-state-machine.json": "1.0.0",
     "bingo-rules.json": "1.0.0",
-    "realtime-events.json": "1.0.3",
-    "api-contract.yaml": "1.0.2"
+    "realtime-events.json": "1.1.0",
+    "api-contract.yaml": "1.1.0"
   },
   "skillMasterVersion": "skill-matrix-2026-tech-role-20260319",
-  "fileCount": 292,
-  "totalBytes": 4970383,
-  "assetsBytes": 1396208,
+  "fileCount": 621,
+  "totalBytes": 9407120,
+  "assetsBytes": 5384865,
   "audioBytes": 688488,
-  "vendorBytes": 2373428,
+  "vendorBytes": 2541016,
   "budgets": {
     "assetsBytes": 6291456,
     "audioBytes": 1677721.6,
@@ -114,13 +114,13 @@
     },
     {
       "path": "apps/employee-mobile/README.md",
-      "bytes": 15291,
-      "sha256": "f9f9c469e74a8c24430f067d0fb149ead774d16da2f0ef67e9b285445c81c197"
+      "bytes": 18883,
+      "sha256": "016b17a0e0826de29037f33ff2ddc14b1e56143eebef05cb84abfd10a6aa0b34"
     },
     {
       "path": "apps/employee-mobile/app.css",
-      "bytes": 34302,
-      "sha256": "ccc9d549a1dfe25038deb4c070c17ef01d3493348659d6b9906e9dfcfb292e0a"
+      "bytes": 34612,
+      "sha256": "656e3fc2d8a0d2a6509d65af535fd6ce4325add51ca1a1cb5efc090589eb823e"
     },
     {
       "path": "apps/employee-mobile/index.html",
@@ -159,8 +159,8 @@
     },
     {
       "path": "apps/employee-mobile/src/main.js",
-      "bytes": 28733,
-      "sha256": "71222825b4330f4db10a0de7605072ffd298363cf1f45e0b485e5089a191923b"
+      "bytes": 29045,
+      "sha256": "8ca8a1ca9222652d2fecef7c0a49bc58352b560ec7e031bd01529bbaa9f67ada"
     },
     {
       "path": "apps/employee-mobile/src/scene/capability.js",
@@ -169,23 +169,33 @@
     },
     {
       "path": "apps/employee-mobile/src/scene/join-scene.js",
-      "bytes": 13766,
-      "sha256": "3c03b7fd9c62986c1c200c477720db9ee58d5b67999a1b03f3020e2bfe20e1f2"
+      "bytes": 10654,
+      "sha256": "a837b13c19253110473d614228ee7e5cd2403c2741886b1df516e432dcac0dcc"
     },
     {
       "path": "apps/employee-mobile/src/scene/loader.js",
-      "bytes": 1284,
-      "sha256": "6782ebee71273afd6511ed9fb1f2007ac74e0a457bad0c959d3c65863093271c"
+      "bytes": 3191,
+      "sha256": "b4b1e8c5b8e51f596644826bb31238486bfba386da4976074e494c4152e16c59"
+    },
+    {
+      "path": "apps/employee-mobile/src/scene/soul-model.js",
+      "bytes": 1213,
+      "sha256": "6b5889f2a720b078631d9e52ccd20a6eabef6f4d28bdffca772d4df196ee5864"
     },
     {
       "path": "apps/employee-mobile/src/scene/soul-params.js",
-      "bytes": 10833,
-      "sha256": "9f6c6dd59e5e65aacde5f7c3ac08ed68cf477816b3a353c386c0153b26ee0e7d"
+      "bytes": 14382,
+      "sha256": "0cfff172bf42f101907848b1e3430f627093958bb89452fc15dc4961b587b39a"
     },
     {
       "path": "apps/employee-mobile/src/scene/soul-scene.js",
-      "bytes": 26097,
-      "sha256": "76c5118362853b702bdfccc9cd3ce739bf59e733bce733cb4fcd7eaa3062464d"
+      "bytes": 18122,
+      "sha256": "983f4f7282e88f53884df549eee764f52aaf945ee7bbb3ad1180af0eed735198"
+    },
+    {
+      "path": "apps/employee-mobile/src/scene/soul-tint.js",
+      "bytes": 720,
+      "sha256": "8c3247aac88b802fcd48b9f67b05600018e300831f68826b6767af03f1e3135c"
     },
     {
       "path": "apps/employee-mobile/src/state.js",
@@ -239,8 +249,8 @@
     },
     {
       "path": "apps/public-galaxy/README.md",
-      "bytes": 17905,
-      "sha256": "e547d20aa9fd0e6676579a3e1cbea0dd82f7b8c641f8da12fc14699fc6e191f1"
+      "bytes": 18992,
+      "sha256": "ff57ba784f7767bd2bc27e8f07bbba02e1467b8eac7dbdae4dcc89156a39f62c"
     },
     {
       "path": "apps/public-galaxy/app.css",
@@ -264,13 +274,13 @@
     },
     {
       "path": "apps/public-galaxy/src/galaxy.js",
-      "bytes": 12815,
-      "sha256": "ae1357777c92b9c9de6b2ec70fbb1ad2f306940220a66a0dac897fd51f31f7cf"
+      "bytes": 13725,
+      "sha256": "d09012cfbdb38e69ac0f8c775217132f723df1c941e94cb9db434e93d8bf448a"
     },
     {
       "path": "apps/public-galaxy/src/main.js",
-      "bytes": 12582,
-      "sha256": "89e437386b833e76295a74e29b00ecdd36c4230fe8d4ee747b1ed393a9402e64"
+      "bytes": 12835,
+      "sha256": "79e227752ee2efbde536aa34e7530729130c47a3e584c85304323e72e2971fc9"
     },
     {
       "path": "apps/public-galaxy/src/panel.js",
@@ -279,8 +289,8 @@
     },
     {
       "path": "apps/public-galaxy/src/renderer/atlas.js",
-      "bytes": 6473,
-      "sha256": "19644291ba4919358057d97df726e680a5b3844239b033a546f3f794ab414500"
+      "bytes": 9456,
+      "sha256": "c5bd912c270cbee878a8578f8abdab7b19214e74741164446fd86cca32dc622d"
     },
     {
       "path": "apps/public-galaxy/src/renderer/aurora.js",
@@ -303,9 +313,19 @@
       "sha256": "1448f6958cb076ba0a0d50872bb229dbb720d9bed0d71bfc4d05c8349af702ae"
     },
     {
+      "path": "apps/public-galaxy/src/renderer/impostor-plan.js",
+      "bytes": 6041,
+      "sha256": "a68845cb1a82b71b0e9e9b112b2277a66f1394b540923acd80c6446abd1bece7"
+    },
+    {
+      "path": "apps/public-galaxy/src/renderer/impostor.js",
+      "bytes": 11133,
+      "sha256": "6b6379d430578a33c4cbf7e084676918950795cb5bf354ecb662829ecae500fc"
+    },
+    {
       "path": "apps/public-galaxy/src/renderer/scene.js",
-      "bytes": 18719,
-      "sha256": "59a05b264bd2556d29b58184e3b417fb02db392f46ca3af694e2fa3a45d073c1"
+      "bytes": 18730,
+      "sha256": "f434906f6a96ed28eb2ca9f4c4111070b540fe2d9253614280cd7a93adc3203a"
     },
     {
       "path": "apps/public-galaxy/src/renderer/static.js",
@@ -319,8 +339,8 @@
     },
     {
       "path": "apps/public-galaxy/src/renderer/three.js",
-      "bytes": 38147,
-      "sha256": "a1d29d303eac3ed693547771cce7b2386716f84bc53825cada560227bc46b597"
+      "bytes": 41619,
+      "sha256": "8823b3049c5f403c4b8f2e1ab362570890d41c0cf533f98038f39ef23595f710"
     },
     {
       "path": "apps/public-galaxy/src/renderer/webgl2.js",
@@ -429,8 +449,8 @@
     },
     {
       "path": "services/game-service/src/game.js",
-      "bytes": 28630,
-      "sha256": "ceef2c3430486dc127846e376ccd1db5bcb006dbee46476f244596e2529035a9"
+      "bytes": 29468,
+      "sha256": "c504adad1867cf1606238f79c105dcdf10ab638195c46247c52b3bb26ffa44e7"
     },
     {
       "path": "services/game-service/src/ids.js",
@@ -474,8 +494,8 @@
     },
     {
       "path": "services/game-service/src/skills.js",
-      "bytes": 2590,
-      "sha256": "4be1b68998471e9b5a80a50dd4a058f152c0c1c189391b8ebd31990421769116"
+      "bytes": 2840,
+      "sha256": "7bff1725c55fb14623dc3865251f416a4ccd16e73a3f0b54594f0584483bd2fe"
     },
     {
       "path": "services/game-service/src/sse.js",
@@ -484,8 +504,8 @@
     },
     {
       "path": "services/game-service/src/static.js",
-      "bytes": 7852,
-      "sha256": "a1962222633272b8c677ee67169076fc2958d5aa2fa9b5137dcb17786578afef"
+      "bytes": 8126,
+      "sha256": "827894e4ed41703c334c76f9f8bd0ff7d7632c8cc311861073e88e941f91f1ab"
     },
     {
       "path": "services/game-service/src/timers.js",
@@ -549,8 +569,8 @@
     },
     {
       "path": "packages/game-rules/src/index.js",
-      "bytes": 236,
-      "sha256": "45be35560015a09f08405a6c0714d49bc1366d3378dc2908655cedaf87545e86"
+      "bytes": 271,
+      "sha256": "750bf24d66d521905869c9cc8a529a148ff30131a50744321588659a93333e77"
     },
     {
       "path": "packages/game-rules/src/insight.js",
@@ -573,9 +593,14 @@
       "sha256": "acc8867e94943eccc3547ac188cec62c6be011abad25a1a23d2551b5e14c0652"
     },
     {
+      "path": "packages/game-rules/src/soul-catalog.js",
+      "bytes": 27625,
+      "sha256": "a68ff58c2ba1a6482bfbc28256cadb1c9b39c7b05ba8dbf8d061c669bfacb820"
+    },
+    {
       "path": "packages/game-rules/src/soul.js",
-      "bytes": 3281,
-      "sha256": "684387b1dd5966ab97ae0169c65efbf3868945a684d3439370fd64c99051ed62"
+      "bytes": 11080,
+      "sha256": "ece86725595cec6ccb20c9bbe695c4cfcaa2b129317d98d08477c291b0695147"
     },
     {
       "path": "packages/game-rules/src/state-machine.js",
@@ -584,8 +609,8 @@
     },
     {
       "path": "packages/ui/README.md",
-      "bytes": 14276,
-      "sha256": "c0e17143ef5b5f971db241dd9a71b0ca6d8c9a03d1c2b1084904495e6eff2563"
+      "bytes": 18023,
+      "sha256": "5559f1bc6a2c42708b43fb848197a6eae5471c0358ba257bc887620fe393b484"
     },
     {
       "path": "packages/ui/api-client.js",
@@ -594,8 +619,8 @@
     },
     {
       "path": "packages/ui/asset-map.js",
-      "bytes": 37713,
-      "sha256": "4a200fc377d6c42b76633febb0f5e4a9d1fa93b6d8ce2485b2c3026136fc6352"
+      "bytes": 39372,
+      "sha256": "f156bddcc4089ffcd9b936149ba0e70e9fd9f721040a5a6770cb67412e6598fa"
     },
     {
       "path": "packages/ui/audio.js",
@@ -648,9 +673,69 @@
       "sha256": "686555bb94b3c8f616e72eb17c2650c3b91b0de4e917b8019cd15f5ae789822b"
     },
     {
+      "path": "packages/ui/soul-baseline-shape.js",
+      "bytes": 4969,
+      "sha256": "3a6093f219a6595f2e32380d2028f8749a212a69f4a73eef9c514ae1886b3a59"
+    },
+    {
+      "path": "packages/ui/soul-decor-data.js",
+      "bytes": 32779,
+      "sha256": "19d5a8aaca708951ae2548e1a17d927d82303fc6d5f5239dcb8e89e92b0087b0"
+    },
+    {
       "path": "packages/ui/soul-renderer.js",
-      "bytes": 23414,
-      "sha256": "b58d78246a2650ac31034a5c5050d8f91df93df2c1df73ca1d0e82a50da60762"
+      "bytes": 28483,
+      "sha256": "52385a7c6064647154785935203c8cfeeb9a8a055ae71966dfa810e21ee6f693"
+    },
+    {
+      "path": "packages/ui/soul3d/badge.js",
+      "bytes": 3676,
+      "sha256": "6fa7032efd5e60c252ac9c098edf451039244351d03b0652bffa4df4e990ee2d"
+    },
+    {
+      "path": "packages/ui/soul3d/card.js",
+      "bytes": 2995,
+      "sha256": "81a88b5f936905ad9f9619c0143a42d30ee4b0703a76aa0b1a8efc58a7832f07"
+    },
+    {
+      "path": "packages/ui/soul3d/decor.js",
+      "bytes": 9504,
+      "sha256": "87ee74f86282bd6169b5024762193b196434196c74dd73e72766fb5e0105b702"
+    },
+    {
+      "path": "packages/ui/soul3d/figure.js",
+      "bytes": 11878,
+      "sha256": "986350da6d29875db24a4533a9e774eba908b9da5e5c45a4ecab60e2da39c69e"
+    },
+    {
+      "path": "packages/ui/soul3d/index.js",
+      "bytes": 781,
+      "sha256": "17ee0f07a5e7047dc7956a2227e3183c73e0dd0779753ff97ea1a4bda3865578"
+    },
+    {
+      "path": "packages/ui/soul3d/model.js",
+      "bytes": 5905,
+      "sha256": "9f9ba7b9e2157bb8eb5dde6b1d9312b065677d12667c37b041f2675497403730"
+    },
+    {
+      "path": "packages/ui/soul3d/placement.js",
+      "bytes": 4007,
+      "sha256": "2a1893fba6be0f4a381522f77e1b646335a12ac634921baf50eafe9866ce02f2"
+    },
+    {
+      "path": "packages/ui/soul3d/rig.js",
+      "bytes": 2895,
+      "sha256": "9bd9a2843cb3de50d5f40254fe940f68c18c7b0196c3b22bb02a554a88050e88"
+    },
+    {
+      "path": "packages/ui/soul3d/studio.js",
+      "bytes": 8109,
+      "sha256": "f8631b5e23dd63726563cca61e41888b398646e4d9d5d540925a7b9e1923ce67"
+    },
+    {
+      "path": "packages/ui/soul3d/tint.js",
+      "bytes": 8805,
+      "sha256": "3bd2f195f0207a776cf38600428250bff07bb4077920f987e7f47fdbc772fec5"
     },
     {
       "path": "packages/ui/sse-client.js",
@@ -774,8 +859,8 @@
     },
     {
       "path": "packages/vendor/three/VENDOR.json",
-      "bytes": 2698,
-      "sha256": "396a8a0216c330252e44bbfb468c9cb5cfa87be0357a751bf62a9bc9e2c77914"
+      "bytes": 3283,
+      "sha256": "5356269c794a3c86201d53f6956d932b158fc3b94410fbc242ae7dac88e8f2a8"
     },
     {
       "path": "packages/vendor/three/addons.js",
@@ -791,6 +876,11 @@
       "path": "packages/vendor/three/build/three.module.js",
       "bytes": 662772,
       "sha256": "9052042d676cb0fdc1ddfefe193053f34b7ac0513a616fdac4535d49987812ea"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/loaders/GLTFLoader.js",
+      "bytes": 117595,
+      "sha256": "e2ca07cacfa4f5b0572310bd26dce2deacf8f4dfa375d3020a476448d635dafa"
     },
     {
       "path": "packages/vendor/three/examples/jsm/postprocessing/EffectComposer.js",
@@ -843,9 +933,24 @@
       "sha256": "353479f77a8d7e2629d49ccac9fc2f5dbfdda5442e0adf867b00377a2fcb0cb2"
     },
     {
+      "path": "packages/vendor/three/examples/jsm/utils/BufferGeometryUtils.js",
+      "bytes": 37737,
+      "sha256": "25d8fffde3d48fa5a219e1ff9ffa02566f99222c71e3e57ae979075eaf52f2d6"
+    },
+    {
+      "path": "packages/vendor/three/examples/jsm/utils/SkeletonUtils.js",
+      "bytes": 11560,
+      "sha256": "9e53f7de94e1a632b88113536c1c404e243dac973bad2e8e6d514ff49b569e65"
+    },
+    {
       "path": "packages/vendor/three/index.js",
       "bytes": 143,
       "sha256": "628487da5f2c29a28c02e4084daae042f02dd3ba48a56a19b370bc65d717d57d"
+    },
+    {
+      "path": "packages/vendor/three/loaders.js",
+      "bytes": 111,
+      "sha256": "010dc946080a33b91c164e71f66416458a8cc9fac451fdebc5f3f049c64351ae"
     },
     {
       "path": "packages/vendor/three/package.json",
@@ -854,8 +959,8 @@
     },
     {
       "path": "contracts/api-contract.yaml",
-      "bytes": 10239,
-      "sha256": "2e05489d3f69e9f2329dd267e7f38b042f9c33f336f5b4a541070443efa8425d"
+      "bytes": 10490,
+      "sha256": "3a7499f952921ae78b77854d032416d5d22ae436b205508fe2e0b86854dce05f"
     },
     {
       "path": "contracts/bingo-rules.json",
@@ -874,23 +979,23 @@
     },
     {
       "path": "contracts/projections/participant.json",
-      "bytes": 1113,
-      "sha256": "5b66c698841f048d44f8a6e86030f1339cd54943bff2260c2320189f6ed16557"
+      "bytes": 1204,
+      "sha256": "d50ae380eb573e822f0362e73274a174b96c8ce4706da267001d908d29bdc112"
     },
     {
       "path": "contracts/projections/public.json",
-      "bytes": 1684,
-      "sha256": "35ab6e29f7bf98ec565a907dbd840c3ce86e974da976df0742b66f4f554e91be"
+      "bytes": 2071,
+      "sha256": "035f8310b84a8d6287d9567ebedc291910ac2262390802cb06a4f07fb7cd4b2b"
     },
     {
       "path": "contracts/projections/stage.json",
-      "bytes": 1555,
-      "sha256": "6d8620f1a7254f99254c7e7fc6e8fbee0f80ae647430bf7aed4283d6fd08a032"
+      "bytes": 2037,
+      "sha256": "064852fe4c1e45862003ade608f6e6eaf68db70d0c7f45fe1dafa52987571409"
     },
     {
       "path": "contracts/realtime-events.json",
-      "bytes": 8225,
-      "sha256": "c50e9450d054df147e89f00f5bb6bc22f3b9c130d4bc11ce1bd3f52b714e49cd"
+      "bytes": 10209,
+      "sha256": "d8792ab797daaed54dd65b114d500c083f343fab9860a8b6b7d1bd60b8015e91"
     },
     {
       "path": "contracts/round-state-machine.json",
@@ -959,8 +1064,8 @@
     },
     {
       "path": "assets/manifest/assets.yaml",
-      "bytes": 24906,
-      "sha256": "48a75816777c85b27f1e793667efec597b2207b4cd42385a61378fec0b500c43"
+      "bytes": 132198,
+      "sha256": "a961ae28b616f8e1ae4b395465e7e5d9d038e64f3ef85c14a0db20e0f8e8688a"
     },
     {
       "path": "assets/manifest/audio.json",
@@ -1008,494 +1113,2034 @@
       "sha256": "de87cb8e9ab98b4a76efb40871d7b2f04575a0eec6f63b93ea2497f028b8edc1"
     },
     {
+      "path": "assets/souls/baseline/soul-baseline-hero.glb",
+      "bytes": 338168,
+      "sha256": "ef698a388bffb9c0b9a19f07c05655a8b6ead0b8cd479eaaad0423fe212df22a"
+    },
+    {
+      "path": "assets/souls/baseline/soul-baseline-lite.glb",
+      "bytes": 86152,
+      "sha256": "d2607c3a49f678ae873fc0d86782956eef5dc05610557ff9a4fec2dfea6e5161"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-lemon.glb",
+      "bytes": 14420,
+      "sha256": "76947c751b83358c230196db10e5f0c00dac49d7a3ed9d92a2ee3905ead8ae75"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-lemon.png",
+      "bytes": 5113,
+      "sha256": "deb7aacea15fc1d6e4b2679b88158c4d412090012b513c6f28023c89b9ec8451"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-lilac.glb",
+      "bytes": 14420,
+      "sha256": "7fce388e88dfb0062c9d87375791deca21d353d1b91ed0123a9fe10787d616c0"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-lilac.png",
+      "bytes": 5312,
+      "sha256": "bb2a7ba6fa941d65b07a8791aa5fee26ebe6ef3b60d7b798264fafce2878e2d2"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-mint.glb",
+      "bytes": 14416,
+      "sha256": "9c56657ac0ef8337b239205a6c1e9c226ac7301640f6a04867851ee7486771f4"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-mint.png",
+      "bytes": 5273,
+      "sha256": "b18c580c443b18285770ebd15a8288afe60c60b43cc9d7096b32de3aaba111f4"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-peach.glb",
+      "bytes": 14420,
+      "sha256": "04c10c9baee7177082691ff4f1fff6d2e15744ec263b59fb9214ac0bda24c88f"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-peach.png",
+      "bytes": 5420,
+      "sha256": "b5407a79644e9a8581e116a4d6ce84a0e5a9796b3107981985d4c53ac03427a8"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-sky.glb",
+      "bytes": 14412,
+      "sha256": "0af5e7717fccf6479a38ac5b9749c08f9068df66c664f98ec6808325f472973a"
+    },
+    {
+      "path": "assets/souls/charms/core-burst-sky.png",
+      "bytes": 5328,
+      "sha256": "4a33691e7e764405490bbaf5146bd94f7c34511bdfd2dd9629f893906b4218c3"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-lemon.glb",
+      "bytes": 14420,
+      "sha256": "09ac745c2213f4c3eff245bdf1c97df667345202cf45a4f58b333cfc54ebbe1a"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-lemon.png",
+      "bytes": 5293,
+      "sha256": "c96cbff1d601b81787ff2b237b284509cf7935fd0e2236d163a3097279500204"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-lilac.glb",
+      "bytes": 14420,
+      "sha256": "6af81440aa82b690a029963e69613b087bf24ea42a899f4b66bfb99f9150389f"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-lilac.png",
+      "bytes": 5391,
+      "sha256": "35339d622785af9921b559c48b943f68f1722cb0d2a75b9c2cd423c323caa78b"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-mint.glb",
+      "bytes": 14416,
+      "sha256": "383387dad9cda7a89726d1f0a5c9881d66b5aaa53af868b306d419a363f784df"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-mint.png",
+      "bytes": 5225,
+      "sha256": "6997090d54015beec605b26a09edace9eba5a9c5709a42ac4f749b0e7f033736"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-peach.glb",
+      "bytes": 14420,
+      "sha256": "8a69ddd17b8899a56fb7327abc752a882311c1c3a70555d806dc4047d5f47403"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-peach.png",
+      "bytes": 5290,
+      "sha256": "2b3789de64a10ceae8bd82aa7009cd0f946f0458a2b7171a1e067c247ff5c3d3"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-sky.glb",
+      "bytes": 14412,
+      "sha256": "b487df19604f50d3e26e04761d373585ca67d105e14dab1f486878b057ec264f"
+    },
+    {
+      "path": "assets/souls/charms/core-chubby-sky.png",
+      "bytes": 5353,
+      "sha256": "bc8044487a7c722aeba43130a953044090e600546ad53c532ea1f6169ed26f17"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-lemon.glb",
+      "bytes": 14424,
+      "sha256": "2fcf59196c61c765e628135acaa0bc9544b9c2a4f00f7e4d74f70d840371e4a0"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-lemon.png",
+      "bytes": 5584,
+      "sha256": "c63f1d0710eec0f5b4c8eebbc82ed94a1b0aa55f4e02cab7ade58e0008153881"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-lilac.glb",
+      "bytes": 14424,
+      "sha256": "d4bfdd24b475eecdd35575fa46e4c2a0a604eaec83b093147603560751922f88"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-lilac.png",
+      "bytes": 5500,
+      "sha256": "1c1730e2fc6c7377fba345cef908f55d5320edb7ccdffe168669723c3275e4c2"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-mint.glb",
+      "bytes": 14420,
+      "sha256": "7fbb69bdde8eb65632c9c536c88702d834506d235089d6825dc0e54740d4d974"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-mint.png",
+      "bytes": 5638,
+      "sha256": "2d016795afa75e6bcf6cfc6a3b2a8f2b83cc77a4ee66dd8b15c90c9ee476cf86"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-peach.glb",
+      "bytes": 14424,
+      "sha256": "d536f421ae96d5deb276312bad1a42d8195cfb18d64b8d5dc604890bb46b3240"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-peach.png",
+      "bytes": 5548,
+      "sha256": "c8dd26a6de3bbbf000c6887ece5c539e891f93916907207bbbca5b5aa519568f"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-sky.glb",
+      "bytes": 14416,
+      "sha256": "b1ac14687dd901f736050355b62d633db2cd272996d8cae224551da487f3deb4"
+    },
+    {
+      "path": "assets/souls/charms/core-classic-sky.png",
+      "bytes": 5712,
+      "sha256": "e9e1ea1c75c4a4af1a1c39eb4e5b4edcdc53fcb6e849c970af52c1a7bcb0dbc4"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-lemon.glb",
+      "bytes": 14432,
+      "sha256": "73cf12ee84bdb453530513474aa9dfe6d43bdea8b5df2319db4234011edb86a2"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-lemon.png",
+      "bytes": 5557,
+      "sha256": "171fe239e52f4728717ef6578235030b2d434568427bfcf301b6fe7493cc23a7"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-lilac.glb",
+      "bytes": 14432,
+      "sha256": "d4e8ee71517f8f0fe43e78d8b78cf2cdf76ea61224cf44ac5eaf9a6fe93d0104"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-lilac.png",
+      "bytes": 5559,
+      "sha256": "e3eff44f050c1a0c11f244f5bb1fb658c2f5c53168d55bc2e0241f259dd38eb7"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-mint.glb",
+      "bytes": 14428,
+      "sha256": "02fba1eb946348aa1118a68f69f13783de4bb402a029236ae8c6c0a7fc625a70"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-mint.png",
+      "bytes": 5615,
+      "sha256": "f1a994881157c2d2dce05d35b90eede68013d07e377cdf31d136414e10e2dc49"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-peach.glb",
+      "bytes": 14432,
+      "sha256": "316a341b383396a7efa402a16f6c3b77e259ae6ee4d77e6f1664e75d0c98a5b9"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-peach.png",
+      "bytes": 5664,
+      "sha256": "836c6ff3a38dd08b7f8a0beba56316201acf9d14d08a9507b901c85faa9e0a76"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-sky.glb",
+      "bytes": 14424,
+      "sha256": "796c67199ba2d6a7b050e8b7206815b01c04bfe1f3ec07c1edea7801d806a709"
+    },
+    {
+      "path": "assets/souls/charms/core-pinwheel-sky.png",
+      "bytes": 5613,
+      "sha256": "c3973a0aa650d818b522aba03c4e8005a39d28d832836c1858192fcce256b785"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-lemon.glb",
+      "bytes": 14420,
+      "sha256": "411cb4111ac78dc1d31d07b55b7584e978497fad788f8b3739940917208026c3"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-lemon.png",
+      "bytes": 5555,
+      "sha256": "bfe907d8800a8b8919efb3de6e0dc6deb1dabf9e84e2775390a64b14c9a920b3"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-lilac.glb",
+      "bytes": 14420,
+      "sha256": "1ba84f33b116753e656b6f151754421994e4a4dad445c21998ef512bed6ea186"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-lilac.png",
+      "bytes": 5536,
+      "sha256": "14df9e0eb1ee6fe19e12e7e6d0ad53e8f19d84f371db40e11fdcaf1c7ff33c2b"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-mint.glb",
+      "bytes": 14416,
+      "sha256": "b6e42991c6582b66eddc8ca127dc8da3678124e7a8404ab846c20cfcd7249f10"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-mint.png",
+      "bytes": 5663,
+      "sha256": "203e78f0f3a8dfdc69c2b95787f87347d8541b23728b40009edfd8a217f95ca4"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-peach.glb",
+      "bytes": 14420,
+      "sha256": "963eaef42807d7f85115835d394312487b57be7aeb307c5e0731da99935fe264"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-peach.png",
+      "bytes": 5522,
+      "sha256": "ac7ad1ffff2e787db176bbc9a936557ee4bc0c5df2830a1021287ffe7413b34f"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-sky.glb",
+      "bytes": 14412,
+      "sha256": "1e292c5eb5ee84cbf8ffe8dad02d75523650be0dae62f854e405194e6c2c196b"
+    },
+    {
+      "path": "assets/souls/charms/core-ringed-sky.png",
+      "bytes": 5611,
+      "sha256": "c18da476cecfe070d91ae15445502ae775520013091b12965e12df50130e5b26"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-lemon.glb",
+      "bytes": 14428,
+      "sha256": "baa50b7a145c3ecd61bf0fcbdad6cc0a06d35b7a4d30ddfbfdccfea9e50e9045"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-lemon.png",
+      "bytes": 4414,
+      "sha256": "b967b78dcb60e3f624b48579a8538c0d64cbe05798d4c0764461db8ba2529043"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-lilac.glb",
+      "bytes": 14428,
+      "sha256": "8619c88b73a2e3e61875497bec104340b868c4d6e9d0c975ac476eee176d6ef5"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-lilac.png",
+      "bytes": 4595,
+      "sha256": "58283ab10df4b8ab9c8cb97a60c58cc79febb5c8e0c8e7dddc9a9e1618fd61bb"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-mint.glb",
+      "bytes": 14424,
+      "sha256": "e41b44bcfdcc08be38c5b3b17778dac4e0129f06d7a24f0609c427121d7027da"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-mint.png",
+      "bytes": 4495,
+      "sha256": "7c989a25610bcc8170b39834881a726fedd0cbbb88f04a39b706049aeac04ffa"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-peach.glb",
+      "bytes": 14428,
+      "sha256": "957d11fecd45fb6ed2e596371ef342f239c07675bc23f209ac0a16c37c23e1b3"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-peach.png",
+      "bytes": 4463,
+      "sha256": "46a259cf0f2dd89d48c610f236f7e39e2a372411507cc58c72c6e8d7f0573f7f"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-sky.glb",
+      "bytes": 14420,
+      "sha256": "e4f7a52079ffd80a9eee07f52fdc8ee69a25a2d39b706af26e4ae1717677e559"
+    },
+    {
+      "path": "assets/souls/charms/core-shooting-sky.png",
+      "bytes": 4519,
+      "sha256": "889b562ac81789384ea7165eac0af9bdd0686310674a2a7dd7a823ec2fb58724"
+    },
+    {
+      "path": "assets/souls/charms/core-six-lemon.glb",
+      "bytes": 14384,
+      "sha256": "70bb4da1a38d9b45cc543825dd279cb2668ec151c93805bca21556092991e2a4"
+    },
+    {
+      "path": "assets/souls/charms/core-six-lemon.png",
+      "bytes": 5122,
+      "sha256": "d673361467c552e81f790178f97d714b53b0f20f1b5b2634f240f8aac7dc526e"
+    },
+    {
+      "path": "assets/souls/charms/core-six-lilac.glb",
+      "bytes": 14384,
+      "sha256": "826ccc44fcc48376c58236a4b4e846ccbfc85529d8dcceb9ba35335e4bf40d37"
+    },
+    {
+      "path": "assets/souls/charms/core-six-lilac.png",
+      "bytes": 4950,
+      "sha256": "652604ed860c938e84186065e5906d85769cc26583627e0a4bc3de8d8c463f00"
+    },
+    {
+      "path": "assets/souls/charms/core-six-mint.glb",
+      "bytes": 14380,
+      "sha256": "08fe30cdd8d8bb98b214fcf94fee56660c7eb565499789ce050fe49f2ce038af"
+    },
+    {
+      "path": "assets/souls/charms/core-six-mint.png",
+      "bytes": 5092,
+      "sha256": "125b3f6ebb879211e1ed91618ef113f2019ac8ea5783191c9372ee0b1f46a57e"
+    },
+    {
+      "path": "assets/souls/charms/core-six-peach.glb",
+      "bytes": 14384,
+      "sha256": "450db65efdd14099fb6120334de243ac9c98bd8a3f891608b03d92628b66622a"
+    },
+    {
+      "path": "assets/souls/charms/core-six-peach.png",
+      "bytes": 5283,
+      "sha256": "a6235792f4636e80a9a665e77f73912fc4ec8aa6f97fde02ff37aa59a427ebff"
+    },
+    {
+      "path": "assets/souls/charms/core-six-sky.glb",
+      "bytes": 14376,
+      "sha256": "139f0b6bb321116d6c546aa325645d24405c22dfd12e958365fb1fca0c41d88e"
+    },
+    {
+      "path": "assets/souls/charms/core-six-sky.png",
+      "bytes": 4954,
+      "sha256": "0397873acdb40f1b2f47566a016371610a52462de9f177a10e2808e6b7b434d7"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-lemon.glb",
+      "bytes": 14416,
+      "sha256": "2f5570702df4bf62186e55288b7f903d0df12323f57fc398f21ff75e284fa9c4"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-lemon.png",
+      "bytes": 5899,
+      "sha256": "5522a444d92b70df9733baabd5e748564397dfc2b3facebe48d00cdf88dfd976"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-lilac.glb",
+      "bytes": 14416,
+      "sha256": "ae8e48428424fbde26ff336b2eca43c211f99a51774bd1ce0fe69d9ca43372df"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-lilac.png",
+      "bytes": 5801,
+      "sha256": "3a70a55b94a07d1d1e74f84e2064e16b2642d321de8c5adfb1b4b7acad6e5c37"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-mint.glb",
+      "bytes": 14412,
+      "sha256": "b15a8e58b32837098a593b95a65295fdeedf4111f8407fed31365e50204a719e"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-mint.png",
+      "bytes": 6048,
+      "sha256": "adff6fa20708f3ea220a9766bfc4701bb5f996042bfbafc51a9a5ba24e97bb8c"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-peach.glb",
+      "bytes": 14416,
+      "sha256": "2ef89145d1556fb2fc44ae06c8e29ef9366b634f4453e928f17878830df8d24d"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-peach.png",
+      "bytes": 5861,
+      "sha256": "14e0d9e1067e916fc5acadf71880cb9641a9e00e220e8f7425f1ca43b4b47a16"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-sky.glb",
+      "bytes": 14408,
+      "sha256": "3ee50cfc76d9d27f92ada3806bc88a6b6cbaa439a4f37fb62c0abb2cf25a4006"
+    },
+    {
+      "path": "assets/souls/charms/core-soft7-sky.png",
+      "bytes": 5897,
+      "sha256": "40f0dd08a282c9bd0b7d440ac9e1f5ee9827afe1a552f5f5aa929a98524d6fad"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-lemon.glb",
+      "bytes": 14428,
+      "sha256": "046fc8dc19fbe504b65e329b08c2fc180b08cf83c2f781b6ee6d7901d380058f"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-lemon.png",
+      "bytes": 4435,
+      "sha256": "34df2735ec8a8fb7f624e232940d371e7725d8c4dddd8aadfe9d5f7b2942aab7"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-lilac.glb",
+      "bytes": 14428,
+      "sha256": "250be0c1bc997d79f2d3550f6df06bba8f9b5e7c42e9701a01b130127ada05e6"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-lilac.png",
+      "bytes": 4626,
+      "sha256": "6c3ff45d11f9e264ac5c18c275ee105e135cb134cee2db1725478273edf9fb1f"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-mint.glb",
+      "bytes": 14424,
+      "sha256": "691066afe3133edd279e71a52d8c3af95805ff1dd8988e01db5c229191073f92"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-mint.png",
+      "bytes": 4476,
+      "sha256": "ac899d428eb8eca9057d433b669cc0ead05b492f0fcb6e9cda8a90533c951f5f"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-peach.glb",
+      "bytes": 14428,
+      "sha256": "a6c1630aab91107e38e06d37a2d89f6c628bf165ed6ee33063fd2c3d8dc2a5ea"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-peach.png",
+      "bytes": 4678,
+      "sha256": "a6cb42231609d46790b73f996b07179ad36a9bd4a4fe4149306e381a11c6b140"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-sky.glb",
+      "bytes": 14420,
+      "sha256": "d06082be195b567376d953ab52b33d5343958ff2b842eb17ecbeacaaf94e281c"
+    },
+    {
+      "path": "assets/souls/charms/core-sparkle-sky.png",
+      "bytes": 4658,
+      "sha256": "782eb15aa19dc00799237882659492d8fd43c2de98bf24896760afa9798e4267"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-lemon.glb",
+      "bytes": 14416,
+      "sha256": "08059a9d04b7ce221257a5f493b9851ef60929598eba0d2dff0624f27c6309cf"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-lemon.png",
+      "bytes": 5427,
+      "sha256": "d2abbe8193dae6f46e00b7018d0795a9adf143c4fe5d8ca8ce5bafddcd423bb3"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-lilac.glb",
+      "bytes": 14416,
+      "sha256": "81a87af458750699622e32352491d3e9b87d6215df16acb9489d7e64826e91cd"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-lilac.png",
+      "bytes": 5411,
+      "sha256": "8663b84c95df81271daab2a5728c42745bcc7dd2444a2bc7bfeb2b278999f660"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-mint.glb",
+      "bytes": 14412,
+      "sha256": "f404b9e82836c4afe3398f2e5ee195091ce4a1bb534fd14853c7dd2acb199e82"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-mint.png",
+      "bytes": 5310,
+      "sha256": "2669afbbe5dcc1b3e20443dcb232315ef1eb5a9d6a81aa0d7b86552465d8b57d"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-peach.glb",
+      "bytes": 14416,
+      "sha256": "423e7bcdfc67f00459c7c0a6926d38d134b28448b1b90b0b5c994ca7e498c5c8"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-peach.png",
+      "bytes": 5491,
+      "sha256": "36c1623d19bc26f5dffce44f0923a997457ed5cfd9655e298d928d798eb09576"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-sky.glb",
+      "bytes": 14408,
+      "sha256": "5ef985ac7440592293b09835749450d733c65e15c5a804461008bd3c2515f3ae"
+    },
+    {
+      "path": "assets/souls/charms/core-twin-sky.png",
+      "bytes": 5492,
+      "sha256": "aaed4beda598ca6c7408c292db216b8b4956e1f8475075d625c53e8a1d464252"
+    },
+    {
+      "path": "assets/souls/charms/soft-apple.glb",
+      "bytes": 14396,
+      "sha256": "55d6f575fc6873e4c6b356f4b0a4e95fcae6ef90d0702fff7cf23b2f27344167"
+    },
+    {
+      "path": "assets/souls/charms/soft-apple.png",
+      "bytes": 7609,
+      "sha256": "6bb8c9b7d02ece3fba21f0ca841ed27e8338f79bc6f28e574517b90f3ba1f361"
+    },
+    {
+      "path": "assets/souls/charms/soft-balloon.glb",
+      "bytes": 14400,
+      "sha256": "43f374f698b4c6e4babbbff15079a61a45566016b6f2979400a3c75f86772d63"
+    },
+    {
+      "path": "assets/souls/charms/soft-balloon.png",
+      "bytes": 7280,
+      "sha256": "03f56790c8c331dd7c5c4fbdfec72ad4c221473a9de1d4b3d6555e2a403b5050"
+    },
+    {
+      "path": "assets/souls/charms/soft-bicycle.glb",
+      "bytes": 14368,
+      "sha256": "1abf01f6640fa3ba29df136ef285d10717e5893055424ff9be21e668110516c3"
+    },
+    {
+      "path": "assets/souls/charms/soft-bicycle.png",
+      "bytes": 8612,
+      "sha256": "20e512c19675f050e7f8f6109546aba9cea11a359314368d92c00725c32ab972"
+    },
+    {
+      "path": "assets/souls/charms/soft-bouquet.glb",
+      "bytes": 14400,
+      "sha256": "75921004fcf719ee92d38e93a35387f97cfa1b632d027d50a493c3cc10285c11"
+    },
+    {
+      "path": "assets/souls/charms/soft-bouquet.png",
+      "bytes": 9089,
+      "sha256": "2df828ac6f5e8390a47452040da2669f527c7062eb880d256212a98a35ac7688"
+    },
+    {
+      "path": "assets/souls/charms/soft-butterfly.glb",
+      "bytes": 14412,
+      "sha256": "41eab1bad6a5b422b52dc0786345f75235548c8e92b0a3e50ab278466219bf20"
+    },
+    {
+      "path": "assets/souls/charms/soft-butterfly.png",
+      "bytes": 9622,
+      "sha256": "3d2368ba734dde691eb0a9638d4d73e9ed27e579e55406514538faa0c9772648"
+    },
+    {
+      "path": "assets/souls/charms/soft-cactus.glb",
+      "bytes": 14396,
+      "sha256": "2dd3e4c236b463f4814cd4d9c1045841a06bab0651d86733bc29fa228a8d5e8b"
+    },
+    {
+      "path": "assets/souls/charms/soft-cactus.png",
+      "bytes": 9385,
+      "sha256": "ef2e86c4bc87c75da8989f236277258795d8e47cf0d10902b3d1998d8667cbb5"
+    },
+    {
+      "path": "assets/souls/charms/soft-candle.glb",
+      "bytes": 14396,
+      "sha256": "cc4dafb4baf4e77a99945d8b8f3878c65b58464f71f721fb023ea2f426c52ce2"
+    },
+    {
+      "path": "assets/souls/charms/soft-candle.png",
+      "bytes": 7628,
+      "sha256": "4b7b3c3a4852b61e3659922156bf0ce9c1f9a0a22b6f6f694335f9aced9a3bed"
+    },
+    {
+      "path": "assets/souls/charms/soft-cherry-blossom.glb",
+      "bytes": 14428,
+      "sha256": "d3603c7619fb03404ea8953bffd938779e11f31f3f3878193a032e3837f23965"
+    },
+    {
+      "path": "assets/souls/charms/soft-cherry-blossom.png",
+      "bytes": 17851,
+      "sha256": "7c8cf855c720275ca94be6630a63e3228c2750369b6e1b685fc642cc27ddecbf"
+    },
+    {
+      "path": "assets/souls/charms/soft-clover.glb",
+      "bytes": 14396,
+      "sha256": "20e1ea59e4a79e561cde30f25c1ac4edcf30de983bd89c3f958881f1c20b37fa"
+    },
+    {
+      "path": "assets/souls/charms/soft-clover.png",
+      "bytes": 9549,
+      "sha256": "ce5983567f26d49fe9153979ef849b8913d515b3fac27d7735b4b8254b9c7cb4"
+    },
+    {
+      "path": "assets/souls/charms/soft-cookie.glb",
+      "bytes": 14400,
+      "sha256": "f1ba82182a06bb61051002aa1f9048c555ee2ca8008254d4c245b14478220d4b"
+    },
+    {
+      "path": "assets/souls/charms/soft-cookie.png",
+      "bytes": 10577,
+      "sha256": "eb0fac4dec1d0dc4eaec86bc99ca0bb262a4862b05cd2a6a180092a2d377e626"
+    },
+    {
+      "path": "assets/souls/charms/soft-cupcake.glb",
+      "bytes": 14400,
+      "sha256": "ec766e8ad543ceaf1b212e611ff36dd659188554d9cfc718d441559228fa6e6e"
+    },
+    {
+      "path": "assets/souls/charms/soft-cupcake.png",
+      "bytes": 8948,
+      "sha256": "c89dc6779e2d2fa4663876ca4915f69a51ea2c6f897a7befc26cdf7a6278ef0f"
+    },
+    {
+      "path": "assets/souls/charms/soft-daisy.glb",
+      "bytes": 14392,
+      "sha256": "514854542f9bc4436273745847f90cabc5b7d3765e41ebd5c1e1c5c04a78d8e6"
+    },
+    {
+      "path": "assets/souls/charms/soft-daisy.png",
+      "bytes": 8872,
+      "sha256": "75547221bd51f2bafeb482fdaa975c5e64a580c18bee44825a22d34d8a0b7cf8"
+    },
+    {
+      "path": "assets/souls/charms/soft-donut.glb",
+      "bytes": 14392,
+      "sha256": "f701a8fa102d69edf17f3e332e2ee9a8c491541675d8c07f62c71bdc47959b3e"
+    },
+    {
+      "path": "assets/souls/charms/soft-donut.png",
+      "bytes": 10745,
+      "sha256": "2d878cb91977f5271ba1cd5f171e9bf6575bcd833a3f587e351c36ccfe56d870"
+    },
+    {
+      "path": "assets/souls/charms/soft-dumbbell.glb",
+      "bytes": 14404,
+      "sha256": "e8d5133f543fe38052fea0d71372266ddce55e30246818a540a3f40da13396a7"
+    },
+    {
+      "path": "assets/souls/charms/soft-dumbbell.png",
+      "bytes": 7288,
+      "sha256": "a03d1f4ed3e62b642166182b44861f6b3e69fda230e96ced1d4ed30beaa3c50d"
+    },
+    {
+      "path": "assets/souls/charms/soft-earphones.glb",
+      "bytes": 14412,
+      "sha256": "c6cf5296b18c5c285c9adfcc12b2f05e40486b673519b1bfe2cc2a15ed3b2248"
+    },
+    {
+      "path": "assets/souls/charms/soft-earphones.png",
+      "bytes": 8687,
+      "sha256": "6f505d356ff7c85aff0f8fc0f6bf46a5000433374cd80c079e8436f43cabfef2"
+    },
+    {
+      "path": "assets/souls/charms/soft-feather.glb",
+      "bytes": 14400,
+      "sha256": "4fb3f133b13cbed33801ecfe1d843c04295ca0fd22578c60223b2ca7307ead2e"
+    },
+    {
+      "path": "assets/souls/charms/soft-feather.png",
+      "bytes": 6683,
+      "sha256": "e404e3a03b13e2aef9f3af29d5188347e2714e3b6ecd9ca701532e506267e9e7"
+    },
+    {
+      "path": "assets/souls/charms/soft-football.glb",
+      "bytes": 14404,
+      "sha256": "cf80f051ded66c6441ca850f7bbf4aa6b070788d044cae03204fa2f4845e2df2"
+    },
+    {
+      "path": "assets/souls/charms/soft-football.png",
+      "bytes": 10676,
+      "sha256": "9a791ac2f95c91721e781c778996e36af95601fd53ee57463ed188456ee55e8f"
+    },
+    {
+      "path": "assets/souls/charms/soft-gift.glb",
+      "bytes": 14388,
+      "sha256": "a862db9f1cac97d231b8241ef143062895e466e53c204825bd1ffcd3f5d82c4c"
+    },
+    {
+      "path": "assets/souls/charms/soft-gift.png",
+      "bytes": 9367,
+      "sha256": "fa1594f41ca7aac9b00893b69cd7fcc60238cb1e75ce66b93a30e7d838b2e1f4"
+    },
+    {
+      "path": "assets/souls/charms/soft-guitar.glb",
+      "bytes": 14372,
+      "sha256": "d1e55dc2625f0848a4723beef2d546357bb318f1e049f5dce92cc119ecea9bff"
+    },
+    {
+      "path": "assets/souls/charms/soft-guitar.png",
+      "bytes": 6515,
+      "sha256": "6cb1fe2d60655a0d8e2e07546c0be05a2aab7d2c5cd0d5c23516e42815398742"
+    },
+    {
+      "path": "assets/souls/charms/soft-heart.glb",
+      "bytes": 14368,
+      "sha256": "1bebc1996d98e8a450a7a90c66d2ac4f1d11ddb39c7a2bb2c3e30cbe8656f40b"
+    },
+    {
+      "path": "assets/souls/charms/soft-heart.png",
+      "bytes": 7747,
+      "sha256": "2777881b7ff4a990c61d18a21a847d180453eb4ffab3e77239b9b1856a4059f5"
+    },
+    {
+      "path": "assets/souls/charms/soft-hot-air-balloon.glb",
+      "bytes": 14432,
+      "sha256": "c99f8b36aad9127617da9ab7325fe67d79e2b4a0209b762586bd05514a561b67"
+    },
+    {
+      "path": "assets/souls/charms/soft-hot-air-balloon.png",
+      "bytes": 8449,
+      "sha256": "0b7e7fc04253b268a5ac128eb70e4681263604aff40ba404a3b08ea4f4f6d5e9"
+    },
+    {
+      "path": "assets/souls/charms/soft-ice-cream.glb",
+      "bytes": 14408,
+      "sha256": "ac5305c553a31ccdb7b4919dec65d7eb71bbbd9094d31cd33d19442e02984a04"
+    },
+    {
+      "path": "assets/souls/charms/soft-ice-cream.png",
+      "bytes": 7415,
+      "sha256": "2e64e7f830436c81f33b91b5c6722c7db844db468a7ece72e1fe7498bf90d6ff"
+    },
+    {
+      "path": "assets/souls/charms/soft-juice.glb",
+      "bytes": 14396,
+      "sha256": "ff131ab99161c3f7516126740386de261e140a78d83253fd10890f629896bdf2"
+    },
+    {
+      "path": "assets/souls/charms/soft-juice.png",
+      "bytes": 7073,
+      "sha256": "4e984911a811e06877939cee7c312fd41b65273ea54cc99e7975289e63e309d3"
+    },
+    {
+      "path": "assets/souls/charms/soft-kite.glb",
+      "bytes": 14388,
+      "sha256": "2d9cc16ebda9cfca039b417eb2963d7daca5d91084377bc7cfb486da2e18f9ec"
+    },
+    {
+      "path": "assets/souls/charms/soft-kite.png",
+      "bytes": 8441,
+      "sha256": "dba583e3a1536e4d0451527b87ed0bf40c7779529c704d9c377f54343e55b132"
+    },
+    {
+      "path": "assets/souls/charms/soft-lavender.glb",
+      "bytes": 14404,
+      "sha256": "fef51a716b6347640e844011e3850edd2c601c1454301b81bfb75e0655697c55"
+    },
+    {
+      "path": "assets/souls/charms/soft-lavender.png",
+      "bytes": 7141,
+      "sha256": "32549b47fae4db42024c7f98495ee5638d71c1f69513893c9e239241271f5a43"
+    },
+    {
+      "path": "assets/souls/charms/soft-mug.glb",
+      "bytes": 14360,
+      "sha256": "f41713641c47494afce8f55837e01b3a8a7d0b039e1f3c5b5ae784e078bf4ba1"
+    },
+    {
+      "path": "assets/souls/charms/soft-mug.png",
+      "bytes": 8379,
+      "sha256": "924c364f4ba58cc739b33a6c7e17bf38e6dab67ce8fc93ccc749469ff22b80e1"
+    },
+    {
+      "path": "assets/souls/charms/soft-music-note.glb",
+      "bytes": 14412,
+      "sha256": "991b6859f5b60f9b36571fe78a515f0bfe0621b92a0ebf9a23c4a2303b14924d"
+    },
+    {
+      "path": "assets/souls/charms/soft-music-note.png",
+      "bytes": 6676,
+      "sha256": "d8f856e01390f13dc9f12709c1a580ecd21567c2311c406419c315ba14266f25"
+    },
+    {
+      "path": "assets/souls/charms/soft-paper-plane.glb",
+      "bytes": 14420,
+      "sha256": "94f66fca3f8ba01473fdcf07b03276e6052b11e339e12df851c68d4c7bbab11d"
+    },
+    {
+      "path": "assets/souls/charms/soft-paper-plane.png",
+      "bytes": 7238,
+      "sha256": "6a469d38b893a6379e66372fa90863f939c2a1fb1bf7967aa63b96cf862bdb15"
+    },
+    {
+      "path": "assets/souls/charms/soft-pillow.glb",
+      "bytes": 14400,
+      "sha256": "0c397b982e14626842244e639ce910e0dd649971c2cf90d1d774d89d655b0307"
+    },
+    {
+      "path": "assets/souls/charms/soft-pillow.png",
+      "bytes": 16732,
+      "sha256": "b663cd9b40de54f2d1359e1377ea7e06a046804a5623890d30d09623005c2300"
+    },
+    {
+      "path": "assets/souls/charms/soft-potted-plant.glb",
+      "bytes": 14420,
+      "sha256": "39d62d30604c3ad8059fc0991ff872867f0ee49145ec9d3734714208dca9904d"
+    },
+    {
+      "path": "assets/souls/charms/soft-potted-plant.png",
+      "bytes": 8326,
+      "sha256": "108d6d76ec6a3027090f1dbadf76fd4b59fa6a6e0c629140685861a8992d98da"
+    },
+    {
+      "path": "assets/souls/charms/soft-rainbow.glb",
+      "bytes": 14400,
+      "sha256": "6ed8e1ef0b184ce36dbb5fd8af94adee71405b54e6f2576deb035378e3fbace3"
+    },
+    {
+      "path": "assets/souls/charms/soft-rainbow.png",
+      "bytes": 8651,
+      "sha256": "7bfeb885fd9743883c498bd0b7ae82fc8193fd9cc4f0005f94c271ad903bbdbc"
+    },
+    {
+      "path": "assets/souls/charms/soft-rose.glb",
+      "bytes": 14388,
+      "sha256": "ccfb40ae9ef482af7882b015c012d47dbfdabece60058bec835af6941a9c9378"
+    },
+    {
+      "path": "assets/souls/charms/soft-rose.png",
+      "bytes": 8490,
+      "sha256": "a8a110bca6a821bad8c64267a1e663291c6147b3ad3dd4e10fb2b36d4faaf3d5"
+    },
+    {
+      "path": "assets/souls/charms/soft-rubber-duck.glb",
+      "bytes": 14420,
+      "sha256": "e4241b7e2538d3be3ea9269450887a1446853dceb21b2f0a02c72b972f058afd"
+    },
+    {
+      "path": "assets/souls/charms/soft-rubber-duck.png",
+      "bytes": 9681,
+      "sha256": "022e60033bae9cc9b935f17e3617af304d4a69b5b530a31fbac264e3c37d850b"
+    },
+    {
+      "path": "assets/souls/charms/soft-running-shoe.glb",
+      "bytes": 14420,
+      "sha256": "959c445ec923091935aa3cf9d9a2f3245e20f7917b198f5b07507f00a6767c1f"
+    },
+    {
+      "path": "assets/souls/charms/soft-running-shoe.png",
+      "bytes": 7749,
+      "sha256": "a9709eb295f47311641a912aed9bc391e43a4e01c43fab3a44cd2ddf206c4cf6"
+    },
+    {
+      "path": "assets/souls/charms/soft-seashell.glb",
+      "bytes": 14404,
+      "sha256": "3f44f226b0e058f2c3a444605c2fe61e058163a8647da50de12aa7b826ad41f3"
+    },
+    {
+      "path": "assets/souls/charms/soft-seashell.png",
+      "bytes": 9612,
+      "sha256": "6f7db3e47442625fad42d8a9d653f5b22c5061685c5f78d6abc39779c3fe1c62"
+    },
+    {
+      "path": "assets/souls/charms/soft-sleep-mask.glb",
+      "bytes": 14412,
+      "sha256": "283e78126f3cc0a6bd4e2b085978ccfd906cbf535944101f3c2b6f7d73bf5939"
+    },
+    {
+      "path": "assets/souls/charms/soft-sleep-mask.png",
+      "bytes": 16829,
+      "sha256": "19c93cb0e4d1c4d2d3a72f139f98bfcb40d6b0f9315409ae40197b4621d70d99"
+    },
+    {
+      "path": "assets/souls/charms/soft-speech-bubble.glb",
+      "bytes": 14428,
+      "sha256": "790b10cd6ed1da914d467be8d1bea2d3c7203b7790ffdc2e86a5ef6584825c0b"
+    },
+    {
+      "path": "assets/souls/charms/soft-speech-bubble.png",
+      "bytes": 7016,
+      "sha256": "f424adb0d54cab01009f710d8568ef047f334707c462b2d0c20f0b54dfc65e9f"
+    },
+    {
+      "path": "assets/souls/charms/soft-sprout.glb",
+      "bytes": 14396,
+      "sha256": "d62c0e3d7587f9af7f33539f6185660a7a08d733a88ca7a848ca9f0e27c22747"
+    },
+    {
+      "path": "assets/souls/charms/soft-sprout.png",
+      "bytes": 7441,
+      "sha256": "0027c479113794350cb8cf0c4224411a7433f670d9e89a325ba590a955fa7335"
+    },
+    {
+      "path": "assets/souls/charms/soft-strawberry.glb",
+      "bytes": 14416,
+      "sha256": "b50f7ef12fd38f7ed6b478f584f8dff9c8acfb521d70f7f4912accf73095cad4"
+    },
+    {
+      "path": "assets/souls/charms/soft-strawberry.png",
+      "bytes": 8672,
+      "sha256": "933aa59e176fe0dd4eecfb46fd23be053d412acb09f87f7ea41e69a48432fb7f"
+    },
+    {
+      "path": "assets/souls/charms/soft-sun.glb",
+      "bytes": 14388,
+      "sha256": "83f665b1cb8a0f8cf78f941e70c464d4d606647ea88d190d151cf54bbaaabf4b"
+    },
+    {
+      "path": "assets/souls/charms/soft-sun.png",
+      "bytes": 11193,
+      "sha256": "f98b9b8d3bdc468a2197e4244af1fd00231fdb6cbeff07d019ee013d7e4f2bf2"
+    },
+    {
+      "path": "assets/souls/charms/soft-sunflower.glb",
+      "bytes": 14408,
+      "sha256": "cb7b756570fe5e277de48afe9c7a0135862aaac6f7abdf451740f9e7d0a6bd11"
+    },
+    {
+      "path": "assets/souls/charms/soft-sunflower.png",
+      "bytes": 9517,
+      "sha256": "fc6581570727626b358e4594b28472d2221ff6b6f8e25502b4585de15234991c"
+    },
+    {
+      "path": "assets/souls/charms/soft-tea-cup.glb",
+      "bytes": 14400,
+      "sha256": "5b38943c6a7eb5cdc91728227605523f83d4f839386103175094290703de4562"
+    },
+    {
+      "path": "assets/souls/charms/soft-tea-cup.png",
+      "bytes": 8778,
+      "sha256": "c7127a466dd90faa371ea2f8f189279c8f4202ae30c0eba094166013c943bd94"
+    },
+    {
+      "path": "assets/souls/charms/soft-teapot.glb",
+      "bytes": 14400,
+      "sha256": "304502e3720263e928ac17016ff6ba5b9b057c19311c753ed0e99bf6ff83dd02"
+    },
+    {
+      "path": "assets/souls/charms/soft-teapot.png",
+      "bytes": 7594,
+      "sha256": "c2299c11675cbd548da9eb34accfdcf4a932cb50b54d8a8a48a625a3535905dd"
+    },
+    {
+      "path": "assets/souls/charms/soft-tulip.glb",
+      "bytes": 14396,
+      "sha256": "755e0e6f6edc3651f52f5472febd34615e9d556752c2bf342597766fce57a713"
+    },
+    {
+      "path": "assets/souls/charms/soft-tulip.png",
+      "bytes": 7928,
+      "sha256": "2db80ebf69657fdff93c64c7b3dfb2186933d689c9475946fe20243a579c4804"
+    },
+    {
+      "path": "assets/souls/charms/soft-umbrella.glb",
+      "bytes": 14408,
+      "sha256": "cc312589903f0448bc1359ebc258912079bdbbf9949400b243a6bb40e3a7a5e4"
+    },
+    {
+      "path": "assets/souls/charms/soft-umbrella.png",
+      "bytes": 8067,
+      "sha256": "f0b104fbff551cf27f0bd4ad2c1bc871213218844ca5de8aeccfcc90b8d3fc91"
+    },
+    {
+      "path": "assets/souls/charms/soft-vinyl.glb",
+      "bytes": 14364,
+      "sha256": "8fbfaa33a544116d0ffe872eb00f355060a5e561cf86ceddfd16af2bda33da59"
+    },
+    {
+      "path": "assets/souls/charms/soft-vinyl.png",
+      "bytes": 11953,
+      "sha256": "5c8f3ee06e11afa9958385109402dfab96e9b05b96e5583dc42501346b491d16"
+    },
+    {
+      "path": "assets/souls/charms/soft-water-bottle.glb",
+      "bytes": 14424,
+      "sha256": "16a0a35ef6b3e47ce3548ddb61122c7ebcf486751cab8d1d0d27a8f86bc8a65b"
+    },
+    {
+      "path": "assets/souls/charms/soft-water-bottle.png",
+      "bytes": 7180,
+      "sha256": "e2c66a1534b02fb56a34df69934934a5d7ae57a3c689b43f6a20b26efeaf36e8"
+    },
+    {
+      "path": "assets/souls/charms/soft-watering-can.glb",
+      "bytes": 14424,
+      "sha256": "e8aa4c5f14be824da9c210ae922fc940ab9c50984de4a60a21aa0a7d307ac0f7"
+    },
+    {
+      "path": "assets/souls/charms/soft-watering-can.png",
+      "bytes": 7979,
+      "sha256": "26e243a724524695805260416943aea9a84fa49145b4e3b6977334d73d16a312"
+    },
+    {
+      "path": "assets/souls/charms/soft-yarn.glb",
+      "bytes": 14388,
+      "sha256": "fc043288c2624c3dfe21ff2d2379e0aafa36c190d9365b581f5bfe6d2c6fb2e4"
+    },
+    {
+      "path": "assets/souls/charms/soft-yarn.png",
+      "bytes": 8613,
+      "sha256": "2ef31e9d838c4f4a59b36ad19645058a99c396e566363a255ecae928aa4747b2"
+    },
+    {
+      "path": "assets/souls/charms/soft-yoga-mat.glb",
+      "bytes": 14404,
+      "sha256": "910f3f5f00a26d9fd364bf0b6898f8798f9e39183d82291c79f491bd62963995"
+    },
+    {
+      "path": "assets/souls/charms/soft-yoga-mat.png",
+      "bytes": 20701,
+      "sha256": "d84b4a7ee66f6bf955906a740972f1c6636ae7fa2cc189e80fb64b0d62635e75"
+    },
+    {
+      "path": "assets/souls/charms/tech-bar-chart.glb",
+      "bytes": 14408,
+      "sha256": "9a60bb36ede11194b15ef0146b1b80632e549840b99cfcf336e71e862041dd9e"
+    },
+    {
+      "path": "assets/souls/charms/tech-bar-chart.png",
+      "bytes": 16482,
+      "sha256": "f5f0264e5aa0d09c28c2b9dd079ad945753f2c134c24808238e77e63326d2e0d"
+    },
+    {
+      "path": "assets/souls/charms/tech-battery.glb",
+      "bytes": 14404,
+      "sha256": "7b9dc6bccac27680b6b771092e7815822253b81f0a0dda4295d42985db105137"
+    },
+    {
+      "path": "assets/souls/charms/tech-battery.png",
+      "bytes": 8609,
+      "sha256": "c0eff2a8659e6617cf338435773ad241fd7bb0e6c9c3102ceeee73725b31a288"
+    },
+    {
+      "path": "assets/souls/charms/tech-book.glb",
+      "bytes": 14388,
+      "sha256": "399f44b037eb8c723db7d88fed0f4140adb3a6e2ae6c1e622603c604384bc48c"
+    },
+    {
+      "path": "assets/souls/charms/tech-book.png",
+      "bytes": 7339,
+      "sha256": "a358df79ffcd60bd51d5679d50fceeee32e05d22f5d8960a3365ea7dec807df1"
+    },
+    {
+      "path": "assets/souls/charms/tech-calculator.glb",
+      "bytes": 14412,
+      "sha256": "78600e28712f97e9f1a65357e683f492ff8ba27e1001a23dded007f27059b29d"
+    },
+    {
+      "path": "assets/souls/charms/tech-calculator.png",
+      "bytes": 22507,
+      "sha256": "1ffed5dc5042c767ce0a0e1666661bf43c73af9173cbf5285caec55d5f2ba003"
+    },
+    {
+      "path": "assets/souls/charms/tech-camera.glb",
+      "bytes": 14396,
+      "sha256": "170cff2cc4159c06e85147dc3d1fede3933817666a3260eee358c7a1a301a525"
+    },
+    {
+      "path": "assets/souls/charms/tech-camera.png",
+      "bytes": 8662,
+      "sha256": "ed5517a3940b5b3dd079b1ff620393d7ebd67d1e896ec3dcf954e066c857c674"
+    },
+    {
+      "path": "assets/souls/charms/tech-circuit.glb",
+      "bytes": 14404,
+      "sha256": "1488d6d6b70bba32a0dfcce18396791ab79954870a1203c93fadb1796f94c1ca"
+    },
+    {
+      "path": "assets/souls/charms/tech-circuit.png",
+      "bytes": 23051,
+      "sha256": "ee2339cdb240806391f0f7572bbff5e5e2d32b49634d8b8815ad5936328cc707"
+    },
+    {
+      "path": "assets/souls/charms/tech-clipboard.glb",
+      "bytes": 14412,
+      "sha256": "34a1692b4f88bd19078710d5902f65e11a539e94b9ba7acfd6254c4d064d76e2"
+    },
+    {
+      "path": "assets/souls/charms/tech-clipboard.png",
+      "bytes": 7052,
+      "sha256": "03ea15fd46157b6c8d4d1de11b02e7967b35aac164db4e1bae43adade97e1b8a"
+    },
+    {
+      "path": "assets/souls/charms/tech-cloud-upload.glb",
+      "bytes": 14424,
+      "sha256": "6fc345a2b7634227f1c38e4fe2287eb9ae0fd4411c101ac083a4afe473aa5c90"
+    },
+    {
+      "path": "assets/souls/charms/tech-cloud-upload.png",
+      "bytes": 7962,
+      "sha256": "ca12d0f88eb8ca7cfdd618cb2e355551c196d6d72185b505b1a11b1d63b50467"
+    },
+    {
+      "path": "assets/souls/charms/tech-compass.glb",
+      "bytes": 14400,
+      "sha256": "e39f1b598515f53cf2032ee364b25eb0b159e62c435f4ff9415de802d190c4c7"
+    },
+    {
+      "path": "assets/souls/charms/tech-compass.png",
+      "bytes": 6968,
+      "sha256": "eea0be589da1b41b01e26eafd697ada215307b96e5a1c89e38525a42d9bfafc8"
+    },
+    {
+      "path": "assets/souls/charms/tech-database.glb",
+      "bytes": 14404,
+      "sha256": "8514519ee3b2fa65917fcabfbe11012c6fa2bb439368d105dbb72ca38ec1294e"
+    },
+    {
+      "path": "assets/souls/charms/tech-database.png",
+      "bytes": 7733,
+      "sha256": "359b7e1bbf8db2f2babef6ec74a9f5418b12adab24085f2c3e20e0646b5fe2c2"
+    },
+    {
+      "path": "assets/souls/charms/tech-drone.glb",
+      "bytes": 14392,
+      "sha256": "169c2f2486c2a980fa8dd54b130ee1601e2fc7efec433ca068839e6d9d09fb86"
+    },
+    {
+      "path": "assets/souls/charms/tech-drone.png",
+      "bytes": 10091,
+      "sha256": "4582383253a8a3b03b2ca85bef1d11078a7239cda2378dd546cd877ab2bbbee9"
+    },
+    {
+      "path": "assets/souls/charms/tech-flask.glb",
+      "bytes": 14396,
+      "sha256": "e6424c812f9d2cf7e55d111858f967b5ce6f421c5b245cbc420c6566a0258d6a"
+    },
+    {
+      "path": "assets/souls/charms/tech-flask.png",
+      "bytes": 8746,
+      "sha256": "57c5a41defc2fd52af0f0328c919b4929a4aed9f07e5f0791ef227f4e8450bd1"
+    },
+    {
+      "path": "assets/souls/charms/tech-floppy.glb",
+      "bytes": 14396,
+      "sha256": "a57c04566ae077f65baeae2a6e94161d2a7712b50d5594762d075a7ba8552ab0"
+    },
+    {
+      "path": "assets/souls/charms/tech-floppy.png",
+      "bytes": 16546,
+      "sha256": "a64d331bcd810cfebdcdc4e15e5a2c6b6e4612a9e0483f3e91454ca2c7d22bf1"
+    },
+    {
+      "path": "assets/souls/charms/tech-gear.glb",
+      "bytes": 14392,
+      "sha256": "992d008d0a715c8b43c9fad6103856dc941c33a1354dc3ec5c7040d5f2eb1d3d"
+    },
+    {
+      "path": "assets/souls/charms/tech-gear.png",
+      "bytes": 10471,
+      "sha256": "2a663f46a60db2c5f923895590aff60e081079048a6552203fe68636c267f940"
+    },
+    {
+      "path": "assets/souls/charms/tech-hammer.glb",
+      "bytes": 14400,
+      "sha256": "34d78791e397404bc0ad02e0a19722f24b290939a75c5cb95111a30898cbb332"
+    },
+    {
+      "path": "assets/souls/charms/tech-hammer.png",
+      "bytes": 6782,
+      "sha256": "6d930a7b0e18795da08cb78a8ef82e7e8594f212c494296a41b01d0b916d35a6"
+    },
+    {
+      "path": "assets/souls/charms/tech-hard-hat.glb",
+      "bytes": 14404,
+      "sha256": "350952d8f2756b18d1c7193587c774f66d0a0d655665953419aa1d995b540d95"
+    },
+    {
+      "path": "assets/souls/charms/tech-hard-hat.png",
+      "bytes": 8680,
+      "sha256": "4a197fbecfe01ede8df1bfdc935436de22381feeea796e0f55834fc6073ea830"
+    },
+    {
+      "path": "assets/souls/charms/tech-headset.glb",
+      "bytes": 14400,
+      "sha256": "8f7cc2c2ae2a715989f05e74fe8faa74ec66c408b4dcae4dd799c804e09a7d9e"
+    },
+    {
+      "path": "assets/souls/charms/tech-headset.png",
+      "bytes": 9096,
+      "sha256": "5533b15cad02d87f72c411c83d76729eef705a179cea150e27c48e5ad22a6426"
+    },
+    {
+      "path": "assets/souls/charms/tech-key.glb",
+      "bytes": 14360,
+      "sha256": "a127240b606aa6544383a2a9c2d5145783bc178fe62f1dfcf8f7752ace85e532"
+    },
+    {
+      "path": "assets/souls/charms/tech-key.png",
+      "bytes": 6605,
+      "sha256": "5cda0f44778f9cfd2e5980a887a443beb1359faa951b0e88ee61d6dbceceaaf8"
+    },
+    {
+      "path": "assets/souls/charms/tech-keyboard.glb",
+      "bytes": 14408,
+      "sha256": "1f75f1cf14145adf0e067c0adfdf18b5bbf97b1a28677f9fd23021c4659a4bac"
+    },
+    {
+      "path": "assets/souls/charms/tech-keyboard.png",
+      "bytes": 8997,
+      "sha256": "03716814f01f1e3996395e2a6e7a5c7abc6d61c856cbe10e081cc7130681780b"
+    },
+    {
+      "path": "assets/souls/charms/tech-laptop.glb",
+      "bytes": 14400,
+      "sha256": "5158caff6e25a6bb051c7401fbfb61b7ff0503b2536e93a88ff822a71779bd38"
+    },
+    {
+      "path": "assets/souls/charms/tech-laptop.png",
+      "bytes": 8305,
+      "sha256": "8203863a2ed15b2467cee6d68ed5cdb382764c5ce09b314d32da3562e9348674"
+    },
+    {
+      "path": "assets/souls/charms/tech-lightbulb.glb",
+      "bytes": 14412,
+      "sha256": "082953c09e4698d4f18a925b7196c3eecd7d92f0ef96c2709f898e76bb685f64"
+    },
+    {
+      "path": "assets/souls/charms/tech-lightbulb.png",
+      "bytes": 8022,
+      "sha256": "662c431277a82b55207de6d6ab9e8f0cccc85633b644a19fd5ede2eb6ba33d70"
+    },
+    {
+      "path": "assets/souls/charms/tech-magnet.glb",
+      "bytes": 14400,
+      "sha256": "81ae0686a28e3f5c4a449a87fb93aaf7dd3385253286c6384281cbc8e6485a67"
+    },
+    {
+      "path": "assets/souls/charms/tech-magnet.png",
+      "bytes": 7858,
+      "sha256": "6de67dd986f578c9b5bd57e14fc844d3721e66746b2f48a91322b1c01daf9a1d"
+    },
+    {
+      "path": "assets/souls/charms/tech-magnifier.glb",
+      "bytes": 14408,
+      "sha256": "9fe7b6850a2177dc5892b11764dcf7420d7aaf06b1adc47bef26d58bf7d0889e"
+    },
+    {
+      "path": "assets/souls/charms/tech-magnifier.png",
+      "bytes": 8301,
+      "sha256": "d89de76674929a85581851f39f25c00d33dbc7991775bab980c90ba2032a0c66"
+    },
+    {
+      "path": "assets/souls/charms/tech-microchip.glb",
+      "bytes": 14408,
+      "sha256": "65fa2e7439376c7fe291e6fc8f4bce38d9b6ad167b6dea6771998fd911581c16"
+    },
+    {
+      "path": "assets/souls/charms/tech-microchip.png",
+      "bytes": 9842,
+      "sha256": "6d3f4913bb68e0ca6bfff2ae113282d67b62780af7badc95b9b8995ebf10d2a7"
+    },
+    {
+      "path": "assets/souls/charms/tech-microscope.glb",
+      "bytes": 14412,
+      "sha256": "6d5120fac1ad203aa650b2365a5f46ad476428923fe2dec0e86f5de7842f14d9"
+    },
+    {
+      "path": "assets/souls/charms/tech-microscope.png",
+      "bytes": 6788,
+      "sha256": "f5037dafb0d32d557b25de287477f385e6bcaf729bd6aae2fe154f27b6c21aa7"
+    },
+    {
+      "path": "assets/souls/charms/tech-monitor.glb",
+      "bytes": 14404,
+      "sha256": "87cb12f03428c251be1f463ecaafc79ae451d8298fc47375c9e5accaaf54dbad"
+    },
+    {
+      "path": "assets/souls/charms/tech-monitor.png",
+      "bytes": 8291,
+      "sha256": "705022cb10973fc446797c74fa1368919ce0eb009c63c13cdeb707477a0367f1"
+    },
+    {
+      "path": "assets/souls/charms/tech-mouse.glb",
+      "bytes": 14396,
+      "sha256": "4b4ff1bc494d20321aea0ea7256d98c3a2937a31cbccb65145a71dc04019a787"
+    },
+    {
+      "path": "assets/souls/charms/tech-mouse.png",
+      "bytes": 7022,
+      "sha256": "2e97419a0131209f396b16a52309d022376601eb9d88bdfaaecbbb1f2f8f086e"
+    },
+    {
+      "path": "assets/souls/charms/tech-padlock.glb",
+      "bytes": 14404,
+      "sha256": "a9450db1bf36362cacf967bf3d92b9f695177b16c6d0dc8de9504580bc792064"
+    },
+    {
+      "path": "assets/souls/charms/tech-padlock.png",
+      "bytes": 8708,
+      "sha256": "48e94fc4e102a952dc2d0836978fecbe36a1f17cc710208b26a0676b125ba357"
+    },
+    {
+      "path": "assets/souls/charms/tech-paintbrush.glb",
+      "bytes": 14412,
+      "sha256": "111519193e15938b211859d98c9481ebab91d2ade8fce1fb85513c312ac8963a"
+    },
+    {
+      "path": "assets/souls/charms/tech-paintbrush.png",
+      "bytes": 7110,
+      "sha256": "05698ec416d8882d64af2e16b980f467d214286dc9a2e01ec7023b2f2384cff0"
+    },
+    {
+      "path": "assets/souls/charms/tech-palette.glb",
+      "bytes": 14404,
+      "sha256": "035645f0e8e19f4b9353029de7028dd1d926a68758d0bf48159a159466ef9113"
+    },
+    {
+      "path": "assets/souls/charms/tech-palette.png",
+      "bytes": 9998,
+      "sha256": "0e7086e159e54e8b8fae2db4c95e07afeafe27d58aefded60e0bf13c9720c0db"
+    },
+    {
+      "path": "assets/souls/charms/tech-pen.glb",
+      "bytes": 14384,
+      "sha256": "40641e4f4f35abbce023f599a25d71c663694e86d7397fbcf6b601e88e448db4"
+    },
+    {
+      "path": "assets/souls/charms/tech-pen.png",
+      "bytes": 6032,
+      "sha256": "0f4f104fc7104773732354c89fe0e3ba2ba4beabc093f13abbd76a5bc874ed3a"
+    },
+    {
+      "path": "assets/souls/charms/tech-pencil.glb",
+      "bytes": 14396,
+      "sha256": "43729571278a74f26c978510aae777502f526d0472c7605eaf982ad573a8bf50"
+    },
+    {
+      "path": "assets/souls/charms/tech-pencil.png",
+      "bytes": 6340,
+      "sha256": "2c7791a26881bd5413c3bcf7f6785164862570f068b0f851640d2efc696efe91"
+    },
+    {
+      "path": "assets/souls/charms/tech-pliers.glb",
+      "bytes": 14396,
+      "sha256": "8177f01b156fab8bf49762e479b17e3650e0750606c1cd4a6d9ac240695e684b"
+    },
+    {
+      "path": "assets/souls/charms/tech-pliers.png",
+      "bytes": 15717,
+      "sha256": "aca6d42da939df5629889fcaf5e4fd0e2cfc8b6012d22d54f99da68c924166a0"
+    },
+    {
+      "path": "assets/souls/charms/tech-plug.glb",
+      "bytes": 14384,
+      "sha256": "b57f9030917e609b9681896a4f0ef2c56187e42dd9c759542ae217ec28a6c6b9"
+    },
+    {
+      "path": "assets/souls/charms/tech-plug.png",
+      "bytes": 8079,
+      "sha256": "3208f88ea5b9a13891cdf9f0607ad763cab0b5c6e2dfb8a4bca65564aa3a3c72"
+    },
+    {
+      "path": "assets/souls/charms/tech-printer-3d.glb",
+      "bytes": 14412,
+      "sha256": "c6c242ce2ec68de24ec231ef48b2408a5e6debe56025ec8d7f7ccea6a6b9f1cf"
+    },
+    {
+      "path": "assets/souls/charms/tech-printer-3d.png",
+      "bytes": 8930,
+      "sha256": "c1897d3a2a22aaab96fb3a3a6e1f09ca7831c05aad893733baa4bd7dbed47205"
+    },
+    {
+      "path": "assets/souls/charms/tech-robot.glb",
+      "bytes": 14392,
+      "sha256": "81788fbc0ebf664ff5181cd77a8a634182e3e04d21b53334570690cfbd1e3b93"
+    },
+    {
+      "path": "assets/souls/charms/tech-robot.png",
+      "bytes": 8270,
+      "sha256": "918c68d3d5526a6cb2b6ffc75eca5e5594e6399dec4f4f5e106a3ea2fae9f814"
+    },
+    {
+      "path": "assets/souls/charms/tech-rocket.glb",
+      "bytes": 14400,
+      "sha256": "785207569148f0d4e01da460462dc6af021ebbe4dbc87ae3eaf8d924afe559fb"
+    },
+    {
+      "path": "assets/souls/charms/tech-rocket.png",
+      "bytes": 7782,
+      "sha256": "8568450bc3469d19cb316e3a6b590eb0f97dafbbe252049771c265cec9e28b6b"
+    },
+    {
+      "path": "assets/souls/charms/tech-ruler.glb",
+      "bytes": 14368,
+      "sha256": "1c392b1ab4439925679df39de342c2929706cb8346445b867d4323c0a0a8ac25"
+    },
+    {
+      "path": "assets/souls/charms/tech-ruler.png",
+      "bytes": 6193,
+      "sha256": "128b70f44f8527b41daf90e3217b5cb5f879e7f5d3e56efca7414bb3b295815b"
+    },
+    {
+      "path": "assets/souls/charms/tech-satellite.glb",
+      "bytes": 14408,
+      "sha256": "56840729f2cc93d6b91560cb02785ba60e2198492a504b80526fc9b6a0aa8408"
+    },
+    {
+      "path": "assets/souls/charms/tech-satellite.png",
+      "bytes": 7760,
+      "sha256": "55a5867ccb3fa94291f86a1771de517318547f4f88885a2d5651884aee2acff5"
+    },
+    {
+      "path": "assets/souls/charms/tech-screwdriver.glb",
+      "bytes": 14416,
+      "sha256": "9dc45fa69eabb7669222b0bd146addeb9f7ea811d67046eaf78bfc1288ec4630"
+    },
+    {
+      "path": "assets/souls/charms/tech-screwdriver.png",
+      "bytes": 4333,
+      "sha256": "174ee2adebeb7b538bf601d1678fd8cbfff542f00eeba6d56578cf4f2ca7ab9c"
+    },
+    {
+      "path": "assets/souls/charms/tech-server.glb",
+      "bytes": 14400,
+      "sha256": "ae3f37b01375e7c6f07166fec5bcb0ddf3a0377df845070485e1c7733356816c"
+    },
+    {
+      "path": "assets/souls/charms/tech-server.png",
+      "bytes": 9744,
+      "sha256": "df97ac7cf3a97c86a0018cc5a39776fe90865403cff7b0cedfcec4ccc90173b8"
+    },
+    {
+      "path": "assets/souls/charms/tech-set-square.glb",
+      "bytes": 14416,
+      "sha256": "9cde05a60484555a455828022f2423382f1d08a5eed7f7e642e3885615e0ba58"
+    },
+    {
+      "path": "assets/souls/charms/tech-set-square.png",
+      "bytes": 7071,
+      "sha256": "fcb7c1a2521484742d1e7547eb1dd241109741e706a3b1b1f090b4733ed3b28c"
+    },
+    {
+      "path": "assets/souls/charms/tech-smartphone.glb",
+      "bytes": 14412,
+      "sha256": "dc9f758396855d30f22ad3e2576aba70e07b4e4958aaf2ec96f1d378eff141ba"
+    },
+    {
+      "path": "assets/souls/charms/tech-smartphone.png",
+      "bytes": 9173,
+      "sha256": "ca4ce32f9f0921c7cc6cfca4721fe2d7370698e17f9a354dc855f99665a18758"
+    },
+    {
+      "path": "assets/souls/charms/tech-stopwatch.glb",
+      "bytes": 14412,
+      "sha256": "57d3efa5c567d73fe03eecefa08af24cf5a2b4c06037cdd44b1037f78ccaf5ce"
+    },
+    {
+      "path": "assets/souls/charms/tech-stopwatch.png",
+      "bytes": 9868,
+      "sha256": "dd78e9186abc6f88103412aebe899aa2264aba480f161e6c29106d1d0a1d49b5"
+    },
+    {
+      "path": "assets/souls/charms/tech-tablet.glb",
+      "bytes": 14396,
+      "sha256": "380185b0357fb06cdf73fbf357f10212ff10cdcc80d4db57df58a49a56f463fc"
+    },
+    {
+      "path": "assets/souls/charms/tech-tablet.png",
+      "bytes": 8862,
+      "sha256": "cf4032d6704c2e8aefc5b01eaa594e46c4d8ec8d0e76820112ae0038a2b4bd7f"
+    },
+    {
+      "path": "assets/souls/charms/tech-tape-measure.glb",
+      "bytes": 14420,
+      "sha256": "21e516987c2c58dd509144b3836f88512fcf52e4d8d1f167d63dba99b0fbedd8"
+    },
+    {
+      "path": "assets/souls/charms/tech-tape-measure.png",
+      "bytes": 8471,
+      "sha256": "99326958347f622bc4b0373498bb2eae4a305f5b5dfd36ea9211f6c3973e900b"
+    },
+    {
+      "path": "assets/souls/charms/tech-telescope.glb",
+      "bytes": 14408,
+      "sha256": "5203f1684bb049b7581b792b170903aa09aeaacc0d8fcb7583e342a9f9bec128"
+    },
+    {
+      "path": "assets/souls/charms/tech-telescope.png",
+      "bytes": 8265,
+      "sha256": "0a457e3d71f0d24ddceaf2da9ba62b6bba1abc63363453f5f755aac58cc4d355"
+    },
+    {
+      "path": "assets/souls/charms/tech-toolbox.glb",
+      "bytes": 14400,
+      "sha256": "6e09e3923c58121102d9b5a86f51d345c0520f25581eac01b8ed7dfd4f4f19f5"
+    },
+    {
+      "path": "assets/souls/charms/tech-toolbox.png",
+      "bytes": 9201,
+      "sha256": "f4cc1057282a97417c0503f76b86de9dd40d8df76a4a93982ed5339918314ec0"
+    },
+    {
+      "path": "assets/souls/charms/tech-usb.glb",
+      "bytes": 14360,
+      "sha256": "1cfb68842194e9f00b5758d2a23e9857ade94bb7d38250efc2663c6aa13332a2"
+    },
+    {
+      "path": "assets/souls/charms/tech-usb.png",
+      "bytes": 8011,
+      "sha256": "b34cd5c70ff27b59e6387969d3d45eb495790078bb8c26b1e39065d9aed8a8a2"
+    },
+    {
+      "path": "assets/souls/charms/tech-wrench.glb",
+      "bytes": 14368,
+      "sha256": "709c689b51baf7d2de8b12a630dbd06586699cc7f2c373a91fff494e60e703d1"
+    },
+    {
+      "path": "assets/souls/charms/tech-wrench.png",
+      "bytes": 6445,
+      "sha256": "dd9b71c902d359fe843e1169e0f4966526ddea1f35e6c81eb4c5ac4b2bb08c6b"
+    },
+    {
       "path": "assets/souls/cohort/01a5bc0af65924.svg",
-      "bytes": 4294,
-      "sha256": "fd2fbbe3ca4c185f6d49117f416d2da4f1f211e837eb4e231e15aa35080d8303"
+      "bytes": 4995,
+      "sha256": "cc0a3e9ec7d784b9a79f2e12b2da1cf2bda2db37cb7a2a47d92c09de57f95198"
     },
     {
       "path": "assets/souls/cohort/0406b542e700a1.svg",
-      "bytes": 4819,
-      "sha256": "8c19cad53d5095760c46cbd6ed48073627a35b868df18461a7083d1983913b12"
+      "bytes": 4978,
+      "sha256": "98a602abcd557cc55ebdc913d0a0da167d9cd6c4b89d62e7970735f7075e0700"
     },
     {
       "path": "assets/souls/cohort/045e48e3566287.svg",
-      "bytes": 5096,
-      "sha256": "aa3ac117fc87ec4b6abeef9d04a30bb03abc84c3a7300073bf62a8fd7e609f85"
+      "bytes": 4979,
+      "sha256": "6315477100d2a9e42b78d5c6b1a46a37f5a41fd591ad1a167e9500962b3c6cc0"
     },
     {
       "path": "assets/souls/cohort/0539dc0c10513f.svg",
-      "bytes": 5362,
-      "sha256": "7decaceee6f7a3984759870a4b9871f3c40dd1664bbe9e1ed79c5bce0ac22a95"
+      "bytes": 4978,
+      "sha256": "e9d1b0d1a18867e50ff338911d250ed6d686abc81f3085148bc0fd756539b0d3"
     },
     {
       "path": "assets/souls/cohort/064b5af3ba69c3.svg",
-      "bytes": 5103,
-      "sha256": "123fe6aed207840fc848affd2215a045c36831260de81e540374e2f00f7dd421"
+      "bytes": 4875,
+      "sha256": "965b290af1d99626b3766c6520e0dff26c6daa3eacea36cdf7cb4896cf0dbf24"
     },
     {
       "path": "assets/souls/cohort/06f6f233f18448.svg",
-      "bytes": 4911,
-      "sha256": "dd4e80656e10f0fed1ed20b2c321ff10d2796d3156508091aec610d771f2a5c4"
+      "bytes": 4979,
+      "sha256": "e640405d0ae40ea6df0e031e6881e4cfe9d19e2c53ef9d386f67a0ba4e0bb5d0"
     },
     {
       "path": "assets/souls/cohort/08ff91eabc6d43.svg",
-      "bytes": 4770,
-      "sha256": "97055862342e670831702554cf588282c4a09d6e87d3b69e3d95f083ec9a844c"
+      "bytes": 4874,
+      "sha256": "59337f207c811c4ccececc34989a72f55d53b08b5d8fd8ca6b1f1cc7ef848acd"
     },
     {
       "path": "assets/souls/cohort/0bc49cd4fd7217.svg",
-      "bytes": 4485,
-      "sha256": "dcd2c82399e68f6508941bdbc37b0b74bb094988552a1b165d091d1d0dd76517"
+      "bytes": 4875,
+      "sha256": "9959237297210574d4609d44e43e2a78db524c2ed7221491c6b398ca58d0cc98"
     },
     {
       "path": "assets/souls/cohort/0c8fda8ffef1d5.svg",
-      "bytes": 4564,
-      "sha256": "bd5f94209888e7b1a2e93c3c427f66acad17bcbb7123924be2e8da41fde39932"
+      "bytes": 4993,
+      "sha256": "b3c85355ec3d17b66f435b5f8e4d0d0a5514b7adcdf64d1bef68dc2e41a84b86"
     },
     {
       "path": "assets/souls/cohort/0cf1c4f541ecc5.svg",
-      "bytes": 4533,
-      "sha256": "264b8e91d8e707f2bee2ed4b2eb6d26e877586d8633f83e102e8272593192b3c"
+      "bytes": 4993,
+      "sha256": "882f7cd20b941f870c8d0bac6b957017799d25dff975649accbcf29a85d660a8"
     },
     {
       "path": "assets/souls/cohort/0e39e2f5047a44.svg",
-      "bytes": 4597,
-      "sha256": "ea3c3c31d77634077a8ae9666ff3f84bd049f59449382b45543a6641124f7b70"
+      "bytes": 4980,
+      "sha256": "9074d5d6353c534180136cdf731e2c6f6401dfb7e7a3e01ae281ed7d23662594"
     },
     {
       "path": "assets/souls/cohort/0e7c71a4f4779e.svg",
-      "bytes": 4886,
-      "sha256": "16ff65528a5d45f4f102a0e3d9d443d2b233444446e65bd541f28f6e2f5d6adc"
+      "bytes": 4875,
+      "sha256": "6271fd53b5d22dca8701da9c8a7e929a340c4c8009df040ee9e54aaa3591878b"
     },
     {
       "path": "assets/souls/cohort/0f1be17ca9df8f.svg",
-      "bytes": 4838,
-      "sha256": "0d2e1d51566fab983a3785c42716fb99bb0b6a1ddd8a4f426ec4ccc6c2268ac8"
+      "bytes": 4979,
+      "sha256": "de863e5ec0b34169385d7411207c9ed4e33f9a64fb380171a4b60b7b1bed27f6"
     },
     {
       "path": "assets/souls/cohort/10e619a585d80a.svg",
-      "bytes": 5387,
-      "sha256": "a3480b3d66a041eca4546b4370f83d8a694582a12c104fdd8f0d063a4633bfee"
+      "bytes": 4992,
+      "sha256": "9db5f12d9219c5d4ad4adb4fc64b90408757e2532fa8c7fdf67736b081e08e86"
     },
     {
       "path": "assets/souls/cohort/12ce33f272ee40.svg",
-      "bytes": 5025,
-      "sha256": "6c6f770e8b913940e1780e62b369f58292dd7925d668f472a75e97b1ec26fa83"
+      "bytes": 5388,
+      "sha256": "86a9d2ebb27dd6493ae51f09926e322d0e6edb508b98d347aea07d52681b2493"
     },
     {
       "path": "assets/souls/cohort/140e6ebb0fff0f.svg",
-      "bytes": 5014,
-      "sha256": "724b1fe46b0ac50397b4e9f80018820a14c4754862189f57a0c27ead8c88e6d4"
+      "bytes": 4994,
+      "sha256": "36559eb5f1ef8590c432a29d5be0027ca7efeb6c068beba342d4c4330ef9ce4a"
     },
     {
       "path": "assets/souls/cohort/15b36949ab1524.svg",
-      "bytes": 4468,
-      "sha256": "e9d0898ace7188d41ff955b99f27767c69c0958f4ac243ff575d22d13efd6d29"
+      "bytes": 4995,
+      "sha256": "5c2d647b9f89f6545cb9e3c8117621a2a710e9ed10509dcc114736c76037416f"
     },
     {
       "path": "assets/souls/cohort/185edf81266a86.svg",
-      "bytes": 5577,
-      "sha256": "bad92ea203ff29011965ab9fcfcb32c3c75f4a93a01b582f54f4f119f9775122"
+      "bytes": 5390,
+      "sha256": "82c80f62bad8b1a0b641b87ea7f886dabb958bedd55017aa97153123eec0c35d"
     },
     {
       "path": "assets/souls/cohort/19c576aacf1ebd.svg",
-      "bytes": 4674,
-      "sha256": "3652ed2bc91915f1198b59290275718ad1c05299d57abd73242bbd25d7be63c6"
+      "bytes": 4873,
+      "sha256": "19247667bc384ce4ba60391cf956285d3102ee719e1a2d35fd45a05255baf127"
     },
     {
       "path": "assets/souls/cohort/1a094e030d5e89.svg",
-      "bytes": 4404,
-      "sha256": "56f787d3b55cd83b0ff90013ae96852de291f29ea868737978de89f04c51631a"
+      "bytes": 4977,
+      "sha256": "a92c1a4d44a5f908dec6f1694ac91c075207f9defdc2c41770d944fbe04fa5aa"
     },
     {
       "path": "assets/souls/cohort/1cdc2b005f78f8.svg",
-      "bytes": 4878,
-      "sha256": "c82806f2d85255c38fb4ee45374d348dda6636c3e06c574f7aa527509db208e8"
+      "bytes": 4978,
+      "sha256": "0a8d4ff8cdab83807bc3202f9cf2410c4ec5daa63c054b6c568f58d3e7529927"
     },
     {
       "path": "assets/souls/cohort/1d2e20987152b0.svg",
-      "bytes": 5168,
-      "sha256": "d3a4070e353cefd1bff3a7b09849f946f4f0d2574838b451317130ebfe0942a9"
+      "bytes": 5496,
+      "sha256": "4812ea2cadafb535e415de3ce1f3b60022f9c7aef8170cb5654b0b3d568fcde4"
     },
     {
       "path": "assets/souls/cohort/1ec3a1b6539cad.svg",
-      "bytes": 5029,
-      "sha256": "2dd1e2e70286d457df7c0e615690e81f90dffbc2358a33881c0d793950afffa7"
+      "bytes": 4977,
+      "sha256": "f73227821ac9bee731cff6692f3b7c99a3e667d73738478c4afb7594da6194e9"
     },
     {
       "path": "assets/souls/cohort/1ef9240343b1a0.svg",
-      "bytes": 5081,
-      "sha256": "c23cca4ee4f990702a03f12678ac51361d74cd59d8d95697d6097168dfa7a103"
+      "bytes": 4875,
+      "sha256": "1ec7e8995752e9300e7b768cd297670f79809e65dbfa5619bcbb4e20b46c9d8f"
     },
     {
       "path": "assets/souls/cohort.json",
-      "bytes": 17999,
-      "sha256": "c512939c7b76e0decba26e63447df17c57c9fbd43b560060029c23215c675df5"
+      "bytes": 18842,
+      "sha256": "0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61"
+    },
+    {
+      "path": "assets/souls/faces/face-angel-front.png",
+      "bytes": 13823,
+      "sha256": "a381143b15e0e3b74281ebd58c473b4522799692f8024e16c7041ec757e8cddf"
+    },
+    {
+      "path": "assets/souls/faces/face-angel.glb",
+      "bytes": 24296,
+      "sha256": "f0710b8d4c2eccc924ddb2640dccc88449c19b758619d300be5d1383aacc1af4"
+    },
+    {
+      "path": "assets/souls/faces/face-nerdy-front.png",
+      "bytes": 12785,
+      "sha256": "ebed0cecd54c316ab70e4c4677e0edc9f137f75dc0252d2a1f12877dc6b029ee"
+    },
+    {
+      "path": "assets/souls/faces/face-nerdy.glb",
+      "bytes": 42284,
+      "sha256": "78354384663f281978cd7641d349fb74dbe8848c6c003ff775ed3333bd04a5d0"
+    },
+    {
+      "path": "assets/souls/faces/face-pirate-front.png",
+      "bytes": 12118,
+      "sha256": "1b0a9b8c970bd2a24eeeccaa1fbf9d2c7cbb4e08c2d45b5f56770d00c6395395"
+    },
+    {
+      "path": "assets/souls/faces/face-pirate.glb",
+      "bytes": 73976,
+      "sha256": "1ebdb76249616903b630a6d8bb3084e402e25b5f84d1463f84118efc3792ec3b"
     },
     {
       "path": "assets/souls/fallback/01a5bc0af65924-dot.svg",
-      "bytes": 639,
-      "sha256": "08fb6b743288565d759753a2e6e11fde70c7172ee680e708cceef9a0956e48ff"
+      "bytes": 676,
+      "sha256": "7a03d12e4e58b69ac40c3a1742f5a0f143cc28ab2e87ee0623ee3b94985c587f"
     },
     {
       "path": "assets/souls/fallback/01a5bc0af65924-simple.svg",
-      "bytes": 3237,
-      "sha256": "350842e7132358a450cd9367c81212430006a10b206b2b839fa48170e0d42024"
+      "bytes": 4121,
+      "sha256": "3657f5aecd6ac662e457492c088279786839f314afa7ab1557a5c36367927e01"
     },
     {
       "path": "assets/souls/fallback/0406b542e700a1-dot.svg",
-      "bytes": 641,
-      "sha256": "f680d35f79149048bce91513b023d767678191954383c2ea8172981c2fa10ed4"
+      "bytes": 676,
+      "sha256": "4cc3463cce9ebb294aef341615c7f4f337ea1fa2da143f7048ce95b97c12fd24"
     },
     {
       "path": "assets/souls/fallback/0406b542e700a1-simple.svg",
-      "bytes": 3499,
-      "sha256": "d0029a46f926b90c67925b27e9c0b4db11f3557a182c4b6cd0d464c2462928d4"
+      "bytes": 4121,
+      "sha256": "fa6bdb616e8a5067fb8762b6c2b8b00e821ce03eb075691b9cfc0d510ae23587"
     },
     {
       "path": "assets/souls/fallback/045e48e3566287-dot.svg",
-      "bytes": 642,
-      "sha256": "0443d17e1f831b994a32e0f75416c0dba503212b6dc8dbef052f0b2b7e4a0213"
+      "bytes": 675,
+      "sha256": "5258c93bbdf70b6f3c2b2578ed78aae8a5808cc8f289f52c248e142a43902d34"
     },
     {
       "path": "assets/souls/fallback/045e48e3566287-simple.svg",
-      "bytes": 3769,
-      "sha256": "20d7eca01ba733d6d5bf218ffc592a1aa03e340f7bfa06b03736bd97b8596149"
+      "bytes": 4120,
+      "sha256": "c4f6753432145a22f85911c5df9e24ae20897d5549d26e49160baa3d9dbdb762"
     },
     {
       "path": "assets/souls/fallback/0539dc0c10513f-dot.svg",
-      "bytes": 641,
-      "sha256": "f4af7747d04f45c87899f2373c1b2a1da71a9117104da1d58105cdebdea50a38"
+      "bytes": 674,
+      "sha256": "1b2c9908fd10a661790ce4d92b33aabefe31d78ddab29e9bc58360c50cec4769"
     },
     {
       "path": "assets/souls/fallback/0539dc0c10513f-simple.svg",
-      "bytes": 4068,
-      "sha256": "b6c451317be9d8eeb73d9fc143a5c982f6979d7a0526afefd953d1d3ba3ef96f"
+      "bytes": 4119,
+      "sha256": "af2854979d9f37f9c343800e5de5a6a635d3674a86df29b6be3a1df282364f35"
     },
     {
       "path": "assets/souls/fallback/064b5af3ba69c3-dot.svg",
-      "bytes": 639,
-      "sha256": "bb86482cf78a635c1d5bf3a35f3bbe3adf4452986f4bf6c9c6383096d1b53859"
+      "bytes": 676,
+      "sha256": "9d2a252c99a53f3a96a42fa21e1a7a708f5aece3901252eda6c048ea1bb1cbc9"
     },
     {
       "path": "assets/souls/fallback/064b5af3ba69c3-simple.svg",
-      "bytes": 3823,
-      "sha256": "1072332f2b68ab838ceeb7e68f9913869ef9663b9cd1b587606c692808a1f748"
+      "bytes": 4121,
+      "sha256": "9f51c0eaa09e2e54a4e0e335759ebf0021f97d8c5131539758e87ffe8d8a8d18"
     },
     {
       "path": "assets/souls/fallback/06f6f233f18448-dot.svg",
-      "bytes": 639,
-      "sha256": "820296a409d40dd3ee98173e7601f37217e50277dbdef36897e098043621b0a8"
+      "bytes": 675,
+      "sha256": "f2ff7a7850ea2c90cf8d32967e699eeed8d60c5cd64314b9201a646c31e47c1d"
     },
     {
       "path": "assets/souls/fallback/06f6f233f18448-simple.svg",
-      "bytes": 3516,
-      "sha256": "5d3feb01a15f1a8376e4bb13d607103d4648fe7b97be95512f085f1001f70c0b"
+      "bytes": 4120,
+      "sha256": "4f50b254ca5027e4e8c74d2a4b7453ef63c9493a8340d0985d1b203da8c41f9d"
     },
     {
       "path": "assets/souls/fallback/08ff91eabc6d43-dot.svg",
-      "bytes": 639,
-      "sha256": "bceabf53f45984b71883772dd20abb70d02effb183e30e9fe1daf756cb8f5365"
+      "bytes": 675,
+      "sha256": "e30a1e0141a62bba8c620c18c4434c556b07dfc32820704af991a75f59c5bc86"
     },
     {
       "path": "assets/souls/fallback/08ff91eabc6d43-simple.svg",
-      "bytes": 3547,
-      "sha256": "1fdc41040bc641306b20c96cefe5f161c7b16b73a2a18489eecbec2b9c151cde"
+      "bytes": 4120,
+      "sha256": "6771dcfedb258787cfc82b6767608343131dc0fe73009d101b14a10792dde959"
     },
     {
       "path": "assets/souls/fallback/0bc49cd4fd7217-dot.svg",
-      "bytes": 643,
-      "sha256": "9181a5051b7aa949e27f9d30897d1df384ce0128a1f41977b017a9df73c9a0f1"
+      "bytes": 676,
+      "sha256": "43a8f05c10a486a1ac3174c0687547ec599330ab0639886870aed3270275efee"
     },
     {
       "path": "assets/souls/fallback/0bc49cd4fd7217-simple.svg",
-      "bytes": 3527,
-      "sha256": "ecd75d0468364f5d76fc2f2c4bb985a94f6a80af3c32fef162376e96126a22a4"
+      "bytes": 4121,
+      "sha256": "781be48b8923ab2abca22aca25a3b85c5dcccf10ee1ed30ad990826bfa112559"
     },
     {
       "path": "assets/souls/fallback/0c8fda8ffef1d5-dot.svg",
-      "bytes": 641,
-      "sha256": "ffb0d35313853479227d1704aed6ee2a8468d27208fbf44882eb388648408cf5"
+      "bytes": 674,
+      "sha256": "28a297fcd4a8730f4aa4e513c01a19df290cc01a2bef843f0c8292b365cce910"
     },
     {
       "path": "assets/souls/fallback/0c8fda8ffef1d5-simple.svg",
-      "bytes": 3433,
-      "sha256": "7146059b92e20ccff13ebf1e7a1e4faff99d86ed9ae111dd0b4d288c23dafb74"
+      "bytes": 4119,
+      "sha256": "1e52dccea26400314edc87f6e6b7b26e654084f5ecd8d8741c4f171b0a296e24"
     },
     {
       "path": "assets/souls/fallback/0cf1c4f541ecc5-dot.svg",
-      "bytes": 637,
-      "sha256": "d6e97ac46747027abd2c9b3945cf2038e06a7a47e7b4865dfb6e47fe8159fcb6"
+      "bytes": 674,
+      "sha256": "3ff4320a7de28d5ad5bcee9d7b159e2a59c918049406db59aca5636ee6f9787d"
     },
     {
       "path": "assets/souls/fallback/0cf1c4f541ecc5-simple.svg",
-      "bytes": 3410,
-      "sha256": "712b949f30ff45bb5e2dc2d4c025d40719b8c46f62a3d4bca96bb38ebf950b14"
+      "bytes": 4119,
+      "sha256": "12f5dde90593a9928af483a6de9931a058d24f14a23cd04c43bed9166546544c"
     },
     {
       "path": "assets/souls/fallback/0e39e2f5047a44-dot.svg",
-      "bytes": 639,
-      "sha256": "0ad4ab0b5b0d78767d4c8fc08e6d7c18ca16a238aef4c9945b08d8ea735aefa0"
+      "bytes": 676,
+      "sha256": "7b69195bc752839ecd6dc4fd5d6e5252927a1cece838810b874ac34dc85aaa4e"
     },
     {
       "path": "assets/souls/fallback/0e39e2f5047a44-simple.svg",
-      "bytes": 3575,
-      "sha256": "65903514e183f443594dc29cdd93bb92320e6afdeb040903ed7414792ded2638"
+      "bytes": 4121,
+      "sha256": "47197b88642365297c665524cc93354767acbe3c44d2b018dad56ff9ed011703"
     },
     {
       "path": "assets/souls/fallback/0e7c71a4f4779e-dot.svg",
-      "bytes": 639,
-      "sha256": "728b8548f40cad6713f30a575ac85f45baa6df3162a130d9b4c1d118b1aa99f6"
+      "bytes": 676,
+      "sha256": "70b6a6eaab9f1a7e20da66e76d168e3c242539db6df67c932430a5105aa5cf4d"
     },
     {
       "path": "assets/souls/fallback/0e7c71a4f4779e-simple.svg",
-      "bytes": 3755,
-      "sha256": "378ee5cb28d0c606837b605dba36fbcaf5b0c85788258b0b3f50d0e0cf227c3b"
+      "bytes": 4121,
+      "sha256": "3ec7611b92230547b5d4e3bdc5bd77db891a8d6de717fc42a8abc8cccc91d8ca"
     },
     {
       "path": "assets/souls/fallback/0f1be17ca9df8f-dot.svg",
-      "bytes": 638,
-      "sha256": "dafbe9ff0a62223937cbfb7905529f32d04895ad6d7c1ecdaeb712b9bbf35fc9"
+      "bytes": 675,
+      "sha256": "d2300dce9b807fd98793e788e573cba06f94a158052aee774b06387bd9ff2022"
     },
     {
       "path": "assets/souls/fallback/0f1be17ca9df8f-simple.svg",
-      "bytes": 3539,
-      "sha256": "8ec29d2b7fcdb039d3a5858b2fa48ed4efb47a2042d150564ba587f061f8899e"
+      "bytes": 4120,
+      "sha256": "b5c6bd468e12a94dd86917c9eee5d2e4ca07e44343976a4a2f2d14eef56698e0"
     },
     {
       "path": "assets/souls/fallback/10e619a585d80a-dot.svg",
-      "bytes": 637,
-      "sha256": "3a5171b7ba5f52a6ba1c249faf93e585c5bcb047f914380f5143f777ce8c3d74"
+      "bytes": 673,
+      "sha256": "4c315f575efc1614c2cfc9893b821856f1bb79e44970b32cf91d4cd29405a458"
     },
     {
       "path": "assets/souls/fallback/10e619a585d80a-simple.svg",
-      "bytes": 3832,
-      "sha256": "69422356a1b9b98f8ff964fc96b2cb831860376396077d682c54a08a7f35c5b5"
+      "bytes": 4118,
+      "sha256": "1ccce046ad45395d7c55ecffe1122ec7496be15bdbb3c656dee791c8a021a0aa"
     },
     {
       "path": "assets/souls/fallback/12ce33f272ee40-dot.svg",
-      "bytes": 642,
-      "sha256": "59fcda430261441b585a56736aec86e86a53e0fb54e3702a85a4e785e7ab0c5c"
+      "bytes": 675,
+      "sha256": "b4bc6a1d8a5e42e63ac0016f0c217a8e010ead47e8162297a33e4bccc6b66356"
     },
     {
       "path": "assets/souls/fallback/12ce33f272ee40-simple.svg",
-      "bytes": 3890,
-      "sha256": "19e1e164ec5d710e285bf4488624af98e3a9e2eaf1c1ac06ed6928b66a8772ff"
+      "bytes": 4636,
+      "sha256": "ce35215aab68d212cdb316c49206759fbf16bae59686a2ec811585e689a4a7ce"
     },
     {
       "path": "assets/souls/fallback/140e6ebb0fff0f-dot.svg",
-      "bytes": 641,
-      "sha256": "75ae1261273623a23a6587661cabedf2aa7bc9d691df48262964cfc654f6b787"
+      "bytes": 675,
+      "sha256": "2c03f7fd97e5596e243d6d37f2b18f29acbf65ede7dd089bf5dc3dc9fbdf1cf3"
     },
     {
       "path": "assets/souls/fallback/140e6ebb0fff0f-simple.svg",
-      "bytes": 3832,
-      "sha256": "a1e922056251842127f9218fced0e6655543635525bab698b0345d88dcc65bf7"
+      "bytes": 4120,
+      "sha256": "6fcab8f39dadef45ddb0b1eead2a687e4da1e4865d3bb9156207a15bc189798e"
     },
     {
       "path": "assets/souls/fallback/15b36949ab1524-dot.svg",
-      "bytes": 644,
-      "sha256": "eded672c9cd1f44bb998a82026730a28f9e7f980358875a92651baa40f5ea669"
+      "bytes": 676,
+      "sha256": "ff2c46b61c4322c4f7a93976d0ecb40303a11c71cb77430e9aa7a422aa13dfa8"
     },
     {
       "path": "assets/souls/fallback/15b36949ab1524-simple.svg",
-      "bytes": 3304,
-      "sha256": "e4cbf95e839ea2bab0b217007dbdfe334c978f2d5c60c0a3e54a928fe3b148e8"
+      "bytes": 4121,
+      "sha256": "125cb13de194754ea0bbacebc78e2e83cac312b0ca4e2aafdaff7ce525bba44d"
     },
     {
       "path": "assets/souls/fallback/185edf81266a86-dot.svg",
-      "bytes": 641,
-      "sha256": "829dcdd8e033a171d0a94bc9dbe1228ff97f4f0416c3abe075c0bbe3e0a0d3bb"
+      "bytes": 675,
+      "sha256": "1950760857bc3d8ca3ebd2eb0d5dfe4159d18cda83f6eb3dde32e034fa19e250"
     },
     {
       "path": "assets/souls/fallback/185edf81266a86-simple.svg",
-      "bytes": 4467,
-      "sha256": "38ed539d850faeeb0f39d2c3b6b4164563d7f32632fe420c8d2aff8b1e6bfe3c"
+      "bytes": 4636,
+      "sha256": "e1662750ff832c6008e2c127c48541e6f427a5f664497531da133ad1ec36467d"
     },
     {
       "path": "assets/souls/fallback/19c576aacf1ebd-dot.svg",
-      "bytes": 637,
-      "sha256": "a5df7546e833af3a5be086e2a584f542480e1ec2359324e8062dab4c4d15c7a1"
+      "bytes": 674,
+      "sha256": "408652ed7ab4461f36a4251abccd4018bca3fe34f1ff1c9fe6d30532e551bcf4"
     },
     {
       "path": "assets/souls/fallback/19c576aacf1ebd-simple.svg",
-      "bytes": 3456,
-      "sha256": "02333e41dc4c43925aab3bd742ac50eaa8dedc505c0b4ae321fbd8db6e04d49d"
+      "bytes": 4119,
+      "sha256": "12db8df1e5bea975110607815d2d3e54962a36a249d9d1de83cf34e9c84a3d59"
     },
     {
       "path": "assets/souls/fallback/1a094e030d5e89-dot.svg",
-      "bytes": 635,
-      "sha256": "f4c8b71a2d9e6e1e3f09582093da82050afd593a4f43d52956addf60311d634c"
+      "bytes": 673,
+      "sha256": "eedfd56f98e3676c23a0ca76703e5f8b9d1bcccd4c270868ec742510a48db22d"
     },
     {
       "path": "assets/souls/fallback/1a094e030d5e89-simple.svg",
-      "bytes": 3297,
-      "sha256": "8323e18dcfc66a625bbd6c20b66e06d993d006c365c0e8141fbbc2de18a51f63"
+      "bytes": 4118,
+      "sha256": "bcc958ef5eee10d356a58d513127a9f138768105bebe952251ff76690b690b03"
     },
     {
       "path": "assets/souls/fallback/1cdc2b005f78f8-dot.svg",
-      "bytes": 637,
-      "sha256": "a6c6ee50a39d9924ef39a6861734d5d322aedda7622be8dfc0927c349f2a5884"
+      "bytes": 674,
+      "sha256": "daefc4e72dc09e1a9b2ff1964c732250b9a38ca3105cbf7807303e63a98a9834"
     },
     {
       "path": "assets/souls/fallback/1cdc2b005f78f8-simple.svg",
-      "bytes": 3506,
-      "sha256": "b7b72116243108c311a5f5209be30106b43688eaec483c44488cb1914092ced0"
+      "bytes": 4119,
+      "sha256": "9d365acb5bf9f1094d8be9eb90d649a3ee811c1cd15499e7986bdae6cee0e28f"
     },
     {
       "path": "assets/souls/fallback/1d2e20987152b0-dot.svg",
-      "bytes": 641,
-      "sha256": "d4656917c192cfd51677a18e444ecdb39f687b6cf98c4bad379db8c4e776b3c9"
+      "bytes": 676,
+      "sha256": "bb79c3a1035a4e80efe85a2bd203fe13ab7cb03857da23f1c1dc3cd04eb16737"
     },
     {
       "path": "assets/souls/fallback/1d2e20987152b0-simple.svg",
-      "bytes": 4146,
-      "sha256": "0aa0eca6699f60c7b1ec9e9511bff5e31b23c9af4e4f1668faf8b9e23ce646e9"
+      "bytes": 4637,
+      "sha256": "825ead1add5b6c3dd06d7e0a85efabb7b71041bac33446be0a9ccb55eff6f264"
     },
     {
       "path": "assets/souls/fallback/1ec3a1b6539cad-dot.svg",
-      "bytes": 639,
-      "sha256": "1900184d4733fbe6c548d052a2b52ad6cdedd3093abd1ed0b4a318d71f72a766"
+      "bytes": 673,
+      "sha256": "484630821f813818578c96239d5b4afb1ff2dac746cdbce9160e335b94f1b2a1"
     },
     {
       "path": "assets/souls/fallback/1ec3a1b6539cad-simple.svg",
-      "bytes": 3641,
-      "sha256": "b60c57b302d46e87bcfc2f5692510f8835944b953799b3d3902982ac9b5f9d34"
+      "bytes": 4118,
+      "sha256": "1019e5f0ac253a0ccf602d1f8d8672880788d8e197edfc8ceffb8bcb13851ed4"
     },
     {
       "path": "assets/souls/fallback/1ef9240343b1a0-dot.svg",
-      "bytes": 644,
-      "sha256": "e365903643016199da64307fc0b60327ef588b4aacc9d55d16fccdd6ed06dba0"
+      "bytes": 676,
+      "sha256": "5293756122c1659771993fc9a359ff336e7677d90d44b4af79e2f48ea338641b"
     },
     {
       "path": "assets/souls/fallback/1ef9240343b1a0-simple.svg",
-      "bytes": 3757,
-      "sha256": "7ce98c3d5e61b63a48dd4538cbe49cb61f590507bd14055d4b7dfee6af4d5e3c"
+      "bytes": 4121,
+      "sha256": "27df421cae876671bd08973be99906b88998cd974dc61573348e483c67776620"
     },
     {
       "path": "assets/souls/sheet.html",
-      "bytes": 304543,
-      "sha256": "e2f6d41b6428805c78104ec66fbdfcfe0069d6dfd3b16fce33ff803105dd9bad"
+      "bytes": 324095,
+      "sha256": "97d9d51ab868f91241478080a743f260c3451ef0557020c88c8f97beb56d040c"
     },
     {
       "path": "assets/souls/thumbnails/01a5bc0af65924-64.svg",
-      "bytes": 4189,
-      "sha256": "0f7ed66ae2648e86eb42d9cd3da9fa8351aeb25ab7d5fdff2f1910bd94db0c94"
+      "bytes": 4890,
+      "sha256": "fdda4633ae1f83804dd3d580cd83ce368fc3268161ed64641de902a354cd28b2"
     },
     {
       "path": "assets/souls/thumbnails/0406b542e700a1-64.svg",
-      "bytes": 4716,
-      "sha256": "d08e204f583408aa73230afbce5c87922eb96e35416d531f801530a2dce90704"
+      "bytes": 4875,
+      "sha256": "4659b03284ae87ae3b3d7cb2a57b090356a87f901bd7bb95889023ddd1361d1d"
     },
     {
       "path": "assets/souls/thumbnails/045e48e3566287-64.svg",
-      "bytes": 4991,
-      "sha256": "68216ead8d9e2388b3d731780d8574837ecef6c86485b7c5ad335168dadced4b"
+      "bytes": 4874,
+      "sha256": "51e0cefa628326bc0b18109540e89694e1b39a394d29bf7bd024f46c47a2091e"
     },
     {
       "path": "assets/souls/thumbnails/0539dc0c10513f-64.svg",
-      "bytes": 5257,
-      "sha256": "30e9eb015a8a0dfa8eec30def7ae23a497a21161bc95eae47917f46092c45285"
+      "bytes": 4873,
+      "sha256": "8e9afa8cb2c395f2776d464747c0524aea7b84a79b0fb0b6d36a6e638c7a93c2"
     },
     {
       "path": "assets/souls/thumbnails/064b5af3ba69c3-64.svg",
-      "bytes": 4998,
-      "sha256": "02dc0e51f1cbb4c23fa8ee4c2b7c474fc86b0355d0a9af9a0a987f51c4762338"
+      "bytes": 4770,
+      "sha256": "2e51c89a90a13d4f4d18c438824bd5f439852d6cbfe5fdbf677ad6d3debef9e1"
     },
     {
       "path": "assets/souls/thumbnails/06f6f233f18448-64.svg",
-      "bytes": 4806,
-      "sha256": "b5855a79dbd0bd71b15523ea6a11c1722df1845040665db3bd96bc0781755810"
+      "bytes": 4874,
+      "sha256": "0378f0b356d729c1b1185ba75936ac34d5354410e4ccef3b6010d218539b85ed"
     },
     {
       "path": "assets/souls/thumbnails/08ff91eabc6d43-64.svg",
-      "bytes": 4665,
-      "sha256": "932c0a2a3bc3b81f0f32aaec6694ed4141189d20e475ad1ff7ec92d8349f6fcb"
+      "bytes": 4769,
+      "sha256": "19db9d1810689a796a316f9130a69fb97511d93120a10e64d36eaccaa5a9d7c5"
     },
     {
       "path": "assets/souls/thumbnails/0bc49cd4fd7217-64.svg",
-      "bytes": 4380,
-      "sha256": "c05e0583df181259d4efb9684f0f7a8b9802a562070d0d16b582ee8134876d95"
+      "bytes": 4770,
+      "sha256": "b5c02fcdfa4586d8432df0f2cfb611648f118aa52e5f1e1a3e701ceb85b39aca"
     },
     {
       "path": "assets/souls/thumbnails/0c8fda8ffef1d5-64.svg",
-      "bytes": 4459,
-      "sha256": "8b2241b9ef6451bc6ce34eb7e805726cc9792636cfbeb8f1fe2439c8ab78e5c6"
+      "bytes": 4888,
+      "sha256": "4155f94090a6082351e42f625f295527096b41b28c3004936c4c9b02639e7616"
     },
     {
       "path": "assets/souls/thumbnails/0cf1c4f541ecc5-64.svg",
-      "bytes": 4428,
-      "sha256": "aacce8b7eace2b16321f455609d8851256501491ce38b2da41a2b9ec483ad115"
+      "bytes": 4888,
+      "sha256": "7bb9f24b1a0178266e0c4a93596512169c8a680e3b783660020626f8eccef0ae"
     },
     {
       "path": "assets/souls/thumbnails/0e39e2f5047a44-64.svg",
-      "bytes": 4492,
-      "sha256": "d7e241f793d21af25f3f5978a891782578b78bd378bb1ab8b02ebb260fda2a10"
+      "bytes": 4875,
+      "sha256": "5b4f3fd4d9e15a07a275a645b73489101ad7e74e70a499bcabdac29c5baf773f"
     },
     {
       "path": "assets/souls/thumbnails/0e7c71a4f4779e-64.svg",
-      "bytes": 4781,
-      "sha256": "14b42166c9768c5b27c2c8d7fc7a93b930909f2dbeaf7d5a70bb02b0cd18b068"
+      "bytes": 4770,
+      "sha256": "96950d6dbb84cf7440e6ea7c75d58a070f316e11dfd9ae4d288e66e6f1e52fb1"
     },
     {
       "path": "assets/souls/thumbnails/0f1be17ca9df8f-64.svg",
-      "bytes": 4733,
-      "sha256": "d462adf2ca1a7c5249b7459cca44ee2bf7c2eca03c5d82acf1dc0bea6b3c046c"
+      "bytes": 4874,
+      "sha256": "8444390aea4eb3be739b37cb3517de5148fc27f08f9f07f97437b507fd5658d9"
     },
     {
       "path": "assets/souls/thumbnails/10e619a585d80a-64.svg",
-      "bytes": 5282,
-      "sha256": "d91f5ac70ba1c35c646acee4ae2d39f245fa660ce122097711d75b318ec9178a"
+      "bytes": 4887,
+      "sha256": "64d84699108ff0def21425eaeeec0426b801e35af9758c6d6b838571ebec32fd"
     },
     {
       "path": "assets/souls/thumbnails/12ce33f272ee40-64.svg",
-      "bytes": 4922,
-      "sha256": "15505a7e7b2f7a36b2964b127f73668e07842c786c54aab81410e18fa96f4685"
+      "bytes": 5285,
+      "sha256": "01eaafccf53fdb767a901aa338fc1722946ef4745828967a92196df032d40882"
     },
     {
       "path": "assets/souls/thumbnails/140e6ebb0fff0f-64.svg",
-      "bytes": 4909,
-      "sha256": "c15109c2c91ae48bef9e231489a9e5e8e2555a06109737c6d02069aef6fe8690"
+      "bytes": 4889,
+      "sha256": "c7102fd73f4dfa58eb3ecdf9c882c9d74b62a1e7c8a671e24451eb83340ee9f0"
     },
     {
       "path": "assets/souls/thumbnails/15b36949ab1524-64.svg",
-      "bytes": 4363,
-      "sha256": "db3cf2da9a6b9e20ad4c8316a861cd983a1ffde899d5b657923ec9809caa6bcb"
+      "bytes": 4890,
+      "sha256": "c92194edad3be21976d251d52c8941da6df42cacb115c5afad3d51e84e1e3d9b"
     },
     {
       "path": "assets/souls/thumbnails/185edf81266a86-64.svg",
-      "bytes": 5472,
-      "sha256": "8a5659eb27593652b3d7757e26d37e44fc4ff5dd5562fa70f876e3ef6dca4292"
+      "bytes": 5285,
+      "sha256": "905a2ba8bccdd4fb22fd9abb270b233b60709db5fb2fb6cbe87667e00125ca7f"
     },
     {
       "path": "assets/souls/thumbnails/19c576aacf1ebd-64.svg",
-      "bytes": 4569,
-      "sha256": "8b832ffb8a42592c6fec0617f11269b3e2144220da2c70468deef25fdf8fe573"
+      "bytes": 4768,
+      "sha256": "eece6b11c42b6853012c6df4139f7aeff9fa030a5f96386e715023c54f17787f"
     },
     {
       "path": "assets/souls/thumbnails/1a094e030d5e89-64.svg",
-      "bytes": 4299,
-      "sha256": "55605a9d1450f069854245628300cf06337f5248adfb5d63a7cc23cda3f96a00"
+      "bytes": 4872,
+      "sha256": "e28511050a2f1037fe8771a2b2bfa258f11e93850f4890a84e24747d9b367189"
     },
     {
       "path": "assets/souls/thumbnails/1cdc2b005f78f8-64.svg",
-      "bytes": 4773,
-      "sha256": "e832da5a892ad840bccb7ca4a3a726d1423342176627cb0e0016dbe704efcfee"
+      "bytes": 4873,
+      "sha256": "d15b5265e5d971996c436417e4c1daf7598740c9c6b6674b73f4c99cfdfa632e"
     },
     {
       "path": "assets/souls/thumbnails/1d2e20987152b0-64.svg",
-      "bytes": 5063,
-      "sha256": "75fe121e6dc06259873b309cadd61bc980b99378d00e17f465c96d073b946b36"
+      "bytes": 5391,
+      "sha256": "63efa3250cabf54f9800903af4991fd812510bef5913793155173a18f99dcd19"
     },
     {
       "path": "assets/souls/thumbnails/1ec3a1b6539cad-64.svg",
-      "bytes": 4924,
-      "sha256": "4d32dc0fe9729345856ad0cb4f5cd4f62372514b5150a6ead6cdd830bbe2ea60"
+      "bytes": 4872,
+      "sha256": "82b5d19d44da53b8865ba5c4805e0eec0765ca0dfa0e5f12c8871d07d014a813"
     },
     {
       "path": "assets/souls/thumbnails/1ef9240343b1a0-64.svg",
-      "bytes": 4976,
-      "sha256": "372f52d8057052e618b60e7ab2bf05b727bd34aadbeb8152b10470e959be3abe"
+      "bytes": 4770,
+      "sha256": "a71b36486a8b0a69f68979079125122c539904df25f6153fca138a4592fe2604"
     },
     {
       "path": "tokens/motion.json",
@@ -1504,7 +3149,7 @@
     }
   ],
   "distribution": {
-    "path": "build/dist/bingo-05efbe9c7c4e.tar.gz",
-    "sha256": "7e89b495d7b173820ec7b795b63d655e0f6bb67208b626843bd4977c4f2ede0b"
+    "path": "build/dist/bingo-5a3d6c80c6a1.tar.gz",
+    "sha256": "a39361924de12cad992651a71067b291b1db1169de88f0a4b70878c382cb12b3"
   }
 }

@@ -112,6 +112,7 @@ async function refreshSnapshot({ replaying = false } = {}) {
   if (sse) sse.acknowledgeSnapshot(snap.sequence);
   if (audio) { audio.setConnectionEpoch(snap.sequence); if (replaying) audio.setReplaying(false); }
   if (galaxy) galaxy.setSouls(state.galaxy.souls);
+  if (galaxy && state.publicState === 'Winner') galaxy.prewarm(); // opened (or reconnected) during a result: Floats follow
   render();
   return snap;
 }
@@ -142,9 +143,11 @@ function onEvent(envelope, meta) {
       break;
     }
     case 'bingo.detected':
+      if (galaxy) galaxy.prewarm(); // the round ends: its decorated Souls Float next (D-29)
       if (guard.shouldCelebrate(`bingo:${envelope.roundId}`, guardMeta)) { pendingWinnerBurst = true; galaxyWinner(envelope.roundId); if (audio) audio.play('bingo', { fresh: true, sequence: envelope.sequence }); announce(t('public.winner.title')); }
       break;
     case 'result.published':
+      if (galaxy) galaxy.prewarm();
       if (guard.shouldCelebrate(`winner:${envelope.roundId}`, guardMeta)) {
         pendingWinnerBurst = true;
         galaxyWinner(envelope.roundId, Array.isArray(p.winners) ? p.winners.map(w => w && w.soulId) : []);

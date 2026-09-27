@@ -1,5 +1,5 @@
 # AriSkill Skill Bingo - API contract (provisional names, normative behavior)
-version: 1.0.2
+version: 1.2.0
 basePath: /api/v1
 conventions:
   contentType: application/json
@@ -150,7 +150,12 @@ operations:
     auth: participant
     headers: [Idempotency-Key]
     body: { soulId: string, floatToken: string }
-    rule: Atomic one-use consumption. A repeat with the same token returns the original entrance (accepted=true, replay=true). Expired/unknown token -> FLOAT_FAILED (E13).
+    rule: >
+      Atomic one-use consumption. A repeat with the same token returns the original entrance (accepted=true, replay=true). Expired/unknown token -> FLOAT_FAILED (E13).
+      entrance.config is the Soul's stored config, the same one the public and stage screens get (realtime-events.json shapes):
+      SoulConfig v3 { version: 3, catalog, seed, gradient, glow, face, plate, eyes, charms, topper, constellation, driftPhase }
+      for Souls created from contract 1.2.0 on (D-31: face plate, eyes and antenna charm, all picked from the seed);
+      SoulConfigV2 (face, charms, gradient) for Souls created under 1.1.0 (D-29) and for the neutral fallback; SoulConfigV1 before 1.1.0.
     response: { accepted: true, replay: bool, entrance: SoulEntrance }
 
   # ---- admin ----------------------------------------------------------------

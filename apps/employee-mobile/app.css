@@ -295,7 +295,8 @@ body { background: var(--play-ink); }
 
 /* ---------- Soul: hero stage (3D scene or SVG) ---------- */
 .soul-stage { position: relative; display: grid; place-items: center; padding: var(--ui-space-5) 0; min-height: 300px; }
-.soul-3d { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 600ms cubic-bezier(.2, 0, 0, 1); mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 40%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 40%, transparent 100%); }
+/* stage fade: fully opaque over the whole baseline Soul (orb to ring, D-27), soft to transparent at the stage edges */
+.soul-3d { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity 600ms cubic-bezier(.2, 0, 0, 1); mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 74%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 50%, #000 74%, transparent 100%); }
 .soul-3d canvas { display: block; width: 100% !important; height: 100% !important; }
 .soul-stage.is-3d .soul-3d, .soul-stage.is-3d-pending .soul-3d { opacity: 1; }
 .soul-stage.is-3d, .soul-stage.is-3d-pending { min-height: min(420px, 105vw); }
@@ -311,6 +312,8 @@ body { background: var(--play-ink); }
 .soul-caption { font-size: var(--ui-fs-sm); }
 /* Floated: the Soul is in the Galaxy, shown small at rest */
 .soul-stage.is-floated { min-height: 200px; }
+/* the lift-off plays in the full 3D stage; the floated layout takes over when the scene settles (is-3d removed) */
+.soul-stage.is-3d.is-floated { min-height: min(420px, 105vw); }
 .soul-stage.is-floated .soul-body { transform: translateY(-8px); }
 .soul-stage.is-floated .soul-figure svg { width: min(128px, 36vw); }
 .soul-stage.is-floated .soul-glow { width: 200px; height: 200px; opacity: .8; }

@@ -1,6 +1,6 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/stage",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "audience": "stage (presenter, read-only)",
   "allow": {
     "eventId": "string", "eventName": "string", "sequence": "int", "serverTime": "ISO", "publicState": "Waiting|Playing|Winner",
@@ -21,5 +21,6 @@
       "suppressedCohorts": "int"
     }
   },
-  "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email", "joinUrl"]
+  "forbidden": ["participantId", "employeeRef", "selectedSkillIds", "cells", "inMatrixCount", "beyondMatrixCount", "floatToken", "sessionToken", "matchedPositions", "email", "joinUrl", "skillIds", "matchedCount", "selectedKinds", "matchedKinds", "kindCounts"],
+  "note": "Contract 1.2.0 (D-31): Soul entrances on the stage stream (soul.float_accepted) carry the Soul's config, SoulConfig v3 for new Souls (realtime-events.json shapes.SoulConfig; SoulConfigV2 / SoulConfigV1 for Souls stored earlier and the neutral fallback), the same config the owner and the public screen get. Its decoration is charm ids, face, face plate, eyes, antenna charm (topper) and gradient only; plate, eyes and topper are cosmetic ids picked from the seed, never from skills; skill ids, skill names, match counts and the raw decoration inputs (the last five forbidden keys) never appear. The stage snapshot has no galaxy."
 }

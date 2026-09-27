@@ -30,7 +30,11 @@
     "ai:copy": "node tools/ai/openai-copy.js",
     "ai:uxui": "node tools/ai/openai-uxui.js",
     "ai:blender": "node tools/ai/blender-render.js",
-    "test:ai": "node --test tools/ai/test"
+    "test:ai": "node --test tools/ai/test",
+    "ai:soul-baseline": "node tools/ai/soul-baseline.js",
+    "ai:charms": "node tools/ai/gemini-charms.js",
+    "ai:soul-decor": "node tools/ai/soul-decor.js",
+    "ai:soul-face": "node tools/ai/soul-face.js"
   },
   "license": "UNLICENSED"
 }

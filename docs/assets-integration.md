@@ -44,13 +44,14 @@ Tree checks: `manifest.orphan` (every file under `assets/` except `assets/manife
 
 | Budget | Limit | Scope | Check id |
 |---|---|---|---|
-| All runtime assets | 6 MB (6 291 456 B) | `assets/**` except `assets/manifest/` | `budget.assets` |
+| All runtime assets | 7 MB (7 340 032 B; 6 MB until the stage-13 Soul faces, D-31) | `assets/**` except `assets/manifest/` | `budget.assets` |
 | Audio | 1.6 MB counted as 1600 KiB (1 638 400 B), the same number as `budgets.max_total_bytes` in `audio.yaml`; the lower of the two applies | `assets/audio/**` | `budget.audio` |
 | Single file | 1.2 MB (1 258 291 B) | any runtime file | `budget.singleFile` |
 | Soul SVG | 6 KB (6 144 B) | every `assets/souls/**/*.svg` (full, simple, dot, thumbnail) | `budget.soulSvg` |
 | Scene data | 120 KB (`scene-spec.md`) | `assets/scene/**` | `budget.sceneData` |
 | One-shot cue | `budgets.max_oneshot_bytes` from `audio.yaml` (120 KB) | `kind: audio-oneshot` | `budget.audioOneshot` |
 | Bundle per app | 600 KB | `apps/<app>/**` excluding `test/` (`app.empty` info while an app has no files) | `budget.app` |
+| Soul faces v3 | plate GLB 48 KB, eyes GLB 64 KB, kit GLB 96 KB, sprite 32 KB, directory 1.5 MB (`FACE_V3_BUDGETS`, docs/art/soul-faces.md) | `assets/souls/v3/**` | `budget.faceV3` |
 
 Current use (validator summary): assets 1.19 MB, audio 672 KB, scene data 45 KB, largest file 302 KB (`ambient_galaxy.wav`), largest Soul SVG 4.1 KB. Budgets can be overridden programmatically (`validateManifests({ budgets: { ... } })`) for tests; the CLI always uses the table above.
 

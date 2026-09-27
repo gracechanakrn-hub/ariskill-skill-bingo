@@ -4,14 +4,14 @@ import { json } from './db.js';
 import { ApiError, isApiError } from './errors.js';
 import { newId, sha256Hex, randomToken } from './ids.js';
 import { encryptToken } from './auth.js';
-import { SKILLS, domainCounts } from './skills.js';
+import { SKILLS, domainCounts, kindCounts } from './skills.js';
 import {
-  getRound, getEvent, roundSummary, drawShape, activeBoardsWithCells, drawsOf, boardsOfRound, cellsOf, winnerLabel,
+  getRound, getEvent, roundSummary, drawShape, activeBoardsWithCells, drawsOf, boardsOfRound, cellsOf, matchesOf, winnerLabel,
   resultWindowEndsAt, latestSequence, boardOf, participantBoard, getParticipant,
 } from './queries.js';
 import {
   isCommandAllowed, buildDrawPool, readiness as poolReadiness, drawNext, evaluateDraw, positionsFromMask, bestLineProgress,
-  secureRng, seededRng, POOL_MINIMUM, soulSeed, soulConfigFromSeed, validateSoulConfig, neutralSoulConfig, shuffle,
+  secureRng, seededRng, POOL_MINIMUM, soulSeed, decoratedSoulConfig, validateSoulConfig, neutralSoulConfig, shuffle,
 } from '../../../packages/game-rules/src/index.js';
 
 export const COMMANDS = ['round.update', 'round.registration.open', 'round.reschedule', 'round.lock', 'round.start', 'round.start_now', 'round.draw.next', 'round.cancel', 'round.close'];
@@ -290,6 +290,16 @@ export function createGame({ db, clock, config, log, hub = null }) {
     return effects;
   }
 
+  /**
+   * Soul decoration inputs (D-29): kind counts of the 25 selected skills (charm split) and of the tiles matched at round end
+   * (face). The v3 face plate, eyes and antenna charm (D-31) take nothing but the seed and the picked charms.
+   */
+  function soulInputs(board) {
+    const selected = json.parse(board.selected_json, []);
+    const matched = new Set(matchesOf(db, board.id));
+    const matchedIds = cellsOf(db, board.id).filter(c => matched.has(c.position)).map(c => c.skillId);
+    return { domainCounts: domainCounts(selected), selectedKinds: kindCounts(selected), matchedKinds: kindCounts(matchedIds) };
+  }
   /** Round end: LOCKED_ACTIVE -> FINISHED and one Soul per finished board (BR-16), idempotent by board id. Returns Map boardId -> soulId. */
   function finishRound(ctx, round, version, winnerParticipantIds) {
     const t = now();
@@ -300,8 +310,11 @@ export function createGame({ db, clock, config, log, hub = null }) {
       const existing = db.get('SELECT id FROM souls WHERE board_id = ?', b.id);
       if (existing) { souls.set(b.id, existing.id); continue; }
       const seed = soulSeed({ eventId: round.event_id, participantId: b.participant_id, roundId: round.id });
-      let cfg = soulConfigFromSeed(seed, domainCounts(json.parse(b.selected_json, [])));
-      if (!validateSoulConfig(cfg).ok) cfg = neutralSoulConfig(seed);
+      // A SoulConfig v3 (contract 1.2.0). A bad decoration must never fail the final draw: any error or invalid config (such
+      // as no skill kind counted, so no charms) gives the neutral Soul, which stays a v2 config (BR-17).
+      let cfg = null, reason = null;
+      try { cfg = decoratedSoulConfig(seed, soulInputs(b)); reason = validateSoulConfig(cfg).reason ?? null; } catch (e) { reason = e?.message || 'decoration failed'; }
+      if (reason) { log?.warn('soul config rejected, neutral fallback', { boardId: b.id, reason }); cfg = neutralSoulConfig(seed); }
       const soulId = newId('soul');
       const token = randomToken(32);
       db.run('INSERT INTO souls(id, event_id, round_id, participant_id, board_id, seed, config_json, badge, float_token_enc, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',

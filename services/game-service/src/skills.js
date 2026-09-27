@@ -1,6 +1,6 @@
 // Skill Master index (packages/skill-master/data/skill-master.json, D-05/D-06). Loaded once; read-only.
 import skillMaster from '../../../packages/skill-master/data/skill-master.json' with { type: 'json' };
-import { isEligibleSkill } from '../../../packages/game-rules/src/index.js';
+import { isEligibleSkill, countSkillKinds } from '../../../packages/game-rules/src/index.js';
 
 export const SKILL_MASTER = skillMaster;
 export const MATRIX_VERSION = skillMaster.matrixVersion;
@@ -42,3 +42,5 @@ export function domainCounts(skillIds) {
   for (const id of skillIds) { const d = SKILLS.get(id)?.domain ?? 'Unknown'; out[d] = (out[d] ?? 0) + 1; }
   return out;
 }
+/** Soul decoration kind counts {core, technical, soft} from each skill's Skill Master `kind` (D-29; unrelated to isCore). */
+export function kindCounts(skillIds) { return countSkillKinds(skillIds.map(id => SKILLS.get(id)?.kind)); }

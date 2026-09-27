@@ -12,3 +12,8 @@ build/screenshots/
 !.env.example
 assets-src/generated/**/*.png
 data/backup/
+assets-src/generated/**/*.blend
+assets-src/generated/**/*.npy
+assets-src/generated/**/*.blend1
+__pycache__/
+*.pyc

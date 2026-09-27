@@ -1,0 +1,101 @@
+{
+  "generator": "tools/ai/blender/soul_baseline.py",
+  "version": "1.0.0",
+  "blender": "5.2.0 LTS",
+  "voxel": 0.003,
+  "camera": [
+    24.625,
+    5.875,
+    6.6984,
+    274.625,
+    -0.0931,
+    1.065
+  ],
+  "eye": {
+    "azimuth_deg": 31.4,
+    "elev_deg": 0.0,
+    "z": 1.165,
+    "radius": 0.148,
+    "dome": 0.028,
+    "groove_r": 0.0075,
+    "groove_depth": 0.0065
+  },
+  "reference": "docs/art/reference/soul-baseline-reference.png",
+  "script_sha256": "ccfa0907831bd15790ddc54d4d90d2a5414a0aff6537546d38b2d9b4c4be28ae",
+  "splats_sha256": "ec4f5e6223fb9b987a0dd6df20c246a5d3e6afa869eeb285677a9c97482a1dff",
+  "files": {
+    "soul-baseline-hero.glb": {
+      "bytes": 338168,
+      "triangles": 24000,
+      "vertices": 12002,
+      "sha256": "ef698a388bffb9c0b9a19f07c05655a8b6ead0b8cd479eaaad0423fe212df22a"
+    },
+    "soul-baseline-lite.glb": {
+      "bytes": 86152,
+      "triangles": 6000,
+      "vertices": 3002,
+      "sha256": "d2607c3a49f678ae873fc0d86782956eef5dc05610557ff9a4fec2dfea6e5161"
+    },
+    "colour-lagoon.png": {
+      "sha256": "06f790d4472ec3867273d9d457d8e5c31d69f8e9ce796e0c482fbe2571feb7dc",
+      "bytes": 815580
+    },
+    "colour-mint.png": {
+      "sha256": "1d68839a838bbdbec669dc971970921e734780117fb93ddc187109d997357c93",
+      "bytes": 816593
+    },
+    "colour-orchid.png": {
+      "sha256": "51161818b5bd06cd010f917d468e1dc3165ba2f69ae1c771dd52ba5aecb064e4",
+      "bytes": 810324
+    },
+    "colour-sheet.png": {
+      "sha256": "f63326dfe2641d246a50c9086a137f9d9996d6178c0c363f2b3241ff52bf2dd6",
+      "bytes": 473577
+    },
+    "match-compare.png": {
+      "sha256": "5da0ec82571e99514e48a323bdd59863ea1fe70c68b3b063b269d5261336a6fa",
+      "bytes": 256093
+    },
+    "match.png": {
+      "sha256": "deb3732ff5571b21c8f427cfea5233c821e1de0854845f7e177dc91b40541a61",
+      "bytes": 338851
+    },
+    "overlay.png": {
+      "sha256": "0b0248980af0eb324a8b050974e4fe512efc8860bd4aa5822c532cab09d81e3c",
+      "bytes": 6717
+    },
+    "soul-baseline.blend": {
+      "sha256": "c1ca412d6204968cf2725e986b22f8ffc87e2279d53cf4c0dc6f8c08f6bf39ac",
+      "bytes": 33289626
+    },
+    "turn-000.png": {
+      "sha256": "de3e1722266603165f889e031377df5dc4a1293b477138caa4032cd2fa20c120",
+      "bytes": 433500
+    },
+    "turn-035.png": {
+      "sha256": "971ffb3467610e269ef6f63b3145f28462b42eb5e09241936ed677be137c2213",
+      "bytes": 420093
+    },
+    "turn-090.png": {
+      "sha256": "560b7843ebe914edc2a262386751a095fb779f663c2e1f2472ee6b2a87b3abae",
+      "bytes": 379115
+    },
+    "turn-150.png": {
+      "sha256": "a841cb5de6dfec770dcfdf2cb2a8ceeb6384d1b7a2282d313f2156150ab330de",
+      "bytes": 410067
+    },
+    "turn-180.png": {
+      "sha256": "5fe64bca821dedc7b2ff79e6af0c732f9e434362d0c2e57f152c3742ee0d9abb",
+      "bytes": 415526
+    },
+    "turn-270.png": {
+      "sha256": "780df88212d84be237c196387d4f4c1876c286d2a2030cf559b8c22efa911558",
+      "bytes": 375203
+    },
+    "turntable-sheet.png": {
+      "sha256": "517e678a27c52b133e01323c0fa0212b3389a22cde1ae7958155ae5338de7346",
+      "bytes": 345190
+    }
+  },
+  "license": "internal original; sculpted procedurally from the supplied reference"
+}

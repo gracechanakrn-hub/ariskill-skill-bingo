@@ -1,0 +1,91 @@
+{
+  "tool": "gemini-charms",
+  "name": "all",
+  "dryRun": true,
+  "createdAt": "2026-09-25T03:00:37.026Z",
+  "model": "gemini-3.1-flash-image",
+  "phase": "run",
+  "count": 2,
+  "requests": [
+    {
+      "id": "soft-vinyl",
+      "method": "POST",
+      "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
+      "headers": {
+        "x-goog-api-key": "<redacted>"
+      },
+      "body": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "A single die-cut sticker icon from a cute, cohesive sticker set: one chunky, rounded, simplified cartoon object drawn as a clean flat illustration.\nThe object is a vinyl record. Draw it as one chunky, rounded, simplified object with friendly, slightly squashed proportions, big simple shapes and only the few details needed to recognise it at a glance, even when the sticker is shown very small. A glossy black vinyl record with fine concentric grooves and a small plain coloured centre label (no text), slightly tilted so it reads as a record, not a plate.\nThe sticker lies alone on a perfectly flat, uniform chroma-key green background (#00FF00) that fills the whole square edge to edge: one solid colour with no gradient, texture, vignette, shadow, floor, reflection or scenery.\nStyle: a bold, even, dark plum outline (#2B2350) around the object and its main parts; soft two-tone cel shading on every colour (a flat base tone plus one slightly darker shadow tone, no gradients) and one small white highlight near the upper left; 3 to 4 friendly colours taken from peach #FFB27A, gold #F6C453, rose #FF6FA5, cherry red #FF5A6E, mint #7CF5C8, leaf green #5FC77A, sky blue #7FB2FF, cyan #63E6FF, lilac #8B7CF0, warm wood #C98B5A and cool grey #C3C8DE. Die-cut: a thick, even, pure white sticker border, about 3% of the image width, surrounds the whole object and follows its silhouette with smooth rounded curves, so the object and all its parts form one single sticker shape; gaps and holes between parts are filled with white; the white border has no outline, shadow or glow, and its outer edge is crisp against the chroma-key green. Framing: the whole sticker, white border included, is centred in the square and fills about 75% of the frame, with an even chroma-key green margin on every side. Square 1:1.\nExactly one object on one sticker. No text, letters, numbers, logos, brand marks or watermarks anywhere: screens, covers, keys, labels and dials stay blank or show simple shapes. No human faces, no hands, no people, and no cartoon face on the object unless its description asks for eyes. No scenery, no extra objects, no sparkles or decorations around the sticker, no drop shadow."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "responseModalities": [
+            "TEXT",
+            "IMAGE"
+          ],
+          "temperature": 0.7,
+          "imageConfig": {
+            "aspectRatio": "1:1"
+          }
+        }
+      },
+      "outputs": [
+        "assets-src/generated/charms/raw/soft-vinyl-a<n>.png",
+        "assets-src/charms/icons/soft-vinyl.png",
+        "assets-src/charms/provenance.json"
+      ],
+      "notes": [
+        "temperature 0.7",
+        "phase run",
+        "AI-generated with Google Gemini (gemini-3.1-flash-image); shipped as game art under D-29, owner sign-off OD-19"
+      ]
+    },
+    {
+      "id": "soft-seashell",
+      "method": "POST",
+      "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent",
+      "headers": {
+        "x-goog-api-key": "<redacted>"
+      },
+      "body": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "A single die-cut sticker icon from a cute, cohesive sticker set: one chunky, rounded, simplified cartoon object drawn as a clean flat illustration.\nThe object is a seashell. Draw it as one chunky, rounded, simplified object with friendly, slightly squashed proportions, big simple shapes and only the few details needed to recognise it at a glance, even when the sticker is shown very small. A scallop seashell: a fan shape with radiating ridges and a small hinge at the bottom, in soft peach and pink.\nThe sticker lies alone on a perfectly flat, uniform chroma-key green background (#00FF00) that fills the whole square edge to edge: one solid colour with no gradient, texture, vignette, shadow, floor, reflection or scenery.\nStyle: a bold, even, dark plum outline (#2B2350) around the object and its main parts; soft two-tone cel shading on every colour (a flat base tone plus one slightly darker shadow tone, no gradients) and one small white highlight near the upper left; 3 to 4 friendly colours taken from peach #FFB27A, gold #F6C453, rose #FF6FA5, cherry red #FF5A6E, mint #7CF5C8, leaf green #5FC77A, sky blue #7FB2FF, cyan #63E6FF, lilac #8B7CF0, warm wood #C98B5A and cool grey #C3C8DE. Die-cut: a thick, even, pure white sticker border, about 3% of the image width, surrounds the whole object and follows its silhouette with smooth rounded curves, so the object and all its parts form one single sticker shape; gaps and holes between parts are filled with white; the white border has no outline, shadow or glow, and its outer edge is crisp against the chroma-key green. Framing: the whole sticker, white border included, is centred in the square and fills about 75% of the frame, with an even chroma-key green margin on every side. Square 1:1.\nExactly one object on one sticker. No text, letters, numbers, logos, brand marks or watermarks anywhere: screens, covers, keys, labels and dials stay blank or show simple shapes. No human faces, no hands, no people, and no cartoon face on the object unless its description asks for eyes. No scenery, no extra objects, no sparkles or decorations around the sticker, no drop shadow."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "responseModalities": [
+            "TEXT",
+            "IMAGE"
+          ],
+          "temperature": 0.7,
+          "imageConfig": {
+            "aspectRatio": "1:1"
+          }
+        }
+      },
+      "outputs": [
+        "assets-src/generated/charms/raw/soft-seashell-a<n>.png",
+        "assets-src/charms/icons/soft-seashell.png",
+        "assets-src/charms/provenance.json"
+      ],
+      "notes": [
+        "temperature 0.7",
+        "phase run",
+        "AI-generated with Google Gemini (gemini-3.1-flash-image); shipped as game art under D-29, owner sign-off OD-19"
+      ]
+    }
+  ]
+}

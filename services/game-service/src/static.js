@@ -3,6 +3,8 @@
 // D-22: text assets above 8 KB are gzip-compressed on demand (node:zlib) when the client accepts gzip, cached in memory per
 // (path, mtime, size) within a bounded budget so the vendored Three.js is compressed once per process; every static response
 // carries a strong ETag (If-None-Match -> 304) and `Vary: Accept-Encoding`; /packages/vendor/** is immutable (versioned by directory).
+// D-27: the baseline Soul models (/assets/souls/baseline/*.glb) are served as model/gltf-binary and gzip like text: the quantised
+// buffers still shrink (~27 %), and they follow the same ETag / revalidate rules as every other asset.
 import { createReadStream, readFileSync, statSync, existsSync } from 'node:fs';
 import { resolve, join, extname, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
@@ -14,9 +16,10 @@ export const MIME = {
   '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp', '.ico': 'image/x-icon',
   '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf',
   '.yaml': 'application/yaml; charset=utf-8', '.yml': 'application/yaml; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.map': 'application/json; charset=utf-8', '.wasm': 'application/wasm', '.csv': 'text/csv; charset=utf-8',
+  '.glb': 'model/gltf-binary',
 };
 
-export const COMPRESSIBLE_EXT = new Set(['.js', '.mjs', '.css', '.html', '.json', '.svg', '.yaml', '.yml']);
+export const COMPRESSIBLE_EXT = new Set(['.js', '.mjs', '.css', '.html', '.json', '.svg', '.yaml', '.yml', '.glb']);
 export const COMPRESS_MIN_BYTES = 8 * 1024;
 export const GZIP_CACHE_MAX_BYTES = 64 * 1024 * 1024;
 export const IMMUTABLE_PREFIX = '/packages/vendor/';

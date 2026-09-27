@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto';
 import { join, dirname, relative, sep, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseManifest, MANIFEST_FIELDS } from './lib/manifest.js';
+import { readGlb, imageRefs } from './lib/glb.js';
 import { buildAssetMapSource, ASSET_MAP_PATH, APPS } from './build-asset-map.js';
 
 export const DEFAULT_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -25,14 +26,43 @@ export const ORPHAN_EXEMPT = /(^|\/)(README(\.md)?|sheet\.html|\.gitkeep)$/;
 export const AUDIO_REQUIRED_FIELDS = Object.freeze(['id', 'kind', 'runtime_file', 'checksum', 'bytes', 'duration_s', 'license', 'generator_script', 'source_file', 'source_format', 'runtime_format', 'version', 'sample_rate', 'channels', 'bit_depth', 'loop', 'preload', 'audiences', 'caption', 'approved_by']);
 export const AUDIO_FORMAT = Object.freeze({ sampleRate: 22050, channels: 1, bitsPerSample: 16, pcmFormat: 1 });
 export const DEFAULT_BUDGETS = Object.freeze({
-  assetsBytes: 6 * 1024 * 1024,          // everything under assets/ except assets/manifest/
+  assetsBytes: 7 * 1024 * 1024,          // everything under assets/ except assets/manifest/ (6 -> 7 MiB for the v3 faces, D-31)
   audioBytes: 1600 * 1024,               // 1.6 MB as the sound spec counts it (audio.yaml budgets.max_total_bytes = 1638400)
   singleFileBytes: Math.round(1.2 * 1024 * 1024),
   soulSvgBytes: 6 * 1024,                // every SVG under assets/souls/
   sceneDataBytes: 120 * 1024,            // assets/scene/* (scene-spec: scene data <= 120 KB)
   appBytesEach: 600 * 1024,              // apps/<app>/ (excluding test dirs)
   audioOneshotBytes: 120 * 1024,         // overridden by audio.yaml budgets.max_oneshot_bytes when present
+  glbBytes: 400 * 1024,                  // every .glb under assets/ (baseline Soul models, D-27)
 });
+export const MODEL_FORMATS = Object.freeze(['glb']);
+// Soul decorations (D-29, tools/assets/build-soul-decor.js): per-file budgets for the charm models + textures and the face
+// kits + sprites, and their total. Kept apart from DEFAULT_BUDGETS (whose key set the integration test pins); the same
+// `budgets` override applies to both.
+export const DECOR_BUDGETS = Object.freeze({
+  charmGlbBytes: 20 * 1024,              // assets/souls/charms/<id>.glb (~900 triangles, quantised)
+  charmPngBytes: 32 * 1024,              // assets/souls/charms/<id>.png (128 px texture, also the 2D sprite)
+  faceGlbBytes: 96 * 1024,               // assets/souls/faces/face-<face>.glb
+  faceSpriteBytes: 96 * 1024,            // assets/souls/faces/face-<face>-front.png (800 px)
+  decorBytes: Math.round(3.75 * 1024 * 1024), // everything under assets/souls/charms/ and assets/souls/faces/
+});
+// Soul faces v3 (D-31, tools/assets/build-soul-face.js): per-file budgets under assets/souls/v3/ and the directory total
+// (the two body GLBs are also held to glbBytes). Kept apart from DEFAULT_BUDGETS like DECOR_BUDGETS.
+export const FACE_V3_BUDGETS = Object.freeze({
+  plateGlbBytes: 48 * 1024,              // assets/souls/v3/plate-<id>.glb
+  eyesGlbBytes: 64 * 1024,               // assets/souls/v3/eyes-<id>.glb
+  kitGlbBytes: 96 * 1024,                // assets/souls/v3/face-<face>.glb
+  spriteBytes: 32 * 1024,                // assets/souls/v3/*.png (cropped front sprites)
+  v3Bytes: Math.round(1.5 * 1024 * 1024), // everything under assets/souls/v3/
+});
+const DECOR_FILE = Object.freeze([
+  { re: /^assets\/souls\/charms\/[^/]+\.glb$/, key: 'charmGlbBytes' }, { re: /^assets\/souls\/charms\/[^/]+\.png$/, key: 'charmPngBytes' },
+  { re: /^assets\/souls\/faces\/[^/]+\.glb$/, key: 'faceGlbBytes' }, { re: /^assets\/souls\/faces\/[^/]+-front\.png$/, key: 'faceSpriteBytes' },
+]);
+const V3_FILE = Object.freeze([
+  { re: /^assets\/souls\/v3\/plate-[^/]+\.glb$/, key: 'plateGlbBytes' }, { re: /^assets\/souls\/v3\/eyes-[^/]+\.glb$/, key: 'eyesGlbBytes' },
+  { re: /^assets\/souls\/v3\/face-[^/]+\.glb$/, key: 'kitGlbBytes' }, { re: /^assets\/souls\/v3\/[^/]+\.png$/, key: 'spriteBytes' },
+]);
 
 const sha256hex = (buf) => createHash('sha256').update(buf).digest('hex');
 const toPosix = (p) => p.split(sep).join('/');
@@ -154,7 +184,7 @@ function walkFiles(dir, out = [], skipDirs = new Set(['node_modules', 'test', 't
 
 /** Validate both manifests and the tree they describe. Never throws for tree problems; returns them as problems. */
 export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAssetMap = true, checkUiKit = true } = {}) {
-  const B = { ...DEFAULT_BUDGETS, ...budgets };
+  const B = { ...DEFAULT_BUDGETS, ...DECOR_BUDGETS, ...FACE_V3_BUDGETS, ...budgets };
   const problems = [];
   const add = (severity, check, path, detail) => problems.push({ severity, check, path: path == null ? null : toPosix(String(path)), detail });
   const abs = (rel) => join(root, rel);
@@ -164,6 +194,26 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
   const listed = new Map(); // rel path -> [ids]
   const note = (rel, id) => { const k = String(rel).replace(/^\.?\//, ''); if (!listed.has(k)) listed.set(k, []); listed.get(k).push(id); };
   const summary = { root: toPosix(root), entries: 0, cues: 0, files: 0, unapproved: { assets: 0, audio: 0 }, budgets: {}, bySeverity: { critical: 0, major: 0, minor: 0, info: 0 } };
+  // glTF binaries (kind model): container header + per-file budget, each path checked once (runtime, fallback or lod)
+  const glbSeen = new Set();
+  const checkGlb = (rel, id) => {
+    if (!/\.glb$/i.test(rel) || glbSeen.has(rel)) return;
+    glbSeen.add(rel);
+    const buf = readBuf(rel);
+    const h = readGlb(buf);
+    if (!h.ok) add('major', 'glb.header', rel, `${h.reason} (entry ${id})`);
+    if (buf.length > B.glbBytes) add('major', 'budget.glb', rel, `${buf.length} bytes > ${B.glbBytes}`);
+    // decor models: quantised positions keep raw integer min/max; a charm's texture is its sibling <id>.png by relative URI
+    if (h.ok && /^assets\/souls\/(charms|faces)\//.test(rel)) {
+      for (const a of h.json.accessors || []) if (a.normalized && (a.min || a.max) && [a.min, a.max].some((m) => !Array.isArray(m) || m.some((v) => !Number.isInteger(v)))) add('major', 'decor.glb', rel, 'quantised accessor min/max must be the raw stored integers');
+      if (rel.startsWith('assets/souls/charms/')) {
+        const want = posix.basename(rel).replace(/\.glb$/, '.png');
+        const imgs = imageRefs(h.json);
+        if (imgs.length !== 1 || !imgs[0].external || !imgs[0].relative || imgs[0].uri !== want) add('major', 'decor.glb', rel, `texture must be the external relative URI ${want}, got ${JSON.stringify(imgs.map((i) => i.uri))}`);
+        else if (!existsSync(abs(posix.join(posix.dirname(rel), want)))) add('major', 'decor.glb', rel, `texture ${want} is missing next to the model`);
+      }
+    }
+  };
 
   // ---------------------------------------------------------------- assets.yaml
   let assets = null;
@@ -208,12 +258,13 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
         if (Number(e.texture_memory_bytes) !== buf.length) add('major', 'bytes.mismatch', rf, `texture_memory_bytes ${e.texture_memory_bytes} != file size ${buf.length} (entry ${id})`);
         if (buf.length > B.singleFileBytes) add('major', 'budget.singleFile', rf, `${buf.length} bytes > ${B.singleFileBytes}`);
         if (/^assets\/souls\/.*\.svg$/.test(rf) && buf.length > B.soulSvgBytes) add('major', 'budget.soulSvg', rf, `${buf.length} bytes > ${B.soulSvgBytes}`);
+        checkGlb(rf, id);
       }
       // fallback
       if (e.fallback_file) {
         const ff = String(e.fallback_file);
         if (!existsSync(abs(ff))) add('major', 'fallback.missing', ff, `fallback_file listed by ${id} does not exist`);
-        else { note(ff, id); if (/^assets\/souls\/.*\.svg$/.test(ff) && readBuf(ff).length > B.soulSvgBytes) add('major', 'budget.soulSvg', ff, `${readBuf(ff).length} bytes > ${B.soulSvgBytes}`); }
+        else { note(ff, id); if (/^assets\/souls\/.*\.svg$/.test(ff) && readBuf(ff).length > B.soulSvgBytes) add('major', 'budget.soulSvg', ff, `${readBuf(ff).length} bytes > ${B.soulSvgBytes}`); checkGlb(ff, id); }
         if (ff === rf) add('minor', 'fallback.sameAsRuntime', where, 'fallback_file equals runtime_file');
       } else if (FALLBACK_REQUIRED_KINDS.includes(String(e.kind))) {
         add('minor', 'fallback.undeclared', where, `kind ${e.kind} has no fallback_file; the client falls back to the built-in rule (scene background / dot). Generator should declare one.`);
@@ -226,12 +277,16 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
           if (typeof l !== 'string' || !l) { add('major', 'lods.malformed', where, `lods[${idx}] must be a non-empty path`); return; }
           if (seenLod.has(l)) add('major', 'lods.malformed', where, `lods[${idx}] duplicates ${l}`); seenLod.add(l);
           if (!existsSync(abs(l))) add('major', 'lods.missing', l, `lod listed by ${id} does not exist`);
-          else { note(l, id); if (/^assets\/souls\/.*\.svg$/.test(l) && readBuf(l).length > B.soulSvgBytes) add('major', 'budget.soulSvg', l, `${readBuf(l).length} bytes > ${B.soulSvgBytes}`); }
+          else { note(l, id); if (/^assets\/souls\/.*\.svg$/.test(l) && readBuf(l).length > B.soulSvgBytes) add('major', 'budget.soulSvg', l, `${readBuf(l).length} bytes > ${B.soulSvgBytes}`); checkGlb(l, id); }
         });
         if (e.lods.length && rf && !e.lods.includes(rf)) add('minor', 'lods.runtimeAbsent', where, 'runtime_file is not part of lods (expected as the highest level)');
       }
       for (const f of ['bounds', 'pivot']) if (!Array.isArray(e[f]) || e[f].length !== 3 || e[f].some((n) => typeof n !== 'number')) add('major', 'field.vector', where, `${f} must be [x, y, z] numbers`);
       if (typeof e.triangle_count !== 'number' || e.triangle_count < 0) add('major', 'field.number', where, 'triangle_count must be a non-negative number');
+      if (String(e.kind) === 'model') {
+        if (!MODEL_FORMATS.includes(String(e.runtime_format))) add('major', 'format.model', where, `kind model needs runtime_format in [${MODEL_FORMATS.join(', ')}], got ${JSON.stringify(e.runtime_format)}`);
+        if (!(e.triangle_count > 0)) add('major', 'field.number', where, 'kind model needs triangle_count > 0');
+      }
     }
     if (summary.unapproved.assets) add('minor', 'approval.pending', ASSETS_MANIFEST, `${summary.unapproved.assets} of ${assets.entries.length} entries have approved_by: null (human gate item)`);
   }
@@ -336,16 +391,29 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
 
   // ---------------------------------------------------------------- tree: orphans + budgets
   const assetFiles = walkFiles(abs('assets'), [], new Set(['manifest']));
-  let assetsBytes = 0; let audioBytes = 0; let sceneBytes = 0; let soulsBytes = 0;
+  let assetsBytes = 0; let audioBytes = 0; let sceneBytes = 0; let soulsBytes = 0; let decorBytes = 0; let v3Bytes = 0;
+  const decorMax = Object.fromEntries(DECOR_FILE.map((d) => [d.key, 0]));
+  const v3Max = Object.fromEntries(V3_FILE.map((d) => [d.key, 0]));
   for (const f of assetFiles) {
     const rel = relOf(f.path);
     assetsBytes += f.bytes;
+    if (/^assets\/souls\/(charms|faces)\//.test(rel)) {
+      decorBytes += f.bytes;
+      const d = DECOR_FILE.find((x) => x.re.test(rel));
+      if (d) { decorMax[d.key] = Math.max(decorMax[d.key], f.bytes); if (f.bytes > B[d.key]) add('major', 'budget.decor', rel, `${f.bytes} bytes > ${B[d.key]} (${d.key})`); }
+    }
+    if (rel.startsWith('assets/souls/v3/')) {
+      v3Bytes += f.bytes;
+      const d = V3_FILE.find((x) => x.re.test(rel));
+      if (d) { v3Max[d.key] = Math.max(v3Max[d.key], f.bytes); if (f.bytes > B[d.key]) add('major', 'budget.faceV3', rel, `${f.bytes} bytes > ${B[d.key]} (${d.key})`); }
+    }
     if (rel.startsWith('assets/audio/')) audioBytes += f.bytes;
     if (rel.startsWith('assets/scene/')) sceneBytes += f.bytes;
     if (rel.startsWith('assets/souls/')) soulsBytes += f.bytes;
     if (!listed.has(rel) && !ORPHAN_EXEMPT.test(rel)) add('major', 'manifest.orphan', rel, 'runtime file under assets/ is not listed by any manifest entry');
     if (f.bytes > B.singleFileBytes && !listed.has(rel)) add('major', 'budget.singleFile', rel, `${f.bytes} bytes > ${B.singleFileBytes}`);
     if (/^assets\/souls\/.*\.svg$/.test(rel) && f.bytes > B.soulSvgBytes && !listed.has(rel)) add('major', 'budget.soulSvg', rel, `${f.bytes} bytes > ${B.soulSvgBytes}`);
+    if (/\.glb$/i.test(rel) && f.bytes > B.glbBytes && !listed.has(rel)) add('major', 'budget.glb', rel, `${f.bytes} bytes > ${B.glbBytes}`);
   }
   summary.files = assetFiles.length;
   summary.budgets.assetsBytes = { used: assetsBytes, limit: B.assetsBytes };
@@ -354,6 +422,13 @@ export function validateManifests({ root = DEFAULT_ROOT, budgets = {}, checkAsse
   summary.budgets.soulsBytes = { used: soulsBytes, limit: null };
   summary.budgets.singleFileBytes = { used: Math.max(0, ...assetFiles.map((f) => f.bytes)), limit: B.singleFileBytes };
   summary.budgets.soulSvgBytes = { used: Math.max(0, ...assetFiles.filter((f) => /\.svg$/.test(f.path) && relOf(f.path).startsWith('assets/souls/')).map((f) => f.bytes)), limit: B.soulSvgBytes };
+  summary.budgets.glbBytes = { used: Math.max(0, ...assetFiles.filter((f) => /\.glb$/i.test(f.path)).map((f) => f.bytes)), limit: B.glbBytes };
+  summary.budgets.decorBytes = { used: decorBytes, limit: B.decorBytes };
+  for (const d of DECOR_FILE) summary.budgets[d.key] = { used: decorMax[d.key], limit: B[d.key] };
+  summary.budgets.v3Bytes = { used: v3Bytes, limit: B.v3Bytes };
+  for (const d of V3_FILE) summary.budgets[d.key] = { used: v3Max[d.key], limit: B[d.key] };
+  if (v3Bytes > B.v3Bytes) add('major', 'budget.faceV3', 'assets/souls/v3/', `v3 faces ${v3Bytes} bytes > ${B.v3Bytes}`);
+  if (decorBytes > B.decorBytes) add('major', 'budget.decor', 'assets/souls/', `charms + faces ${decorBytes} bytes > ${B.decorBytes}`);
   if (assetsBytes > B.assetsBytes) add('major', 'budget.assets', 'assets/', `${assetsBytes} bytes > ${B.assetsBytes}`);
   if (audioBytes > summary.budgets.audioBytes.limit) add('major', 'budget.audio', 'assets/audio/', `${audioBytes} bytes > ${summary.budgets.audioBytes.limit}`);
   if (sceneBytes > B.sceneDataBytes) add('major', 'budget.sceneData', 'assets/scene/', `${sceneBytes} bytes > ${B.sceneDataBytes}`);
@@ -387,7 +462,9 @@ export function formatReport({ ok, problems, summary }) {
   lines.push(`validate-manifest: ${ok ? 'OK' : 'FAILED'} - ${summary.entries} asset entries, ${summary.cues} audio cues, ${summary.files} runtime files`);
   const b = summary.budgets;
   const row = (name, v) => v && lines.push(`  budget ${name.padEnd(16)} ${fmtBytes(v.used).padStart(10)} / ${v.limit == null ? 'n/a' : fmtBytes(v.limit)}${v.limit != null && v.used > v.limit ? '  OVER' : ''}`);
-  row('assets', b.assetsBytes); row('audio', b.audioBytes); row('scene data', b.sceneDataBytes); row('largest file', b.singleFileBytes); row('largest soul svg', b.soulSvgBytes);
+  row('assets', b.assetsBytes); row('audio', b.audioBytes); row('scene data', b.sceneDataBytes); row('largest file', b.singleFileBytes); row('largest soul svg', b.soulSvgBytes); row('largest glb', b.glbBytes);
+  row('soul decor', b.decorBytes); row('largest charm glb', b.charmGlbBytes); row('largest charm png', b.charmPngBytes); row('largest face glb', b.faceGlbBytes); row('largest face png', b.faceSpriteBytes);
+  row('soul faces v3', b.v3Bytes); row('largest plate glb', b.plateGlbBytes); row('largest eyes glb', b.eyesGlbBytes); row('largest kit v3 glb', b.kitGlbBytes); row('largest v3 sprite', b.spriteBytes);
   for (const [app, v] of Object.entries(b.apps || {})) row(`app ${app}`, v.files ? v : { used: 0, limit: v.limit });
   lines.push(`  approvals pending: assets ${summary.unapproved.assets}, audio ${summary.unapproved.audio}`);
   lines.push(`  problems: critical ${summary.bySeverity.critical}, major ${summary.bySeverity.major}, minor ${summary.bySeverity.minor}, info ${summary.bySeverity.info}`);

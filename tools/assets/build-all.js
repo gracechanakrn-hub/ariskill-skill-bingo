@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// tools/assets/build-all.js - one command for the asset pipeline (workflow 13.6): scene -> souls -> audio -> asset map -> validate.
+// tools/assets/build-all.js - one command for the asset pipeline (workflow 13.6): scene -> souls -> soul-baseline (GLB) -> soul-decor -> audio ->
+// asset map -> validate.
 // Zero third-party code. Every generator is deterministic, so running twice is a no-op.
 //
 //   node tools/assets/build-all.js            regenerate everything in place, then validate (exit 1 on critical/major)
@@ -21,11 +22,19 @@ export const DEFAULT_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', 
 export const GENERATORS = Object.freeze([
   { id: 'scene', cmd: 'node', args: ['tools/assets/build-scene.js'], outputs: ['assets/scene', 'assets/manifest/assets.yaml'] },
   { id: 'souls', cmd: 'node', args: ['tools/assets/build-souls.js'], outputs: ['assets/souls', 'assets/manifest/assets.yaml'] },
+  // Baseline Soul GLBs (D-27): copies + checks the Blender outputs in assets-src/generated/soul-baseline/v1.
+  { id: 'soul-baseline', cmd: 'node', args: ['tools/assets/build-soul-baseline.js'], outputs: ['assets/souls/baseline', 'assets/manifest/assets.yaml'] },
+  // Soul decorations (D-29): copies + checks the Blender charms and face kits in assets-src/generated/soul-decor/v1.
+  { id: 'soul-decor', cmd: 'node', args: ['tools/assets/build-soul-decor.js'], outputs: ['assets/souls/charms', 'assets/souls/faces', 'assets/manifest/assets.yaml'] },
+  // Soul faces v3 (D-31): copies + checks the Blender body, plates, eyes, kits and sprites in assets-src/generated/soul-face/v1.
+  { id: 'soul-face', cmd: 'node', args: ['tools/assets/build-soul-face.js'], outputs: ['assets/souls/v3', 'assets/manifest/assets.yaml'] },
   { id: 'audio', cmd: 'python3', args: ['tools/assets/build-audio.py'], outputs: ['assets/audio', 'assets/manifest/audio.yaml', 'assets/manifest/audio.json'], check: ['--check'] },
 ]);
 // What the JS generators need to run inside a temporary copy (imports are relative to tools/assets/).
 const CHECK_COPY = ['assets', 'assets-src', 'tools/assets', 'packages'];
 const SKIP_DIRS = new Set(['node_modules', 'test', 'tests', '.git']);
+// Blender masters / numpy caches (git-ignored, ~66 MB) are never read by a JS generator: keep them out of the copy.
+const SKIP_FILES = /\.(blend|blend1|npy)$/;
 const toPosix = (p) => p.split(sep).join('/');
 
 function run(cmd, args, cwd) {
@@ -71,7 +80,7 @@ export function buildAll({ root = DEFAULT_ROOT, check = false, tmp = null, skipA
     mkdirSync(parent, { recursive: true });
     const work = mkdtempSync(join(parent, 'assets-check-'));
     try {
-      for (const d of CHECK_COPY) if (existsSync(join(root, d))) cpSync(join(root, d), join(work, d), { recursive: true, filter: (src) => !SKIP_DIRS.has(relative(root, src).split(sep).pop()) });
+      for (const d of CHECK_COPY) if (existsSync(join(root, d))) cpSync(join(root, d), join(work, d), { recursive: true, filter: (src) => { const name = relative(root, src).split(sep).pop(); return !SKIP_DIRS.has(name) && !SKIP_FILES.test(name); } });
       for (const g of GENERATORS) {
         if (g.cmd !== 'node') continue;
         const res = run(g.cmd, [...g.args], work);

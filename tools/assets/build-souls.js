@@ -5,14 +5,15 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative } from 'node:path';
-import { renderSoulSvg, soulAltText, resolveSoul, TRAITS, PALETTES, SOUL_RENDERER_VERSION } from '../../packages/ui/soul-renderer.js';
-import { soulSeed, soulConfigFromSeed, validateSoulConfig, SOUL_TRAITS } from '../../packages/game-rules/src/soul.js';
+import { renderSoulSvg, soulAltText, resolveSoul, decorUsable, TRAITS, SOUL_RENDERER_VERSION } from '../../packages/ui/soul-renderer.js';
+import { soulSeed, soulConfigFromSeed, decoratedSoulConfig, validateSoulConfig, SOUL_TRAITS } from '../../packages/game-rules/src/soul.js';
+import { GRADIENTS, FACES } from '../../packages/game-rules/src/soul-catalog.js';
 import { seededRng } from '../../packages/game-rules/src/random.js';
 import { mergeManifest, fileChecksum, fileSize, writeIfChanged } from './lib/manifest.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const GENERATOR = 'tools/assets/build-souls.js';
-const VERSION = '2.0.0'; // v2 sticker language (docs/art/sticker-art-direction.md, D-25)
+const VERSION = '4.0.0'; // v4: renderer 4 (D-29 decorations); the v1 cohort files are byte-identical to v3 (docs/art/soul-baseline.md, D-27)
 const OUT = join(ROOT, 'assets', 'souls');
 const SRC = join(ROOT, 'assets-src', 'souls');
 const MANIFEST = join(ROOT, 'assets', 'manifest', 'assets.yaml');
@@ -83,6 +84,7 @@ entries.push({
 });
 
 // ---- Contact sheet (static review page; uses inline SVG so it works from file://) ----
+// v3 (D-27): one character; only palette, glow style and the Bingo Star badge vary, so those are the review rows.
 function traitRow(kind, base) {
   return TRAITS[kind].map((name, i) => {
     const cfg = { ...base, [kind]: i, seed: `row-${kind}-${i}` };
@@ -93,10 +95,27 @@ const base = { body: 0, palette: 1, eyes: 0, antenna: 0, mouth: 0, glow: 0, cons
 const cohortCards = members.map((m) => {
   const s = resolveSoul(m.config);
   return `<figure><div class="sp">${renderSoulSvg(m.config, { size: 150, badge: m.badge, detail: 'full', reducedMotion: true, idPrefix: `c${m.seed}` })}</div>` +
-    `<figcaption><b>#${String(m.index).padStart(2, '0')}</b> ${s.palette} ${s.body}<br><span class="muted">${s.eyes} / ${s.antenna} / ${s.mouth} / ${s.glow}${m.badge ? ' / badge' : ''}</span><br><code>${m.seed}</code></figcaption></figure>`;
+    `<figcaption><b>#${String(m.index).padStart(2, '0')}</b> ${s.palette}<br><span class="muted">${s.glow} glow${m.badge ? ' / badge' : ''}</span><br><code>${m.seed}</code></figcaption></figure>`;
 }).join('');
 const lodCards = members.slice(0, 6).map((m) => `<figure><div class="sp lod">${renderSoulSvg(m.config, { size: 120, badge: m.badge, idPrefix: `l1${m.seed}`, reducedMotion: true })}${renderSoulSvg(m.config, { size: 72, badge: m.badge, detail: 'simple', idPrefix: `l2${m.seed}` })}${renderSoulSvg(m.config, { size: 28, detail: 'dot', idPrefix: `l3${m.seed}` })}</div><figcaption>full / simple / dot</figcaption></figure>`).join('');
-const paletteRow = PALETTES.map((p, i) => `<figure><div class="sp">${renderSoulSvg({ ...base, palette: i, body: i % 6, eyes: i % 6, antenna: i % 6, seed: `pal-${i}` }, { size: 112, reducedMotion: true, idPrefix: `p${i}` })}</div><figcaption>palette: ${p.name}</figcaption></figure>`).join('');
+const badgeCards = [null, 'bingo-star'].map((badge, i) => `<figure><div class="sp">${renderSoulSvg({ ...base, seed: `badge-${i}` }, { size: 112, badge, reducedMotion: true, idPrefix: `bd${i}` })}</div><figcaption>badge: ${badge || 'none'}</figcaption></figure>`).join('');
+
+// ---- Decorated Souls (renderer v4, D-29): body gradients, then one Soul per face with 10 charms (review rows only; the
+// v1 cohort above is unchanged). Charm and face sprites use absolute /assets URLs: they show when the sheet is served
+// and only once packages/ui/soul-decor-data.js is generated (the stub draws the plain gradient Soul).
+const decorState = decorUsable() ? 'generated decor data: face and charm sprites drawn' : 'decor data is still the stub: face and charm sprites not drawn';
+const gradientCards = GRADIENTS.map((g, i) => {
+  const cfg = { version: 2, catalog: 1, seed: `grad-${g.id}`, gradient: i, glow: 0, face: null, charms: [], constellation: [], driftPhase: 0 };
+  return `<figure><div class="sp">${renderSoulSvg(cfg, { size: 112, detail: 'full', reducedMotion: true, idPrefix: `gr-${i}` })}</div><figcaption>gradient: ${g.name}</figcaption></figure>`;
+}).join('');
+const faceKinds = { nerdy: { core: 10, technical: 10, soft: 5 }, pirate: { core: 1, technical: 22, soft: 2 }, angel: { core: 5, technical: 8, soft: 12 } };
+const faceCards = FACES.map((face, i) => {
+  const matched = { core: face === 'nerdy' ? 3 : 0, technical: face === 'pirate' ? 3 : 0, soft: face === 'angel' ? 3 : 0 };
+  const cfg = decoratedSoulConfig(`face-${face}`, { selectedKinds: faceKinds[face], matchedKinds: matched });
+  const v = validateSoulConfig(cfg);
+  if (!v.ok) throw new Error(`decorated sample ${face} invalid: ${v.reason}`);
+  return `<figure><div class="sp">${renderSoulSvg(cfg, { size: 150, badge: i === 2 ? 'bingo-star' : null, detail: 'full', reducedMotion: true, idPrefix: `fc-${face}` })}</div><figcaption>${soulAltText(cfg, i === 2 ? 'bingo-star' : null)}</figcaption></figure>`;
+}).join('');
 
 const sheet = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Arise Soul cohort sheet</title>
@@ -107,18 +126,19 @@ h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:28px 0 8px;color:#B4BC
 p{color:#B4BCE0;margin:0 0 12px;max-width:80ch}.grid{display:flex;flex-wrap:wrap;gap:12px}
 figure{margin:0;width:160px;background:#121833;border:1px solid #2A3560;border-radius:12px;padding:8px;text-align:center}
 .sp{display:flex;justify-content:center;align-items:flex-end;gap:6px}figcaption{font-size:12px;margin-top:6px}code{font-size:10px;color:#8F9AC6}.muted{color:#B4BCE0}
-.lod svg{display:inline-block}
+.lod svg{display:inline-block}.gap{margin-top:12px}
 </style></head><body>
-<h1>Arise Soul v2 (sticker language) - neutral test cohort (${members.length} seeds)</h1>
-<p>Generated by <code>${GENERATOR}</code> (renderer ${SOUL_RENDERER_VERSION}). Sticker language v2: clay gradient body, peach rim, seeded speckles, lit antenna orb, white die-cut + shadow (docs/art/sticker-art-direction.md). Review checklist: every Soul is the same size and brightness range; no trait reads as rank, status, skin tone, gender or body size; badges are small and never cover the face. Seeds come from synthetic identities; Platform/Role are not inputs.</p>
+<h1>Arise Soul v3 (baseline character) - neutral test cohort (${members.length} seeds)</h1>
+<p>Generated by <code>${GENERATOR}</code> (renderer ${SOUL_RENDERER_VERSION}). The flat Soul is the front view of the 3D baseline model (docs/art/soul-baseline.md, D-27): <code>packages/ui/soul-baseline-shape.js</code> is projected out of <code>tools/ai/blender/soul_baseline.py</code> by <code>tools/assets/build-soul-shape.py</code>. Sticker language: clay gradient body, goo drips, button eyes with a groove ring, lit antenna orb, white die-cut + shadow (docs/art/sticker-art-direction.md). Per player only the palette, the glow style and the Bingo Star badge vary; the body/eyes/antenna/mouth traits stay in the config but are not drawn. Review checklist: every Soul is the same character, size and brightness range; no palette or glow reads as rank, status, skin tone, gender or body size; the badge is small and never covers the eyes. Seeds come from synthetic identities; Platform/Role are not inputs.</p>
 <h2>Cohort</h2><div class="grid">${cohortCards}</div>
-<h2>Bodies</h2><div class="grid">${traitRow('body', base)}</div>
-<h2>Eyes</h2><div class="grid">${traitRow('eyes', base)}</div>
-<h2>Antenna</h2><div class="grid">${traitRow('antenna', base)}</div>
-<h2>Mouth</h2><div class="grid">${traitRow('mouth', base)}</div>
+<h2>Palettes</h2><div class="grid">${traitRow('palette', base)}</div>
 <h2>Glow</h2><div class="grid">${traitRow('glow', base)}</div>
-<h2>Palettes</h2><div class="grid">${paletteRow}</div>
+<h2>Badge</h2><div class="grid">${badgeCards}</div>
 <h2>Level of detail</h2><div class="grid">${lodCards}</div>
+<h2>Decorated Souls (v2, D-29)</h2>
+<p>Renderer ${SOUL_RENDERER_VERSION}: the body gradient as a vertical gradient over the catalog span (every gradient one mean brightness), the face kit and 10 skill charms as sprites at the decor slots, the Bingo Star on a round medallion (${decorState}). Review checklist: no gradient, face or charm reads as rank, status or rarity; every charm is the same size; the medallion badge never reads as a star charm.</p>
+<div class="grid">${gradientCards}</div>
+<div class="grid gap">${faceCards}</div>
 </body></html>
 `;
 const sheetPath = emit('sheet.html', sheet);

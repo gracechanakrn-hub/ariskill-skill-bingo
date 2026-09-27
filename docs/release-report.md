@@ -17,6 +17,41 @@
 | Approved waivers | none requested |
 | **Go-live decision** | **Not claimed.** Blocked on the human sign-offs below (decision D-09). |
 
+## v1.4 decorated Soul candidate (stage 12, D-29 / D-30, branch `after-gem`)
+
+Build `bingo-5a3d6c80c6a1` (reproducible: two consecutive assemblies produced the same id), 621 files, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs pending. Tests: 647 passing (game-rules 48, design-tokens 10, UI kit 109, game-service 75, employee 61, admin 20, public 57, stage 35, asset tools 72, AI tools 45, e2e + contracts + accessibility 115).
+
+When a round finishes, the server decorates every baseline Soul once and saves the decoration with it (`docs/art/soul-decorations.md`):
+- **Face:** the skill kind with the most matched tiles picks it: core gives nerdy glasses, technical a pirate eye patch and bandana, soft an angel halo and blush.
+- **Charms:** 10 charms, split across the kinds in proportion to the 25 selected skills.
+- **Colour, variants and slots:** the body gradient, the charm variants and their slots all come from the Soul seed.
+
+No AI runs in the game. The catalog (`packages/game-rules/src/soul-catalog.js`) was built once:
+- 50 procedural stars and all the 3D charm models and face kits come from Blender.
+- The 100 tool and life-item icons were drawn by Gemini, with provenance per icon. All 100 pass QA; they took 126 requests in total (`reports/ai/charms-qa.json`).
+
+The phone and the public Galaxy draw the same decorated 3D Soul from shared code (`packages/ui/soul3d`). After Ready to Float, the Galaxy flies the live 3D figure, then keeps it as an impostor of that figure. The 2D fallback (soul-renderer 4.0.0) draws the same decoration flat.
+
+Contracts moved to 1.1.0 (SoulConfig v2). Public and stage payloads carry only charm ids, the face and the gradient, never skill ids, skill names or counts.
+
+Open:
+- **OD-18, face rule:** most Souls get the pirate face, because 87% of the skill catalogue is technical.
+- **OD-19, AI art sign-off:** shipping Gemini-drawn art needs sign-off.
+
+Screens:
+- `reports/qa/screens/decor-{examples,faces,stars,gradients,slots,charms-sample}.png` (Blender)
+- `decor-example-soul.png`: one full decorated Soul (Sunset colour, angel face, 10 charms), from the real rules (Blender)
+- `charms-{technical,soft}.png` (icons)
+- `decor-{phone-reveal,phone-reveal-closeup,public-entrance,public-galaxy}.png` (live)
+
+## v1.3 baseline Soul candidate (stage 11, D-27 / D-28, branch `after-gem`)
+
+Build `bingo-40ec8affc5ff` (reproducible: two consecutive assemblies produced the same id), 301 files, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs pending. Tests: 543 passing (game-rules 23, design-tokens 10, UI kit 78, game-service 70, employee 55, admin 20, public 49, stage 35, asset tools 62, AI tools 30, e2e + contracts + accessibility 111).
+
+The Soul is now one baseline character sculpted in Blender from the supplied reference (`docs/art/soul-baseline.md`). It is built reproducibly by `npm run ai:soul-baseline` and matches the reference silhouette at IoU 0.933. It ships as two quantised glTF models (hero 330 KB, lite 84 KB) that any palette tints through per-vertex masks. The phone shows it in 3D for the join mascot, the Soul reveal and the Float. The flat 2D Soul (thumbnails, Galaxy sprites, fallbacks) is a front projection of the same model, so 2D and 3D match. Per player the Soul varies by palette, glow and the Bingo Star badge. Trait data is unchanged, so no contract changed.
+
+Open for sign-off: OD-16 (variety is now palette, glow and badge only) and OD-17 (new Soul alt text). Owed to a real-device check: 3D scene build time on an entry-level phone (2.5-5 s headless in software rendering; the frame-time probe falls back to the 2D Soul). Screens: `reports/qa/screens/soul-baseline-{match,turntable,colours}.png`, `employee-baseline-*.png`, `soul-v3-sheet.png`, `public-baseline-galaxy.png`.
+
 ## v1.2 sticker art-direction candidate (stage 10, D-25 / D-26)
 
 Build `bingo-05efbe9c7c4e` (reproducible: two consecutive assemblies produced the same id), 292 files, gate `AUTOMATED_GREEN_MANUAL_PENDING` 18/18, the same 8 human sign-offs still pending. Tests after stage 10: 509 passing (game-rules 23, design-tokens 10, UI kit 77, game-service 69, employee 39, admin 20, public 49, stage 35, asset tools 53, AI tools 23, e2e + contracts + accessibility 111).

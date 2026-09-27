@@ -1,0 +1,2332 @@
+{
+  "catalogVersion": 1,
+  "charm": {
+    "back_radius": 2.6,
+    "bulge": 0.22,
+    "edge": 0.18,
+    "emissive": 0.32,
+    "frame": 1.0,
+    "png": 128,
+    "roughness": 0.45,
+    "round": 0.07,
+    "thickness": 0.3,
+    "tris": 900,
+    "voxel": 0.0078125
+  },
+  "faceWeight": {
+    "angel": 523.1,
+    "nerdy": 470.0,
+    "pirate": 658.2
+  },
+  "files": {
+    "charms/core-burst-lemon.glb": {
+      "bytes": 14420,
+      "sha256": "76947c751b83358c230196db10e5f0c00dac49d7a3ed9d92a2ee3905ead8ae75",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-burst-lemon.png": {
+      "bytes": 5113,
+      "format": "palette",
+      "sha256": "deb7aacea15fc1d6e4b2679b88158c4d412090012b513c6f28023c89b9ec8451"
+    },
+    "charms/core-burst-lilac.glb": {
+      "bytes": 14420,
+      "sha256": "7fce388e88dfb0062c9d87375791deca21d353d1b91ed0123a9fe10787d616c0",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-burst-lilac.png": {
+      "bytes": 5312,
+      "format": "palette",
+      "sha256": "bb2a7ba6fa941d65b07a8791aa5fee26ebe6ef3b60d7b798264fafce2878e2d2"
+    },
+    "charms/core-burst-mint.glb": {
+      "bytes": 14416,
+      "sha256": "9c56657ac0ef8337b239205a6c1e9c226ac7301640f6a04867851ee7486771f4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-burst-mint.png": {
+      "bytes": 5273,
+      "format": "palette",
+      "sha256": "b18c580c443b18285770ebd15a8288afe60c60b43cc9d7096b32de3aaba111f4"
+    },
+    "charms/core-burst-peach.glb": {
+      "bytes": 14420,
+      "sha256": "04c10c9baee7177082691ff4f1fff6d2e15744ec263b59fb9214ac0bda24c88f",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-burst-peach.png": {
+      "bytes": 5420,
+      "format": "palette",
+      "sha256": "b5407a79644e9a8581e116a4d6ce84a0e5a9796b3107981985d4c53ac03427a8"
+    },
+    "charms/core-burst-sky.glb": {
+      "bytes": 14412,
+      "sha256": "0af5e7717fccf6479a38ac5b9749c08f9068df66c664f98ec6808325f472973a",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-burst-sky.png": {
+      "bytes": 5328,
+      "format": "palette",
+      "sha256": "4a33691e7e764405490bbaf5146bd94f7c34511bdfd2dd9629f893906b4218c3"
+    },
+    "charms/core-chubby-lemon.glb": {
+      "bytes": 14420,
+      "sha256": "09ac745c2213f4c3eff245bdf1c97df667345202cf45a4f58b333cfc54ebbe1a",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-chubby-lemon.png": {
+      "bytes": 5293,
+      "format": "palette",
+      "sha256": "c96cbff1d601b81787ff2b237b284509cf7935fd0e2236d163a3097279500204"
+    },
+    "charms/core-chubby-lilac.glb": {
+      "bytes": 14420,
+      "sha256": "6af81440aa82b690a029963e69613b087bf24ea42a899f4b66bfb99f9150389f",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-chubby-lilac.png": {
+      "bytes": 5391,
+      "format": "palette",
+      "sha256": "35339d622785af9921b559c48b943f68f1722cb0d2a75b9c2cd423c323caa78b"
+    },
+    "charms/core-chubby-mint.glb": {
+      "bytes": 14416,
+      "sha256": "383387dad9cda7a89726d1f0a5c9881d66b5aaa53af868b306d419a363f784df",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-chubby-mint.png": {
+      "bytes": 5225,
+      "format": "palette",
+      "sha256": "6997090d54015beec605b26a09edace9eba5a9c5709a42ac4f749b0e7f033736"
+    },
+    "charms/core-chubby-peach.glb": {
+      "bytes": 14420,
+      "sha256": "8a69ddd17b8899a56fb7327abc752a882311c1c3a70555d806dc4047d5f47403",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-chubby-peach.png": {
+      "bytes": 5290,
+      "format": "palette",
+      "sha256": "2b3789de64a10ceae8bd82aa7009cd0f946f0458a2b7171a1e067c247ff5c3d3"
+    },
+    "charms/core-chubby-sky.glb": {
+      "bytes": 14412,
+      "sha256": "b487df19604f50d3e26e04761d373585ca67d105e14dab1f486878b057ec264f",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-chubby-sky.png": {
+      "bytes": 5353,
+      "format": "palette",
+      "sha256": "bc8044487a7c722aeba43130a953044090e600546ad53c532ea1f6169ed26f17"
+    },
+    "charms/core-classic-lemon.glb": {
+      "bytes": 14424,
+      "sha256": "2fcf59196c61c765e628135acaa0bc9544b9c2a4f00f7e4d74f70d840371e4a0",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-classic-lemon.png": {
+      "bytes": 5584,
+      "format": "palette",
+      "sha256": "c63f1d0710eec0f5b4c8eebbc82ed94a1b0aa55f4e02cab7ade58e0008153881"
+    },
+    "charms/core-classic-lilac.glb": {
+      "bytes": 14424,
+      "sha256": "d4bfdd24b475eecdd35575fa46e4c2a0a604eaec83b093147603560751922f88",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-classic-lilac.png": {
+      "bytes": 5500,
+      "format": "palette",
+      "sha256": "1c1730e2fc6c7377fba345cef908f55d5320edb7ccdffe168669723c3275e4c2"
+    },
+    "charms/core-classic-mint.glb": {
+      "bytes": 14420,
+      "sha256": "7fbb69bdde8eb65632c9c536c88702d834506d235089d6825dc0e54740d4d974",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-classic-mint.png": {
+      "bytes": 5638,
+      "format": "palette",
+      "sha256": "2d016795afa75e6bcf6cfc6a3b2a8f2b83cc77a4ee66dd8b15c90c9ee476cf86"
+    },
+    "charms/core-classic-peach.glb": {
+      "bytes": 14424,
+      "sha256": "d536f421ae96d5deb276312bad1a42d8195cfb18d64b8d5dc604890bb46b3240",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-classic-peach.png": {
+      "bytes": 5548,
+      "format": "palette",
+      "sha256": "c8dd26a6de3bbbf000c6887ece5c539e891f93916907207bbbca5b5aa519568f"
+    },
+    "charms/core-classic-sky.glb": {
+      "bytes": 14416,
+      "sha256": "b1ac14687dd901f736050355b62d633db2cd272996d8cae224551da487f3deb4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-classic-sky.png": {
+      "bytes": 5712,
+      "format": "palette",
+      "sha256": "e9e1ea1c75c4a4af1a1c39eb4e5b4edcdc53fcb6e849c970af52c1a7bcb0dbc4"
+    },
+    "charms/core-pinwheel-lemon.glb": {
+      "bytes": 14432,
+      "sha256": "73cf12ee84bdb453530513474aa9dfe6d43bdea8b5df2319db4234011edb86a2",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-pinwheel-lemon.png": {
+      "bytes": 5557,
+      "format": "palette",
+      "sha256": "171fe239e52f4728717ef6578235030b2d434568427bfcf301b6fe7493cc23a7"
+    },
+    "charms/core-pinwheel-lilac.glb": {
+      "bytes": 14432,
+      "sha256": "d4e8ee71517f8f0fe43e78d8b78cf2cdf76ea61224cf44ac5eaf9a6fe93d0104",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-pinwheel-lilac.png": {
+      "bytes": 5559,
+      "format": "palette",
+      "sha256": "e3eff44f050c1a0c11f244f5bb1fb658c2f5c53168d55bc2e0241f259dd38eb7"
+    },
+    "charms/core-pinwheel-mint.glb": {
+      "bytes": 14428,
+      "sha256": "02fba1eb946348aa1118a68f69f13783de4bb402a029236ae8c6c0a7fc625a70",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-pinwheel-mint.png": {
+      "bytes": 5615,
+      "format": "palette",
+      "sha256": "f1a994881157c2d2dce05d35b90eede68013d07e377cdf31d136414e10e2dc49"
+    },
+    "charms/core-pinwheel-peach.glb": {
+      "bytes": 14432,
+      "sha256": "316a341b383396a7efa402a16f6c3b77e259ae6ee4d77e6f1664e75d0c98a5b9",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-pinwheel-peach.png": {
+      "bytes": 5664,
+      "format": "palette",
+      "sha256": "836c6ff3a38dd08b7f8a0beba56316201acf9d14d08a9507b901c85faa9e0a76"
+    },
+    "charms/core-pinwheel-sky.glb": {
+      "bytes": 14424,
+      "sha256": "796c67199ba2d6a7b050e8b7206815b01c04bfe1f3ec07c1edea7801d806a709",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-pinwheel-sky.png": {
+      "bytes": 5613,
+      "format": "palette",
+      "sha256": "c3973a0aa650d818b522aba03c4e8005a39d28d832836c1858192fcce256b785"
+    },
+    "charms/core-ringed-lemon.glb": {
+      "bytes": 14420,
+      "sha256": "411cb4111ac78dc1d31d07b55b7584e978497fad788f8b3739940917208026c3",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-ringed-lemon.png": {
+      "bytes": 5555,
+      "format": "palette",
+      "sha256": "bfe907d8800a8b8919efb3de6e0dc6deb1dabf9e84e2775390a64b14c9a920b3"
+    },
+    "charms/core-ringed-lilac.glb": {
+      "bytes": 14420,
+      "sha256": "1ba84f33b116753e656b6f151754421994e4a4dad445c21998ef512bed6ea186",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-ringed-lilac.png": {
+      "bytes": 5536,
+      "format": "palette",
+      "sha256": "14df9e0eb1ee6fe19e12e7e6d0ad53e8f19d84f371db40e11fdcaf1c7ff33c2b"
+    },
+    "charms/core-ringed-mint.glb": {
+      "bytes": 14416,
+      "sha256": "b6e42991c6582b66eddc8ca127dc8da3678124e7a8404ab846c20cfcd7249f10",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-ringed-mint.png": {
+      "bytes": 5663,
+      "format": "palette",
+      "sha256": "203e78f0f3a8dfdc69c2b95787f87347d8541b23728b40009edfd8a217f95ca4"
+    },
+    "charms/core-ringed-peach.glb": {
+      "bytes": 14420,
+      "sha256": "963eaef42807d7f85115835d394312487b57be7aeb307c5e0731da99935fe264",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-ringed-peach.png": {
+      "bytes": 5522,
+      "format": "palette",
+      "sha256": "ac7ad1ffff2e787db176bbc9a936557ee4bc0c5df2830a1021287ffe7413b34f"
+    },
+    "charms/core-ringed-sky.glb": {
+      "bytes": 14412,
+      "sha256": "1e292c5eb5ee84cbf8ffe8dad02d75523650be0dae62f854e405194e6c2c196b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-ringed-sky.png": {
+      "bytes": 5611,
+      "format": "palette",
+      "sha256": "c18da476cecfe070d91ae15445502ae775520013091b12965e12df50130e5b26"
+    },
+    "charms/core-shooting-lemon.glb": {
+      "bytes": 14428,
+      "sha256": "baa50b7a145c3ecd61bf0fcbdad6cc0a06d35b7a4d30ddfbfdccfea9e50e9045",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-shooting-lemon.png": {
+      "bytes": 4414,
+      "format": "palette",
+      "sha256": "b967b78dcb60e3f624b48579a8538c0d64cbe05798d4c0764461db8ba2529043"
+    },
+    "charms/core-shooting-lilac.glb": {
+      "bytes": 14428,
+      "sha256": "8619c88b73a2e3e61875497bec104340b868c4d6e9d0c975ac476eee176d6ef5",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-shooting-lilac.png": {
+      "bytes": 4595,
+      "format": "palette",
+      "sha256": "58283ab10df4b8ab9c8cb97a60c58cc79febb5c8e0c8e7dddc9a9e1618fd61bb"
+    },
+    "charms/core-shooting-mint.glb": {
+      "bytes": 14424,
+      "sha256": "e41b44bcfdcc08be38c5b3b17778dac4e0129f06d7a24f0609c427121d7027da",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-shooting-mint.png": {
+      "bytes": 4495,
+      "format": "palette",
+      "sha256": "7c989a25610bcc8170b39834881a726fedd0cbbb88f04a39b706049aeac04ffa"
+    },
+    "charms/core-shooting-peach.glb": {
+      "bytes": 14428,
+      "sha256": "957d11fecd45fb6ed2e596371ef342f239c07675bc23f209ac0a16c37c23e1b3",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-shooting-peach.png": {
+      "bytes": 4463,
+      "format": "palette",
+      "sha256": "46a259cf0f2dd89d48c610f236f7e39e2a372411507cc58c72c6e8d7f0573f7f"
+    },
+    "charms/core-shooting-sky.glb": {
+      "bytes": 14420,
+      "sha256": "e4f7a52079ffd80a9eee07f52fdc8ee69a25a2d39b706af26e4ae1717677e559",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-shooting-sky.png": {
+      "bytes": 4519,
+      "format": "palette",
+      "sha256": "889b562ac81789384ea7165eac0af9bdd0686310674a2a7dd7a823ec2fb58724"
+    },
+    "charms/core-six-lemon.glb": {
+      "bytes": 14384,
+      "sha256": "70bb4da1a38d9b45cc543825dd279cb2668ec151c93805bca21556092991e2a4",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/core-six-lemon.png": {
+      "bytes": 5122,
+      "format": "palette",
+      "sha256": "d673361467c552e81f790178f97d714b53b0f20f1b5b2634f240f8aac7dc526e"
+    },
+    "charms/core-six-lilac.glb": {
+      "bytes": 14384,
+      "sha256": "826ccc44fcc48376c58236a4b4e846ccbfc85529d8dcceb9ba35335e4bf40d37",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/core-six-lilac.png": {
+      "bytes": 4950,
+      "format": "palette",
+      "sha256": "652604ed860c938e84186065e5906d85769cc26583627e0a4bc3de8d8c463f00"
+    },
+    "charms/core-six-mint.glb": {
+      "bytes": 14380,
+      "sha256": "08fe30cdd8d8bb98b214fcf94fee56660c7eb565499789ce050fe49f2ce038af",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/core-six-mint.png": {
+      "bytes": 5092,
+      "format": "palette",
+      "sha256": "125b3f6ebb879211e1ed91618ef113f2019ac8ea5783191c9372ee0b1f46a57e"
+    },
+    "charms/core-six-peach.glb": {
+      "bytes": 14384,
+      "sha256": "450db65efdd14099fb6120334de243ac9c98bd8a3f891608b03d92628b66622a",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/core-six-peach.png": {
+      "bytes": 5283,
+      "format": "palette",
+      "sha256": "a6235792f4636e80a9a665e77f73912fc4ec8aa6f97fde02ff37aa59a427ebff"
+    },
+    "charms/core-six-sky.glb": {
+      "bytes": 14376,
+      "sha256": "139f0b6bb321116d6c546aa325645d24405c22dfd12e958365fb1fca0c41d88e",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/core-six-sky.png": {
+      "bytes": 4954,
+      "format": "palette",
+      "sha256": "0397873acdb40f1b2f47566a016371610a52462de9f177a10e2808e6b7b434d7"
+    },
+    "charms/core-soft7-lemon.glb": {
+      "bytes": 14416,
+      "sha256": "2f5570702df4bf62186e55288b7f903d0df12323f57fc398f21ff75e284fa9c4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-soft7-lemon.png": {
+      "bytes": 5899,
+      "format": "palette",
+      "sha256": "5522a444d92b70df9733baabd5e748564397dfc2b3facebe48d00cdf88dfd976"
+    },
+    "charms/core-soft7-lilac.glb": {
+      "bytes": 14416,
+      "sha256": "ae8e48428424fbde26ff336b2eca43c211f99a51774bd1ce0fe69d9ca43372df",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-soft7-lilac.png": {
+      "bytes": 5801,
+      "format": "palette",
+      "sha256": "3a70a55b94a07d1d1e74f84e2064e16b2642d321de8c5adfb1b4b7acad6e5c37"
+    },
+    "charms/core-soft7-mint.glb": {
+      "bytes": 14412,
+      "sha256": "b15a8e58b32837098a593b95a65295fdeedf4111f8407fed31365e50204a719e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-soft7-mint.png": {
+      "bytes": 6048,
+      "format": "palette",
+      "sha256": "adff6fa20708f3ea220a9766bfc4701bb5f996042bfbafc51a9a5ba24e97bb8c"
+    },
+    "charms/core-soft7-peach.glb": {
+      "bytes": 14416,
+      "sha256": "2ef89145d1556fb2fc44ae06c8e29ef9366b634f4453e928f17878830df8d24d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-soft7-peach.png": {
+      "bytes": 5861,
+      "format": "palette",
+      "sha256": "14e0d9e1067e916fc5acadf71880cb9641a9e00e220e8f7425f1ca43b4b47a16"
+    },
+    "charms/core-soft7-sky.glb": {
+      "bytes": 14408,
+      "sha256": "3ee50cfc76d9d27f92ada3806bc88a6b6cbaa439a4f37fb62c0abb2cf25a4006",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-soft7-sky.png": {
+      "bytes": 5897,
+      "format": "palette",
+      "sha256": "40f0dd08a282c9bd0b7d440ac9e1f5ee9827afe1a552f5f5aa929a98524d6fad"
+    },
+    "charms/core-sparkle-lemon.glb": {
+      "bytes": 14428,
+      "sha256": "046fc8dc19fbe504b65e329b08c2fc180b08cf83c2f781b6ee6d7901d380058f",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-sparkle-lemon.png": {
+      "bytes": 4435,
+      "format": "palette",
+      "sha256": "34df2735ec8a8fb7f624e232940d371e7725d8c4dddd8aadfe9d5f7b2942aab7"
+    },
+    "charms/core-sparkle-lilac.glb": {
+      "bytes": 14428,
+      "sha256": "250be0c1bc997d79f2d3550f6df06bba8f9b5e7c42e9701a01b130127ada05e6",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-sparkle-lilac.png": {
+      "bytes": 4626,
+      "format": "palette",
+      "sha256": "6c3ff45d11f9e264ac5c18c275ee105e135cb134cee2db1725478273edf9fb1f"
+    },
+    "charms/core-sparkle-mint.glb": {
+      "bytes": 14424,
+      "sha256": "691066afe3133edd279e71a52d8c3af95805ff1dd8988e01db5c229191073f92",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-sparkle-mint.png": {
+      "bytes": 4476,
+      "format": "palette",
+      "sha256": "ac899d428eb8eca9057d433b669cc0ead05b492f0fcb6e9cda8a90533c951f5f"
+    },
+    "charms/core-sparkle-peach.glb": {
+      "bytes": 14428,
+      "sha256": "a6c1630aab91107e38e06d37a2d89f6c628bf165ed6ee33063fd2c3d8dc2a5ea",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-sparkle-peach.png": {
+      "bytes": 4678,
+      "format": "palette",
+      "sha256": "a6cb42231609d46790b73f996b07179ad36a9bd4a4fe4149306e381a11c6b140"
+    },
+    "charms/core-sparkle-sky.glb": {
+      "bytes": 14420,
+      "sha256": "d06082be195b567376d953ab52b33d5343958ff2b842eb17ecbeacaaf94e281c",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-sparkle-sky.png": {
+      "bytes": 4658,
+      "format": "palette",
+      "sha256": "782eb15aa19dc00799237882659492d8fd43c2de98bf24896760afa9798e4267"
+    },
+    "charms/core-twin-lemon.glb": {
+      "bytes": 14416,
+      "sha256": "08059a9d04b7ce221257a5f493b9851ef60929598eba0d2dff0624f27c6309cf",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-twin-lemon.png": {
+      "bytes": 5427,
+      "format": "palette",
+      "sha256": "d2abbe8193dae6f46e00b7018d0795a9adf143c4fe5d8ca8ce5bafddcd423bb3"
+    },
+    "charms/core-twin-lilac.glb": {
+      "bytes": 14416,
+      "sha256": "81a87af458750699622e32352491d3e9b87d6215df16acb9489d7e64826e91cd",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-twin-lilac.png": {
+      "bytes": 5411,
+      "format": "palette",
+      "sha256": "8663b84c95df81271daab2a5728c42745bcc7dd2444a2bc7bfeb2b278999f660"
+    },
+    "charms/core-twin-mint.glb": {
+      "bytes": 14412,
+      "sha256": "f404b9e82836c4afe3398f2e5ee195091ce4a1bb534fd14853c7dd2acb199e82",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-twin-mint.png": {
+      "bytes": 5310,
+      "format": "palette",
+      "sha256": "2669afbbe5dcc1b3e20443dcb232315ef1eb5a9d6a81aa0d7b86552465d8b57d"
+    },
+    "charms/core-twin-peach.glb": {
+      "bytes": 14416,
+      "sha256": "423e7bcdfc67f00459c7c0a6926d38d134b28448b1b90b0b5c994ca7e498c5c8",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-twin-peach.png": {
+      "bytes": 5491,
+      "format": "palette",
+      "sha256": "36c1623d19bc26f5dffce44f0923a997457ed5cfd9655e298d928d798eb09576"
+    },
+    "charms/core-twin-sky.glb": {
+      "bytes": 14408,
+      "sha256": "5ef985ac7440592293b09835749450d733c65e15c5a804461008bd3c2515f3ae",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/core-twin-sky.png": {
+      "bytes": 5492,
+      "format": "palette",
+      "sha256": "aaed4beda598ca6c7408c292db216b8b4956e1f8475075d625c53e8a1d464252"
+    },
+    "charms/soft-apple.glb": {
+      "bytes": 14396,
+      "sha256": "55d6f575fc6873e4c6b356f4b0a4e95fcae6ef90d0702fff7cf23b2f27344167",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-apple.png": {
+      "bytes": 7609,
+      "format": "palette",
+      "sha256": "6bb8c9b7d02ece3fba21f0ca841ed27e8338f79bc6f28e574517b90f3ba1f361"
+    },
+    "charms/soft-balloon.glb": {
+      "bytes": 14400,
+      "sha256": "43f374f698b4c6e4babbbff15079a61a45566016b6f2979400a3c75f86772d63",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-balloon.png": {
+      "bytes": 7280,
+      "format": "palette",
+      "sha256": "03f56790c8c331dd7c5c4fbdfec72ad4c221473a9de1d4b3d6555e2a403b5050"
+    },
+    "charms/soft-bicycle.glb": {
+      "bytes": 14368,
+      "sha256": "1abf01f6640fa3ba29df136ef285d10717e5893055424ff9be21e668110516c3",
+      "triangles": 900,
+      "vertices": 450
+    },
+    "charms/soft-bicycle.png": {
+      "bytes": 8612,
+      "format": "palette",
+      "sha256": "20e512c19675f050e7f8f6109546aba9cea11a359314368d92c00725c32ab972"
+    },
+    "charms/soft-bouquet.glb": {
+      "bytes": 14400,
+      "sha256": "75921004fcf719ee92d38e93a35387f97cfa1b632d027d50a493c3cc10285c11",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-bouquet.png": {
+      "bytes": 9089,
+      "format": "palette",
+      "sha256": "2df828ac6f5e8390a47452040da2669f527c7062eb880d256212a98a35ac7688"
+    },
+    "charms/soft-butterfly.glb": {
+      "bytes": 14412,
+      "sha256": "41eab1bad6a5b422b52dc0786345f75235548c8e92b0a3e50ab278466219bf20",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-butterfly.png": {
+      "bytes": 9622,
+      "format": "palette",
+      "sha256": "3d2368ba734dde691eb0a9638d4d73e9ed27e579e55406514538faa0c9772648"
+    },
+    "charms/soft-cactus.glb": {
+      "bytes": 14396,
+      "sha256": "2dd3e4c236b463f4814cd4d9c1045841a06bab0651d86733bc29fa228a8d5e8b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-cactus.png": {
+      "bytes": 9385,
+      "format": "palette",
+      "sha256": "ef2e86c4bc87c75da8989f236277258795d8e47cf0d10902b3d1998d8667cbb5"
+    },
+    "charms/soft-candle.glb": {
+      "bytes": 14396,
+      "sha256": "cc4dafb4baf4e77a99945d8b8f3878c65b58464f71f721fb023ea2f426c52ce2",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-candle.png": {
+      "bytes": 7628,
+      "format": "palette",
+      "sha256": "4b7b3c3a4852b61e3659922156bf0ce9c1f9a0a22b6f6f694335f9aced9a3bed"
+    },
+    "charms/soft-cherry-blossom.glb": {
+      "bytes": 14428,
+      "sha256": "d3603c7619fb03404ea8953bffd938779e11f31f3f3878193a032e3837f23965",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-cherry-blossom.png": {
+      "bytes": 17851,
+      "format": "rgba",
+      "sha256": "7c8cf855c720275ca94be6630a63e3228c2750369b6e1b685fc642cc27ddecbf"
+    },
+    "charms/soft-clover.glb": {
+      "bytes": 14396,
+      "sha256": "20e1ea59e4a79e561cde30f25c1ac4edcf30de983bd89c3f958881f1c20b37fa",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-clover.png": {
+      "bytes": 9549,
+      "format": "palette",
+      "sha256": "ce5983567f26d49fe9153979ef849b8913d515b3fac27d7735b4b8254b9c7cb4"
+    },
+    "charms/soft-cookie.glb": {
+      "bytes": 14400,
+      "sha256": "f1ba82182a06bb61051002aa1f9048c555ee2ca8008254d4c245b14478220d4b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-cookie.png": {
+      "bytes": 10577,
+      "format": "palette",
+      "sha256": "eb0fac4dec1d0dc4eaec86bc99ca0bb262a4862b05cd2a6a180092a2d377e626"
+    },
+    "charms/soft-cupcake.glb": {
+      "bytes": 14400,
+      "sha256": "ec766e8ad543ceaf1b212e611ff36dd659188554d9cfc718d441559228fa6e6e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-cupcake.png": {
+      "bytes": 8948,
+      "format": "palette",
+      "sha256": "c89dc6779e2d2fa4663876ca4915f69a51ea2c6f897a7befc26cdf7a6278ef0f"
+    },
+    "charms/soft-daisy.glb": {
+      "bytes": 14392,
+      "sha256": "514854542f9bc4436273745847f90cabc5b7d3765e41ebd5c1e1c5c04a78d8e6",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-daisy.png": {
+      "bytes": 8872,
+      "format": "palette",
+      "sha256": "75547221bd51f2bafeb482fdaa975c5e64a580c18bee44825a22d34d8a0b7cf8"
+    },
+    "charms/soft-donut.glb": {
+      "bytes": 14392,
+      "sha256": "f701a8fa102d69edf17f3e332e2ee9a8c491541675d8c07f62c71bdc47959b3e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-donut.png": {
+      "bytes": 10745,
+      "format": "palette",
+      "sha256": "2d878cb91977f5271ba1cd5f171e9bf6575bcd833a3f587e351c36ccfe56d870"
+    },
+    "charms/soft-dumbbell.glb": {
+      "bytes": 14404,
+      "sha256": "e8d5133f543fe38052fea0d71372266ddce55e30246818a540a3f40da13396a7",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-dumbbell.png": {
+      "bytes": 7288,
+      "format": "palette",
+      "sha256": "a03d1f4ed3e62b642166182b44861f6b3e69fda230e96ced1d4ed30beaa3c50d"
+    },
+    "charms/soft-earphones.glb": {
+      "bytes": 14412,
+      "sha256": "c6cf5296b18c5c285c9adfcc12b2f05e40486b673519b1bfe2cc2a15ed3b2248",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-earphones.png": {
+      "bytes": 8687,
+      "format": "palette",
+      "sha256": "6f505d356ff7c85aff0f8fc0f6bf46a5000433374cd80c079e8436f43cabfef2"
+    },
+    "charms/soft-feather.glb": {
+      "bytes": 14400,
+      "sha256": "4fb3f133b13cbed33801ecfe1d843c04295ca0fd22578c60223b2ca7307ead2e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-feather.png": {
+      "bytes": 6683,
+      "format": "palette",
+      "sha256": "e404e3a03b13e2aef9f3af29d5188347e2714e3b6ecd9ca701532e506267e9e7"
+    },
+    "charms/soft-football.glb": {
+      "bytes": 14404,
+      "sha256": "cf80f051ded66c6441ca850f7bbf4aa6b070788d044cae03204fa2f4845e2df2",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-football.png": {
+      "bytes": 10676,
+      "format": "palette",
+      "sha256": "9a791ac2f95c91721e781c778996e36af95601fd53ee57463ed188456ee55e8f"
+    },
+    "charms/soft-gift.glb": {
+      "bytes": 14388,
+      "sha256": "a862db9f1cac97d231b8241ef143062895e466e53c204825bd1ffcd3f5d82c4c",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-gift.png": {
+      "bytes": 9367,
+      "format": "palette",
+      "sha256": "fa1594f41ca7aac9b00893b69cd7fcc60238cb1e75ce66b93a30e7d838b2e1f4"
+    },
+    "charms/soft-guitar.glb": {
+      "bytes": 14372,
+      "sha256": "d1e55dc2625f0848a4723beef2d546357bb318f1e049f5dce92cc119ecea9bff",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/soft-guitar.png": {
+      "bytes": 6515,
+      "format": "palette",
+      "sha256": "6cb1fe2d60655a0d8e2e07546c0be05a2aab7d2c5cd0d5c23516e42815398742"
+    },
+    "charms/soft-heart.glb": {
+      "bytes": 14368,
+      "sha256": "1bebc1996d98e8a450a7a90c66d2ac4f1d11ddb39c7a2bb2c3e30cbe8656f40b",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/soft-heart.png": {
+      "bytes": 7747,
+      "format": "palette",
+      "sha256": "2777881b7ff4a990c61d18a21a847d180453eb4ffab3e77239b9b1856a4059f5"
+    },
+    "charms/soft-hot-air-balloon.glb": {
+      "bytes": 14432,
+      "sha256": "c99f8b36aad9127617da9ab7325fe67d79e2b4a0209b762586bd05514a561b67",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-hot-air-balloon.png": {
+      "bytes": 8449,
+      "format": "palette",
+      "sha256": "0b7e7fc04253b268a5ac128eb70e4681263604aff40ba404a3b08ea4f4f6d5e9"
+    },
+    "charms/soft-ice-cream.glb": {
+      "bytes": 14408,
+      "sha256": "ac5305c553a31ccdb7b4919dec65d7eb71bbbd9094d31cd33d19442e02984a04",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-ice-cream.png": {
+      "bytes": 7415,
+      "format": "palette",
+      "sha256": "2e64e7f830436c81f33b91b5c6722c7db844db468a7ece72e1fe7498bf90d6ff"
+    },
+    "charms/soft-juice.glb": {
+      "bytes": 14396,
+      "sha256": "ff131ab99161c3f7516126740386de261e140a78d83253fd10890f629896bdf2",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-juice.png": {
+      "bytes": 7073,
+      "format": "palette",
+      "sha256": "4e984911a811e06877939cee7c312fd41b65273ea54cc99e7975289e63e309d3"
+    },
+    "charms/soft-kite.glb": {
+      "bytes": 14388,
+      "sha256": "2d9cc16ebda9cfca039b417eb2963d7daca5d91084377bc7cfb486da2e18f9ec",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-kite.png": {
+      "bytes": 8441,
+      "format": "palette",
+      "sha256": "dba583e3a1536e4d0451527b87ed0bf40c7779529c704d9c377f54343e55b132"
+    },
+    "charms/soft-lavender.glb": {
+      "bytes": 14404,
+      "sha256": "fef51a716b6347640e844011e3850edd2c601c1454301b81bfb75e0655697c55",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-lavender.png": {
+      "bytes": 7141,
+      "format": "palette",
+      "sha256": "32549b47fae4db42024c7f98495ee5638d71c1f69513893c9e239241271f5a43"
+    },
+    "charms/soft-mug.glb": {
+      "bytes": 14360,
+      "sha256": "f41713641c47494afce8f55837e01b3a8a7d0b039e1f3c5b5ae784e078bf4ba1",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/soft-mug.png": {
+      "bytes": 8379,
+      "format": "palette",
+      "sha256": "924c364f4ba58cc739b33a6c7e17bf38e6dab67ce8fc93ccc749469ff22b80e1"
+    },
+    "charms/soft-music-note.glb": {
+      "bytes": 14412,
+      "sha256": "991b6859f5b60f9b36571fe78a515f0bfe0621b92a0ebf9a23c4a2303b14924d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-music-note.png": {
+      "bytes": 6676,
+      "format": "palette",
+      "sha256": "d8f856e01390f13dc9f12709c1a580ecd21567c2311c406419c315ba14266f25"
+    },
+    "charms/soft-paper-plane.glb": {
+      "bytes": 14420,
+      "sha256": "94f66fca3f8ba01473fdcf07b03276e6052b11e339e12df851c68d4c7bbab11d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-paper-plane.png": {
+      "bytes": 7238,
+      "format": "palette",
+      "sha256": "6a469d38b893a6379e66372fa90863f939c2a1fb1bf7967aa63b96cf862bdb15"
+    },
+    "charms/soft-pillow.glb": {
+      "bytes": 14400,
+      "sha256": "0c397b982e14626842244e639ce910e0dd649971c2cf90d1d774d89d655b0307",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-pillow.png": {
+      "bytes": 16732,
+      "format": "rgba",
+      "sha256": "b663cd9b40de54f2d1359e1377ea7e06a046804a5623890d30d09623005c2300"
+    },
+    "charms/soft-potted-plant.glb": {
+      "bytes": 14420,
+      "sha256": "39d62d30604c3ad8059fc0991ff872867f0ee49145ec9d3734714208dca9904d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-potted-plant.png": {
+      "bytes": 8326,
+      "format": "palette",
+      "sha256": "108d6d76ec6a3027090f1dbadf76fd4b59fa6a6e0c629140685861a8992d98da"
+    },
+    "charms/soft-rainbow.glb": {
+      "bytes": 14400,
+      "sha256": "6ed8e1ef0b184ce36dbb5fd8af94adee71405b54e6f2576deb035378e3fbace3",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-rainbow.png": {
+      "bytes": 8651,
+      "format": "palette",
+      "sha256": "7bfeb885fd9743883c498bd0b7ae82fc8193fd9cc4f0005f94c271ad903bbdbc"
+    },
+    "charms/soft-rose.glb": {
+      "bytes": 14388,
+      "sha256": "ccfb40ae9ef482af7882b015c012d47dbfdabece60058bec835af6941a9c9378",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-rose.png": {
+      "bytes": 8490,
+      "format": "palette",
+      "sha256": "a8a110bca6a821bad8c64267a1e663291c6147b3ad3dd4e10fb2b36d4faaf3d5"
+    },
+    "charms/soft-rubber-duck.glb": {
+      "bytes": 14420,
+      "sha256": "e4241b7e2538d3be3ea9269450887a1446853dceb21b2f0a02c72b972f058afd",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-rubber-duck.png": {
+      "bytes": 9681,
+      "format": "palette",
+      "sha256": "022e60033bae9cc9b935f17e3617af304d4a69b5b530a31fbac264e3c37d850b"
+    },
+    "charms/soft-running-shoe.glb": {
+      "bytes": 14420,
+      "sha256": "959c445ec923091935aa3cf9d9a2f3245e20f7917b198f5b07507f00a6767c1f",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-running-shoe.png": {
+      "bytes": 7749,
+      "format": "palette",
+      "sha256": "a9709eb295f47311641a912aed9bc391e43a4e01c43fab3a44cd2ddf206c4cf6"
+    },
+    "charms/soft-seashell.glb": {
+      "bytes": 14404,
+      "sha256": "3f44f226b0e058f2c3a444605c2fe61e058163a8647da50de12aa7b826ad41f3",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-seashell.png": {
+      "bytes": 9612,
+      "format": "palette",
+      "sha256": "6f7db3e47442625fad42d8a9d653f5b22c5061685c5f78d6abc39779c3fe1c62"
+    },
+    "charms/soft-sleep-mask.glb": {
+      "bytes": 14412,
+      "sha256": "283e78126f3cc0a6bd4e2b085978ccfd906cbf535944101f3c2b6f7d73bf5939",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-sleep-mask.png": {
+      "bytes": 16829,
+      "format": "rgba",
+      "sha256": "19c93cb0e4d1c4d2d3a72f139f98bfcb40d6b0f9315409ae40197b4621d70d99"
+    },
+    "charms/soft-speech-bubble.glb": {
+      "bytes": 14428,
+      "sha256": "790b10cd6ed1da914d467be8d1bea2d3c7203b7790ffdc2e86a5ef6584825c0b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-speech-bubble.png": {
+      "bytes": 7016,
+      "format": "palette",
+      "sha256": "f424adb0d54cab01009f710d8568ef047f334707c462b2d0c20f0b54dfc65e9f"
+    },
+    "charms/soft-sprout.glb": {
+      "bytes": 14396,
+      "sha256": "d62c0e3d7587f9af7f33539f6185660a7a08d733a88ca7a848ca9f0e27c22747",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-sprout.png": {
+      "bytes": 7441,
+      "format": "palette",
+      "sha256": "0027c479113794350cb8cf0c4224411a7433f670d9e89a325ba590a955fa7335"
+    },
+    "charms/soft-strawberry.glb": {
+      "bytes": 14416,
+      "sha256": "b50f7ef12fd38f7ed6b478f584f8dff9c8acfb521d70f7f4912accf73095cad4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-strawberry.png": {
+      "bytes": 8672,
+      "format": "palette",
+      "sha256": "933aa59e176fe0dd4eecfb46fd23be053d412acb09f87f7ea41e69a48432fb7f"
+    },
+    "charms/soft-sun.glb": {
+      "bytes": 14388,
+      "sha256": "83f665b1cb8a0f8cf78f941e70c464d4d606647ea88d190d151cf54bbaaabf4b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-sun.png": {
+      "bytes": 11193,
+      "format": "palette",
+      "sha256": "f98b9b8d3bdc468a2197e4244af1fd00231fdb6cbeff07d019ee013d7e4f2bf2"
+    },
+    "charms/soft-sunflower.glb": {
+      "bytes": 14408,
+      "sha256": "cb7b756570fe5e277de48afe9c7a0135862aaac6f7abdf451740f9e7d0a6bd11",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-sunflower.png": {
+      "bytes": 9517,
+      "format": "palette",
+      "sha256": "fc6581570727626b358e4594b28472d2221ff6b6f8e25502b4585de15234991c"
+    },
+    "charms/soft-tea-cup.glb": {
+      "bytes": 14400,
+      "sha256": "5b38943c6a7eb5cdc91728227605523f83d4f839386103175094290703de4562",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-tea-cup.png": {
+      "bytes": 8778,
+      "format": "palette",
+      "sha256": "c7127a466dd90faa371ea2f8f189279c8f4202ae30c0eba094166013c943bd94"
+    },
+    "charms/soft-teapot.glb": {
+      "bytes": 14400,
+      "sha256": "304502e3720263e928ac17016ff6ba5b9b057c19311c753ed0e99bf6ff83dd02",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-teapot.png": {
+      "bytes": 7594,
+      "format": "palette",
+      "sha256": "c2299c11675cbd548da9eb34accfdcf4a932cb50b54d8a8a48a625a3535905dd"
+    },
+    "charms/soft-tulip.glb": {
+      "bytes": 14396,
+      "sha256": "755e0e6f6edc3651f52f5472febd34615e9d556752c2bf342597766fce57a713",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-tulip.png": {
+      "bytes": 7928,
+      "format": "palette",
+      "sha256": "2db80ebf69657fdff93c64c7b3dfb2186933d689c9475946fe20243a579c4804"
+    },
+    "charms/soft-umbrella.glb": {
+      "bytes": 14408,
+      "sha256": "cc312589903f0448bc1359ebc258912079bdbbf9949400b243a6bb40e3a7a5e4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-umbrella.png": {
+      "bytes": 8067,
+      "format": "palette",
+      "sha256": "f0b104fbff551cf27f0bd4ad2c1bc871213218844ca5de8aeccfcc90b8d3fc91"
+    },
+    "charms/soft-vinyl.glb": {
+      "bytes": 14364,
+      "sha256": "8fbfaa33a544116d0ffe872eb00f355060a5e561cf86ceddfd16af2bda33da59",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/soft-vinyl.png": {
+      "bytes": 11953,
+      "format": "palette",
+      "sha256": "5c8f3ee06e11afa9958385109402dfab96e9b05b96e5583dc42501346b491d16"
+    },
+    "charms/soft-water-bottle.glb": {
+      "bytes": 14424,
+      "sha256": "16a0a35ef6b3e47ce3548ddb61122c7ebcf486751cab8d1d0d27a8f86bc8a65b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-water-bottle.png": {
+      "bytes": 7180,
+      "format": "palette",
+      "sha256": "e2c66a1534b02fb56a34df69934934a5d7ae57a3c689b43f6a20b26efeaf36e8"
+    },
+    "charms/soft-watering-can.glb": {
+      "bytes": 14424,
+      "sha256": "e8aa4c5f14be824da9c210ae922fc940ab9c50984de4a60a21aa0a7d307ac0f7",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-watering-can.png": {
+      "bytes": 7979,
+      "format": "palette",
+      "sha256": "26e243a724524695805260416943aea9a84fa49145b4e3b6977334d73d16a312"
+    },
+    "charms/soft-yarn.glb": {
+      "bytes": 14388,
+      "sha256": "fc043288c2624c3dfe21ff2d2379e0aafa36c190d9365b581f5bfe6d2c6fb2e4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-yarn.png": {
+      "bytes": 8613,
+      "format": "palette",
+      "sha256": "2ef31e9d838c4f4a59b36ad19645058a99c396e566363a255ecae928aa4747b2"
+    },
+    "charms/soft-yoga-mat.glb": {
+      "bytes": 14404,
+      "sha256": "910f3f5f00a26d9fd364bf0b6898f8798f9e39183d82291c79f491bd62963995",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/soft-yoga-mat.png": {
+      "bytes": 20701,
+      "format": "rgba",
+      "sha256": "d84b4a7ee66f6bf955906a740972f1c6636ae7fa2cc189e80fb64b0d62635e75"
+    },
+    "charms/tech-bar-chart.glb": {
+      "bytes": 14408,
+      "sha256": "9a60bb36ede11194b15ef0146b1b80632e549840b99cfcf336e71e862041dd9e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-bar-chart.png": {
+      "bytes": 16482,
+      "format": "rgba",
+      "sha256": "f5f0264e5aa0d09c28c2b9dd079ad945753f2c134c24808238e77e63326d2e0d"
+    },
+    "charms/tech-battery.glb": {
+      "bytes": 14404,
+      "sha256": "7b9dc6bccac27680b6b771092e7815822253b81f0a0dda4295d42985db105137",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-battery.png": {
+      "bytes": 8609,
+      "format": "palette",
+      "sha256": "c0eff2a8659e6617cf338435773ad241fd7bb0e6c9c3102ceeee73725b31a288"
+    },
+    "charms/tech-book.glb": {
+      "bytes": 14388,
+      "sha256": "399f44b037eb8c723db7d88fed0f4140adb3a6e2ae6c1e622603c604384bc48c",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-book.png": {
+      "bytes": 7339,
+      "format": "palette",
+      "sha256": "a358df79ffcd60bd51d5679d50fceeee32e05d22f5d8960a3365ea7dec807df1"
+    },
+    "charms/tech-calculator.glb": {
+      "bytes": 14412,
+      "sha256": "78600e28712f97e9f1a65357e683f492ff8ba27e1001a23dded007f27059b29d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-calculator.png": {
+      "bytes": 22507,
+      "format": "rgba",
+      "sha256": "1ffed5dc5042c767ce0a0e1666661bf43c73af9173cbf5285caec55d5f2ba003"
+    },
+    "charms/tech-camera.glb": {
+      "bytes": 14396,
+      "sha256": "170cff2cc4159c06e85147dc3d1fede3933817666a3260eee358c7a1a301a525",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-camera.png": {
+      "bytes": 8662,
+      "format": "palette",
+      "sha256": "ed5517a3940b5b3dd079b1ff620393d7ebd67d1e896ec3dcf954e066c857c674"
+    },
+    "charms/tech-circuit.glb": {
+      "bytes": 14404,
+      "sha256": "1488d6d6b70bba32a0dfcce18396791ab79954870a1203c93fadb1796f94c1ca",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-circuit.png": {
+      "bytes": 23051,
+      "format": "rgba",
+      "sha256": "ee2339cdb240806391f0f7572bbff5e5e2d32b49634d8b8815ad5936328cc707"
+    },
+    "charms/tech-clipboard.glb": {
+      "bytes": 14412,
+      "sha256": "34a1692b4f88bd19078710d5902f65e11a539e94b9ba7acfd6254c4d064d76e2",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-clipboard.png": {
+      "bytes": 7052,
+      "format": "palette",
+      "sha256": "03ea15fd46157b6c8d4d1de11b02e7967b35aac164db4e1bae43adade97e1b8a"
+    },
+    "charms/tech-cloud-upload.glb": {
+      "bytes": 14424,
+      "sha256": "6fc345a2b7634227f1c38e4fe2287eb9ae0fd4411c101ac083a4afe473aa5c90",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-cloud-upload.png": {
+      "bytes": 7962,
+      "format": "palette",
+      "sha256": "ca12d0f88eb8ca7cfdd618cb2e355551c196d6d72185b505b1a11b1d63b50467"
+    },
+    "charms/tech-compass.glb": {
+      "bytes": 14400,
+      "sha256": "e39f1b598515f53cf2032ee364b25eb0b159e62c435f4ff9415de802d190c4c7",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-compass.png": {
+      "bytes": 6968,
+      "format": "palette",
+      "sha256": "eea0be589da1b41b01e26eafd697ada215307b96e5a1c89e38525a42d9bfafc8"
+    },
+    "charms/tech-database.glb": {
+      "bytes": 14404,
+      "sha256": "8514519ee3b2fa65917fcabfbe11012c6fa2bb439368d105dbb72ca38ec1294e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-database.png": {
+      "bytes": 7733,
+      "format": "palette",
+      "sha256": "359b7e1bbf8db2f2babef6ec74a9f5418b12adab24085f2c3e20e0646b5fe2c2"
+    },
+    "charms/tech-drone.glb": {
+      "bytes": 14392,
+      "sha256": "169c2f2486c2a980fa8dd54b130ee1601e2fc7efec433ca068839e6d9d09fb86",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-drone.png": {
+      "bytes": 10091,
+      "format": "palette",
+      "sha256": "4582383253a8a3b03b2ca85bef1d11078a7239cda2378dd546cd877ab2bbbee9"
+    },
+    "charms/tech-flask.glb": {
+      "bytes": 14396,
+      "sha256": "e6424c812f9d2cf7e55d111858f967b5ce6f421c5b245cbc420c6566a0258d6a",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-flask.png": {
+      "bytes": 8746,
+      "format": "palette",
+      "sha256": "57c5a41defc2fd52af0f0328c919b4929a4aed9f07e5f0791ef227f4e8450bd1"
+    },
+    "charms/tech-floppy.glb": {
+      "bytes": 14396,
+      "sha256": "a57c04566ae077f65baeae2a6e94161d2a7712b50d5594762d075a7ba8552ab0",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-floppy.png": {
+      "bytes": 16546,
+      "format": "rgba",
+      "sha256": "a64d331bcd810cfebdcdc4e15e5a2c6b6e4612a9e0483f3e91454ca2c7d22bf1"
+    },
+    "charms/tech-gear.glb": {
+      "bytes": 14392,
+      "sha256": "992d008d0a715c8b43c9fad6103856dc941c33a1354dc3ec5c7040d5f2eb1d3d",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-gear.png": {
+      "bytes": 10471,
+      "format": "palette",
+      "sha256": "2a663f46a60db2c5f923895590aff60e081079048a6552203fe68636c267f940"
+    },
+    "charms/tech-hammer.glb": {
+      "bytes": 14400,
+      "sha256": "34d78791e397404bc0ad02e0a19722f24b290939a75c5cb95111a30898cbb332",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-hammer.png": {
+      "bytes": 6782,
+      "format": "palette",
+      "sha256": "6d930a7b0e18795da08cb78a8ef82e7e8594f212c494296a41b01d0b916d35a6"
+    },
+    "charms/tech-hard-hat.glb": {
+      "bytes": 14404,
+      "sha256": "350952d8f2756b18d1c7193587c774f66d0a0d655665953419aa1d995b540d95",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-hard-hat.png": {
+      "bytes": 8680,
+      "format": "palette",
+      "sha256": "4a197fbecfe01ede8df1bfdc935436de22381feeea796e0f55834fc6073ea830"
+    },
+    "charms/tech-headset.glb": {
+      "bytes": 14400,
+      "sha256": "8f7cc2c2ae2a715989f05e74fe8faa74ec66c408b4dcae4dd799c804e09a7d9e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-headset.png": {
+      "bytes": 9096,
+      "format": "palette",
+      "sha256": "5533b15cad02d87f72c411c83d76729eef705a179cea150e27c48e5ad22a6426"
+    },
+    "charms/tech-key.glb": {
+      "bytes": 14360,
+      "sha256": "a127240b606aa6544383a2a9c2d5145783bc178fe62f1dfcf8f7752ace85e532",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/tech-key.png": {
+      "bytes": 6605,
+      "format": "palette",
+      "sha256": "5cda0f44778f9cfd2e5980a887a443beb1359faa951b0e88ee61d6dbceceaaf8"
+    },
+    "charms/tech-keyboard.glb": {
+      "bytes": 14408,
+      "sha256": "1f75f1cf14145adf0e067c0adfdf18b5bbf97b1a28677f9fd23021c4659a4bac",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-keyboard.png": {
+      "bytes": 8997,
+      "format": "palette",
+      "sha256": "03716814f01f1e3996395e2a6e7a5c7abc6d61c856cbe10e081cc7130681780b"
+    },
+    "charms/tech-laptop.glb": {
+      "bytes": 14400,
+      "sha256": "5158caff6e25a6bb051c7401fbfb61b7ff0503b2536e93a88ff822a71779bd38",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-laptop.png": {
+      "bytes": 8305,
+      "format": "palette",
+      "sha256": "8203863a2ed15b2467cee6d68ed5cdb382764c5ce09b314d32da3562e9348674"
+    },
+    "charms/tech-lightbulb.glb": {
+      "bytes": 14412,
+      "sha256": "082953c09e4698d4f18a925b7196c3eecd7d92f0ef96c2709f898e76bb685f64",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-lightbulb.png": {
+      "bytes": 8022,
+      "format": "palette",
+      "sha256": "662c431277a82b55207de6d6ab9e8f0cccc85633b644a19fd5ede2eb6ba33d70"
+    },
+    "charms/tech-magnet.glb": {
+      "bytes": 14400,
+      "sha256": "81ae0686a28e3f5c4a449a87fb93aaf7dd3385253286c6384281cbc8e6485a67",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-magnet.png": {
+      "bytes": 7858,
+      "format": "palette",
+      "sha256": "6de67dd986f578c9b5bd57e14fc844d3721e66746b2f48a91322b1c01daf9a1d"
+    },
+    "charms/tech-magnifier.glb": {
+      "bytes": 14408,
+      "sha256": "9fe7b6850a2177dc5892b11764dcf7420d7aaf06b1adc47bef26d58bf7d0889e",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-magnifier.png": {
+      "bytes": 8301,
+      "format": "palette",
+      "sha256": "d89de76674929a85581851f39f25c00d33dbc7991775bab980c90ba2032a0c66"
+    },
+    "charms/tech-microchip.glb": {
+      "bytes": 14408,
+      "sha256": "65fa2e7439376c7fe291e6fc8f4bce38d9b6ad167b6dea6771998fd911581c16",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-microchip.png": {
+      "bytes": 9842,
+      "format": "palette",
+      "sha256": "6d3f4913bb68e0ca6bfff2ae113282d67b62780af7badc95b9b8995ebf10d2a7"
+    },
+    "charms/tech-microscope.glb": {
+      "bytes": 14412,
+      "sha256": "6d5120fac1ad203aa650b2365a5f46ad476428923fe2dec0e86f5de7842f14d9",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-microscope.png": {
+      "bytes": 6788,
+      "format": "palette",
+      "sha256": "f5037dafb0d32d557b25de287477f385e6bcaf729bd6aae2fe154f27b6c21aa7"
+    },
+    "charms/tech-monitor.glb": {
+      "bytes": 14404,
+      "sha256": "87cb12f03428c251be1f463ecaafc79ae451d8298fc47375c9e5accaaf54dbad",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-monitor.png": {
+      "bytes": 8291,
+      "format": "palette",
+      "sha256": "705022cb10973fc446797c74fa1368919ce0eb009c63c13cdeb707477a0367f1"
+    },
+    "charms/tech-mouse.glb": {
+      "bytes": 14396,
+      "sha256": "4b4ff1bc494d20321aea0ea7256d98c3a2937a31cbccb65145a71dc04019a787",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-mouse.png": {
+      "bytes": 7022,
+      "format": "palette",
+      "sha256": "2e97419a0131209f396b16a52309d022376601eb9d88bdfaaecbbb1f2f8f086e"
+    },
+    "charms/tech-padlock.glb": {
+      "bytes": 14404,
+      "sha256": "a9450db1bf36362cacf967bf3d92b9f695177b16c6d0dc8de9504580bc792064",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-padlock.png": {
+      "bytes": 8708,
+      "format": "palette",
+      "sha256": "48e94fc4e102a952dc2d0836978fecbe36a1f17cc710208b26a0676b125ba357"
+    },
+    "charms/tech-paintbrush.glb": {
+      "bytes": 14412,
+      "sha256": "111519193e15938b211859d98c9481ebab91d2ade8fce1fb85513c312ac8963a",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-paintbrush.png": {
+      "bytes": 7110,
+      "format": "palette",
+      "sha256": "05698ec416d8882d64af2e16b980f467d214286dc9a2e01ec7023b2f2384cff0"
+    },
+    "charms/tech-palette.glb": {
+      "bytes": 14404,
+      "sha256": "035645f0e8e19f4b9353029de7028dd1d926a68758d0bf48159a159466ef9113",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-palette.png": {
+      "bytes": 9998,
+      "format": "palette",
+      "sha256": "0e7086e159e54e8b8fae2db4c95e07afeafe27d58aefded60e0bf13c9720c0db"
+    },
+    "charms/tech-pen.glb": {
+      "bytes": 14384,
+      "sha256": "40641e4f4f35abbce023f599a25d71c663694e86d7397fbcf6b601e88e448db4",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-pen.png": {
+      "bytes": 6032,
+      "format": "palette",
+      "sha256": "0f4f104fc7104773732354c89fe0e3ba2ba4beabc093f13abbd76a5bc874ed3a"
+    },
+    "charms/tech-pencil.glb": {
+      "bytes": 14396,
+      "sha256": "43729571278a74f26c978510aae777502f526d0472c7605eaf982ad573a8bf50",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-pencil.png": {
+      "bytes": 6340,
+      "format": "palette",
+      "sha256": "2c7791a26881bd5413c3bcf7f6785164862570f068b0f851640d2efc696efe91"
+    },
+    "charms/tech-pliers.glb": {
+      "bytes": 14396,
+      "sha256": "8177f01b156fab8bf49762e479b17e3650e0750606c1cd4a6d9ac240695e684b",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-pliers.png": {
+      "bytes": 15717,
+      "format": "rgba",
+      "sha256": "aca6d42da939df5629889fcaf5e4fd0e2cfc8b6012d22d54f99da68c924166a0"
+    },
+    "charms/tech-plug.glb": {
+      "bytes": 14384,
+      "sha256": "b57f9030917e609b9681896a4f0ef2c56187e42dd9c759542ae217ec28a6c6b9",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-plug.png": {
+      "bytes": 8079,
+      "format": "palette",
+      "sha256": "3208f88ea5b9a13891cdf9f0607ad763cab0b5c6e2dfb8a4bca65564aa3a3c72"
+    },
+    "charms/tech-printer-3d.glb": {
+      "bytes": 14412,
+      "sha256": "c6c242ce2ec68de24ec231ef48b2408a5e6debe56025ec8d7f7ccea6a6b9f1cf",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-printer-3d.png": {
+      "bytes": 8930,
+      "format": "palette",
+      "sha256": "c1897d3a2a22aaab96fb3a3a6e1f09ca7831c05aad893733baa4bd7dbed47205"
+    },
+    "charms/tech-robot.glb": {
+      "bytes": 14392,
+      "sha256": "81788fbc0ebf664ff5181cd77a8a634182e3e04d21b53334570690cfbd1e3b93",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-robot.png": {
+      "bytes": 8270,
+      "format": "palette",
+      "sha256": "918c68d3d5526a6cb2b6ffc75eca5e5594e6399dec4f4f5e106a3ea2fae9f814"
+    },
+    "charms/tech-rocket.glb": {
+      "bytes": 14400,
+      "sha256": "785207569148f0d4e01da460462dc6af021ebbe4dbc87ae3eaf8d924afe559fb",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-rocket.png": {
+      "bytes": 7782,
+      "format": "palette",
+      "sha256": "8568450bc3469d19cb316e3a6b590eb0f97dafbbe252049771c265cec9e28b6b"
+    },
+    "charms/tech-ruler.glb": {
+      "bytes": 14368,
+      "sha256": "1c392b1ab4439925679df39de342c2929706cb8346445b867d4323c0a0a8ac25",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/tech-ruler.png": {
+      "bytes": 6193,
+      "format": "palette",
+      "sha256": "128b70f44f8527b41daf90e3217b5cb5f879e7f5d3e56efca7414bb3b295815b"
+    },
+    "charms/tech-satellite.glb": {
+      "bytes": 14408,
+      "sha256": "56840729f2cc93d6b91560cb02785ba60e2198492a504b80526fc9b6a0aa8408",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-satellite.png": {
+      "bytes": 7760,
+      "format": "palette",
+      "sha256": "55a5867ccb3fa94291f86a1771de517318547f4f88885a2d5651884aee2acff5"
+    },
+    "charms/tech-screwdriver.glb": {
+      "bytes": 14416,
+      "sha256": "9dc45fa69eabb7669222b0bd146addeb9f7ea811d67046eaf78bfc1288ec4630",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-screwdriver.png": {
+      "bytes": 4333,
+      "format": "palette",
+      "sha256": "174ee2adebeb7b538bf601d1678fd8cbfff542f00eeba6d56578cf4f2ca7ab9c"
+    },
+    "charms/tech-server.glb": {
+      "bytes": 14400,
+      "sha256": "ae3f37b01375e7c6f07166fec5bcb0ddf3a0377df845070485e1c7733356816c",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-server.png": {
+      "bytes": 9744,
+      "format": "palette",
+      "sha256": "df97ac7cf3a97c86a0018cc5a39776fe90865403cff7b0cedfcec4ccc90173b8"
+    },
+    "charms/tech-set-square.glb": {
+      "bytes": 14416,
+      "sha256": "9cde05a60484555a455828022f2423382f1d08a5eed7f7e642e3885615e0ba58",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-set-square.png": {
+      "bytes": 7071,
+      "format": "palette",
+      "sha256": "fcb7c1a2521484742d1e7547eb1dd241109741e706a3b1b1f090b4733ed3b28c"
+    },
+    "charms/tech-smartphone.glb": {
+      "bytes": 14412,
+      "sha256": "dc9f758396855d30f22ad3e2576aba70e07b4e4958aaf2ec96f1d378eff141ba",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-smartphone.png": {
+      "bytes": 9173,
+      "format": "palette",
+      "sha256": "ca4ce32f9f0921c7cc6cfca4721fe2d7370698e17f9a354dc855f99665a18758"
+    },
+    "charms/tech-stopwatch.glb": {
+      "bytes": 14412,
+      "sha256": "57d3efa5c567d73fe03eecefa08af24cf5a2b4c06037cdd44b1037f78ccaf5ce",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-stopwatch.png": {
+      "bytes": 9868,
+      "format": "palette",
+      "sha256": "dd78e9186abc6f88103412aebe899aa2264aba480f161e6c29106d1d0a1d49b5"
+    },
+    "charms/tech-tablet.glb": {
+      "bytes": 14396,
+      "sha256": "380185b0357fb06cdf73fbf357f10212ff10cdcc80d4db57df58a49a56f463fc",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-tablet.png": {
+      "bytes": 8862,
+      "format": "palette",
+      "sha256": "cf4032d6704c2e8aefc5b01eaa594e46c4d8ec8d0e76820112ae0038a2b4bd7f"
+    },
+    "charms/tech-tape-measure.glb": {
+      "bytes": 14420,
+      "sha256": "21e516987c2c58dd509144b3836f88512fcf52e4d8d1f167d63dba99b0fbedd8",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-tape-measure.png": {
+      "bytes": 8471,
+      "format": "palette",
+      "sha256": "99326958347f622bc4b0373498bb2eae4a305f5b5dfd36ea9211f6c3973e900b"
+    },
+    "charms/tech-telescope.glb": {
+      "bytes": 14408,
+      "sha256": "5203f1684bb049b7581b792b170903aa09aeaacc0d8fcb7583e342a9f9bec128",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-telescope.png": {
+      "bytes": 8265,
+      "format": "palette",
+      "sha256": "0a457e3d71f0d24ddceaf2da9ba62b6bba1abc63363453f5f755aac58cc4d355"
+    },
+    "charms/tech-toolbox.glb": {
+      "bytes": 14400,
+      "sha256": "6e09e3923c58121102d9b5a86f51d345c0520f25581eac01b8ed7dfd4f4f19f5",
+      "triangles": 900,
+      "vertices": 452
+    },
+    "charms/tech-toolbox.png": {
+      "bytes": 9201,
+      "format": "palette",
+      "sha256": "f4cc1057282a97417c0503f76b86de9dd40d8df76a4a93982ed5339918314ec0"
+    },
+    "charms/tech-usb.glb": {
+      "bytes": 14360,
+      "sha256": "1cfb68842194e9f00b5758d2a23e9857ade94bb7d38250efc2663c6aa13332a2",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/tech-usb.png": {
+      "bytes": 8011,
+      "format": "palette",
+      "sha256": "b34cd5c70ff27b59e6387969d3d45eb495790078bb8c26b1e39065d9aed8a8a2"
+    },
+    "charms/tech-wrench.glb": {
+      "bytes": 14368,
+      "sha256": "709c689b51baf7d2de8b12a630dbd06586699cc7f2c373a91fff494e60e703d1",
+      "triangles": 898,
+      "vertices": 451
+    },
+    "charms/tech-wrench.png": {
+      "bytes": 6445,
+      "format": "palette",
+      "sha256": "dd9b71c902d359fe843e1169e0f4966526ddea1f35e6c81eb4c5ac4b2bb08c6b"
+    },
+    "faces/face-angel-front.png": {
+      "bytes": 13823,
+      "sha256": "a381143b15e0e3b74281ebd58c473b4522799692f8024e16c7041ec757e8cddf",
+      "weight": 523.1
+    },
+    "faces/face-angel.glb": {
+      "bytes": 24296,
+      "parts": [
+        "halo",
+        "blush_left",
+        "blush_right"
+      ],
+      "sha256": "f0710b8d4c2eccc924ddb2640dccc88449c19b758619d300be5d1383aacc1af4",
+      "triangles": 1612
+    },
+    "faces/face-nerdy-front.png": {
+      "bytes": 12785,
+      "sha256": "ebed0cecd54c316ab70e4c4677e0edc9f137f75dc0252d2a1f12877dc6b029ee",
+      "weight": 470.0
+    },
+    "faces/face-nerdy.glb": {
+      "bytes": 42284,
+      "parts": [
+        "rim_left",
+        "rim_right",
+        "bridge",
+        "temple_left",
+        "temple_right"
+      ],
+      "sha256": "78354384663f281978cd7641d349fb74dbe8848c6c003ff775ed3333bd04a5d0",
+      "triangles": 3198
+    },
+    "faces/face-pirate-front.png": {
+      "bytes": 12118,
+      "sha256": "1b0a9b8c970bd2a24eeeccaa1fbf9d2c7cbb4e08c2d45b5f56770d00c6395395",
+      "weight": 658.2
+    },
+    "faces/face-pirate.glb": {
+      "bytes": 73976,
+      "parts": [
+        "patch",
+        "strap",
+        "bandana",
+        "bandana_hem",
+        "bandana_top",
+        "bandana_knot",
+        "bandana_dots"
+      ],
+      "sha256": "1ebdb76249616903b630a6d8bb3084e402e25b5f84d1463f84118efc3792ec3b",
+      "triangles": 5648
+    }
+  },
+  "generator": "tools/ai/blender/soul_decor.py",
+  "icons": {
+    "core-burst-lemon": {
+      "file": "assets-src/charms/icons/core-burst-lemon.png",
+      "sha256": "05ec6c323fbacc8ab00a9fbfcd0b40ac48dc4b6b99db9ac67fd09e9d65143a75"
+    },
+    "core-burst-lilac": {
+      "file": "assets-src/charms/icons/core-burst-lilac.png",
+      "sha256": "79fb915490ef27a024742334f832088f48db20b6ed68b521941483e3891f5b45"
+    },
+    "core-burst-mint": {
+      "file": "assets-src/charms/icons/core-burst-mint.png",
+      "sha256": "009205c84ce0213f37d14e9aecc4ac3862f7f66db395e85edcdd1d4d791d9ba8"
+    },
+    "core-burst-peach": {
+      "file": "assets-src/charms/icons/core-burst-peach.png",
+      "sha256": "255a9683b1e360ff05732dadd25c5bb47fa4595664c37a73071b814b6c80084a"
+    },
+    "core-burst-sky": {
+      "file": "assets-src/charms/icons/core-burst-sky.png",
+      "sha256": "69ea6cbb472d1df1e1dfbd4e906f9ac7200d6e32566550656b1b885f537ea390"
+    },
+    "core-chubby-lemon": {
+      "file": "assets-src/charms/icons/core-chubby-lemon.png",
+      "sha256": "0bbed757097dcdc25ebf3e24cc17d1f39ec43dc32bc527e28ec8bd814b9ba793"
+    },
+    "core-chubby-lilac": {
+      "file": "assets-src/charms/icons/core-chubby-lilac.png",
+      "sha256": "e0cd33f8b25f4e6908b7a5c91d26b53bd79a3be587c3541ec147e45ff8970cf2"
+    },
+    "core-chubby-mint": {
+      "file": "assets-src/charms/icons/core-chubby-mint.png",
+      "sha256": "fb58378d4efdf5093f374f1cbf3f5614266c37e17f57382b4c4d50ab9ecd6b60"
+    },
+    "core-chubby-peach": {
+      "file": "assets-src/charms/icons/core-chubby-peach.png",
+      "sha256": "d4999eb3d0b8561284492376f56fa18fa7dd0e9dbdf57bbc4a7f02453b79291f"
+    },
+    "core-chubby-sky": {
+      "file": "assets-src/charms/icons/core-chubby-sky.png",
+      "sha256": "648fd2792087137fc832cf4207ae074b2ec920f143c17c0402c33e41e6d2605b"
+    },
+    "core-classic-lemon": {
+      "file": "assets-src/charms/icons/core-classic-lemon.png",
+      "sha256": "9d81d074c8c657128b6a48977cdbf93e12a2e4eb7977acb2a1b47f9ebd0adeb0"
+    },
+    "core-classic-lilac": {
+      "file": "assets-src/charms/icons/core-classic-lilac.png",
+      "sha256": "dee9c9c93fe6976a11f76df1dd6a23a32e21d8e99ecbe7bdda0fb87e9b01f33a"
+    },
+    "core-classic-mint": {
+      "file": "assets-src/charms/icons/core-classic-mint.png",
+      "sha256": "408db3b53d1e2b062bb6e117c410b8b5a5e538ec1f216a239974cb24e16fea38"
+    },
+    "core-classic-peach": {
+      "file": "assets-src/charms/icons/core-classic-peach.png",
+      "sha256": "7b9e13bc39be510866a19661b04c3f9daeb14f6427b3bf570fe15ea360c5481b"
+    },
+    "core-classic-sky": {
+      "file": "assets-src/charms/icons/core-classic-sky.png",
+      "sha256": "bbfbebd958c6fa18fc788cfb2f3a1a20c636788b32cf2857547d9303a0ea6b13"
+    },
+    "core-pinwheel-lemon": {
+      "file": "assets-src/charms/icons/core-pinwheel-lemon.png",
+      "sha256": "28742386ab180568614ff36cf072d1b0db1ee00c327bf9f11f7706346f2778f6"
+    },
+    "core-pinwheel-lilac": {
+      "file": "assets-src/charms/icons/core-pinwheel-lilac.png",
+      "sha256": "d4a22e5d848b18490696fb825a855bf3f63d659f795b759a2e96ac621ac1d656"
+    },
+    "core-pinwheel-mint": {
+      "file": "assets-src/charms/icons/core-pinwheel-mint.png",
+      "sha256": "db10a9b7e62ac280a914a91343081d412d331b127af1b4c89364c45a27d6018b"
+    },
+    "core-pinwheel-peach": {
+      "file": "assets-src/charms/icons/core-pinwheel-peach.png",
+      "sha256": "38ad69e4e244f3e6ccfa13d65eefbdfc54c101f56bbfca047859e40275069fe2"
+    },
+    "core-pinwheel-sky": {
+      "file": "assets-src/charms/icons/core-pinwheel-sky.png",
+      "sha256": "82d429f037978e650efa871d4e6dec52f06a4d4620cd4a23d9136fd00b9a071b"
+    },
+    "core-ringed-lemon": {
+      "file": "assets-src/charms/icons/core-ringed-lemon.png",
+      "sha256": "ef0bb4b4c8957808e271dd7f06a62b5cac048e6c5a91305470c29c0c3333fcda"
+    },
+    "core-ringed-lilac": {
+      "file": "assets-src/charms/icons/core-ringed-lilac.png",
+      "sha256": "070a1cd73893dcfb0d7eb6e3a9a172daa9c31cd567fc1ae652aa0b6d1332e4ad"
+    },
+    "core-ringed-mint": {
+      "file": "assets-src/charms/icons/core-ringed-mint.png",
+      "sha256": "c49992be87464431450dbbc50995dbf106dc77fa195ca0e0b733904b3a6c4c56"
+    },
+    "core-ringed-peach": {
+      "file": "assets-src/charms/icons/core-ringed-peach.png",
+      "sha256": "00e230413b21ca7a9cadbb78e75ccbc8c1b936c2d55274fba97520c5e3566fbe"
+    },
+    "core-ringed-sky": {
+      "file": "assets-src/charms/icons/core-ringed-sky.png",
+      "sha256": "71b4ef72e645fdc02d16ab240e3213b6ac3de1199061a619c157d0a1697eebc1"
+    },
+    "core-shooting-lemon": {
+      "file": "assets-src/charms/icons/core-shooting-lemon.png",
+      "sha256": "8845478f652f3513c1d4d56514d9256e5ab9ccd9523a04ac696c9bb014ef065d"
+    },
+    "core-shooting-lilac": {
+      "file": "assets-src/charms/icons/core-shooting-lilac.png",
+      "sha256": "296c24944d63c1d6a438a1930cfeca3e3245f14e69a68f416226dfc0546fa8cd"
+    },
+    "core-shooting-mint": {
+      "file": "assets-src/charms/icons/core-shooting-mint.png",
+      "sha256": "d1bfd35e76524120cc14173a9df74636bd389d6a92676f9df0dc0c10ee4a685f"
+    },
+    "core-shooting-peach": {
+      "file": "assets-src/charms/icons/core-shooting-peach.png",
+      "sha256": "6a1b2da70e2be26098b33d5c27dc1c6f31c274bbb89f47a61717ace16fe19f7d"
+    },
+    "core-shooting-sky": {
+      "file": "assets-src/charms/icons/core-shooting-sky.png",
+      "sha256": "5b86cd36e5402c7bf556fd7620d013dc2e6407cc5a1c9c6201b8f5397ae7b928"
+    },
+    "core-six-lemon": {
+      "file": "assets-src/charms/icons/core-six-lemon.png",
+      "sha256": "c6e857d0851462ef81c53cf0103f6af5608d818e4b95544d2718ca80a1b6c61d"
+    },
+    "core-six-lilac": {
+      "file": "assets-src/charms/icons/core-six-lilac.png",
+      "sha256": "562a3bac4b5145d1eb1387a1dcc595c56b5b571cd7a51f25d6e6d543f2eef2c8"
+    },
+    "core-six-mint": {
+      "file": "assets-src/charms/icons/core-six-mint.png",
+      "sha256": "64b00a9cc41eef3b4e1fcdfe0fc144d03afde3c1479c1e8928448a778281f1b9"
+    },
+    "core-six-peach": {
+      "file": "assets-src/charms/icons/core-six-peach.png",
+      "sha256": "dee4c36c6a460e698fd5d1e5adf077dbbd77e77ab5e9d1a50725d87651c02117"
+    },
+    "core-six-sky": {
+      "file": "assets-src/charms/icons/core-six-sky.png",
+      "sha256": "c6c5604af045b7fb9a6d96c8d9562f0bf65dbb2fdb281e72af7cf193fa6b3b08"
+    },
+    "core-soft7-lemon": {
+      "file": "assets-src/charms/icons/core-soft7-lemon.png",
+      "sha256": "7d087b1034a9a5b1895f35edc0d2f9fa59a599365b391864c5e068291f0a2bd3"
+    },
+    "core-soft7-lilac": {
+      "file": "assets-src/charms/icons/core-soft7-lilac.png",
+      "sha256": "fadf680b6d313449777424b95d2f538c3c66df1444d0c7090688cbb183e7f816"
+    },
+    "core-soft7-mint": {
+      "file": "assets-src/charms/icons/core-soft7-mint.png",
+      "sha256": "1a1f5f2d89484458ff3c237ef8ca1e0fb3b394dee3055079bf22ab1334f74bf4"
+    },
+    "core-soft7-peach": {
+      "file": "assets-src/charms/icons/core-soft7-peach.png",
+      "sha256": "801080131051b4bc0c68d3322e3244d8980a419be7315f9e29b7d8e0b769533f"
+    },
+    "core-soft7-sky": {
+      "file": "assets-src/charms/icons/core-soft7-sky.png",
+      "sha256": "54b1390c41f42810b96db65881ea790bf13128b619fc67cfda873a2b2dddba9a"
+    },
+    "core-sparkle-lemon": {
+      "file": "assets-src/charms/icons/core-sparkle-lemon.png",
+      "sha256": "326a6febeaffe0da0dd7ef18ada5e2c8ed3725db1e0a42be7f36145b0c7e72c6"
+    },
+    "core-sparkle-lilac": {
+      "file": "assets-src/charms/icons/core-sparkle-lilac.png",
+      "sha256": "1c334d80e829bd14cac2820110543cb40debc33f9085d4513f2f4ed2a1118de0"
+    },
+    "core-sparkle-mint": {
+      "file": "assets-src/charms/icons/core-sparkle-mint.png",
+      "sha256": "9dc52ecff42305aa45abf6110aa8aeb370867324263e1d75e5b3012b888d39f5"
+    },
+    "core-sparkle-peach": {
+      "file": "assets-src/charms/icons/core-sparkle-peach.png",
+      "sha256": "d35b876f5846ee8741d06f4a70767a47a9ade10e58ccf2bc25b234bc314532cd"
+    },
+    "core-sparkle-sky": {
+      "file": "assets-src/charms/icons/core-sparkle-sky.png",
+      "sha256": "6f9194a8d1caf1e291b1d3009e4d23e7089ffe3f53c44534f5c4bf65e09d922e"
+    },
+    "core-twin-lemon": {
+      "file": "assets-src/charms/icons/core-twin-lemon.png",
+      "sha256": "b478d395d389d96d41cbe7cf23a066e9b02313b09209b3a0bf9e2d960c0f9a85"
+    },
+    "core-twin-lilac": {
+      "file": "assets-src/charms/icons/core-twin-lilac.png",
+      "sha256": "91c55170316fa33e37cc87f2803ce12e147a1d81bc2f62c7059a028418037e69"
+    },
+    "core-twin-mint": {
+      "file": "assets-src/charms/icons/core-twin-mint.png",
+      "sha256": "11acd11ecc57fce00c5a45f2f43669d6e68799e02bc589fba8d1eda30306ea81"
+    },
+    "core-twin-peach": {
+      "file": "assets-src/charms/icons/core-twin-peach.png",
+      "sha256": "18a9746de5083a75a2e68857b55d46907d302aab55f8a04d8fc83d6d50216c13"
+    },
+    "core-twin-sky": {
+      "file": "assets-src/charms/icons/core-twin-sky.png",
+      "sha256": "692639779ab3853be9e2fe444b1e0b74a0e6d349be42a997ea19d85a57ee78d2"
+    },
+    "soft-apple": {
+      "file": "assets-src/charms/icons/soft-apple.png",
+      "sha256": "ca7abb40851b6df008b2df0aa450a1ed9dfe99481a2bd374f324e4ee68cb87b9"
+    },
+    "soft-balloon": {
+      "file": "assets-src/charms/icons/soft-balloon.png",
+      "sha256": "16bb181a5f32773c2e46118ea83abd1e7fee1807e800c69690050c34d03d00f3"
+    },
+    "soft-bicycle": {
+      "file": "assets-src/charms/icons/soft-bicycle.png",
+      "sha256": "dd3bb0a2cf82a6dbc36c643d3eaefd4dbdd737059c4b267ca0a0acad318946f9"
+    },
+    "soft-bouquet": {
+      "file": "assets-src/charms/icons/soft-bouquet.png",
+      "sha256": "3286e0da22282441cfcd9c28f64ccd6c43d060c5667d47ded2aaa10f525dc191"
+    },
+    "soft-butterfly": {
+      "file": "assets-src/charms/icons/soft-butterfly.png",
+      "sha256": "3d4570a9d6a6d9b657f7c133af5ce077fc195c21a6a4d7b566ce745ef98aabae"
+    },
+    "soft-cactus": {
+      "file": "assets-src/charms/icons/soft-cactus.png",
+      "sha256": "cbfb8acdc0d9ded7a1642629022e1c6f68d838b090cc931b67ac860d5e379940"
+    },
+    "soft-candle": {
+      "file": "assets-src/charms/icons/soft-candle.png",
+      "sha256": "db875fd00203b47d608fbf8125ba58dc1b4b9af1b414fb939f70b3f64ca4b978"
+    },
+    "soft-cherry-blossom": {
+      "file": "assets-src/charms/icons/soft-cherry-blossom.png",
+      "sha256": "be49b6e143566ca161863f078f0990fd032256cb183bb3c1793b4e72789f610c"
+    },
+    "soft-clover": {
+      "file": "assets-src/charms/icons/soft-clover.png",
+      "sha256": "e378c8d4c3ba93447c6128863acddb40cae9f6296dd9e936e75cf70e83c4565b"
+    },
+    "soft-cookie": {
+      "file": "assets-src/charms/icons/soft-cookie.png",
+      "sha256": "23068f959f4d9aace32fe7d4d07c1d8f00ecef6d0803a6bce04ad130da179357"
+    },
+    "soft-cupcake": {
+      "file": "assets-src/charms/icons/soft-cupcake.png",
+      "sha256": "c9b6a6c9dabbc558d336fb193fd05ca9a187835f595c5951cb72ccbd58da91e1"
+    },
+    "soft-daisy": {
+      "file": "assets-src/charms/icons/soft-daisy.png",
+      "sha256": "5bc1bce45154087a0d2be3f68a8152f0d2db6eac91f768430427c9011a7131c2"
+    },
+    "soft-donut": {
+      "file": "assets-src/charms/icons/soft-donut.png",
+      "sha256": "ffc6f69c4d94132c9abe9e2e5001c74d617f3feb38ece030877878ea72be6e36"
+    },
+    "soft-dumbbell": {
+      "file": "assets-src/charms/icons/soft-dumbbell.png",
+      "sha256": "fba3e50bd522d76f11a10486fadad2246d7c92b6bdfa7b78bbc624da188ccad9"
+    },
+    "soft-earphones": {
+      "file": "assets-src/charms/icons/soft-earphones.png",
+      "sha256": "1ac68b52106ac5ac477af3bbee3cd27f1fe6d523be6e849541474fc2b9dda351"
+    },
+    "soft-feather": {
+      "file": "assets-src/charms/icons/soft-feather.png",
+      "sha256": "d35b33206780ce7690afd71202af0324fd023af957316a3fd31873cb3de6f7a3"
+    },
+    "soft-football": {
+      "file": "assets-src/charms/icons/soft-football.png",
+      "sha256": "fc050989898c490858f3775066d499427050f9f3d85175f4a973d08aba023601"
+    },
+    "soft-gift": {
+      "file": "assets-src/charms/icons/soft-gift.png",
+      "sha256": "a92e2703cde517a9e5b7ef66bff57978e04b9cd67e32a7df9ac169bdd846f0eb"
+    },
+    "soft-guitar": {
+      "file": "assets-src/charms/icons/soft-guitar.png",
+      "sha256": "e4988cd341acf0f2b92e77019cf2895d60808bfc301cef922ddbe0ee26040944"
+    },
+    "soft-heart": {
+      "file": "assets-src/charms/icons/soft-heart.png",
+      "sha256": "91fc498f05b7d3dfd273833872f61bf96138e5db97192206e481a7eda4d6ac16"
+    },
+    "soft-hot-air-balloon": {
+      "file": "assets-src/charms/icons/soft-hot-air-balloon.png",
+      "sha256": "f31e9c3711ff39bd4b05de1a76cf4c020504e7288fec661e149758c731c7006e"
+    },
+    "soft-ice-cream": {
+      "file": "assets-src/charms/icons/soft-ice-cream.png",
+      "sha256": "a4c63597e2bbbefe3ce69945f6bbe5eef35f5ad62cd1901355376b1c27d8e02f"
+    },
+    "soft-juice": {
+      "file": "assets-src/charms/icons/soft-juice.png",
+      "sha256": "c5ef138da3be896397126c90320f933d47a548c6954394998d7ffca08113d55a"
+    },
+    "soft-kite": {
+      "file": "assets-src/charms/icons/soft-kite.png",
+      "sha256": "133939950886e9fbe282bc9a6fce45858ea56ec435981e7d61d5e60e2e004a79"
+    },
+    "soft-lavender": {
+      "file": "assets-src/charms/icons/soft-lavender.png",
+      "sha256": "c939a32948e3926022d557840125e152aa371644228067fe13149d2c43f244dd"
+    },
+    "soft-mug": {
+      "file": "assets-src/charms/icons/soft-mug.png",
+      "sha256": "7692a4f27ef460752b4b9a50a2299d41a6523fd965c09f8545989c316b97b566"
+    },
+    "soft-music-note": {
+      "file": "assets-src/charms/icons/soft-music-note.png",
+      "sha256": "1a3968090eb865721f832d7864914dce69a0dbff2c91f9f70866563a8b4e4577"
+    },
+    "soft-paper-plane": {
+      "file": "assets-src/charms/icons/soft-paper-plane.png",
+      "sha256": "13a3ab5bf7630c472e97e5078be6a6dba55b5767d71194810ea0c178b618016b"
+    },
+    "soft-pillow": {
+      "file": "assets-src/charms/icons/soft-pillow.png",
+      "sha256": "d8f577550746a82867c20e84b72bc67a4b67dce6d1edeca3ca7ea3e9c8640733"
+    },
+    "soft-potted-plant": {
+      "file": "assets-src/charms/icons/soft-potted-plant.png",
+      "sha256": "c4d3d2b5dd990bf4bcaf13cb4e02bb3c817b1c1c7186d58ffd847367119b162c"
+    },
+    "soft-rainbow": {
+      "file": "assets-src/charms/icons/soft-rainbow.png",
+      "sha256": "37817245e728f205513b8ebe2c06b8bf2445f6c62b72f4eff3f0d7219096c1b3"
+    },
+    "soft-rose": {
+      "file": "assets-src/charms/icons/soft-rose.png",
+      "sha256": "e08c01922d3edad57bf2659b3a0de000fceb6a8b77350d8a2277c205369a5e5b"
+    },
+    "soft-rubber-duck": {
+      "file": "assets-src/charms/icons/soft-rubber-duck.png",
+      "sha256": "fcdf19a855f257c67dc3a88ca0d12f7a7ffc4e10b460789cccf71df6d5cc1679"
+    },
+    "soft-running-shoe": {
+      "file": "assets-src/charms/icons/soft-running-shoe.png",
+      "sha256": "3cd978c6bcf28f8306b1a8911880e6120a49d79a4046438a385e3274fbc79e9a"
+    },
+    "soft-seashell": {
+      "file": "assets-src/charms/icons/soft-seashell.png",
+      "sha256": "15cd0f7b332cfb75e5f2eac6200e1170c681a524e88f9b21aaea13a039aecd61"
+    },
+    "soft-sleep-mask": {
+      "file": "assets-src/charms/icons/soft-sleep-mask.png",
+      "sha256": "175ba182ca1196e9d3558daae424df46942d9cc8fa426034bd34a51b754e6bdd"
+    },
+    "soft-speech-bubble": {
+      "file": "assets-src/charms/icons/soft-speech-bubble.png",
+      "sha256": "350a469a55b8785d56f3d215b589165763ec4b66d908bbb24cd86a3a0842980c"
+    },
+    "soft-sprout": {
+      "file": "assets-src/charms/icons/soft-sprout.png",
+      "sha256": "466800346ceba5eb3bb166d0c56f6992a86dcc7dcf7e4d0eb7dc884d5c346d0c"
+    },
+    "soft-strawberry": {
+      "file": "assets-src/charms/icons/soft-strawberry.png",
+      "sha256": "52a64c9005d34e07ac49890e5021360c1ea37dd0e8451c110f341f02372505fa"
+    },
+    "soft-sun": {
+      "file": "assets-src/charms/icons/soft-sun.png",
+      "sha256": "2ac1b4ff3b755b811a463a26c535edfdc94aa0091d261689c79db88772148ca6"
+    },
+    "soft-sunflower": {
+      "file": "assets-src/charms/icons/soft-sunflower.png",
+      "sha256": "dcf6ee4fdc56d3424b246d7df57d61cb1fced262adb145b9a196b4a797a8d633"
+    },
+    "soft-tea-cup": {
+      "file": "assets-src/charms/icons/soft-tea-cup.png",
+      "sha256": "04ba591f3ad41938e2424ec5be5c770a52e919004c83cf5d68365b972141f105"
+    },
+    "soft-teapot": {
+      "file": "assets-src/charms/icons/soft-teapot.png",
+      "sha256": "f042313b999c7adbf859f5d0b8110f5d18f4c93f2f2f46cb62edf5f59b2c74a8"
+    },
+    "soft-tulip": {
+      "file": "assets-src/charms/icons/soft-tulip.png",
+      "sha256": "f3bafa7eff2563566120764bb7868ac2daab9ca9f4f9f650d85b690c15d27fea"
+    },
+    "soft-umbrella": {
+      "file": "assets-src/charms/icons/soft-umbrella.png",
+      "sha256": "30871f4b09e42e0937949682ba4e66d85463544f5588549480e2f41564006575"
+    },
+    "soft-vinyl": {
+      "file": "assets-src/charms/icons/soft-vinyl.png",
+      "sha256": "e25e6209b027ce759a822b32fae76e245d3dd232213e9e982b993b4557a61101"
+    },
+    "soft-water-bottle": {
+      "file": "assets-src/charms/icons/soft-water-bottle.png",
+      "sha256": "bb7fbcbeba0fcdda578f85d6fc575d97c8c0227ec2964c5ece1323af4bf83e17"
+    },
+    "soft-watering-can": {
+      "file": "assets-src/charms/icons/soft-watering-can.png",
+      "sha256": "cfbdc197e8d475ed76f94bceb2414f4baea0c33709adb9fb8b136145b0440e0a"
+    },
+    "soft-yarn": {
+      "file": "assets-src/charms/icons/soft-yarn.png",
+      "sha256": "06e170a2f18611c99179aa1fdd247c8197a4e3c9135e9e6d0df92d53d8d7b96c"
+    },
+    "soft-yoga-mat": {
+      "file": "assets-src/charms/icons/soft-yoga-mat.png",
+      "sha256": "ecddec90677e1e2dbb1a350ea24c2bee1546f648c88b34f43394431e87c4b081"
+    },
+    "tech-bar-chart": {
+      "file": "assets-src/charms/icons/tech-bar-chart.png",
+      "sha256": "b1ddd4ba98ce59db5f948baad8981553d6f2b11ccd89f31b1ffb9c7bb6725348"
+    },
+    "tech-battery": {
+      "file": "assets-src/charms/icons/tech-battery.png",
+      "sha256": "54d9bafc822e0f7731e16b3d2c54e775c9fde1cfd246d8a2e58ac77db054bdc6"
+    },
+    "tech-book": {
+      "file": "assets-src/charms/icons/tech-book.png",
+      "sha256": "88cef7086bb9e030c30d7e30c1523c480e94242080ac3b48395f480f5f2f042f"
+    },
+    "tech-calculator": {
+      "file": "assets-src/charms/icons/tech-calculator.png",
+      "sha256": "a54b865520415660b5aa87debd93a1a2fe2977ef289341a35e039b749137da57"
+    },
+    "tech-camera": {
+      "file": "assets-src/charms/icons/tech-camera.png",
+      "sha256": "7a1fc9a4e33a6d740e5fdc14ce416770034a385a0d4ef511687a410cf75f8e25"
+    },
+    "tech-circuit": {
+      "file": "assets-src/charms/icons/tech-circuit.png",
+      "sha256": "df1402b2f1e4a047ca27b3bc663262161f0059bad9c4554f059aaf38a5b972bb"
+    },
+    "tech-clipboard": {
+      "file": "assets-src/charms/icons/tech-clipboard.png",
+      "sha256": "63032754ab4256d6b3df135bec7867f8d7cfafe0d3a78b42fd8675b3e6680006"
+    },
+    "tech-cloud-upload": {
+      "file": "assets-src/charms/icons/tech-cloud-upload.png",
+      "sha256": "941717504a516606a5b3b39648c394366556304f672187e164f06f4db97a9443"
+    },
+    "tech-compass": {
+      "file": "assets-src/charms/icons/tech-compass.png",
+      "sha256": "2c4377df2c60b3ef4837f72dd5b25c8dd859ffa4cfbef44ebc4ed17e3de6240b"
+    },
+    "tech-database": {
+      "file": "assets-src/charms/icons/tech-database.png",
+      "sha256": "22932a38c2aec7213ae136c63438586e1d4aba964ab4678332bc53d822c81b81"
+    },
+    "tech-drone": {
+      "file": "assets-src/charms/icons/tech-drone.png",
+      "sha256": "611632898e455980be8600705e70385c7017be6726b27e119ac1f23d4d922273"
+    },
+    "tech-flask": {
+      "file": "assets-src/charms/icons/tech-flask.png",
+      "sha256": "468a7795a1c43ebeb1823b2281c84d17bfebb75cb9e7b424d5f500cbb0df0f3b"
+    },
+    "tech-floppy": {
+      "file": "assets-src/charms/icons/tech-floppy.png",
+      "sha256": "370284adee8b3e9f27d2d391b289b5d4111484e8951bb10c069cc3a7a4f41483"
+    },
+    "tech-gear": {
+      "file": "assets-src/charms/icons/tech-gear.png",
+      "sha256": "aeb54aec4c31fd4f99e7008e1d905cb9bbe4a1cc4fd5169441b4ab2c09efb8ba"
+    },
+    "tech-hammer": {
+      "file": "assets-src/charms/icons/tech-hammer.png",
+      "sha256": "abc3025cd9a0cc52323a909e94555c92307b4a410ea8dab13c44b81178e498bd"
+    },
+    "tech-hard-hat": {
+      "file": "assets-src/charms/icons/tech-hard-hat.png",
+      "sha256": "6e06ad24b54a6dd3bf5d994eabe81c32f3386de9a6fc5d6b700cb3eb3f07f431"
+    },
+    "tech-headset": {
+      "file": "assets-src/charms/icons/tech-headset.png",
+      "sha256": "25757df950e3acc1285f56624484fca4fab39c08db6ce3e8b6c445e286f86f31"
+    },
+    "tech-key": {
+      "file": "assets-src/charms/icons/tech-key.png",
+      "sha256": "40053a1693e436c0c55327ae734560e0d3bdb3f4c3d9548ba3d45b4fd4515ed6"
+    },
+    "tech-keyboard": {
+      "file": "assets-src/charms/icons/tech-keyboard.png",
+      "sha256": "55935047ac3240625a6348a7187a1311a8bab2febe8a9ac4e8fd8be93da62dfb"
+    },
+    "tech-laptop": {
+      "file": "assets-src/charms/icons/tech-laptop.png",
+      "sha256": "d2e3bb00749c126493ae519913b72b8c3c3e7907df5b77c75d1fa9fee9a7c7d7"
+    },
+    "tech-lightbulb": {
+      "file": "assets-src/charms/icons/tech-lightbulb.png",
+      "sha256": "881735028e11d2905b6c1b39f196bdd4e5610db367118802a4bb844121533426"
+    },
+    "tech-magnet": {
+      "file": "assets-src/charms/icons/tech-magnet.png",
+      "sha256": "82ed2199e15df31ac0b1ed6f1fbc420814ae1a45947734dca6af0e51c1e81881"
+    },
+    "tech-magnifier": {
+      "file": "assets-src/charms/icons/tech-magnifier.png",
+      "sha256": "a9b010b90529065a722db6f98eb0834c0461159b2d199eebfd1dd6a04f847a41"
+    },
+    "tech-microchip": {
+      "file": "assets-src/charms/icons/tech-microchip.png",
+      "sha256": "6b1887d6f90351a85a28d80dd8e8b32a5fcfd57695f7138626b2b9ce81fb8138"
+    },
+    "tech-microscope": {
+      "file": "assets-src/charms/icons/tech-microscope.png",
+      "sha256": "35d5e624233265c4784ec903bcf26268126b5830fcdf49279d1e3840e821fac6"
+    },
+    "tech-monitor": {
+      "file": "assets-src/charms/icons/tech-monitor.png",
+      "sha256": "1b19d12e99fcbc132c8ce2f2bd91f8635bf0c30febff5f3354f044367d3b49b1"
+    },
+    "tech-mouse": {
+      "file": "assets-src/charms/icons/tech-mouse.png",
+      "sha256": "71fa62fda8ac613fed63baec345bcb00ba3696e6a6dd1d4659d0f29240c23a40"
+    },
+    "tech-padlock": {
+      "file": "assets-src/charms/icons/tech-padlock.png",
+      "sha256": "58d4b311b76958fe601ccf45e84b3658c43cf81680e07a350e286ae362151ebc"
+    },
+    "tech-paintbrush": {
+      "file": "assets-src/charms/icons/tech-paintbrush.png",
+      "sha256": "62f77ee151aef85aa574e8c53618545b1815504a90e9f5b013bf4478d646b35e"
+    },
+    "tech-palette": {
+      "file": "assets-src/charms/icons/tech-palette.png",
+      "sha256": "9ac6ce58f3edfa69ce175e18e93be8f126bcd0c921e51f537e9907a43c50ccd9"
+    },
+    "tech-pen": {
+      "file": "assets-src/charms/icons/tech-pen.png",
+      "sha256": "1c1533e114f43dd6292c0068ec1b949cb29064c6303f3700bee3080435a2ebc8"
+    },
+    "tech-pencil": {
+      "file": "assets-src/charms/icons/tech-pencil.png",
+      "sha256": "729ca334d6f823b866e2cf905f9b68d5d125f077e8836c49bdde9190cb402642"
+    },
+    "tech-pliers": {
+      "file": "assets-src/charms/icons/tech-pliers.png",
+      "sha256": "3260603d121051afa4878d85e14649303333dab6122d6c6d31a6e9b1f4722304"
+    },
+    "tech-plug": {
+      "file": "assets-src/charms/icons/tech-plug.png",
+      "sha256": "27059716675b76eddb19de7a8a6a106972e9d0d7fe3e52bc76478514297d86e4"
+    },
+    "tech-printer-3d": {
+      "file": "assets-src/charms/icons/tech-printer-3d.png",
+      "sha256": "0c4b120235cc1c3ac5b34ecd89b5f8f01973db94be6ce92e4fe28898e1519ccc"
+    },
+    "tech-robot": {
+      "file": "assets-src/charms/icons/tech-robot.png",
+      "sha256": "54efbb35df845eeae1845fdae0df07e04603ef36dfe21e2112914f6fa27dd21d"
+    },
+    "tech-rocket": {
+      "file": "assets-src/charms/icons/tech-rocket.png",
+      "sha256": "4b6e364235d4bf88a7c9548dc40741713a7322b6ce06d290ac518d81c719b8b0"
+    },
+    "tech-ruler": {
+      "file": "assets-src/charms/icons/tech-ruler.png",
+      "sha256": "5a7926bd3e95ddf38ea43efc947f3c30cc14a31cd3e4e57dd52998d19d9ba002"
+    },
+    "tech-satellite": {
+      "file": "assets-src/charms/icons/tech-satellite.png",
+      "sha256": "ac79a6a7a5a344fdc74189c83b26d4b945df5665fa0c93f11e01840d51904040"
+    },
+    "tech-screwdriver": {
+      "file": "assets-src/charms/icons/tech-screwdriver.png",
+      "sha256": "e2f9b954ed77a5b010068adea11c02d14867f8a019345befff13113fecc64a05"
+    },
+    "tech-server": {
+      "file": "assets-src/charms/icons/tech-server.png",
+      "sha256": "6582d53998ba35639f575d4a4f8ef233b0af1e5c65085a71c47047fe8bc2477a"
+    },
+    "tech-set-square": {
+      "file": "assets-src/charms/icons/tech-set-square.png",
+      "sha256": "89c6ad8b6e583683e454e545f8f9b852745f45becdacae070de32896ce855801"
+    },
+    "tech-smartphone": {
+      "file": "assets-src/charms/icons/tech-smartphone.png",
+      "sha256": "030940c7069e802d3799e6f5c1e18261ecd291ca0d5d1529874ddeda65e7857f"
+    },
+    "tech-stopwatch": {
+      "file": "assets-src/charms/icons/tech-stopwatch.png",
+      "sha256": "70381a1fe2f14b4c7ee19ab87a7dc114cddde9d0827535e9893888ca356e2e7d"
+    },
+    "tech-tablet": {
+      "file": "assets-src/charms/icons/tech-tablet.png",
+      "sha256": "9c63bf546eecc027d98168263cfca5ca47775ca44683449851dcaf44220db0b3"
+    },
+    "tech-tape-measure": {
+      "file": "assets-src/charms/icons/tech-tape-measure.png",
+      "sha256": "cc701483b166a2b2cbee888e958bee2e0a38b0ce02769a0ba8f9d09542c4189d"
+    },
+    "tech-telescope": {
+      "file": "assets-src/charms/icons/tech-telescope.png",
+      "sha256": "599fc9691ae8f3ffba32ccd76cd86945ff43e59bad3e750aa1554983d8264e3d"
+    },
+    "tech-toolbox": {
+      "file": "assets-src/charms/icons/tech-toolbox.png",
+      "sha256": "69b23e4d1fbd8fd872680f94386803fc26cfd0d09f6fb9c471155e9d76eae8c0"
+    },
+    "tech-usb": {
+      "file": "assets-src/charms/icons/tech-usb.png",
+      "sha256": "2bf6068d2a38fad186e0d343d1a9c6d408191c995435ccd622979ed8e68a22ec"
+    },
+    "tech-wrench": {
+      "file": "assets-src/charms/icons/tech-wrench.png",
+      "sha256": "a3b945ef0cf16a8a2f6dedad855f97eab1d96d3cd3678285da05bc65e99d1a37"
+    }
+  },
+  "sources": {
+    "packages/game-rules/src/soul-catalog.js": "a68ff58c2ba1a6482bfbc28256cadb1c9b39c7b05ba8dbf8d061c669bfacb820",
+    "tools/ai/blender/soul_baseline.py": "ccfa0907831bd15790ddc54d4d90d2a5414a0aff6537546d38b2d9b4c4be28ae",
+    "tools/ai/blender/soul_decor.py": "350ae3cc9210c2a0e152f6b1feb627c704f63a95a3bc4e01c5a3a197fe856dc3"
+  }
+}

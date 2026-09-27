@@ -4,7 +4,7 @@
 // the HTTP API; every snapshot of every audience and every SSE payload of every audience is scanned.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS, privacyTextHits, findKeys, forbiddenKeysFromContract, roleAt } from '../e2e/helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS, privacyTextHits, findKeys, forbiddenKeysFromContract, roleAt, SOUL_CONFIG_KEYS, skillStringsIn } from '../e2e/helpers.js';
 import publicContract from '../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../contracts/projections/stage.json' with { type: 'json' };
 import adminContract from '../../contracts/projections/admin.json' with { type: 'json' };
@@ -18,6 +18,14 @@ const FORBIDDEN = {
 };
 // keys that identify an individual and must never reach an anonymous audience even if a contract phrase did not start with the key
 const INDIVIDUAL_KEYS = ['participantId', 'employeeRef', 'displayName', 'consentPublicName', 'sessionToken', 'floatToken', 'selectedSkillIds', 'cells', 'matchedPositions', 'myMatchedPositions', 'matchedPositionsByParticipant', 'inMatrixCount', 'beyondMatrixCount', 'email'];
+// contract 1.2.0 (D-31): a new Soul's config is SoulConfig v3 with exactly the contract keys (plate, eyes and topper included);
+// its strings are never a skill id or skill name, and the antenna charm is never one of the body charms
+function assertSoulConfig(cfg, where) {
+  assert.deepEqual(Object.keys(cfg).sort(), SOUL_CONFIG_KEYS, `${where}: exactly the SoulConfig keys`); assert.equal(cfg.version, 3, where);
+  for (const k of ['plate', 'eyes', 'topper']) assert.equal(typeof cfg[k], 'string', `${where}: ${k} passes the projection`);
+  assert.ok(!cfg.charms.includes(cfg.topper), `${where}: the topper is not a body charm`);
+  assert.deepEqual(skillStringsIn(cfg), [], `${where}: no skill id or skill name`);
+}
 const set = boardSet(0, 25, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
 const third = mixedSet(5, 30, 0).filter(id => !REGEX_TRIPPING_SKILL_IDS.includes(id));
 
@@ -102,6 +110,7 @@ describe('projection redaction across audiences', () => {
       }
     }
     const w = snaps.winner;
+    for (const k of ['A', 'B', 'C']) assertSoulConfig(w[k].soul.config, `participant ${k} soul`);
     assert.equal(typeof w.A.soul.floatToken, 'string'); assert.equal(typeof w.B.soul.floatToken, 'string'); assert.notEqual(w.A.soul.floatToken, w.B.soul.floatToken);
     assert.ok(!JSON.stringify(w.A).includes(w.B.soul.floatToken) && !JSON.stringify(w.B).includes(w.A.soul.floatToken));
     assert.equal(snaps.next.A.soul.floatToken, null, 'consumed token disappears'); assert.equal(snaps.next.A.soul.floated, true);
@@ -124,7 +133,9 @@ describe('projection redaction across audiences', () => {
     assert.equal(galaxy.count, 2);
     const labels = galaxy.souls.map(s => s.label);
     assert.ok(labels.includes('Consented Winner')); assert.ok(labels.includes(null)); assert.ok(!labels.includes('Hidden Winner'));
-    for (const s of galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']); assert.deepEqual(findKeys(s.config, ['platformId', 'roleId', 'rank', 'isWinner', 'inMatrixCount', 'participantId']), [], 'Soul config carries no identity or rank trait'); }
+    for (const s of galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']); assert.deepEqual(findKeys(s.config, ['platformId', 'roleId', 'rank', 'isWinner', 'inMatrixCount', 'participantId']), [], 'Soul config carries no identity or rank trait'); assertSoulConfig(s.config, `galaxy ${s.soulId}`); }
+    const owners = new Map([[snaps.winner.A.soul.soulId, snaps.winner.A.soul.config], [snaps.winner.B.soul.soulId, snaps.winner.B.soul.config]]);
+    for (const s of galaxy.souls) assert.deepEqual(s.config, owners.get(s.soulId), 'the Galaxy shows the config its owner saw, nothing added');
     assert.equal(snaps.next.public.previousWinners.length, 1); assert.equal(snaps.next.public.previousWinners[0].labels.length, 2);
   });
 
@@ -165,6 +176,7 @@ describe('projection redaction across audiences', () => {
         assert.equal(new Set(boards).size, 1, `${k} only ever sees one board id`);
         const soul = s.events.find(e => e.event === 'soul.created');
         assert.ok(soul && typeof soul.data.payload.soul.floatToken === 'string', `${k} receives its own float token once`);
+        assertSoulConfig(soul.data.payload.soul.config, `${k} soul.created`);
         const res = s.events.find(e => e.event === 'result.published').data.payload;
         assert.ok('myResult' in res); assert.deepEqual(Object.keys(res.winners[0]).sort(), ['label', 'soulId']);
       } else {
@@ -176,6 +188,7 @@ describe('projection redaction across audiences', () => {
         if (aud === 'admin') assert.ok(counts.every(c => 'boardsWithFourInLine' in c.data.payload)); else assert.ok(counts.every(c => !('boardsWithFourInLine' in c.data.payload)));
         const floats = s.events.filter(e => e.event === 'soul.float_accepted');
         assert.equal(floats.length, 2); assert.deepEqual(floats.map(f => f.data.payload.entrance.label).sort(), [null, 'Consented Winner'].sort((a, b) => String(a).localeCompare(String(b))));
+        for (const f of floats) { assert.deepEqual(Object.keys(f.data.payload.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId'], `${k} entrance keys`); assertSoulConfig(f.data.payload.entrance.config, `${k} soul.float_accepted`); }
       }
     }
   });

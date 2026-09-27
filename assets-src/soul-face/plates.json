@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "source": "docs/art/reference/soul-faces-reference.png",
+  "sourceSha256": "f9dcbca676adf0d43267b670fcf5ce9d17b0f085a91de9eee4c96844ecabc394",
+  "tool": "tools/ai/blender/soul_face.py --mode trace",
+  "frame": 0.8,
+  "size": 512,
+  "plates": {
+    "crack": {
+      "file": "assets-src/soul-face/plates/crack.png",
+      "aspect": 0.9847,
+      "ink": "#3F37D6",
+      "mirrored": true,
+      "halfOverlap": 0.995,
+      "sheetTile": 0,
+      "sha256": "14c658e971eef7ce753a500f6eb1869afe7265c94d03834e41a562ded0dab4be"
+    },
+    "bean": {
+      "file": "assets-src/soul-face/plates/bean.png",
+      "aspect": 0.6988,
+      "ink": null,
+      "mirrored": false,
+      "halfOverlap": null,
+      "sheetTile": 1,
+      "sha256": "dc4bea998ecafb6204d219259dea3579d0ec62ca91ae79c62e01b7035d79a10f"
+    },
+    "notch": {
+      "file": "assets-src/soul-face/plates/notch.png",
+      "aspect": 0.8598,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.953,
+      "sheetTile": 2,
+      "sha256": "cc02f28f893199ad4f5f85203492ecb805d4d98ae4e8419d17ae31d22eae1ae7"
+    },
+    "skull-x": {
+      "file": "assets-src/soul-face/plates/skull-x.png",
+      "aspect": 0.9752,
+      "ink": "#26232E",
+      "mirrored": true,
+      "halfOverlap": 0.926,
+      "sheetTile": 3,
+      "sha256": "7ba950ede665f0ab913f8e9d5557c457148a0513a5ab25395998c65c2656be70"
+    },
+    "bow": {
+      "file": "assets-src/soul-face/plates/bow.png",
+      "aspect": 0.6391,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.888,
+      "sheetTile": 4,
+      "sha256": "286eadcc0ba8d4da2f2cbe713f6c920105730a0174a601623a526a0db20d96c7"
+    },
+    "round": {
+      "file": "assets-src/soul-face/plates/round.png",
+      "aspect": 0.9969,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.998,
+      "sheetTile": 5,
+      "sha256": "a14b190b2d5eb51519913ee1c74c66d0e9dafc1a20c2bc5503e64e779270a09b"
+    },
+    "bat": {
+      "file": "assets-src/soul-face/plates/bat.png",
+      "aspect": 0.8142,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.815,
+      "sheetTile": 6,
+      "sha256": "7c28748f72cd8e025fe82be8d846ad81aa8af69c641d4d0499db96e712471a37"
+    },
+    "dome": {
+      "file": "assets-src/soul-face/plates/dome.png",
+      "aspect": 0.8248,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.993,
+      "sheetTile": 7,
+      "sha256": "e2d1f1b52a27c57073d0ca1099051799fde608595dfcbc51f0de2b301babc5d2"
+    },
+    "skull": {
+      "file": "assets-src/soul-face/plates/skull.png",
+      "aspect": 0.9782,
+      "ink": null,
+      "mirrored": true,
+      "halfOverlap": 0.909,
+      "sheetTile": 8,
+      "sha256": "c5b328606281210bf0d901b1db0983ba534e6ab5ecbf3c3a9d665e5dcdbaec37"
+    },
+    "cracked-bow": {
+      "file": "assets-src/soul-face/plates/cracked-bow.png",
+      "aspect": 0.6369,
+      "ink": "#26232E",
+      "mirrored": true,
+      "halfOverlap": 0.886,
+      "sheetTile": 9,
+      "sha256": "3b9baff1f6ffd6dc7c773808abc569815432318669acc3b72435e54175264653"
+    }
+  }
+}

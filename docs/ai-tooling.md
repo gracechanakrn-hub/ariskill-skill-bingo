@@ -138,3 +138,73 @@ prompt, sha256) attached to that decision. Copy and UX/UI outputs are proposals;
   and asks for up to 12 k output tokens per batch; the UX/UI run sends ~9 requests with a ~6 k-token developer prompt.
   Token counts land in the `usage` array of each report. Use `--only` to trial a subset first.
 - Blender is local and free; a 1024 px turnaround takes seconds on this machine (smoke render: ~3 s for one view).
+
+## Soul baseline character (Blender, no key needed)
+
+The 3D baseline Soul (D-27, `docs/art/soul-baseline.md`) is rebuilt from source with one command:
+
+```
+npm run ai:soul-baseline                  # full build: master .blend, web GLBs, renders, provenance (about 30 s)
+npm run ai:soul-baseline -- --mode build  # quick preview: match.png + overlay.png against the reference
+npm run ai:soul-baseline -- --mode fit    # refit the camera to the reference silhouette and landmarks
+```
+
+Everything that shapes the character lives in two files: the proportions and profiles in `tools/ai/blender/soul_baseline.py` (`BASE`, `EYE`), and the drip list in `tools/ai/blender/soul_baseline_splats.json` (reference pixel positions and radii). Edit, rebuild, then compare `match.png` with the reference. The web GLBs in `assets-src/generated/soul-baseline/v1/` are copied into `assets/souls/baseline/` by `node tools/assets/build-all.js`.
+
+## Charm icons (npm run ai:charms)
+
+The 100 technical and soft charm icons of the Soul decorations (D-29, `docs/art/soul-decorations.md`) are drawn once by Gemini and cut out locally. Unlike the plates above, they **ship as game art** (owner sign-off OD-19), so every icon carries its provenance. The 50 core stars are procedural (`npm run ai:soul-decor`).
+
+```
+npm run ai:charms -- --list                          # 100 ids: kind, attempts, QA state, look
+npm run ai:charms -- --dry-run --pilot               # the requests, redacted, in reports/ai/dry-run/ (nothing sent)
+npm run ai:charms -- --pilot                         # the 6 pilot charms (3 technical, 3 soft)
+npm run ai:charms                                    # every charm without a passing icon (resumable)
+npm run ai:charms -- --only tech-pen,soft-rose --regen   # new attempts for outliers, even if they pass QA
+npm run ai:charms -- --process                       # redo cut-out, QA, sheets and provenance from the saved raws
+# options: --kind technical|soft  --model <id>  --concurrency 3  --temperature <n>  --max-attempts 3  --refs 0
+```
+
+- **Model.** `gemini-3.1-flash-image` (GA) unless `--model` or `GEMINI_IMAGE_MODEL` says otherwise. In the pilot it beat `gemini-3-pro-image`: it followed the looks more faithfully (pro drew a three-leaf clover and a headband instead of earbuds), kept flatter cel shading and took about 10 s per image instead of 20 s. The choice is recorded in `tools/ai/prompts/charms.json` (`modelChoice`).
+- **Prompt.** `tools/ai/prompts/charms.json` holds one 5-part family style with the catalog `look` filled in. The style asks for:
+  - a chunky, rounded object with a bold plum outline (#2B2350), two-tone cel shading, one small upper-left highlight and 3-4 colours from the sticker palette;
+  - a thick, even white die-cut around the whole object, with gaps and holes filled white;
+  - the sticker centred and filling about 75% of the square, on flat chroma-key green `#00FF00`;
+  - no text, logos, faces, hands, scenery or shadow.
+
+  `overrides.<id>.detail` adds item-specific lines, such as blank screens, no digits or tinted glass. Style references (`references.use`) are supported but off: a pilot A/B showed they pull the palette toward the reference objects.
+- **Raw images.** They go to `assets-src/generated/charms/raw/<id>-a<n>.png`, which is git-ignored. The model answers in JPEG, so the tool stores the decoded pixels as a lossless PNG. `rawSha256` is the hash of the bytes the API returned; `fileSha256` is the hash of the stored PNG. Every attempt, including failed requests, is logged in `assets-src/generated/charms/attempts.json` with its prompt, model, token usage and QA result.
+- **Cut-out** (`tools/ai/lib/charm_cutout.py`, python3 + numpy + PIL):
+  1. Flood-fill the key from the image border. A pixel counts as background if it is close to the measured key or strongly key-hued.
+  2. Keep the largest component, and treat everything it encloses as part of it. Paint any key-coloured pixels inside it (see-through holes, specks) white.
+  3. Unmix the edge pixels between key and white: alpha is 1 minus the key share, and the colour becomes white.
+  4. Crop to the die-cut box with 6% padding, centre it on a square and resample premultiplied to **256x256 RGBA** (8-bit, non-interlaced) in `assets-src/charms/icons/<id>.png`.
+
+  Transparent and edge pixels are stored white, so texture filtering never pulls a dark or green fringe.
+- **QA** writes every metric to `reports/ai/charms-qa.json`. The checks:
+  - background uniformity: at least 97% of it within 36 of the key;
+  - exactly one sticker component;
+  - coverage: raw box 55-95% of the frame, not touching the edge, final fill 22-86%;
+  - white rim all around: rings 2-3 px inside the edge at least 95% white, and the rim at least 3 px wide;
+  - centred: box offset 2 px or less, alpha centroid 12% or less;
+  - no key colour left inside.
+
+  The contact sheets `reports/qa/screens/charms-technical.png` and `charms-soft.png` show each icon at 128 px and 48 px on mid-violet, with failures boxed in red.
+- **Review loop.** Look at both sheets. For an outlier that passes QA but looks wrong, do two things in charms.json:
+  - add an override detail;
+  - flag the shipped attempt with `review.<id> = {attempt, note}`.
+
+  The flagged icon keeps shipping and is boxed amber on the sheet. The next plain `npm run ai:charms` regenerates flagged charms together with missing or failing ones; `--only <id> --regen` forces a new attempt for any charm.
+
+  Limits and rules:
+  - A run allows at most 3 attempts per charm (`maxAttempts`). Pilot and compare attempts don't count toward it.
+  - The latest passing attempt ships. `ship.<id> = n` pins an attempt, and `reject.<id> = [n]` excludes attempts.
+  - `budget` (260) caps the total requests, retries included.
+  - Backoff covers 429, 5xx and network errors. A run stops after 5 charms fail in a row, for example when the project's prepaid credits run out (HTTP 402). Top up, then rerun: runs resume.
+- **Provenance.** `assets-src/charms/provenance.json` has one entry per icon:
+  - `id`, `file`, `model`, the full `prompt`, `temperature`, `attempt`
+  - `rawSha256`, `sha256` of the cut-out, `createdAt`
+  - `shipped` (QA pass)
+  - `license: "AI-generated with Google Gemini (<model>); shipped as game art under D-29, owner sign-off OD-19"`
+
+  No key is ever written: requests send it only in the `x-goog-api-key` header, and every printed or written line goes through `redact()`.

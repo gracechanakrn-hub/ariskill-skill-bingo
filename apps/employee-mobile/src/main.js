@@ -22,7 +22,7 @@ import { mountPlaying } from './views/playing.js';
 import { mountResult } from './views/result.js';
 import { mountSoul } from './views/soul.js';
 import { createBackdrop } from './backdrop.js';
-import { prefetchThree } from './scene/loader.js';
+import { prefetchThree, prefetchSoulBody, prefetchSoulDecor } from './scene/loader.js';
 import { sparseStreamLiveness, createGapTracker } from './liveness.js';
 
 // Persistence lives in localStorage keyed by event (+ participant) so a QR re-scan or a closed tab keeps the
@@ -189,6 +189,9 @@ function afterRender(state) {
   // Warm the vendored Three.js module cache while the round plays so the Soul reveal opens instantly (idle import;
   // the initial load never waits for it).
   if (screen === 'playing' || screen === 'locked' || screen === 'result') prefetchThree();
+  // The round-end Soul config is known on the result screen: warm its own models too - the v3 body of a v3 Soul (D-31)
+  // and its charm / face models (D-29, D-31) - so the reveal opens decorated without waiting on the network.
+  if ((screen === 'result' || screen === 'soul') && state.soul && state.soul.config) { prefetchSoulBody(state.soul.config); prefetchSoulDecor(state.soul.config); }
   // Auto-finalize a server DRAFT that already holds 25 (reassigned deferred board or resumed session).
   if (screen === 'select' && shouldAutoFinalize(state) && autoFinalizedFor !== `${state.board.boardId}:${state.board.version}`) {
     autoFinalizedFor = `${state.board.boardId}:${state.board.version}`;

@@ -6,12 +6,21 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { startServer, createRound, command, join, me, readyBoard, saveBoard, boardSet, mixedSet, startRound, drawUntilEnd, readSse, nextKey, ELIGIBLE_IDS, roleAt } from '../e2e/helpers.js';
 import { ERROR_CODES } from '../../services/game-service/src/errors.js';
+import { PLATE_IDS, EYE_IDS, CHARM_BY_ID } from '../../packages/game-rules/src/soul-catalog.js';
+import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
 
 const yaml = readFileSync(new URL('../../contracts/api-contract.yaml', import.meta.url), 'utf8');
 const operations = [...yaml.matchAll(/^  - id: (\S+)\n(?:.*\n)*?    method: (\S+)\n    path: (\S+)\n    auth: (\S+)/gm)].map(m => ({ id: m[1], method: m[2], path: m[3], auth: m[4] }));
 const codeTable = Object.fromEntries([...yaml.matchAll(/^      ([A-Z_]+): \{ http: (\d+)(?:, exception: (E\d+))?/gm)].map(m => [m[1], { http: Number(m[2]), exceptionId: m[3] ?? null }]));
 
 const ENVELOPE_OK = ['correlationId', 'serverTime'];
+const SOUL_CONFIG_KEYS = Object.keys(realtime.shapes.SoulConfig); // contract 1.2.0 (D-31): SoulConfig v3, exactly these keys in this order
+/** The SoulConfig v3 keys the soul.float rule of api-contract.yaml spells out ("SoulConfig v3 { version: 3, catalog, ... }"). */
+const yamlSoulConfigKeys = () => {
+  const m = yaml.replace(/\s+/g, ' ').match(/SoulConfig v3 \{([^}]*)\}/);
+  return m ? m[1].split(',').map(k => k.split(':')[0].trim()) : null;
+};
+const atLeast = (version, min) => { const a = String(version).split('.').map(Number), b = min.split('.').map(Number); for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i]; return true; };
 function expectError(r, status, code, exceptionId) {
   assert.equal(r.status, status, `${code}: ${JSON.stringify(r.body)}`);
   assert.deepEqual(Object.keys(r.body).sort(), ['correlationId', 'error', 'serverTime'], 'error envelope keys');
@@ -86,6 +95,12 @@ describe('api contract shapes', () => {
         expectError(await finished.api.post('/me/soul/float', { soulId: finished.me.soul.soulId, floatToken: 'wrong' }, finished.p.token), 409, 'FLOAT_FAILED', 'E13');
         const r = await finished.api.post('/me/soul/float', { soulId: finished.me.soul.soulId, floatToken: finished.me.soul.floatToken }, finished.p.token);
         expectOk(r, 200, ['accepted', 'replay', 'entrance']); assert.equal(r.body.accepted, true); assert.deepEqual(Object.keys(r.body.entrance).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']);
+        const cfg = r.body.entrance.config;
+        assert.deepEqual(Object.keys(cfg), SOUL_CONFIG_KEYS, 'entrance.config is SoulConfig v3, keys in contract order'); assert.equal(cfg.version, 3);
+        assert.ok(PLATE_IDS.includes(cfg.plate) && EYE_IDS.includes(cfg.eyes), 'plate and eyes are catalog ids');
+        assert.ok(CHARM_BY_ID.has(cfg.topper) && !cfg.charms.includes(cfg.topper), 'the topper is a catalog charm that is not one of the Soul\'s charms');
+        assert.deepEqual(r.body.entrance.config, finished.me.soul.config, 'the entrance carries the Soul config the owner saw');
+        assert.deepEqual(Object.keys(finished.me.soul).sort(), ['badge', 'config', 'floatToken', 'floated', 'soulId'], 'SoulPrivate keys');
       },
       'round.admin.snapshot': async () => { expectError(await t.api.get(`/admin/events/${E}/snapshot`), 401, 'UNAUTHORIZED', 'E9'); expectError(await t.api.get(`/admin/events/${E}/snapshot`, t.stage), 403, 'FORBIDDEN', 'E9'); expectError(await t.api.get(`/admin/events/${E}/snapshot`, p.token), 403, 'FORBIDDEN', 'E9'); const r = await t.api.get(`/admin/events/${E}/snapshot`, t.admin); expectOk(r, 200, ['eventId', 'sequence', 'rounds', 'currentRound', 'join', 'connections']); assert.deepEqual(Object.keys(r.body.connections).sort(), ['admin', 'participants', 'public', 'stage']); },
       'admin.stream': async () => { assert.equal((await readSse(t.baseUrl, `/admin/events/${E}/stream`, { timeoutMs: 100 })).status, 401); assert.equal((await readSse(t.baseUrl, `/admin/events/${E}/stream`, { token: t.stage, timeoutMs: 100 })).status, 403); assert.equal((await readSse(t.baseUrl, `/admin/events/${E}/stream`, { token: t.admin, timeoutMs: 150 })).status, 200); },
@@ -141,4 +156,18 @@ describe('api contract shapes', () => {
     const corr = await t.api.get('/time', null, { 'X-Correlation-Id': 'qa-corr-1' });
     assert.equal(corr.body.correlationId, 'qa-corr-1', 'client correlation id is echoed');
   });
+});
+
+test('contract 1.2.0 (D-31): api-contract.yaml and realtime-events.json state the same SoulConfig v3; SoulConfigV2 and SoulConfigV1 stay for stored Souls', () => {
+  assert.ok(atLeast(realtime.version, '1.2.0'), `realtime-events.json ${realtime.version}`);
+  const apiVersion = (yaml.match(/^version:\s*(\S+)/m) ?? [])[1];
+  assert.ok(atLeast(apiVersion, '1.2.0'), `api-contract.yaml ${apiVersion}`);
+  const v3 = ['version', 'catalog', 'seed', 'gradient', 'glow', 'face', 'plate', 'eyes', 'charms', 'topper', 'constellation', 'driftPhase'];
+  assert.deepEqual(Object.keys(realtime.shapes.SoulConfig), v3, 'realtime-events.json shapes.SoulConfig');
+  assert.deepEqual(yamlSoulConfigKeys(), v3, 'api-contract.yaml soul.float rule');
+  assert.match(realtime.shapes.SoulConfig.version, /^3 \(contract 1\.2\.0/);
+  assert.deepEqual(Object.keys(realtime.shapes.SoulConfigV2), ['version', 'catalog', 'seed', 'gradient', 'glow', 'face', 'charms', 'constellation', 'driftPhase']);
+  assert.match(realtime.shapes.SoulConfigV2.version, /^2: /); assert.match(realtime.shapes.SoulConfigV2.version, /neutral fallback/);
+  assert.deepEqual(Object.keys(realtime.shapes.SoulConfigV1), ['version', 'seed', 'body', 'palette', 'eyes', 'antenna', 'mouth', 'glow', 'constellation', 'driftPhase']);
+  for (const shape of ['SoulPrivate', 'SoulEntrance']) for (const v of ['SoulConfig', 'SoulConfigV2', 'SoulConfigV1']) assert.ok(realtime.shapes[shape].config.includes(v), `${shape}.config names ${v}`);
 });

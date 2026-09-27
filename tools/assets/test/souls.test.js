@@ -5,6 +5,7 @@ import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderSoulSvg, soulAltText, soulOrbitSlot, PALETTES, BODY_PATHS, TRAITS, ORBIT_RINGS, ORBIT_CAPACITY, hash32, BADGE_LABEL, BADGE_CENTER } from '../../../packages/ui/soul-renderer.js';
+import { SILHOUETTE, BOUNDS, EYES, ORB } from '../../../packages/ui/soul-baseline-shape.js';
 import { SOUL_TRAITS, validateSoulConfig, soulConfigFromSeed } from '../../../packages/game-rules/src/soul.js';
 import { parseManifest, sha256, MANIFEST_FIELDS } from '../lib/manifest.js';
 
@@ -52,6 +53,12 @@ test('accepts trait names as well as indices and clamps out-of-range indices', (
 });
 
 test('body silhouettes stay inside the viewBox with margin (no clipping)', () => {
+  // v3 draws the baseline character (D-27): its silhouette, die-cut (5 units) and shadow stay inside the viewBox
+  const nums = SILHOUETTE.match(/-?(?:\d+\.?\d*|\.\d+)/g).map(Number);
+  assert.ok(nums.length > 60 && /^M[-\d. ]+(c[-\d. ]+)+z$/.test(SILHOUETTE), 'baseline silhouette uses only M/c/z');
+  assert.ok(BOUNDS.x0 - 5 >= 24 && BOUNDS.x1 + 5 <= 176, 'baseline x within margin');
+  assert.ok(BOUNDS.y0 - 5 >= 12 && BOUNDS.y1 + 5 + 6 <= 196, 'baseline y within margin (antenna orb on top, shadow below)');
+  // legacy v2 bodies (exported for backward compatibility, no longer drawn)
   for (const [name, d] of Object.entries(BODY_PATHS)) {
     const nums = d.match(/-?\d+(\.\d+)?/g).map(Number);
     const xs = nums.filter((_, i) => i % 2 === 0), ys = nums.filter((_, i) => i % 2 === 1);
@@ -66,9 +73,10 @@ test('alt text never mentions Platform, Role, rank or capability', () => {
   for (let b = 0; b < 6; b++) for (let p = 0; p < 8; p++) for (let e = 0; e < 6; e++) {
     const t = soulAltText({ body: b, palette: p, eyes: e }, 'bingo-star');
     assert.ok(!banned.test(t), t);
-    assert.match(t, /^Arise Soul, [a-z]+ [a-z]+ with [a-z]+ eyes\. Bingo Star badge: completed a line this round$/);
+    // v3 describes what is drawn: the baseline character in its palette (body/eyes traits are not drawn, D-27)
+    assert.match(t, /^Arise Soul, [a-z]+ colour, with round button eyes and a glowing antenna orb\. Bingo Star badge: completed a line this round$/);
   }
-  assert.equal(soulAltText(sample), 'Arise Soul, lagoon drop with dot eyes');
+  assert.equal(soulAltText(sample), 'Arise Soul, lagoon colour, with round button eyes and a glowing antenna orb');
 });
 
 test('badge is present only when requested, is labelled, and sits away from the face', () => {
@@ -76,14 +84,18 @@ test('badge is present only when requested, is labelled, and sits away from the 
   const withBadge = renderSoulSvg(sample, { badge: 'bingo-star' });
   assert.ok(!without.includes(BADGE_LABEL));
   assert.ok(withBadge.includes(`aria-label="${BADGE_LABEL}"`) && withBadge.includes(`<title>${BADGE_LABEL}</title>`));
-  assert.ok(withBadge.includes('aria-label="Arise Soul, lagoon drop with dot eyes. Bingo Star badge'));
-  // v2: gold star with a white outline, upper right (BADGE_CENTER); face disc is centred (100,84) r 25 and must stay clear
+  assert.ok(withBadge.includes('aria-label="Arise Soul, lagoon colour, with round button eyes and a glowing antenna orb. Bingo Star badge'));
+  // gold star with a white outline, upper right (BADGE_CENTER); the baseline's eyes and antenna orb must stay clear
   const m = withBadge.match(/<g role="img" aria-label="[^"]+" transform="translate\((\d+) (\d+)\)">/);
   assert.ok(m, 'badge group');
   const [cx, cy, r] = [Number(m[1]), Number(m[2]), BADGE_CENTER.r];
   assert.deepEqual([cx, cy], [BADGE_CENTER.cx, BADGE_CENTER.cy]);
-  const dist = Math.hypot(cx - 100, cy - 84);
-  assert.ok(dist > 25 + r + 10, `badge overlaps face (dist ${dist})`);
+  for (const e of EYES) {
+    const dist = Math.hypot(cx - e.cx, cy - e.cy);
+    assert.ok(dist > e.ring.rx + r + 10, `badge overlaps an eye (dist ${dist})`);
+  }
+  assert.ok(Math.hypot(cx - ORB.cx, cy - ORB.cy) > ORB.r + r + 10, 'badge overlaps the antenna orb');
+  assert.ok(cx - r > BOUNDS.x1 + 1, 'badge sits right of the figure');
   assert.ok(cx + r <= 200 && cy - r >= 0);
   assert.ok(r <= 14, 'badge is small');
   assert.ok(withBadge.includes('fill="#F6C453" stroke="#fff"'), 'gold star, white die-cut');
@@ -91,12 +103,12 @@ test('badge is present only when requested, is labelled, and sits away from the 
   assert.ok(!renderSoulSvg(sample, { detail: 'dot', badge: 'bingo-star' }).includes(BADGE_LABEL), 'dot has no badge');
 });
 
-test('simple and dot detail levels work and are lighter than full (v2: simple keeps the sticker look without filters)', () => {
+test('simple and dot detail levels work and are lighter than full (simple keeps the sticker look without filters)', () => {
   const full = renderSoulSvg(sample), simple = renderSoulSvg(sample, { detail: 'simple' }), dot = renderSoulSvg(sample, { detail: 'dot' });
   assert.ok(simple.length < full.length && dot.length < simple.length);
   assert.ok(dot.length < 1024);
   assert.ok(!simple.includes('<filter') && !simple.includes('<animate'));
-  assert.ok(simple.includes('clip-path=') && simple.includes('stroke="#fff" stroke-width="5"'), 'simple: speckles + 3 px die-cut');
+  assert.ok(simple.includes('clip-path=') && simple.includes('stroke="#fff" stroke-width="5"'), 'simple: clipped drips + 3 px die-cut');
   assert.ok(dot.includes('<circle') && dot.includes('radialGradient'));
   assert.ok(simple.includes('data-detail="simple"') && dot.includes('data-detail="dot"'));
 });
@@ -117,10 +129,14 @@ test('gradient/filter ids are namespaced by idPrefix so many Souls can be inline
   assert.ok(ids(renderSoulSvg(sample)).every((id) => id.startsWith('soul-abc123-')));
 });
 
-test('every trait variant is visually distinct (different markup) from its siblings', () => {
+test('D-27: palette and glow variants are visually distinct; body/eyes/antenna/mouth stay in the config but are not drawn', () => {
   for (const kind of Object.keys(TRAITS)) {
     const outs = TRAITS[kind].map((_, i) => renderSoulSvg({ ...sample, [kind]: i }, { reducedMotion: true, idPrefix: 'x' }));
-    for (let i = 0; i < outs.length; i++) for (let j = i + 1; j < outs.length; j++) assert.notEqual(outs[i], outs[j], `${kind} ${i} vs ${j}`);
+    const drawn = kind === 'palette' || kind === 'glow';
+    for (let i = 0; i < outs.length; i++) for (let j = i + 1; j < outs.length; j++) {
+      if (drawn) assert.notEqual(outs[i], outs[j], `${kind} ${i} vs ${j}`);
+      else assert.equal(outs[i], outs[j], `${kind} ${i} vs ${j}: not drawn on the baseline`);
+    }
   }
 });
 
@@ -134,22 +150,22 @@ test('palettes are equal-value: body fills share one luminance band and all Soul
   const outlines = PALETTES.map((p) => lum(p.outline));
   assert.ok(Math.max(...outlines) - Math.min(...outlines) <= 0.1, 'outline band');
   for (const p of PALETTES) assert.ok(lum(p.highlight) > 0.8, `${p.name} highlight is light`);
-  // same glow radius and body stroke for every combination
+  // same figure, glow radius and body stroke for every combination
   for (let p = 0; p < 8; p++) for (let g = 0; g < 3; g++) {
     const svg = renderSoulSvg({ ...sample, palette: p, glow: g }, { reducedMotion: true });
-    assert.ok(svg.includes('<circle cx="100" cy="112" r="86"'), 'same glow radius');
-    assert.ok(svg.includes('stroke-width="4.5"'), 'same outline weight');
+    assert.ok(svg.includes(`d="${SILHOUETTE}"`), 'same silhouette scale (one character)');
+    assert.ok(svg.includes('<circle cx="100" cy="108" r="86"'), 'same glow radius');
+    assert.ok(svg.includes('stroke-width="2.2"'), 'same outline weight');
     assert.ok(svg.includes('stroke-width="10" stroke-linejoin="round" filter='), 'same die-cut weight');
   }
 });
 
-test('constellation glyphs are all the same size and only weight order changes placement', () => {
+test('constellation data stays in the config but never changes the drawing (D-27: only palette, glow and badge vary)', () => {
   const one = renderSoulSvg({ ...sample, constellation: [{ domain: 'Cloud', weight: 1 }] }, { reducedMotion: true });
   const five = renderSoulSvg({ ...sample, constellation: CONST }, { reducedMotion: true });
   const none = renderSoulSvg({ ...sample, constellation: [] }, { reducedMotion: true });
-  assert.ok(five.length > one.length && one.length > none.length);
-  const heavy = renderSoulSvg({ ...sample, constellation: [{ domain: 'Cloud', weight: 0.9 }] }, { reducedMotion: true });
-  assert.equal(one, heavy, 'weight changes nothing when there is a single glyph');
+  assert.equal(five, none);
+  assert.equal(one, none);
   assert.doesNotThrow(() => renderSoulSvg({ ...sample, constellation: Array.from({ length: 12 }, (_, i) => ({ domain: `D${i}`, weight: 0.1 })) }));
 });
 
@@ -187,7 +203,7 @@ test('manifest exists, has every workflow 5.2 field, and checksums/sizes match t
     assert.ok(!ids.has(e.id), `duplicate id ${e.id}`); ids.add(e.id);
     assert.equal(e.license, 'internal-original');
     assert.equal(e.approved_by, null);
-    assert.equal(e.triangle_count, 0);
+    if (e.kind === 'model') assert.ok(e.triangle_count > 0, `${e.id} triangles`); else assert.equal(e.triangle_count, 0);
     assert.ok(existsSync(join(ROOT, e.source_file)), `${e.id} source ${e.source_file}`);
     assert.ok(existsSync(join(ROOT, e.generator_script)), `${e.id} generator`);
     const file = join(ROOT, e.runtime_file);

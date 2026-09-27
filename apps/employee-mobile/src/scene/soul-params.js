@@ -1,7 +1,15 @@
 // apps/employee-mobile/src/scene/soul-params.js - pure, deterministic derivation of the 3D Soul parameters from a
 // SoulConfig (packages/ui/soul-renderer.js traits + PALETTES). No DOM, no Three.js: node-testable.
 // BR-17: every Soul has the same size and brightness; nothing here reads Platform, Role, rank or winner state.
+//
+// Since D-27 the phone scenes draw the baseline Soul character (see "Baseline Soul" at the end: baselineParams,
+// BASELINE, reveal / peel timing); since D-29 decorated (v2) configs bring a body gradient, a face kit and charms, and
+// since D-31 v3 configs a face plate, eyes and an antenna charm on the v3 body, drawn by packages/ui/soul3d. The lathe
+// profiles, speckles, antenna layouts and face crop above it are the
+// LEGACY procedural Soul: no longer drawn by the app, kept (with their tests) because tools/ai/blender/soul_turnaround.py
+// ports them and tools/ai/test/blender-port.test.js checks that port to 1e-6.
 import { PALETTES, TRAITS, resolveSoul } from '../../../../packages/ui/soul-renderer.js';
+import { SOUL_VIEW, outlineWidth as viewOutlineWidth } from '../../../../packages/ui/soul3d/studio.js';
 
 /** SVG units (viewBox 200, body between y 52 and 170) -> scene units. Same for every Soul (BR-17). */
 export const UNIT = 0.0135;
@@ -197,4 +205,50 @@ export function stickerPeel(p) {
 export function revealScale(silP, peelP) {
   const a = Math.min(1, Math.max(0, silP)), b = Math.min(1, Math.max(0, peelP));
   return 0.25 + (PEEL.scaleFrom - 0.25) * a + (1 - PEEL.scaleFrom) * easeEmphasized(b);
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Baseline Soul (D-27, docs/art/soul-baseline.md): one sculpted character for everyone (assets/souls/baseline/*.glb,
+// built by tools/ai/blender/soul_baseline.py). Per player the colour (v1 palette or v2 / v3 body gradient), the glow
+// style, the face kit and charms (D-29; v3 adds the face plate, eyes and antenna charm on the v3 body, D-31) and the
+// Bingo Star badge vary; body / eyes / antenna / mouth stay in v1 configs but are not drawn. Size, brightness, outline and motion amplitudes are shared constants (BR-17), defined once in
+// packages/ui/soul3d/studio.js (SOUL_VIEW) for the phone and the public Galaxy.
+
+export const BASELINE = SOUL_VIEW;
+/** Glow trait -> halo style drawn around the Soul (same peak opacity for all three, BR-17). */
+export const GLOW_STYLES = Object.freeze({ soft: 'back-glow', ring: 'dashed-ring', halo: 'halo-ring' });
+
+export function outlineWidth(quality) { return viewOutlineWidth(quality); }
+
+/**
+ * What the baseline scene draws for one Soul, from config + badge only. Deterministic; ignores body / eyes /
+ * antenna / mouth (not drawn on the baseline) and anything that is not a Soul trait (Platform, Role, rank ...).
+ * Colours come from the resolved Soul: the v1 palette, or the v2 gradient seen as a palette (glow, highlight, outline;
+ * fill = the gradient's sRGB midpoint), so the reveal's ring, motes and halo take the Soul's own glow.
+ */
+export function baselineParams(config, badge = null) {
+  const s = resolveSoul(config);
+  const pal = s.pal || PALETTES[TRAITS.palette.indexOf(s.palette)] || PALETTES[0];
+  return Object.freeze({
+    seed: s.seed,
+    version: s.version,
+    palette: s.palette,
+    glow: s.glow,
+    // v2 / v3: no halo ring above the orb (or the v3 antenna charm), which would read as the angel face kit's halo
+    // (D-29); the soft glow instead.
+    glowStyle: (s.version >= 2 && s.glow === 'halo' ? null : GLOW_STYLES[s.glow]) || GLOW_STYLES.soft,
+    hex: Object.freeze({ fill: pal.fill, highlight: pal.highlight, outline: pal.outline, glow: pal.glow }),
+    colors: Object.freeze({ fill: hexToInt(pal.fill), highlight: hexToInt(pal.highlight), outline: hexToInt(pal.outline), glow: hexToInt(pal.glow) }),
+    badge: badge === 'bingo-star',
+    scale: 1,                 // identical for every Soul (BR-17)
+    glowStrength: 1,          // identical for every Soul (BR-17)
+    bobPhase: Number(((hashSeed(s.seed) % 1000) / 1000 * Math.PI * 2).toFixed(4)),
+  });
+}
+
+/** The join-screen mascot: the baseline in the lilac palette. It is nobody's Soul (no seed, no badge, no label). */
+export const MASCOT = Object.freeze({ palette: 'lilac', glowStyle: GLOW_STYLES.soft });
+export function mascotPalette() {
+  const pal = PALETTES[TRAITS.palette.indexOf(MASCOT.palette)] || PALETTES[PALETTES.length - 1];
+  return Object.freeze({ fill: pal.fill, highlight: pal.highlight, outline: pal.outline, glow: pal.glow });
 }

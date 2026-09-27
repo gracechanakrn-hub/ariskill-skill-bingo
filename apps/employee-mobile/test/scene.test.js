@@ -1,7 +1,9 @@
 // node --test apps/employee-mobile/test - pure helpers behind the phone hero scenes (no DOM, no Three.js).
+// The phone draws the baseline Soul (D-27): baselineParams / BASELINE below. soulMeshParams / latheProfile / radiusAt /
+// ANTENNA are the LEGACY procedural Soul, no longer drawn; they stay tested because tools/ai (Blender port) imports them.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { soulMeshParams, latheProfile, radiusAt, stageProgress, easeEmphasized, easeExit, BODY_PROFILES, hashSeed, ANTENNA } from '../src/scene/soul-params.js';
+import { soulMeshParams, latheProfile, radiusAt, stageProgress, easeEmphasized, easeExit, BODY_PROFILES, hashSeed, ANTENNA, baselineParams, BASELINE, GLOW_STYLES, outlineWidth, mascotPalette, MASCOT, PEEL, stickerPeel } from '../src/scene/soul-params.js';
 import { sceneQuality, frameBudgetExceeded, pixelRatioFor, FRAME_BUDGET_MS } from '../src/scene/capability.js';
 import { TRAITS, PALETTES } from '../../../packages/ui/soul-renderer.js';
 
@@ -111,4 +113,56 @@ test('frameBudgetExceeded needs evidence and compares the median against 33 ms',
   assert.equal(pixelRatioFor('high', 3), 1.5);
   assert.equal(pixelRatioFor('low', 3), 1);
   assert.equal(pixelRatioFor('high', 1), 1);
+});
+
+// ---- baseline Soul (D-27) -------------------------------------------------------------------------------------
+
+test('baselineParams draws palette + glow + badge only: body / eyes / antenna / mouth / Platform / Role never change it', () => {
+  const base = baselineParams(cfg(), 'bingo-star');
+  assert.deepEqual(baselineParams(cfg(), 'bingo-star'), base, 'deterministic');
+  for (const body of TRAITS.body) for (const eyes of TRAITS.eyes.slice(0, 3)) {
+    const p = baselineParams(cfg({ body, eyes, antenna: 'twin', mouth: 'none' }), 'bingo-star');
+    assert.deepEqual(p, base, `${body} / ${eyes}`);
+  }
+  assert.deepEqual(baselineParams({ ...cfg(), platformId: 'platform_x', roleId: 'role_y', isWinner: true, rank: 1, label: 'VIP' }, 'bingo-star'), base);
+  assert.equal(base.scale, 1); assert.equal(base.glowStrength, 1);
+  assert.equal(baselineParams(cfg(), null).badge, false);
+  assert.equal(baselineParams(cfg(), 'something-else').badge, false, 'only the Bingo Star is a badge');
+  assert.ok(Object.isFrozen(base) && Object.isFrozen(base.hex) && Object.isFrozen(base.colors));
+});
+
+test('baselineParams: every palette comes from PALETTES, every glow trait maps to a halo style, unknown values fall back', () => {
+  for (const pal of PALETTES) {
+    const p = baselineParams(cfg({ palette: pal.name }));
+    assert.deepEqual({ ...p.hex }, { fill: pal.fill, highlight: pal.highlight, outline: pal.outline, glow: pal.glow });
+    assert.equal(p.colors.fill, parseInt(pal.fill.slice(1), 16));
+  }
+  assert.deepEqual(Object.keys(GLOW_STYLES), [...TRAITS.glow]);
+  const styles = TRAITS.glow.map((g) => baselineParams(cfg({ glow: g })).glowStyle);
+  assert.deepEqual(styles, ['back-glow', 'dashed-ring', 'halo-ring']);
+  const fb = baselineParams({ seed: 'x', palette: 'nope', glow: 'nope' });
+  assert.equal(fb.palette, TRAITS.palette[0]); assert.equal(fb.glowStyle, 'back-glow');
+  const p = baselineParams(cfg({ seed: 'zzz' }));
+  assert.ok(p.bobPhase >= 0 && p.bobPhase < Math.PI * 2);
+  assert.equal(p.bobPhase, soulMeshParams(cfg({ seed: 'zzz' })).bobPhase, 'same bob phase as before (motion only)');
+});
+
+test('BASELINE framing, die-cut and motion constants (shared by every Soul, BR-17)', () => {
+  assert.equal(BASELINE.fitHeight, 1.86, 'the lathe Souls\' framing incl. the antenna');
+  assert.ok(BASELINE.yaw < 0 && BASELINE.yaw > -0.8, '3/4 view, face toward the viewer\'s left');
+  assert.equal(outlineWidth('high'), BASELINE.outline.high); assert.equal(outlineWidth('low'), BASELINE.outline.low); assert.equal(outlineWidth('nope'), BASELINE.outline.low);
+  // ~1.03 of the model half-width (0.725 model units): 0.02 .. 0.035
+  for (const w of Object.values(BASELINE.outline)) assert.ok(w >= 0.02 && w <= 0.035, `outline ${w}`);
+  assert.ok(BASELINE.flashBoost > 0 && BASELINE.flashBoost <= 1, 'one flash widens the die-cut, flash-safe');
+  assert.ok(BASELINE.bob.hz <= 0.5, 'ambient motion under 0.5 Hz');
+  // the peel itself is unchanged: 0.92 -> 1, 6 deg, one 250 ms flash
+  assert.equal(PEEL.scaleFrom, 0.92); assert.equal(PEEL.tiltDeg, 6); assert.equal(PEEL.flashMs, 250);
+  assert.equal(stickerPeel(1).flash, 0);
+});
+
+test('the join mascot is the baseline in the lilac palette (nobody\'s Soul: no seed, no badge)', () => {
+  const lilac = PALETTES.find((p) => p.name === 'lilac');
+  assert.equal(MASCOT.palette, 'lilac');
+  assert.deepEqual({ ...mascotPalette() }, { fill: lilac.fill, highlight: lilac.highlight, outline: lilac.outline, glow: lilac.glow });
+  assert.ok(!('seed' in MASCOT) && !('badge' in MASCOT));
 });

@@ -66,7 +66,17 @@ export function buildAssetMapModel({ root = DEFAULT_ROOT } = {}) {
     count: soulEntries.length,
     seeds: soulEntries.map((e) => e.id.match(/_([0-9a-f]+)$/)[1]),
     maxSpriteBytes: Math.max(0, ...soulEntries.map((e) => Number(e.texture_memory_bytes) || 0)),
+    // Baseline Soul character (D-27): the two glTF LODs; null on trees built before the models existed.
+    baseline: null,
   };
+  const baselineLods = { hero: byId.get('soul_baseline_hero'), lite: byId.get('soul_baseline_lite') };
+  if (baselineLods.hero || baselineLods.lite) {
+    const pick = (fn) => ({ hero: baselineLods.hero ? fn(baselineLods.hero) : null, lite: baselineLods.lite ? fn(baselineLods.lite) : null });
+    souls.baseline = {
+      format: 'glb', hero: toUrl(baselineLods.hero?.runtime_file), lite: toUrl(baselineLods.lite?.runtime_file),
+      sha256: pick((e) => stripPrefix(e.checksum)), bytes: pick((e) => Number(e.texture_memory_bytes) || 0), triangles: pick((e) => Number(e.triangle_count) || 0),
+    };
+  }
 
   // ---- audio ----
   const audioMap = {};
@@ -83,8 +93,11 @@ export function buildAssetMapModel({ root = DEFAULT_ROOT } = {}) {
   }
 
   // ---- every assets.yaml entry, for assetUrl(id) ----
+  // The D-29 decoration files (soul_charm_*, soul_face_*) are left out: packages/ui/soul-decor-data.js already carries
+  // their URLs and hashes, and 150-odd more entries would more than double the module every client downloads.
   const entries = {};
   for (const e of assets.entries) {
+    if (/^soul_(charm|face)_/.test(e.id)) continue;
     entries[e.id] = {
       kind: e.kind, url: toUrl(e.runtime_file), format: e.runtime_format, fallbackUrl: toUrl(e.fallback_file), fallbackFormat: e.fallback_format ?? null,
       sha256: stripPrefix(e.checksum), bytes: Number(e.texture_memory_bytes) || 0, lods: (e.lods || []).map(toUrl),
@@ -158,6 +171,12 @@ export function soulSpriteUrls(seed) {
   const s = String(seed || '').replace(/[^0-9a-z]/gi, '');
   const { cohortDir, fallbackDir, thumbnailDir, suffix } = ASSETS.souls;
   return { full: cohortDir + s + suffix.full, simple: fallbackDir + s + suffix.simple, dot: fallbackDir + s + suffix.dot, thumbnail: thumbnailDir + s + suffix.thumbnail };
+}
+
+/** URL of the baseline Soul model (D-27) for a level of detail ('hero' | 'lite'); null when the tree has none. */
+export function soulModelUrl(lod = 'hero') {
+  const b = ASSETS.souls.baseline; if (!b) return null;
+  return (lod === 'lite' ? b.lite : b.hero) || null;
 }
 
 /** Cue ids an app should preload right after createAudioManager(): priority descending, then manifest order. */

@@ -4,12 +4,13 @@
 // The deterministic RNG seed makes the two identical boards win on the same draw (a consented and a non-consented co-winner).
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract } from './helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract, SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, skillStringsIn, charmSplit, expectedDecor, expectedSeedPicks } from './helpers.js';
 import publicContract from '../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../contracts/projections/stage.json' with { type: 'json' };
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
 
 const FORBIDDEN = { public: forbiddenKeysFromContract(publicContract), stage: forbiddenKeysFromContract(stageContract) };
+const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId'];
 const safeRoles = ROLES.filter(r => !PRIVACY_TEXT_REGEX.test(`${r.id} ${r.name}`));
 const byPlatform = new Map(); for (const r of safeRoles) { if (!byPlatform.has(r.platformId)) byPlatform.set(r.platformId, []); byPlatform.get(r.platformId).push(r); }
 const [cohortRole, otherRole] = [...byPlatform.values()].find(rs => rs.length >= 2);
@@ -130,7 +131,20 @@ describe('public + stage views across a full round', () => {
     assert.equal(bySoul.get(pm.soul.soulId).label, 'Public Name'); assert.equal(bySoul.get(pm.soul.soulId).badge, 'bingo-star');
     assert.equal(bySoul.get(hm.soul.soulId).label, null); assert.equal(bySoul.get(hm.soul.soulId).badge, 'bingo-star');
     assert.equal(bySoul.get(cm.soul.soulId).label, 'Cohort 0'); assert.equal(bySoul.get(cm.soul.soulId).badge, null);
-    for (const s of pub.galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ['badge', 'config', 'edge', 'enteredAt', 'label', 'soulId']); assert.ok(['left', 'right', 'top', 'bottom'].includes(s.edge)); }
+    for (const s of pub.galaxy.souls) { assert.deepEqual(Object.keys(s).sort(), ENTRANCE_KEYS); assert.ok(['left', 'right', 'top', 'bottom'].includes(s.edge)); }
+    // contract 1.2.0 (D-31): the decorated v3 Soul the phone showed, exactly the SoulConfig keys (face plate, eyes and antenna
+    // charm included), no skill id, skill name or match count
+    assert.deepEqual(SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, 'the contract SoulConfig is v3');
+    for (const [name, m] of [['public', pm], ['hidden', hm], ['cohort', cm]]) {
+      const cfg = bySoul.get(m.soul.soulId).config;
+      assert.deepEqual(Object.keys(cfg).sort(), SOUL_CONFIG_V3_KEYS, `${name}: exactly the SoulConfig v3 keys`); assert.equal(cfg.version, 3);
+      assert.deepEqual(cfg, m.soul.config, `${name}: the Galaxy shows the config the phone showed`);
+      assert.deepEqual(skillStringsIn(cfg), [], `${name}: no skill id or skill name`);
+      const want = expectedDecor(m.board);
+      assert.deepEqual(charmSplit(cfg.charms), want.split, `${name}: charm split follows the selected skills' kinds`); assert.equal(cfg.face, want.face, `${name}: face follows the matched tiles`);
+      assert.deepEqual({ plate: cfg.plate, eyes: cfg.eyes, topper: cfg.topper }, expectedSeedPicks(cfg), `${name}: plate, eyes and topper come from the seed, never from skills`);
+      assert.ok(!cfg.charms.includes(cfg.topper), `${name}: the antenna charm is not a body charm`);
+    }
   });
 
   test('Closed -> next round: previousWinners on public after the second round opens; stage still has no join link', async () => {
@@ -173,6 +187,15 @@ describe('public + stage views across a full round', () => {
       assert.ok(counts.every(c => !('boardsWithFourInLine' in c.data.payload)), `${aud} never sees boardsWithFourInLine`);
       const res = s.events.find(e => e.event === 'result.published').data.payload;
       assert.deepEqual(Object.keys(res.winners[0]).sort(), aud === 'public' ? ['label', 'soulId'] : ['label', 'soulId', 'winningDrawNumber']);
+      const galaxy = snapshots.find(x => x.label === 'galaxy').pub.galaxy.souls;
+      const floats = s.events.filter(e => e.event === 'soul.float_accepted');
+      assert.equal(floats.length, 3, `${aud} saw the three entrances`);
+      for (const f of floats) {
+        const entrance = f.data.payload.entrance;
+        assert.deepEqual(Object.keys(f.data.payload), ['entrance']); assert.deepEqual(Object.keys(entrance).sort(), ENTRANCE_KEYS, `${aud} entrance keys`);
+        assert.deepEqual(Object.keys(entrance.config).sort(), SOUL_CONFIG_V3_KEYS, `${aud} entrance config keys (v3)`); assert.deepEqual(skillStringsIn(entrance.config), []);
+        assert.deepEqual(entrance.config, galaxy.find(g => g.soulId === entrance.soulId).config, `${aud}: the entrance config is the Galaxy config`);
+      }
     }
     for (const { label, pub, stage } of snapshots) { scan('public', `snapshot ${label} (re-scan)`, pub); scan('stage', `snapshot ${label} (re-scan)`, stage); }
   });

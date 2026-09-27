@@ -1,0 +1,7232 @@
+{
+  "version": 1,
+  "tool": "tools/ai/gemini-charms.js",
+  "createdAt": "2026-09-25T03:00:54.343Z",
+  "catalogVersion": 1,
+  "key": "#00FF00",
+  "cutout": {
+    "size": 256,
+    "pad": 0.06
+  },
+  "thresholds": {
+    "bgMatch": 0.97,
+    "bgTol": 36,
+    "keyDrift": 60,
+    "minPart": 0.002,
+    "rawCover": [
+      0.55,
+      0.95
+    ],
+    "rawMargin": 0.01,
+    "fill": [
+      0.22,
+      0.86
+    ],
+    "rimCover": 0.95,
+    "rimMinPx": 3,
+    "centrePx": 2,
+    "centroid": 0.12,
+    "keyInside": 0.002
+  },
+  "cutter": {
+    "frame": 0.02,
+    "floodTol": 90,
+    "floodKey": 0.5,
+    "holeTol": 48,
+    "edgeBand": 2,
+    "spillFloor": 180
+  },
+  "summary": {
+    "charms": 100,
+    "pass": 100,
+    "fail": 0,
+    "missing": 0,
+    "flagged": 0,
+    "byKind": {
+      "technical": {
+        "charms": 50,
+        "pass": 50,
+        "fail": 0,
+        "missing": 0,
+        "flagged": 0
+      },
+      "soft": {
+        "charms": 50,
+        "pass": 50,
+        "fail": 0,
+        "missing": 0,
+        "flagged": 0
+      }
+    },
+    "models": [
+      "gemini-3.1-flash-image"
+    ],
+    "requests": 126,
+    "attemptsWithImage": 112,
+    "failedRequests": 8
+  },
+  "items": [
+    {
+      "id": "tech-hammer",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-hammer-a1.png",
+      "icon": "assets-src/charms/icons/tech-hammer.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          249,
+          6
+        ],
+        "keyDrift": 13.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.34,
+        "rawCover": 0.7529,
+        "rawMargin": 0.1221,
+        "rawCentreOffset": 0.0015,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.3828,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0439,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.437,
+          0.078,
+          0.029
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-laptop",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-laptop-a1.png",
+      "icon": "assets-src/charms/icons/tech-laptop.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          18
+        ],
+        "keyDrift": 21.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.6,
+        "rawCover": 0.752,
+        "rawMargin": 0.124,
+        "rawCentreOffset": 0.001,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5095,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0408,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.988,
+          0.247,
+          0.016,
+          0.005,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-book",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-book-a1.png",
+      "icon": "assets-src/charms/icons/tech-book.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.35,
+        "rawCover": 0.7109,
+        "rawMargin": 0.1445,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.5405,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0083,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.426,
+          0.012,
+          0.001
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-pen",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-pen-a1.png",
+      "icon": "assets-src/charms/icons/tech-pen.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          245,
+          5
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.24,
+        "rawCover": 0.7549,
+        "rawMargin": 0.1221,
+        "rawCentreOffset": 0.0007,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.3845,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0173,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.967,
+          0.169,
+          0.024,
+          0.006
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-wrench",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-wrench-a1.png",
+      "icon": "assets-src/charms/icons/tech-wrench.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          9
+        ],
+        "keyDrift": 16.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.5,
+        "rawCover": 0.7256,
+        "rawMargin": 0.1367,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 36,
+        "fill": 0.3812,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0104,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.753,
+          0.089
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-screwdriver",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-screwdriver-a1.png",
+      "icon": "assets-src/charms/icons/tech-screwdriver.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          244,
+          12
+        ],
+        "keyDrift": 19.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 0.9945,
+        "bgStd": 2.48,
+        "rawCover": 0.7324,
+        "rawMargin": 0.1309,
+        "rawCentreOffset": 0.0045,
+        "holeArea": 0,
+        "rimRawPx": 28,
+        "fill": 0.2723,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.051,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.995,
+          0.397,
+          0.015,
+          0.016,
+          0.005
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-gear",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-gear-a1.png",
+      "icon": "assets-src/charms/icons/tech-gear.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          6
+        ],
+        "keyDrift": 13.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.35,
+        "rawCover": 0.7695,
+        "rawMargin": 0.1152,
+        "rawCentreOffset": 0,
+        "holeArea": 0.005,
+        "rimRawPx": 32,
+        "fill": 0.5687,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0008,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.959,
+          0.201,
+          0.045,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-magnifier",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-magnifier-a1.png",
+      "icon": "assets-src/charms/icons/tech-magnifier.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          233,
+          31
+        ],
+        "keyDrift": 39.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.21,
+        "rawCover": 0.7686,
+        "rawMargin": 0.1152,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.5055,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0173,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.947,
+          0.156,
+          0.024,
+          0.009
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-ruler",
+      "kind": "technical",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-ruler-a2.png",
+      "icon": "assets-src/charms/icons/tech-ruler.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          5
+        ],
+        "keyDrift": 13,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.22,
+        "rawCover": 0.7725,
+        "rawMargin": 0.1123,
+        "rawCentreOffset": 0.0018,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.3486,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0016,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.995,
+          0.094,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-pencil",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-pencil-a1.png",
+      "icon": "assets-src/charms/icons/tech-pencil.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          247,
+          6
+        ],
+        "keyDrift": 14.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.6855,
+        "rawMargin": 0.1572,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.4723,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0108,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.952,
+          0.267
+        ],
+        "rimCover": 1,
+        "rimMinPx": 11,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-calculator",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-calculator-a1.png",
+      "icon": "assets-src/charms/icons/tech-calculator.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          7,
+          245,
+          8
+        ],
+        "keyDrift": 14.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7373,
+        "rawMargin": 0.1309,
+        "rawCentreOffset": 0.0007,
+        "holeArea": 0,
+        "rimRawPx": 27,
+        "fill": 0.5689,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0089,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.915,
+          0.076,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-keyboard",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-keyboard-a1.png",
+      "icon": "assets-src/charms/icons/tech-keyboard.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          244,
+          5
+        ],
+        "keyDrift": 15.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.25,
+        "rawCover": 0.8691,
+        "rawMargin": 0.0654,
+        "rawCentreOffset": 0.001,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.444,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0022,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.682,
+          0,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-mouse",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-mouse-a1.png",
+      "icon": "assets-src/charms/icons/tech-mouse.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          244,
+          7
+        ],
+        "keyDrift": 16.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.49,
+        "rawCover": 0.7812,
+        "rawMargin": 0.1094,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 34,
+        "fill": 0.5004,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0214,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.542,
+          0.035,
+          0.027
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-monitor",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-monitor-a1.png",
+      "icon": "assets-src/charms/icons/tech-monitor.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          6
+        ],
+        "keyDrift": 13.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.29,
+        "rawCover": 0.6992,
+        "rawMargin": 0.1504,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5967,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0321,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.915,
+          0.14,
+          0.043,
+          0.042
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-smartphone",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-smartphone-a1.png",
+      "icon": "assets-src/charms/icons/tech-smartphone.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          245,
+          6
+        ],
+        "keyDrift": 16,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.29,
+        "rawCover": 0.8389,
+        "rawMargin": 0.0801,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.4917,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0031,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.518,
+          0.002,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-tablet",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-tablet-a1.png",
+      "icon": "assets-src/charms/icons/tech-tablet.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          12,
+          247,
+          5
+        ],
+        "keyDrift": 15.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.2,
+        "rawCover": 0.8047,
+        "rawMargin": 0.0977,
+        "rawCentreOffset": 0.0171,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.4973,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0021,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.901,
+          0.044,
+          0.023,
+          0.019,
+          0.019
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-microchip",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-microchip-a1.png",
+      "icon": "assets-src/charms/icons/tech-microchip.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          248,
+          5
+        ],
+        "keyDrift": 12.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.34,
+        "rawCover": 0.8633,
+        "rawMargin": 0.0684,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.483,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0052,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.876,
+          0.245,
+          0.143,
+          0.113,
+          0.091
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-circuit",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-circuit-a1.png",
+      "icon": "assets-src/charms/icons/tech-circuit.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          245,
+          5
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.22,
+        "rawCover": 0.7363,
+        "rawMargin": 0.1318,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.5979,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0057,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.678,
+          0.016,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-server",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-server-a1.png",
+      "icon": "assets-src/charms/icons/tech-server.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.5,
+        "rawCover": 0.7305,
+        "rawMargin": 0.1348,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 34,
+        "fill": 0.6621,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0026,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.855,
+          0.155,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-database",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-database-a1.png",
+      "icon": "assets-src/charms/icons/tech-database.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          246,
+          6
+        ],
+        "keyDrift": 15.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.53,
+        "rawCover": 0.7852,
+        "rawMargin": 0.0996,
+        "rawCentreOffset": 0.0078,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.5794,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0065,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.889,
+          0.737,
+          0.621,
+          0.051,
+          0.005,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 6,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-cloud-upload",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-cloud-upload-a1.png",
+      "icon": "assets-src/charms/icons/tech-cloud-upload.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          245,
+          8
+        ],
+        "keyDrift": 16.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.35,
+        "rawCover": 0.834,
+        "rawMargin": 0.083,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 28,
+        "fill": 0.423,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.023,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.469,
+          0.023,
+          0.017,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 7,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-robot",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-robot-a1.png",
+      "icon": "assets-src/charms/icons/tech-robot.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          6
+        ],
+        "keyDrift": 14.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7656,
+        "rawMargin": 0.1172,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5091,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0586,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.917,
+          0.209,
+          0.056,
+          0.025,
+          0.016
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-rocket",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-rocket-a1.png",
+      "icon": "assets-src/charms/icons/tech-rocket.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          8
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.7568,
+        "rawMargin": 0.1211,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.4479,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0529,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.878,
+          0.137,
+          0.048
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-lightbulb",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-lightbulb-a1.png",
+      "icon": "assets-src/charms/icons/tech-lightbulb.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          245,
+          7
+        ],
+        "keyDrift": 16.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.32,
+        "rawCover": 0.752,
+        "rawMargin": 0.1211,
+        "rawCentreOffset": 0.0029,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4456,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0347,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.995,
+          0.828,
+          0.171,
+          0.004,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-paintbrush",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-paintbrush-a1.png",
+      "icon": "assets-src/charms/icons/tech-paintbrush.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          245,
+          4
+        ],
+        "keyDrift": 14,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.26,
+        "rawCover": 0.7383,
+        "rawMargin": 0.127,
+        "rawCentreOffset": 0.0039,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.4472,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0175,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.765,
+          0.065,
+          0.021
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-palette",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-palette-a1.png",
+      "icon": "assets-src/charms/icons/tech-palette.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          247,
+          6
+        ],
+        "keyDrift": 14.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7422,
+        "rawMargin": 0.1289,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5616,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0154,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.548,
+          0.033,
+          0.016,
+          0.004
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-compass",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-compass-a1.png",
+      "icon": "assets-src/charms/icons/tech-compass.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          6,
+          247,
+          9
+        ],
+        "keyDrift": 13.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4115,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0475,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.926,
+          0.232,
+          0.088,
+          0.064
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-set-square",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-set-square-a1.png",
+      "icon": "assets-src/charms/icons/tech-set-square.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          6
+        ],
+        "keyDrift": 14.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.47,
+        "rawCover": 0.707,
+        "rawMargin": 0.1465,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.4764,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0767,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.381,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-tape-measure",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-tape-measure-a1.png",
+      "icon": "assets-src/charms/icons/tech-tape-measure.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          243,
+          19
+        ],
+        "keyDrift": 25,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.61,
+        "rawCover": 0.7617,
+        "rawMargin": 0.1191,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.501,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0297,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.421,
+          0.047,
+          0.019
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-pliers",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-pliers-a1.png",
+      "icon": "assets-src/charms/icons/tech-pliers.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          6
+        ],
+        "keyDrift": 14.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.7852,
+        "rawMargin": 0.1055,
+        "rawCentreOffset": 0.0044,
+        "holeArea": 0,
+        "rimRawPx": 27,
+        "fill": 0.3682,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0097,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.512,
+          0.08,
+          0.07,
+          0.059,
+          0.049
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-toolbox",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-toolbox-a1.png",
+      "icon": "assets-src/charms/icons/tech-toolbox.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          245,
+          5
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.29,
+        "rawCover": 0.7852,
+        "rawMargin": 0.1074,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 28,
+        "fill": 0.5312,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0165,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.774,
+          0.067,
+          0.01,
+          0,
+          0.008
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-usb",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-usb-a1.png",
+      "icon": "assets-src/charms/icons/tech-usb.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          247,
+          7
+        ],
+        "keyDrift": 13.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7617,
+        "rawMargin": 0.1172,
+        "rawCentreOffset": 0.0071,
+        "holeArea": 0,
+        "rimRawPx": 38,
+        "fill": 0.5535,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0498,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.869,
+          0.699,
+          0.149
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-battery",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-battery-a1.png",
+      "icon": "assets-src/charms/icons/tech-battery.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          241,
+          6
+        ],
+        "keyDrift": 18.8,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.54,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 38,
+        "fill": 0.5236,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0121,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.876,
+          0.126
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-plug",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-plug-a1.png",
+      "icon": "assets-src/charms/icons/tech-plug.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          248,
+          5
+        ],
+        "keyDrift": 13.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.29,
+        "rawCover": 0.7881,
+        "rawMargin": 0.1055,
+        "rawCentreOffset": 0.0007,
+        "holeArea": 0.0011,
+        "rimRawPx": 35,
+        "fill": 0.5006,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0338,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.56,
+          0.087,
+          0.045
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-magnet",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-magnet-a1.png",
+      "icon": "assets-src/charms/icons/tech-magnet.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          247,
+          8
+        ],
+        "keyDrift": 13.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.39,
+        "rawCover": 0.7539,
+        "rawMargin": 0.123,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.6092,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.017,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.785,
+          0.139,
+          0.078
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-microscope",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-microscope-a1.png",
+      "icon": "assets-src/charms/icons/tech-microscope.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          245,
+          5
+        ],
+        "keyDrift": 14.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.48,
+        "rawCover": 0.8027,
+        "rawMargin": 0.0898,
+        "rawCentreOffset": 0.009,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.4632,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0641,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.969,
+          0.331,
+          0.094,
+          0.075
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-flask",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-flask-a1.png",
+      "icon": "assets-src/charms/icons/tech-flask.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          12,
+          247,
+          5
+        ],
+        "keyDrift": 15.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.13,
+        "rawCover": 0.7432,
+        "rawMargin": 0.1279,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4596,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.037,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.974,
+          0.247,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-telescope",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-telescope-a1.png",
+      "icon": "assets-src/charms/icons/tech-telescope.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          243,
+          10
+        ],
+        "keyDrift": 17.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.56,
+        "rawCover": 0.7393,
+        "rawMargin": 0.123,
+        "rawCentreOffset": 0.0094,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.4771,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0277,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.803,
+          0.205,
+          0.125
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-satellite",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-satellite-a1.png",
+      "icon": "assets-src/charms/icons/tech-satellite.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          5
+        ],
+        "keyDrift": 14.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.4,
+        "rawCover": 0.8301,
+        "rawMargin": 0.0811,
+        "rawCentreOffset": 0.0049,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.4214,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0142,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.417,
+          0.068,
+          0.04,
+          0.013
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-drone",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-drone-a1.png",
+      "icon": "assets-src/charms/icons/tech-drone.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.44,
+        "rawCover": 0.834,
+        "rawMargin": 0.083,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.6295,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0009,
+        "rimRings": [
+          1,
+          1,
+          1,
+          0.998,
+          1,
+          1,
+          1,
+          0.783,
+          0.091,
+          0.064,
+          0.048,
+          0.041
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-printer-3d",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-printer-3d-a1.png",
+      "icon": "assets-src/charms/icons/tech-printer-3d.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          244,
+          10
+        ],
+        "keyDrift": 16.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.49,
+        "rawCover": 0.7393,
+        "rawMargin": 0.1299,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.5968,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.017,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.998,
+          0.282,
+          0.011,
+          0.004
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-camera",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-camera-a1.png",
+      "icon": "assets-src/charms/icons/tech-camera.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          245,
+          5
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.31,
+        "rawCover": 0.7422,
+        "rawMargin": 0.1289,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.5696,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.022,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.998,
+          0.414,
+          0.021,
+          0.016
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-floppy",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-floppy-a1.png",
+      "icon": "assets-src/charms/icons/tech-floppy.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          4
+        ],
+        "keyDrift": 14,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.44,
+        "rawCover": 0.7148,
+        "rawMargin": 0.1426,
+        "rawCentreOffset": 0.0029,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.66,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0068,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.809,
+          0.027,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-hard-hat",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-hard-hat-a1.png",
+      "icon": "assets-src/charms/icons/tech-hard-hat.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          248,
+          6
+        ],
+        "keyDrift": 13.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.28,
+        "rawCover": 0.7256,
+        "rawMargin": 0.1367,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.4622,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0441,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.998,
+          0.187,
+          0.008,
+          0.001
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-padlock",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-padlock-a1.png",
+      "icon": "assets-src/charms/icons/tech-padlock.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          245,
+          6
+        ],
+        "keyDrift": 14.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.48,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.5163,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0335,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.32,
+          0.014,
+          0.001
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-key",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-key-a1.png",
+      "icon": "assets-src/charms/icons/tech-key.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          9
+        ],
+        "keyDrift": 15.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.48,
+        "rawCover": 0.7217,
+        "rawMargin": 0.1377,
+        "rawCentreOffset": 0.0024,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.3965,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0366,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.457,
+          0.061,
+          0.035
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-headset",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-headset-a1.png",
+      "icon": "assets-src/charms/icons/tech-headset.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          242,
+          7
+        ],
+        "keyDrift": 17.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.46,
+        "rawCover": 0.793,
+        "rawMargin": 0.1035,
+        "rawCentreOffset": 0,
+        "holeArea": 0.0636,
+        "rimRawPx": 29,
+        "fill": 0.5881,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0041,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.909,
+          0.144,
+          0.027,
+          0.026,
+          0.026
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-bar-chart",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-bar-chart-a1.png",
+      "icon": "assets-src/charms/icons/tech-bar-chart.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          248,
+          5
+        ],
+        "keyDrift": 13.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.2,
+        "rawCover": 0.7559,
+        "rawMargin": 0.1221,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.5857,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.002,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.895,
+          0.798,
+          0.453,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-clipboard",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-clipboard-a1.png",
+      "icon": "assets-src/charms/icons/tech-clipboard.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          246,
+          9
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.39,
+        "rawCover": 0.752,
+        "rawMargin": 0.1211,
+        "rawCentreOffset": 0.0029,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.5763,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0322,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.717,
+          0.157,
+          0.002,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "tech-stopwatch",
+      "kind": "technical",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/tech-stopwatch-a1.png",
+      "icon": "assets-src/charms/icons/tech-stopwatch.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          6
+        ],
+        "keyDrift": 14.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.39,
+        "rawCover": 0.7695,
+        "rawMargin": 0.1152,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.5238,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0252,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.774,
+          0.112,
+          0.071,
+          0.059
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-earphones",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-earphones-a1.png",
+      "icon": "assets-src/charms/icons/soft-earphones.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          4
+        ],
+        "keyDrift": 13.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.33,
+        "rawCover": 0.7959,
+        "rawMargin": 0.1006,
+        "rawCentreOffset": 0.0056,
+        "holeArea": 0,
+        "rimRawPx": 36,
+        "fill": 0.5177,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0324,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.852,
+          0.123,
+          0.053
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-daisy",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-daisy-a2.png",
+      "icon": "assets-src/charms/icons/soft-daisy.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          244,
+          5
+        ],
+        "keyDrift": 14.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4556,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0379,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.961,
+          0.239,
+          0.157,
+          0.112
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-tulip",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-tulip-a1.png",
+      "icon": "assets-src/charms/icons/soft-tulip.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          243,
+          7
+        ],
+        "keyDrift": 16.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.5,
+        "rawCover": 0.79,
+        "rawMargin": 0.0996,
+        "rawCentreOffset": 0.0054,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.3831,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0379,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.997,
+          0.264,
+          0.056,
+          0.043
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-sunflower",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-sunflower-a1.png",
+      "icon": "assets-src/charms/icons/soft-sunflower.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          7
+        ],
+        "keyDrift": 14.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.8057,
+        "rawMargin": 0.0898,
+        "rawCentreOffset": 0.0073,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.4667,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0262,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.928,
+          0.225,
+          0.136,
+          0.086
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-rose",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-rose-a1.png",
+      "icon": "assets-src/charms/icons/soft-rose.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          242,
+          16
+        ],
+        "keyDrift": 23.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.51,
+        "rawCover": 0.8164,
+        "rawMargin": 0.0879,
+        "rawCentreOffset": 0.0039,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.4352,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0338,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.712,
+          0.099,
+          0.062,
+          0.053,
+          0.04
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-cherry-blossom",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-cherry-blossom-a1.png",
+      "icon": "assets-src/charms/icons/soft-cherry-blossom.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          5
+        ],
+        "keyDrift": 13,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.35,
+        "rawCover": 0.7422,
+        "rawMargin": 0.1289,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.5309,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0142,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.818,
+          0.361,
+          0.281,
+          0.17
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-lavender",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-lavender-a2.png",
+      "icon": "assets-src/charms/icons/soft-lavender.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          247,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.33,
+        "rawCover": 0.748,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0.0011,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4373,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.074,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.971,
+          0.289,
+          0.128,
+          0.087
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-bouquet",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-bouquet-a1.png",
+      "icon": "assets-src/charms/icons/soft-bouquet.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          236,
+          28
+        ],
+        "keyDrift": 35.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.65,
+        "rawCover": 0.6816,
+        "rawMargin": 0.1592,
+        "rawCentreOffset": 0.0103,
+        "holeArea": 0,
+        "rimRawPx": 27,
+        "fill": 0.4759,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0544,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.734,
+          0.124,
+          0.058,
+          0.021
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-potted-plant",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-potted-plant-a1.png",
+      "icon": "assets-src/charms/icons/soft-potted-plant.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          243,
+          12
+        ],
+        "keyDrift": 20.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.53,
+        "rawCover": 0.6514,
+        "rawMargin": 0.1738,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.5297,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0054,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.94,
+          0.293,
+          0.072
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-cactus",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-cactus-a1.png",
+      "icon": "assets-src/charms/icons/soft-cactus.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          6
+        ],
+        "keyDrift": 14.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.41,
+        "rawCover": 0.7236,
+        "rawMargin": 0.1328,
+        "rawCentreOffset": 0.0054,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.5071,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0069,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.888,
+          0.198,
+          0.102,
+          0.072
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-sprout",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-sprout-a1.png",
+      "icon": "assets-src/charms/icons/soft-sprout.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.48,
+        "rawCover": 0.6836,
+        "rawMargin": 0.1582,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.4213,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0388,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.998,
+          0.417,
+          0.094
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-clover",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-clover-a1.png",
+      "icon": "assets-src/charms/icons/soft-clover.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.41,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.6224,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0136,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.927,
+          0.195,
+          0.093
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-tea-cup",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-tea-cup-a1.png",
+      "icon": "assets-src/charms/icons/soft-tea-cup.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          247,
+          6
+        ],
+        "keyDrift": 13.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7422,
+        "rawMargin": 0.1289,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 33,
+        "fill": 0.5152,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0732,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.61,
+          0.084,
+          0.057
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-mug",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-mug-a1.png",
+      "icon": "assets-src/charms/icons/soft-mug.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          248,
+          5
+        ],
+        "keyDrift": 14,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.32,
+        "rawCover": 0.8242,
+        "rawMargin": 0.0879,
+        "rawCentreOffset": 0,
+        "holeArea": 0.002,
+        "rimRawPx": 30,
+        "fill": 0.535,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0358,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.821,
+          0.083,
+          0.01,
+          0.002,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-teapot",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-teapot-a1.png",
+      "icon": "assets-src/charms/icons/soft-teapot.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          242,
+          6
+        ],
+        "keyDrift": 17.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.46,
+        "rawCover": 0.834,
+        "rawMargin": 0.083,
+        "rawCentreOffset": 0.0015,
+        "holeArea": 0.0006,
+        "rimRawPx": 29,
+        "fill": 0.4097,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0297,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.649,
+          0.057,
+          0.028,
+          0.023,
+          0.014
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-water-bottle",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-water-bottle-a1.png",
+      "icon": "assets-src/charms/icons/soft-water-bottle.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          245,
+          5
+        ],
+        "keyDrift": 15,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.23,
+        "rawCover": 0.7754,
+        "rawMargin": 0.1123,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.4197,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.032,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.741,
+          0.104,
+          0.011
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-juice",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-juice-a1.png",
+      "icon": "assets-src/charms/icons/soft-juice.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          243,
+          6
+        ],
+        "keyDrift": 16.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.52,
+        "rawCover": 0.7275,
+        "rawMargin": 0.1279,
+        "rawCentreOffset": 0.0083,
+        "holeArea": 0,
+        "rimRawPx": 27,
+        "fill": 0.4252,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0296,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.869,
+          0.228,
+          0.082,
+          0.01,
+          0.003
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-cookie",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-cookie-a1.png",
+      "icon": "assets-src/charms/icons/soft-cookie.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          248,
+          6
+        ],
+        "keyDrift": 12.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.41,
+        "rawCover": 0.7217,
+        "rawMargin": 0.1367,
+        "rawCentreOffset": 0.0024,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.6046,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0039,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.871,
+          0.508,
+          0.041
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-cupcake",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-cupcake-a1.png",
+      "icon": "assets-src/charms/icons/soft-cupcake.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          246,
+          7
+        ],
+        "keyDrift": 13.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.41,
+        "rawCover": 0.7461,
+        "rawMargin": 0.127,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 37,
+        "fill": 0.5775,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0078,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.862,
+          0.104
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-strawberry",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-strawberry-a1.png",
+      "icon": "assets-src/charms/icons/soft-strawberry.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          244,
+          6
+        ],
+        "keyDrift": 16,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.42,
+        "rawCover": 0.7148,
+        "rawMargin": 0.1426,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 37,
+        "fill": 0.5713,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0081,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.99,
+          0.779,
+          0.372
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-apple",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-apple-a1.png",
+      "icon": "assets-src/charms/icons/soft-apple.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          7
+        ],
+        "keyDrift": 15.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.44,
+        "rawCover": 0.707,
+        "rawMargin": 0.1465,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.572,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0259,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.992,
+          0.198,
+          0.058,
+          0.043
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-ice-cream",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-ice-cream-a1.png",
+      "icon": "assets-src/charms/icons/soft-ice-cream.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          9
+        ],
+        "keyDrift": 15.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.54,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.3841,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0085,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.425,
+          0.053,
+          0.025
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-donut",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-donut-a1.png",
+      "icon": "assets-src/charms/icons/soft-donut.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          241,
+          9
+        ],
+        "keyDrift": 18.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.4,
+        "rawCover": 0.793,
+        "rawMargin": 0.1035,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 41,
+        "fill": 0.5835,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0028,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.45
+        ],
+        "rimCover": 1,
+        "rimMinPx": 11,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-candle",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-candle-a1.png",
+      "icon": "assets-src/charms/icons/soft-candle.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          12,
+          246,
+          7
+        ],
+        "keyDrift": 16.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.7051,
+        "rawMargin": 0.1475,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 37,
+        "fill": 0.4363,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0496,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.503
+        ],
+        "rimCover": 1,
+        "rimMinPx": 11,
+        "rimWidthPx": 12,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-rubber-duck",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-rubber-duck-a1.png",
+      "icon": "assets-src/charms/icons/soft-rubber-duck.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          247,
+          5
+        ],
+        "keyDrift": 12.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.22,
+        "rawCover": 0.708,
+        "rawMargin": 0.1455,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5819,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.031,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.881,
+          0.101,
+          0.039,
+          0.027
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-pillow",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-pillow-a1.png",
+      "icon": "assets-src/charms/icons/soft-pillow.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.31,
+        "rawCover": 0.7402,
+        "rawMargin": 0.127,
+        "rawCentreOffset": 0.0041,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.5714,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0073,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.873,
+          0.091,
+          0.009,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-sleep-mask",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-sleep-mask-a1.png",
+      "icon": "assets-src/charms/icons/soft-sleep-mask.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          243,
+          11
+        ],
+        "keyDrift": 18.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.54,
+        "rawCover": 0.834,
+        "rawMargin": 0.083,
+        "rawCentreOffset": 0.0054,
+        "holeArea": 0.0053,
+        "rimRawPx": 29,
+        "fill": 0.4137,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0159,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.599,
+          0.002,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-sun",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-sun-a1.png",
+      "icon": "assets-src/charms/icons/soft-sun.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          248,
+          5
+        ],
+        "keyDrift": 13.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.31,
+        "rawCover": 0.8516,
+        "rawMargin": 0.0742,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 36,
+        "fill": 0.5697,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.008,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.948,
+          0.356,
+          0.275,
+          0.241
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-rainbow",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-rainbow-a1.png",
+      "icon": "assets-src/charms/icons/soft-rainbow.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          238,
+          8
+        ],
+        "keyDrift": 20.8,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.4,
+        "rawCover": 0.832,
+        "rawMargin": 0.084,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 27,
+        "fill": 0.4162,
+        "bboxOffsetPx": 0.71,
+        "centroidOffset": 0.0204,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.211,
+          0.003,
+          0,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 7,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-umbrella",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-umbrella-a1.png",
+      "icon": "assets-src/charms/icons/soft-umbrella.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.38,
+        "rawCover": 0.7637,
+        "rawMargin": 0.1182,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.446,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0336,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.609,
+          0.081,
+          0.053,
+          0.04
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-hot-air-balloon",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-hot-air-balloon-a1.png",
+      "icon": "assets-src/charms/icons/soft-hot-air-balloon.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          7
+        ],
+        "keyDrift": 14.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.3,
+        "rawCover": 0.7949,
+        "rawMargin": 0.0996,
+        "rawCentreOffset": 0.0029,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.4284,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0491,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.965,
+          0.22,
+          0.011,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-kite",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-kite-a1.png",
+      "icon": "assets-src/charms/icons/soft-kite.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          246,
+          5
+        ],
+        "keyDrift": 13.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.38,
+        "rawCover": 0.7607,
+        "rawMargin": 0.1191,
+        "rawCentreOffset": 0.0132,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.4759,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0363,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.912,
+          0.108,
+          0.023,
+          0.023
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-paper-plane",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-paper-plane-a2.png",
+      "icon": "assets-src/charms/icons/soft-paper-plane.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          246,
+          5
+        ],
+        "keyDrift": 15.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.4,
+        "rawCover": 0.8125,
+        "rawMargin": 0.0938,
+        "rawCentreOffset": 0.0015,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.3562,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0395,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.698,
+          0.018,
+          0.006,
+          0.001
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-balloon",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-balloon-a2.png",
+      "icon": "assets-src/charms/icons/soft-balloon.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          243,
+          10
+        ],
+        "keyDrift": 18,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.58,
+        "rawCover": 0.7168,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0.0166,
+        "holeArea": 0,
+        "rimRawPx": 32,
+        "fill": 0.4053,
+        "bboxOffsetPx": 0.71,
+        "centroidOffset": 0.1018,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.67,
+          0.091,
+          0.051
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-gift",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-gift-a2.png",
+      "icon": "assets-src/charms/icons/soft-gift.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          245,
+          5
+        ],
+        "keyDrift": 15.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.27,
+        "rawCover": 0.709,
+        "rawMargin": 0.1455,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.5972,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0115,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.315,
+          0.03,
+          0.014
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-music-note",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-music-note-a2.png",
+      "icon": "assets-src/charms/icons/soft-music-note.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          244,
+          7
+        ],
+        "keyDrift": 15.8,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.51,
+        "rawCover": 0.7539,
+        "rawMargin": 0.123,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 34,
+        "fill": 0.4005,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0437,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.82,
+          0.15,
+          0.036
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 10,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-guitar",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-guitar-a2.png",
+      "icon": "assets-src/charms/icons/soft-guitar.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          13,
+          241,
+          43
+        ],
+        "keyDrift": 47.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.38,
+        "rawCover": 0.7695,
+        "rawMargin": 0.1055,
+        "rawCentreOffset": 0.0098,
+        "holeArea": 0,
+        "rimRawPx": 25,
+        "fill": 0.3558,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0463,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.226,
+          0.031,
+          0.008,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 7,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-vinyl",
+      "kind": "soft",
+      "attempt": 3,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-vinyl-a3.png",
+      "icon": "assets-src/charms/icons/soft-vinyl.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          247,
+          12
+        ],
+        "keyDrift": 18.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.46,
+        "rawCover": 0.7217,
+        "rawMargin": 0.1387,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.5934,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0005,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.254,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 9,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-yarn",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-yarn-a2.png",
+      "icon": "assets-src/charms/icons/soft-yarn.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          11,
+          245,
+          4
+        ],
+        "keyDrift": 15.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.28,
+        "rawCover": 0.7383,
+        "rawMargin": 0.1309,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.4837,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0217,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.575,
+          0.079,
+          0.046,
+          0.013
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-yoga-mat",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-yoga-mat-a2.png",
+      "icon": "assets-src/charms/icons/soft-yoga-mat.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          242,
+          6
+        ],
+        "keyDrift": 17.5,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.38,
+        "rawCover": 0.7285,
+        "rawMargin": 0.1357,
+        "rawCentreOffset": 0.0015,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.4554,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0146,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.895,
+          0.071,
+          0.015,
+          0.004
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 9,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-dumbbell",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-dumbbell-a1.png",
+      "icon": "assets-src/charms/icons/soft-dumbbell.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          7
+        ],
+        "keyDrift": 14.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.36,
+        "rawCover": 0.8672,
+        "rawMargin": 0.0664,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 31,
+        "fill": 0.3447,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.001,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.78,
+          0.176,
+          0.032,
+          0.007,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-running-shoe",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-running-shoe-a1.png",
+      "icon": "assets-src/charms/icons/soft-running-shoe.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          12,
+          247,
+          5
+        ],
+        "keyDrift": 15.3,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.37,
+        "rawCover": 0.8242,
+        "rawMargin": 0.0879,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 30,
+        "fill": 0.3765,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0332,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.855,
+          0.118,
+          0.004,
+          0,
+          0.003
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-bicycle",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-bicycle-a1.png",
+      "icon": "assets-src/charms/icons/soft-bicycle.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          241,
+          10
+        ],
+        "keyDrift": 19.4,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.29,
+        "rawCover": 0.7812,
+        "rawMargin": 0.1094,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 25,
+        "fill": 0.4029,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0402,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.978,
+          0.269,
+          0.085,
+          0.059,
+          0.064,
+          0.062
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 7,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-football",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-football-a1.png",
+      "icon": "assets-src/charms/icons/soft-football.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          12,
+          237,
+          22
+        ],
+        "keyDrift": 30.9,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.65,
+        "rawCover": 0.6836,
+        "rawMargin": 0.1582,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 34,
+        "fill": 0.6189,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0002,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.776,
+          0.045
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-watering-can",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-watering-can-a1.png",
+      "icon": "assets-src/charms/icons/soft-watering-can.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          244,
+          21
+        ],
+        "keyDrift": 25.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.41,
+        "rawCover": 0.8223,
+        "rawMargin": 0.0889,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.4119,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0218,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.748,
+          0.104,
+          0.02,
+          0.014,
+          0.008
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-heart",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-heart-a1.png",
+      "icon": "assets-src/charms/icons/soft-heart.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          6
+        ],
+        "keyDrift": 14.7,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.45,
+        "rawCover": 0.7734,
+        "rawMargin": 0.1133,
+        "rawCentreOffset": 0,
+        "holeArea": 0,
+        "rimRawPx": 44,
+        "fill": 0.4986,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0359,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "rimCover": 1,
+        "rimMinPx": 12,
+        "rimWidthPx": 13,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-seashell",
+      "kind": "soft",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-seashell-a2.png",
+      "icon": "assets-src/charms/icons/soft-seashell.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          8
+        ],
+        "keyDrift": 15.1,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.39,
+        "rawCover": 0.793,
+        "rawMargin": 0.1035,
+        "rawCentreOffset": 0.0059,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.4935,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0006,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.799,
+          0.112,
+          0.015,
+          0,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-speech-bubble",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-speech-bubble-a1.png",
+      "icon": "assets-src/charms/icons/soft-speech-bubble.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          10,
+          246,
+          4
+        ],
+        "keyDrift": 14,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.5,
+        "rawCover": 0.7891,
+        "rawMargin": 0.1055,
+        "rawCentreOffset": 0.0068,
+        "holeArea": 0,
+        "rimRawPx": 29,
+        "fill": 0.5697,
+        "bboxOffsetPx": 0.5,
+        "centroidOffset": 0.0231,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.882,
+          0.109,
+          0.01,
+          0.005,
+          0
+        ],
+        "rimCover": 1,
+        "rimMinPx": 7,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-butterfly",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-butterfly-a1.png",
+      "icon": "assets-src/charms/icons/soft-butterfly.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          8,
+          245,
+          7
+        ],
+        "keyDrift": 14.6,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.54,
+        "rawCover": 0.75,
+        "rawMargin": 0.125,
+        "rawCentreOffset": 0.0034,
+        "holeArea": 0,
+        "rimRawPx": 28,
+        "fill": 0.5045,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.0184,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.984,
+          0.238,
+          0.095,
+          0.091,
+          0.069
+        ],
+        "rimCover": 1,
+        "rimMinPx": 8,
+        "rimWidthPx": 8,
+        "keyInside": 0
+      }
+    },
+    {
+      "id": "soft-feather",
+      "kind": "soft",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "raw": "assets-src/generated/charms/raw/soft-feather-a1.png",
+      "icon": "assets-src/charms/icons/soft-feather.png",
+      "pass": true,
+      "failed": [],
+      "checks": {
+        "bgUniform": true,
+        "oneComponent": true,
+        "coverage": true,
+        "rim": true,
+        "centred": true,
+        "noKeyInside": true
+      },
+      "metrics": {
+        "size": [
+          1024,
+          1024
+        ],
+        "keyMeasured": [
+          9,
+          243,
+          6
+        ],
+        "keyDrift": 16.2,
+        "components": 1,
+        "extraAreas": [],
+        "specksDropped": 0,
+        "bgMatch": 1,
+        "bgStd": 1.52,
+        "rawCover": 0.6982,
+        "rawMargin": 0.1504,
+        "rawCentreOffset": 0.0005,
+        "holeArea": 0,
+        "rimRawPx": 35,
+        "fill": 0.4653,
+        "bboxOffsetPx": 0,
+        "centroidOffset": 0.009,
+        "rimRings": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0.804,
+          0.137
+        ],
+        "rimCover": 1,
+        "rimMinPx": 10,
+        "rimWidthPx": 11,
+        "keyInside": 0
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "id": "tech-hammer",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-laptop",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-magnifier",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-earphones",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-clover",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-donut",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-clover",
+      "attempt": 2,
+      "phase": "probe",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 400 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"Invalid JSON payload received. Unknown name \\\"imageOutputOptions\\\" at 'generation_config.image_config': Cannot find field.\",\n    \"status\": \"INVALID_ARGUMENT\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.BadRequest\",\n        \"fieldViolations\": [\n          {\n            \"field\": \"generation_config.image_config\",\n            \"description\": \"Invalid JSON payload received. Un"
+    },
+    {
+      "id": "tech-laptop",
+      "attempt": 2,
+      "phase": "compare",
+      "model": "gemini-3-pro-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-earphones",
+      "attempt": 2,
+      "phase": "compare",
+      "model": "gemini-3-pro-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-clover",
+      "attempt": 3,
+      "phase": "compare",
+      "model": "gemini-3-pro-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-keyboard",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-sunflower",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-bicycle",
+      "attempt": 1,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-keyboard",
+      "attempt": 2,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-sunflower",
+      "attempt": 2,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-bicycle",
+      "attempt": 2,
+      "phase": "pilot",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-book",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-pen",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-wrench",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-screwdriver",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-gear",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-ruler",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-pencil",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-calculator",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-mouse",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-monitor",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-smartphone",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-tablet",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-microchip",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-circuit",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-server",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-database",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-cloud-upload",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-robot",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-rocket",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-lightbulb",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-paintbrush",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-palette",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-compass",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-set-square",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-tape-measure",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-pliers",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-toolbox",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-usb",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-battery",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-plug",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-magnet",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-microscope",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-flask",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-telescope",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-satellite",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-drone",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-printer-3d",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-camera",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-floppy",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-hard-hat",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-padlock",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-key",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-headset",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-bar-chart",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-clipboard",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "tech-stopwatch",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-daisy",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-tulip",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-rose",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-cherry-blossom",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-lavender",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-bouquet",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-potted-plant",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-cactus",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-sprout",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-tea-cup",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-mug",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-teapot",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-water-bottle",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-juice",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-cookie",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-cupcake",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-strawberry",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-apple",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-ice-cream",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-candle",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-rubber-duck",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-pillow",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-sleep-mask",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-sun",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-rainbow",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-umbrella",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-hot-air-balloon",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-kite",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-paper-plane",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-balloon",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-gift",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-music-note",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-guitar",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-vinyl",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-yarn",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "soft-yoga-mat",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": false,
+      "error": "HTTP 402 from generativelanguage.googleapis.com: {\n  \"error\": {\n    \"code\": 402,\n    \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\n    \"status\": \"RESOURCE_EXHAUSTED\"\n  }\n}\n"
+    },
+    {
+      "id": "tech-ruler",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-daisy",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-lavender",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-paper-plane",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-balloon",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-gift",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-music-note",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-guitar",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-vinyl",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-yarn",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-yoga-mat",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-dumbbell",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-running-shoe",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-football",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-watering-can",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-heart",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-seashell",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-speech-bubble",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-butterfly",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-feather",
+      "attempt": 1,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-vinyl",
+      "attempt": 3,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    },
+    {
+      "id": "soft-seashell",
+      "attempt": 2,
+      "phase": "run",
+      "model": "gemini-3.1-flash-image",
+      "pass": true,
+      "failed": []
+    }
+  ]
+}

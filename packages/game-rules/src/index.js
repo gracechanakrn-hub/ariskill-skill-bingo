@@ -4,5 +4,6 @@ export * from './board.js';
 export * from './pool.js';
 export * from './evaluate.js';
 export * from './soul.js';
+export * from './soul-catalog.js';
 export * from './insight.js';
 export * from './state-machine.js';

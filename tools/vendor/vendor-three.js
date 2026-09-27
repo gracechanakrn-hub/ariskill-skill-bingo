@@ -17,6 +17,8 @@ const FILES = [
   'examples/jsm/postprocessing/EffectComposer.js', 'examples/jsm/postprocessing/RenderPass.js', 'examples/jsm/postprocessing/ShaderPass.js',
   'examples/jsm/postprocessing/UnrealBloomPass.js', 'examples/jsm/postprocessing/Pass.js', 'examples/jsm/postprocessing/MaskPass.js', 'examples/jsm/postprocessing/OutputPass.js',
   'examples/jsm/shaders/CopyShader.js', 'examples/jsm/shaders/LuminosityHighPassShader.js', 'examples/jsm/shaders/OutputShader.js',
+  // Baseline Soul GLBs (D-27): GLTFLoader + its two static imports (toTrianglesDrawMode, SkeletonUtils.clone).
+  'examples/jsm/loaders/GLTFLoader.js', 'examples/jsm/utils/BufferGeometryUtils.js', 'examples/jsm/utils/SkeletonUtils.js',
   'LICENSE',
 ];
 const manifest = { name: 'three', version: pkg.version, license: pkg.license, source: `https://registry.npmjs.org/three/-/three-${pkg.version}.tgz`, vendoredBy: 'tools/vendor/vendor-three.js', files: [] };
@@ -34,6 +36,8 @@ for (const f of FILES) {
 // A tiny facade so app code imports one path for core + addons.
 writeFileSync(join(out, 'index.js'), `// Vendored Three.js ${pkg.version} (MIT). Regenerate with tools/vendor/vendor-three.js; never edit by hand.\nexport * from './build/three.module.js';\n`);
 writeFileSync(join(out, 'addons.js'), `// Vendored Three.js ${pkg.version} addons (MIT).\nexport { EffectComposer } from './examples/jsm/postprocessing/EffectComposer.js';\nexport { RenderPass } from './examples/jsm/postprocessing/RenderPass.js';\nexport { ShaderPass } from './examples/jsm/postprocessing/ShaderPass.js';\nexport { UnrealBloomPass } from './examples/jsm/postprocessing/UnrealBloomPass.js';\nexport { OutputPass } from './examples/jsm/postprocessing/OutputPass.js';\n`);
+// Loaders live in their own facade so screens that only need bloom (public Galaxy) never fetch GLTFLoader + its utils.
+writeFileSync(join(out, 'loaders.js'), `// Vendored Three.js ${pkg.version} loaders (MIT).\nexport { GLTFLoader } from './examples/jsm/loaders/GLTFLoader.js';\n`);
 writeFileSync(join(out, 'VENDOR.json'), JSON.stringify(manifest, null, 2) + '\n');
 writeFileSync(join(out, 'package.json'), JSON.stringify({ name: '@ariskill/vendor-three', version: pkg.version, type: 'module', private: true, license: 'MIT', description: 'Pinned vendored Three.js for offline, CSP-safe use' }, null, 2) + '\n');
 console.log(`vendored three ${pkg.version}: ${manifest.files.length} files, ${manifest.files.reduce((a, f) => a + f.bytes, 0)} bytes`);

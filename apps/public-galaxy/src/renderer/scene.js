@@ -285,7 +285,7 @@ export function createScene(opts = {}) {
   function entranceItem(s, p, home, prog, size) {
     const id = String(s.soulId);
     const edge = s.edge || config.entrance.defaultEdge;
-    const base = { soulId: id, config: s.config, badge: s.badge || null, size, detail: 'full', ring: p.ring, phase: prog.phase, trail: [] };
+    const base = { soulId: id, config: s.config, badge: s.badge || null, size, detail: 'full', ring: p.ring, phase: prog.phase, t: prog.t, trail: [] };
     if (reducedMotion || prog.phase === 'fade') {
       return { ...base, x: home.x, y: home.y, scale: 1, alpha: prog.phase === 'fade' ? easeStandard(prog.t) : 1, glow: 0 };
     }

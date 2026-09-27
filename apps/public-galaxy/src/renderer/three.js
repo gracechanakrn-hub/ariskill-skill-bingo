@@ -15,7 +15,13 @@
 // then EffectComposer: RenderPass(sky) -> UnrealBloomPass (off on `low`) -> RenderPass(overlay, no clear) -> OutputPass.
 // The overlay scene is drawn AFTER bloom so the stickers stay flat, crisp print on the glowing sky (art direction v2):
 //   Souls (instanced atlas quads at detail 'simple', die-cut hull + winner outline flash in the fragment shader)
+//   Float entrances of decorated Souls (the live 3D figure from the impostor stage, same sticker shader)
 //   doodads (rocket / UFO / planet / comet / stars from packages/ui/doodads.js, high tier only, doodads-layout.js)
+// Decorated (v2 / v3) Souls (D-29, D-31): the impostor stage (impostor.js) renders the phone's 3D Soul - shared soul3d
+// rig on the body of the Soul's variant (the v3 body for a v3 Soul), lights, tone mapping - live for each Float
+// entrance's hero moment, and bakes settled decorated Souls into their atlas cells after each frame (afterFrame), so the
+// Galaxy shows the same decorated Soul as the phone; GLTFLoader and the models load only when the first decorated Soul
+// appears. v1 Souls keep their 2D sprites; so does a Soul whose body variant could not load.
 // BR-17: nothing here tints, scales or reorders a Soul by anything but config / badge / soulId.
 import * as THREE from '/packages/vendor/three/index.js';
 import { EffectComposer, RenderPass, UnrealBloomPass, OutputPass } from '/packages/vendor/three/addons.js';
@@ -27,12 +33,15 @@ import { seededRandom } from './forest.js';
 import { activeRingCount } from './scene.js';
 import { AURORA, AURORA_GLSL, auroraPhase, auroraTierGain } from './aurora.js';
 import { DOODAD_SET, DOODAD_RULES, doodadLayout, doodadExclusions, doodadOffset, doodadRect, rectsIntersect } from './doodads-layout.js';
+import { createImpostorStage } from './impostor.js';
+import { IMPOSTOR } from './impostor-plan.js';
 
 export const THREE_RENDERER_KIND = 'three';
 const FOREST_REF = { width: 1248, height: 1080 };
 const PARTICLE_MAX = 2400;
 const NEBULA_OVERSCAN = 1.1;   // the nebula plane is 10 % larger than the region (parallax headroom)
 const DOODAD_CELL = 128;      // doodad atlas cell (the 64 px viewBox drawn at 104 px, rotation baked in)
+const ATLAS_UPLOAD_MS = 200;  // at most ~5 atlas page re-uploads per second while cells land
 
 const NEBULA_VS = /* glsl */`
 varying vec2 vUv;
@@ -331,8 +340,13 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
   scene.add(halo.mesh, clusterBatch.mesh, particleBatch.mesh);
   const soulBatches = []; const pageTex = []; let atlasVersion = -1;
   const flashColor = new THREE.Color('#F6C453'); // --sticker-gold
-  function ensureAtlas() {
+  // While cells keep landing (impostor bakes a few per frame, sprite decodes) a 2048^2 page would be re-uploaded
+  // (16 MB) every frame; new cells are batched into one upload per ATLAS_UPLOAD_MS instead. New pages upload at once.
+  let lastUploadAt = -Infinity;
+  function ensureAtlas(now = performance.now()) {
     if (atlas.version === atlasVersion && soulBatches.length === atlas.pages.length) return;
+    if (soulBatches.length === atlas.pages.length && now - lastUploadAt < ATLAS_UPLOAD_MS) return;
+    lastUploadAt = now;
     atlasVersion = atlas.version;
     atlas.pages.forEach((p, i) => {
       if (!pageTex[i]) {
@@ -341,6 +355,16 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
         overlay.add(soulBatches[i].mesh);
       } else pageTex[i].needsUpdate = true;
     });
+  }
+
+  // ---- decorated Souls: the 3D impostor stage (lazy: nothing loads until a decorated Soul asks) and the live entrance quads ----
+  const impostors = createImpostorStage({ THREE });   // attached to the atlas once this renderer is fully built (below)
+  let liveTex = null, heroBatch = null;
+  function ensureLive() {
+    if (heroBatch || !impostors.canvas) return;
+    liveTex = canvasTexture(impostors.canvas, { flipY: false });
+    heroBatch = createSpriteBatch({ texture: liveTex, additive: false, capacity: 16, renderOrder: 48, fragmentShader: STICKER_FS, uniforms: { uTexel: { value: 1 / IMPOSTOR.stage }, uFlashColor: { value: flashColor } } });
+    overlay.add(heroBatch.mesh);
   }
 
   // ---- doodads (high tier only; strip atlas built once, stickers drawn in the overlay) ----
@@ -477,14 +501,19 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     ffMat.uniforms.uRes.value.set(width, height);
   }
 
-  function drawSoul(item, detail, alpha, scale, glow, now) {
+  function drawSoul(item, detail, alpha, scale, glow, now, entering = false, live = null) {
     const size = item.size * (scale || 1);
     const [r, g, b] = glowOf(item);
     const flash = flashIds.size && flashIds.has(String(item.soulId)) ? outlineFlash(flashAt, now) : 0;
     if (flash > 0) lastFlashDrawn = flash;
     // palette light behind the sticker (bloomed); the sticker itself is drawn crisp in the overlay pass
     halo.push(item.x, item.y + size * 0.04, size * 2.1, 0, 0, 1, 1, r, g, b, (0.30 + 0.34 * glow + 0.25 * flash) * alpha);
-    const entry = atlas.get(item, detail, item.size * pr);
+    // entrances ask first (priority 1): a decorated Soul's impostor is baked before it settles
+    const entry = atlas.get(item, detail, item.size * pr, { priority: entering ? 1 : 0 });
+    if (live && heroBatch) {
+      heroBatch.push(item.x, item.y, size, live.u0, live.v0, live.u1, live.v1, 1, 1, 1, alpha, hullPx(size) * (live.size / size), flash);
+      return;
+    }
     if (entry.ready && entry.page >= 0 && soulBatches[entry.page]) {
       const ps = atlas.pageSize;
       const hullTexels = hullPx(size) * (entry.w / size);
@@ -509,8 +538,8 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
   function render(f) {
     if (disposed || lost) return;
     if (f.quality !== currentQuality) applyQuality(f.quality);
-    ensureAtlas();
     const now = performance.now();
+    ensureAtlas(now);
     const dt = lastNow ? Math.min(0.1, (now - lastNow) / 1000) : 1 / 60;
     lastNow = now;
     const t = f.timeSec || 0, L = f.layout;
@@ -546,8 +575,11 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
       clusterBatch.push(c.x, c.y, c.size * 0.6, 0, 0, 1, 1, 0.9, 0.86, 1, 0.5);
     }
     updateLabels(f.clusters);
-    // entrances
+    // entrances (a decorated Soul is the live 3D figure while the stage is ready; the rest keep their atlas sprite)
     const active = new Set();
+    const live = f.entrances.length && impostors.state === 'ready' ? impostors.renderEntrances(f.entrances, pr, { reducedMotion }) : null;
+    if (live && live.size) { ensureLive(); if (liveTex) liveTex.needsUpdate = true; }
+    if (heroBatch) heroBatch.begin();
     for (const e of f.entrances) {
       active.add(e.soulId);
       const glow = e.glow || 0;
@@ -557,8 +589,9 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
         if (e.phase === 'arc') emitTrail(e.soulId, e.x, e.y, e.size, r, g, b, L.scale);
       }
       if (e.phase === 'pulse' && !pulsed.has(e.soulId) && !reducedMotion) { pulsed.add(e.soulId); pulseAt = now; pulsePeak = BLOOM_PULSE.entrance; pulseDur = pulseMs; }
-      drawSoul(e, 'full', e.alpha ?? 1, e.scale ?? 1, glow, now);
+      drawSoul(e, 'full', e.alpha ?? 1, e.scale ?? 1, glow, now, true, live ? live.get(String(e.soulId)) || null : null);
     }
+    if (heroBatch) heroBatch.end();
     for (const id of pulsed) if (!active.has(id)) pulsed.delete(id);
     for (const id of trailPrev.keys()) if (!active.has(id)) trailPrev.delete(id);
     stepParticles(dt); drawParticles();
@@ -606,11 +639,17 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
   canvas.addEventListener('webglcontextlost', handleLost, false);
 
   applyQuality(quality);
+  atlas.setImpostors(impostors); // only now: a renderer that failed to build never leaves its stage on the shared atlas
+
+  /** After the frame (galaxy.js, outside the measured render): bake queued v2 / v3 impostors for about `budgetMs`. */
+  function afterFrame(budgetMs) { if (!disposed && !lost) impostors.pump(budgetMs); }
+  /** A round just ended: load the impostor stage now so the coming Float entrances are 3D from their first frame. */
+  function prewarm() { if (!disposed && !lost) impostors.warm(); }
 
   return {
-    kind: THREE_RENDERER_KIND, canvas, resize, render, winner, flash,
-    /** Rehearsal instrumentation: doodad homes / visibility and the atlas cells in use. */
-    debug() { return { doodads: doodadHomes.map((d, i) => ({ name: d.name, x: Math.round(doodadState[i].x), y: Math.round(doodadState[i].y), size: d.size, visible: d.visible, alpha: Number(doodadState[i].alpha.toFixed(2)) })), aurora: { cap: auroraU.uAuroraCap.value, skyLumCap: auroraU.uSkyLumCap.value, phase: auroraU.uAuroraPhase.value }, hull: HULL, flash: { ids: [...flashIds], at: flashAt, value: outlineFlash(flashAt, performance.now()), lastDrawn: lastFlashDrawn } }; },
+    kind: THREE_RENDERER_KIND, canvas, resize, render, winner, flash, afterFrame, prewarm,
+    /** Rehearsal instrumentation: doodad homes / visibility, the atlas cells in use and the impostor stage. */
+    debug() { return { doodads: doodadHomes.map((d, i) => ({ name: d.name, x: Math.round(doodadState[i].x), y: Math.round(doodadState[i].y), size: d.size, visible: d.visible, alpha: Number(doodadState[i].alpha.toFixed(2)) })), aurora: { cap: auroraU.uAuroraCap.value, skyLumCap: auroraU.uSkyLumCap.value, phase: auroraU.uAuroraPhase.value }, hull: HULL, flash: { ids: [...flashIds], at: flashAt, value: outlineFlash(flashAt, performance.now()), lastDrawn: lastFlashDrawn }, impostors: { ...impostors.stats, pending: impostors.pending } }; },
     get lost() { return lost; },
     get quality() { return currentQuality; },
     /** Rehearsal instrumentation: simulate a context loss so the canvas2d hand-over can be checked. */
@@ -619,6 +658,10 @@ export function createThreeRenderer({ container, atlas, starLayers = [], backgro
     dispose() {
       disposed = true;
       canvas.removeEventListener('webglcontextlost', handleLost);
+      if (atlas.impostors === impostors) atlas.setImpostors(null); // later cells (canvas2d / static) use the 2D composition
+      impostors.dispose();
+      if (heroBatch) heroBatch.dispose();
+      if (liveTex) liveTex.dispose();
       try { composer.dispose(); } catch { /* ignore */ }
       for (const b of [halo, clusterBatch, particleBatch, doodadBatch, ...soulBatches]) b.dispose();
       for (const tx of pageTex) tx.dispose();

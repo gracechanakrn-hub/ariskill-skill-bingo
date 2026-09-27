@@ -1,6 +1,6 @@
 {
   "$id": "ariskill-skill-bingo/contracts/realtime-events",
-  "version": "1.0.3",
+  "version": "1.2.0",
   "transport": {
     "type": "server-sent-events",
     "paths": {
@@ -305,19 +305,55 @@
     },
     "SoulPrivate": {
       "soulId": "string",
-      "config": "SoulConfig",
+      "config": "SoulConfig (v3) for Souls created from contract 1.2.0 on; SoulConfigV2 for Souls created under 1.1.0 and for the neutral fallback; SoulConfigV1 for Souls created before 1.1.0",
       "badge": "bingo-star|null",
       "floatToken": "string|null (only until consumed)",
       "floated": "bool"
     },
     "SoulEntrance": {
       "soulId": "string",
-      "config": "SoulConfig",
+      "config": "SoulConfig (v3) for Souls created from contract 1.2.0 on; SoulConfigV2 for Souls created under 1.1.0 and for the neutral fallback; SoulConfigV1 for Souls created before 1.1.0. Public and stage get the same config as the owner: its decoration is charm ids, face, face plate, eyes, antenna charm and gradient, never skill ids, skill names or match counts",
       "badge": "bingo-star|null",
       "label": "string|null",
       "enteredAt": "ISO",
       "edge": "left|right|top|bottom"
     },
-    "SoulConfig": "see packages/game-rules/src/soul.js SOUL_CONFIG_SCHEMA"
+    "SoulConfig": {
+      "version": "3 (contract 1.2.0, D-31, docs/art/soul-faces.md). Built once at round end by packages/game-rules/src/soul.js decoratedSoulConfig and checked by validateSoulConfig; exactly these keys, in this order, for every audience. Clients branch on version: SoulConfigV2 and SoulConfigV1 stay valid for stored Souls",
+      "catalog": "int 2..current: version of packages/game-rules/src/soul-catalog.js that the charm, plate and eye ids refer to (plates and eyes exist from catalog 2)",
+      "seed": "string (hex), from eventId|participantId|roundId only",
+      "gradient": "int 0..11: catalog body gradient, picked from the seed (all gradients share one mean brightness)",
+      "glow": "int 0..2: glow style, picked from the seed",
+      "face": "nerdy|pirate|angel: the face kit, from the kind with the most matched tiles at round end (ties core > technical > soft, no matches -> nerdy); never null",
+      "plate": "string: catalog face plate id (soul-catalog.js PLATE_IDS), picked from the seed",
+      "eyes": "string: catalog eye design id (soul-catalog.js EYE_IDS), picked from the seed",
+      "charms": "string[]: catalog charm ids, index = slot; exactly slotCount (10) distinct ids, split across core / technical / soft in proportion to the selected skills' kinds, variants and order from the seed",
+      "topper": "string: the antenna charm that replaces the orb, a catalog charm id picked from the seed among the charms not in charms (random, never derived from skills)",
+      "constellation": "[{domain, weight 0..1}] top 5 selected-skill domains (accent placement only)",
+      "driftPhase": "float 0..1 (orbit start offset, cosmetic)"
+    },
+    "SoulConfigV2": {
+      "version": "2: Souls created under contract 1.1.0 (D-29, docs/art/soul-decorations.md; packages/game-rules/src/soul.js SOUL_CONFIG_SCHEMA_V2), and the neutral fallback any Soul gets when its decoration fails (packages/game-rules/src/soul.js neutralSoulConfig: face null, charms [], gradient 0, glow 0). Still valid; exactly these keys",
+      "catalog": "int 1..current: version of packages/game-rules/src/soul-catalog.js that the charm ids refer to",
+      "seed": "as SoulConfig",
+      "gradient": "as SoulConfig",
+      "glow": "as SoulConfig",
+      "face": "nerdy|pirate|angel as SoulConfig; null only in the neutral fallback",
+      "charms": "string[]: as SoulConfig (slotCount ids); [] in the neutral fallback",
+      "constellation": "as SoulConfig",
+      "driftPhase": "as SoulConfig"
+    },
+    "SoulConfigV1": {
+      "version": "1: Souls created before contract 1.1.0 (packages/game-rules/src/soul.js SOUL_CONFIG_SCHEMA); still valid, rendered as the plain baseline with their palette",
+      "seed": "string (hex)",
+      "body": "index into SOUL_TRAITS.body",
+      "palette": "index into SOUL_TRAITS.palette",
+      "eyes": "index into SOUL_TRAITS.eyes",
+      "antenna": "index into SOUL_TRAITS.antenna",
+      "mouth": "index into SOUL_TRAITS.mouth",
+      "glow": "index into SOUL_TRAITS.glow",
+      "constellation": "as SoulConfig",
+      "driftPhase": "as SoulConfig"
+    }
   }
 }

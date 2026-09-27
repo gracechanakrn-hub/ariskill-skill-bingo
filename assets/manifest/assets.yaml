@@ -129,6 +129,2742 @@ entries:
     texture_memory_bytes: 4873
     lods: []
     approved_by: null
+  - id: soul_baseline_hero
+    kind: model
+    source_file: assets-src/generated/soul-baseline/v1/soul-baseline-hero.glb
+    source_format: glb
+    runtime_file: assets/souls/baseline/soul-baseline-hero.glb
+    runtime_format: glb
+    fallback_file: assets/souls/baseline/soul-baseline-lite.glb
+    fallback_format: glb
+    version: 1.0.0
+    checksum: sha256:ef698a388bffb9c0b9a19f07c05655a8b6ead0b8cd479eaaad0423fe212df22a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_baseline.py
+    bounds: [1.45, 2.29087, 0.89373]
+    pivot: [0, -0.02189, 0]
+    triangle_count: 24000
+    texture_memory_bytes: 338168
+    lods: [assets/souls/baseline/soul-baseline-hero.glb, assets/souls/baseline/soul-baseline-lite.glb]
+    approved_by: null
+  - id: soul_baseline_lite
+    kind: model
+    source_file: assets-src/generated/soul-baseline/v1/soul-baseline-lite.glb
+    source_format: glb
+    runtime_file: assets/souls/baseline/soul-baseline-lite.glb
+    runtime_format: glb
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:d2607c3a49f678ae873fc0d86782956eef5dc05610557ff9a4fec2dfea6e5161
+    license: internal-original
+    generator_script: tools/ai/blender/soul_baseline.py
+    bounds: [1.44924, 2.29087, 0.89396]
+    pivot: [0, -0.02189, 0]
+    triangle_count: 6000
+    texture_memory_bytes: 86152
+    lods: [assets/souls/baseline/soul-baseline-lite.glb]
+    approved_by: null
+  - id: soul_charm_core_burst_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-burst-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-burst-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-burst-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:76947c751b83358c230196db10e5f0c00dac49d7a3ed9d92a2ee3905ead8ae75
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93867, 0.93913, 0.33823]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-burst-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_burst_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-burst-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-burst-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-burst-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:7fce388e88dfb0062c9d87375791deca21d353d1b91ed0123a9fe10787d616c0
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93867, 0.93913, 0.33823]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-burst-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_burst_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-burst-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-burst-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-burst-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9c56657ac0ef8337b239205a6c1e9c226ac7301640f6a04867851ee7486771f4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93867, 0.93913, 0.33823]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-burst-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_burst_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-burst-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-burst-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-burst-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:04c10c9baee7177082691ff4f1fff6d2e15744ec263b59fb9214ac0bda24c88f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93867, 0.93913, 0.33823]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-burst-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_burst_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-burst-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-burst-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-burst-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:0af5e7717fccf6479a38ac5b9749c08f9068df66c664f98ec6808325f472973a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93867, 0.93913, 0.33823]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/core-burst-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_chubby_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-chubby-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-chubby-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-chubby-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:09ac745c2213f4c3eff245bdf1c97df667345202cf45a4f58b333cfc54ebbe1a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96616, 0.93779, 0.33758]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-chubby-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_chubby_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-chubby-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-chubby-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-chubby-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:6af81440aa82b690a029963e69613b087bf24ea42a899f4b66bfb99f9150389f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96616, 0.93779, 0.33758]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-chubby-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_chubby_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-chubby-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-chubby-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-chubby-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:383387dad9cda7a89726d1f0a5c9881d66b5aaa53af868b306d419a363f784df
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96616, 0.93779, 0.33758]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-chubby-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_chubby_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-chubby-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-chubby-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-chubby-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8a69ddd17b8899a56fb7327abc752a882311c1c3a70555d806dc4047d5f47403
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96616, 0.93779, 0.33758]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-chubby-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_chubby_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-chubby-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-chubby-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-chubby-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b487df19604f50d3e26e04761d373585ca67d105e14dab1f486878b057ec264f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96616, 0.93779, 0.33758]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/core-chubby-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_classic_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-classic-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-classic-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-classic-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:2fcf59196c61c765e628135acaa0bc9544b9c2a4f00f7e4d74f70d840371e4a0
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96182, 0.9251, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-classic-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_classic_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-classic-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-classic-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-classic-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d4bfdd24b475eecdd35575fa46e4c2a0a604eaec83b093147603560751922f88
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96182, 0.9251, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-classic-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_classic_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-classic-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-classic-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-classic-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:7fbb69bdde8eb65632c9c536c88702d834506d235089d6825dc0e54740d4d974
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96182, 0.9251, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-classic-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_classic_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-classic-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-classic-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-classic-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d536f421ae96d5deb276312bad1a42d8195cfb18d64b8d5dc604890bb46b3240
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96182, 0.9251, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-classic-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_classic_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-classic-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-classic-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-classic-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b1ac14687dd901f736050355b62d633db2cd272996d8cae224551da487f3deb4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96182, 0.9251, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-classic-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_pinwheel_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-pinwheel-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-pinwheel-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-pinwheel-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:73cf12ee84bdb453530513474aa9dfe6d43bdea8b5df2319db4234011edb86a2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96315, 0.94249, 0.33659]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14432
+    lods: [assets/souls/charms/core-pinwheel-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_pinwheel_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-pinwheel-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-pinwheel-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-pinwheel-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d4e8ee71517f8f0fe43e78d8b78cf2cdf76ea61224cf44ac5eaf9a6fe93d0104
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96315, 0.94249, 0.33659]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14432
+    lods: [assets/souls/charms/core-pinwheel-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_pinwheel_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-pinwheel-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-pinwheel-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-pinwheel-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:02fba1eb946348aa1118a68f69f13783de4bb402a029236ae8c6c0a7fc625a70
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96315, 0.94249, 0.33659]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-pinwheel-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_pinwheel_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-pinwheel-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-pinwheel-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-pinwheel-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:316a341b383396a7efa402a16f6c3b77e259ae6ee4d77e6f1664e75d0c98a5b9
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96315, 0.94249, 0.33659]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14432
+    lods: [assets/souls/charms/core-pinwheel-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_pinwheel_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-pinwheel-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-pinwheel-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-pinwheel-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:796c67199ba2d6a7b050e8b7206815b01c04bfe1f3ec07c1edea7801d806a709
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96315, 0.94249, 0.33659]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-pinwheel-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_ringed_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-ringed-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-ringed-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-ringed-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:411cb4111ac78dc1d31d07b55b7584e978497fad788f8b3739940917208026c3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96326, 0.67146, 0.33778]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-ringed-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_ringed_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-ringed-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-ringed-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-ringed-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1ba84f33b116753e656b6f151754421994e4a4dad445c21998ef512bed6ea186
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96326, 0.67146, 0.33778]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-ringed-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_ringed_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-ringed-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-ringed-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-ringed-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b6e42991c6582b66eddc8ca127dc8da3678124e7a8404ab846c20cfcd7249f10
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96326, 0.67146, 0.33778]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-ringed-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_ringed_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-ringed-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-ringed-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-ringed-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:963eaef42807d7f85115835d394312487b57be7aeb307c5e0731da99935fe264
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96326, 0.67146, 0.33778]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-ringed-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_ringed_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-ringed-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-ringed-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-ringed-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1e292c5eb5ee84cbf8ffe8dad02d75523650be0dae62f854e405194e6c2c196b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96326, 0.67146, 0.33778]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/core-ringed-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_shooting_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-shooting-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-shooting-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-shooting-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:baa50b7a145c3ecd61bf0fcbdad6cc0a06d35b7a4d30ddfbfdccfea9e50e9045
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83268, 0.76935, 0.32676]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-shooting-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_shooting_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-shooting-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-shooting-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-shooting-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8619c88b73a2e3e61875497bec104340b868c4d6e9d0c975ac476eee176d6ef5
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83268, 0.76935, 0.32676]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-shooting-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_shooting_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-shooting-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-shooting-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-shooting-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e41b44bcfdcc08be38c5b3b17778dac4e0129f06d7a24f0609c427121d7027da
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83268, 0.76935, 0.32676]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-shooting-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_shooting_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-shooting-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-shooting-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-shooting-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:957d11fecd45fb6ed2e596371ef342f239c07675bc23f209ac0a16c37c23e1b3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83268, 0.76935, 0.32676]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-shooting-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_shooting_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-shooting-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-shooting-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-shooting-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e4f7a52079ffd80a9eee07f52fdc8ee69a25a2d39b706af26e4ae1717677e559
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83268, 0.76935, 0.32676]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-shooting-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_six_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-six-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-six-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-six-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:70bb4da1a38d9b45cc543825dd279cb2668ec151c93805bca21556092991e2a4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89506, 1.00112, 0.33791]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14384
+    lods: [assets/souls/charms/core-six-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_six_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-six-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-six-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-six-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:826ccc44fcc48376c58236a4b4e846ccbfc85529d8dcceb9ba35335e4bf40d37
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89506, 1.00112, 0.33791]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14384
+    lods: [assets/souls/charms/core-six-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_six_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-six-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-six-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-six-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:08fe30cdd8d8bb98b214fcf94fee56660c7eb565499789ce050fe49f2ce038af
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89506, 1.00112, 0.33791]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14380
+    lods: [assets/souls/charms/core-six-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_six_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-six-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-six-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-six-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:450db65efdd14099fb6120334de243ac9c98bd8a3f891608b03d92628b66622a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89506, 1.00112, 0.33791]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14384
+    lods: [assets/souls/charms/core-six-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_six_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-six-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-six-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-six-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:139f0b6bb321116d6c546aa325645d24405c22dfd12e958365fb1fca0c41d88e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89506, 1.00112, 0.33791]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14376
+    lods: [assets/souls/charms/core-six-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_soft7_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-soft7-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-soft7-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-soft7-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:2f5570702df4bf62186e55288b7f903d0df12323f57fc398f21ff75e284fa9c4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98083, 0.96646, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-soft7-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_soft7_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-soft7-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-soft7-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-soft7-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ae8e48428424fbde26ff336b2eca43c211f99a51774bd1ce0fe69d9ca43372df
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98083, 0.96646, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-soft7-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_soft7_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-soft7-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-soft7-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-soft7-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b15a8e58b32837098a593b95a65295fdeedf4111f8407fed31365e50204a719e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98083, 0.96646, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/core-soft7-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_soft7_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-soft7-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-soft7-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-soft7-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:2ef89145d1556fb2fc44ae06c8e29ef9366b634f4453e928f17878830df8d24d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98083, 0.96646, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-soft7-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_soft7_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-soft7-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-soft7-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-soft7-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:3ee50cfc76d9d27f92ada3806bc88a6b6cbaa439a4f37fb62c0abb2cf25a4006
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98083, 0.96646, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/core-soft7-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_sparkle_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-sparkle-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-sparkle-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-sparkle-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:046fc8dc19fbe504b65e329b08c2fc180b08cf83c2f781b6ee6d7901d380058f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85915, 0.99926, 0.33729]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-sparkle-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_sparkle_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-sparkle-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-sparkle-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-sparkle-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:250be0c1bc997d79f2d3550f6df06bba8f9b5e7c42e9701a01b130127ada05e6
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85915, 0.99926, 0.33729]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-sparkle-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_sparkle_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-sparkle-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-sparkle-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-sparkle-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:691066afe3133edd279e71a52d8c3af95805ff1dd8988e01db5c229191073f92
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85915, 0.99926, 0.33729]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/core-sparkle-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_sparkle_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-sparkle-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-sparkle-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-sparkle-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a6c1630aab91107e38e06d37a2d89f6c628bf165ed6ee33063fd2c3d8dc2a5ea
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85915, 0.99926, 0.33729]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/core-sparkle-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_sparkle_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-sparkle-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-sparkle-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-sparkle-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d06082be195b567376d953ab52b33d5343958ff2b842eb17ecbeacaaf94e281c
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85915, 0.99926, 0.33729]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/core-sparkle-sky.glb]
+    approved_by: null
+  - id: soul_charm_core_twin_lemon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-twin-lemon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-twin-lemon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-twin-lemon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:08059a9d04b7ce221257a5f493b9851ef60929598eba0d2dff0624f27c6309cf
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85192, 0.82412, 0.33841]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-twin-lemon.glb]
+    approved_by: null
+  - id: soul_charm_core_twin_lilac
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-twin-lilac.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-twin-lilac.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-twin-lilac.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:81a87af458750699622e32352491d3e9b87d6215df16acb9489d7e64826e91cd
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85192, 0.82412, 0.33841]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-twin-lilac.glb]
+    approved_by: null
+  - id: soul_charm_core_twin_mint
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-twin-mint.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-twin-mint.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-twin-mint.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f404b9e82836c4afe3398f2e5ee195091ce4a1bb534fd14853c7dd2acb199e82
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85192, 0.82412, 0.33841]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/core-twin-mint.glb]
+    approved_by: null
+  - id: soul_charm_core_twin_peach
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-twin-peach.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-twin-peach.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-twin-peach.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:423e7bcdfc67f00459c7c0a6926d38d134b28448b1b90b0b5c994ca7e498c5c8
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85192, 0.82412, 0.33841]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/core-twin-peach.glb]
+    approved_by: null
+  - id: soul_charm_core_twin_sky
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/core-twin-sky.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/core-twin-sky.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/core-twin-sky.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:5ef985ac7440592293b09835749450d733c65e15c5a804461008bd3c2515f3ae
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85192, 0.82412, 0.33841]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/core-twin-sky.glb]
+    approved_by: null
+  - id: soul_charm_soft_apple
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-apple.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-apple.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-apple.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:55d6f575fc6873e4c6b356f4b0a4e95fcae6ef90d0702fff7cf23b2f27344167
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.81117, 0.88405, 0.33809]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-apple.glb]
+    approved_by: null
+  - id: soul_charm_soft_balloon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-balloon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-balloon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-balloon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:43f374f698b4c6e4babbbff15079a61a45566016b6f2979400a3c75f86772d63
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.77701, 0.95664, 0.33741]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-balloon.glb]
+    approved_by: null
+  - id: soul_charm_soft_bicycle
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-bicycle.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-bicycle.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-bicycle.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1abf01f6640fa3ba29df136ef285d10717e5893055424ff9be21e668110516c3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96328, 0.70891, 0.33775]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14368
+    lods: [assets/souls/charms/soft-bicycle.glb]
+    approved_by: null
+  - id: soul_charm_soft_bouquet
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-bouquet.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-bouquet.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-bouquet.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:75921004fcf719ee92d38e93a35387f97cfa1b632d027d50a493c3cc10285c11
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.80754, 0.92706, 0.33855]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-bouquet.glb]
+    approved_by: null
+  - id: soul_charm_soft_butterfly
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-butterfly.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-butterfly.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-butterfly.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:41eab1bad6a5b422b52dc0786345f75235548c8e92b0a3e50ab278466219bf20
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.95849, 0.74022, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/soft-butterfly.glb]
+    approved_by: null
+  - id: soul_charm_soft_cactus
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-cactus.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-cactus.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-cactus.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:2dd3e4c236b463f4814cd4d9c1045841a06bab0651d86733bc29fa228a8d5e8b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88945, 0.9531, 0.33747]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-cactus.glb]
+    approved_by: null
+  - id: soul_charm_soft_candle
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-candle.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-candle.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-candle.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:cc4dafb4baf4e77a99945d8b8f3878c65b58464f71f721fb023ea2f426c52ce2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.72397, 0.98933, 0.33756]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-candle.glb]
+    approved_by: null
+  - id: soul_charm_soft_cherry_blossom
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-cherry-blossom.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-cherry-blossom.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-cherry-blossom.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d3603c7619fb03404ea8953bffd938779e11f31f3f3878193a032e3837f23965
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.81761, 0.76625, 0.33743]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/soft-cherry-blossom.glb]
+    approved_by: null
+  - id: soul_charm_soft_clover
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-clover.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-clover.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-clover.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:20e1ea59e4a79e561cde30f25c1ac4edcf30de983bd89c3f958881f1c20b37fa
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.92934, 0.94362, 0.33749]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-clover.glb]
+    approved_by: null
+  - id: soul_charm_soft_cookie
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-cookie.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-cookie.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-cookie.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f1ba82182a06bb61051002aa1f9048c555ee2ca8008254d4c245b14478220d4b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.9827, 0.99038, 0.33831]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-cookie.glb]
+    approved_by: null
+  - id: soul_charm_soft_cupcake
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-cupcake.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-cupcake.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-cupcake.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ec766e8ad543ceaf1b212e611ff36dd659188554d9cfc718d441559228fa6e6e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.97432, 0.97986, 0.33782]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-cupcake.glb]
+    approved_by: null
+  - id: soul_charm_soft_daisy
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-daisy.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-daisy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-daisy.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:514854542f9bc4436273745847f90cabc5b7d3765e41ebd5c1e1c5c04a78d8e6
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.86286, 1.00003, 0.33797]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14392
+    lods: [assets/souls/charms/soft-daisy.glb]
+    approved_by: null
+  - id: soul_charm_soft_donut
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-donut.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-donut.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-donut.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f701a8fa102d69edf17f3e332e2ee9a8c491541675d8c07f62c71bdc47959b3e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99878, 0.92278, 0.33746]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14392
+    lods: [assets/souls/charms/soft-donut.glb]
+    approved_by: null
+  - id: soul_charm_soft_dumbbell
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-dumbbell.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-dumbbell.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-dumbbell.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e8d5133f543fe38052fea0d71372266ddce55e30246818a540a3f40da13396a7
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [1.00011, 0.57948, 0.32539]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/soft-dumbbell.glb]
+    approved_by: null
+  - id: soul_charm_soft_earphones
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-earphones.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-earphones.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-earphones.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:c6cf5296b18c5c285c9adfcc12b2f05e40486b673519b1bfe2cc2a15ed3b2248
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.91931, 0.84793, 0.32677]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/soft-earphones.glb]
+    approved_by: null
+  - id: soul_charm_soft_feather
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-feather.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-feather.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-feather.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:4fb3f133b13cbed33801ecfe1d843c04295ca0fd22578c60223b2ca7307ead2e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.76701, 0.80745, 0.33627]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-feather.glb]
+    approved_by: null
+  - id: soul_charm_soft_football
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-football.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-football.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-football.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:cf80f051ded66c6441ca850f7bbf4aa6b070788d044cae03204fa2f4845e2df2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [1.00031, 0.99949, 0.33813]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/soft-football.glb]
+    approved_by: null
+  - id: soul_charm_soft_gift
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-gift.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-gift.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-gift.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a862db9f1cac97d231b8241ef143062895e466e53c204825bd1ffcd3f5d82c4c
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89837, 0.93739, 0.33709]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/soft-gift.glb]
+    approved_by: null
+  - id: soul_charm_soft_guitar
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-guitar.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-guitar.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-guitar.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d1e55dc2625f0848a4723beef2d546357bb318f1e049f5dce92cc119ecea9bff
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83842, 0.85723, 0.33058]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14372
+    lods: [assets/souls/charms/soft-guitar.glb]
+    approved_by: null
+  - id: soul_charm_soft_heart
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-heart.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-heart.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-heart.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1bebc1996d98e8a450a7a90c66d2ac4f1d11ddb39c7a2bb2c3e30cbe8656f40b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99758, 0.82707, 0.33727]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14368
+    lods: [assets/souls/charms/soft-heart.glb]
+    approved_by: null
+  - id: soul_charm_soft_hot_air_balloon
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-hot-air-balloon.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-hot-air-balloon.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-hot-air-balloon.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:c99f8b36aad9127617da9ab7325fe67d79e2b4a0209b762586bd05514a561b67
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.77285, 0.99688, 0.33721]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14432
+    lods: [assets/souls/charms/soft-hot-air-balloon.glb]
+    approved_by: null
+  - id: soul_charm_soft_ice_cream
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-ice-cream.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-ice-cream.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-ice-cream.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ac5305c553a31ccdb7b4919dec65d7eb71bbbd9094d31cd33d19442e02984a04
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.66472, 0.96057, 0.33633]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/soft-ice-cream.glb]
+    approved_by: null
+  - id: soul_charm_soft_juice
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-juice.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-juice.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-juice.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ff131ab99161c3f7516126740386de261e140a78d83253fd10890f629896bdf2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.67667, 0.90569, 0.33719]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-juice.glb]
+    approved_by: null
+  - id: soul_charm_soft_kite
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-kite.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-kite.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-kite.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:2d9cc16ebda9cfca039b417eb2963d7daca5d91084377bc7cfb486da2e18f9ec
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.74197, 0.94425, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/soft-kite.glb]
+    approved_by: null
+  - id: soul_charm_soft_lavender
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-lavender.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-lavender.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-lavender.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:fef51a716b6347640e844011e3850edd2c601c1454301b81bfb75e0655697c55
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.72582, 0.79272, 0.32082]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/soft-lavender.glb]
+    approved_by: null
+  - id: soul_charm_soft_mug
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-mug.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-mug.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-mug.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f41713641c47494afce8f55837e01b3a8a7d0b039e1f3c5b5ae784e078bf4ba1
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.95573, 0.81195, 0.33788]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14360
+    lods: [assets/souls/charms/soft-mug.glb]
+    approved_by: null
+  - id: soul_charm_soft_music_note
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-music-note.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-music-note.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-music-note.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:991b6859f5b60f9b36571fe78a515f0bfe0621b92a0ebf9a23c4a2303b14924d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.86579, 0.88425, 0.33498]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/soft-music-note.glb]
+    approved_by: null
+  - id: soul_charm_soft_paper_plane
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-paper-plane.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-paper-plane.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-paper-plane.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:94f66fca3f8ba01473fdcf07b03276e6052b11e339e12df851c68d4c7bbab11d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.97163, 0.68978, 0.33677]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/soft-paper-plane.glb]
+    approved_by: null
+  - id: soul_charm_soft_pillow
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-pillow.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-pillow.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-pillow.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:0c397b982e14626842244e639ce910e0dd649971c2cf90d1d774d89d655b0307
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88234, 0.76998, 0.33786]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-pillow.glb]
+    approved_by: null
+  - id: soul_charm_soft_potted_plant
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-potted-plant.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-potted-plant.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-potted-plant.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:39d62d30604c3ad8059fc0991ff872867f0ee49145ec9d3734714208dca9904d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.81599, 0.96294, 0.33749]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/soft-potted-plant.glb]
+    approved_by: null
+  - id: soul_charm_soft_rainbow
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-rainbow.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-rainbow.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-rainbow.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:6ed8e1ef0b184ce36dbb5fd8af94adee71405b54e6f2576deb035378e3fbace3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99042, 0.73631, 0.31928]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-rainbow.glb]
+    approved_by: null
+  - id: soul_charm_soft_rose
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-rose.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-rose.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-rose.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ccfb40ae9ef482af7882b015c012d47dbfdabece60058bec835af6941a9c9378
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.7485, 0.99727, 0.33698]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/soft-rose.glb]
+    approved_by: null
+  - id: soul_charm_soft_rubber_duck
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-rubber-duck.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-rubber-duck.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-rubber-duck.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e4241b7e2538d3be3ea9269450887a1446853dceb21b2f0a02c72b972f058afd
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.94034, 0.93762, 0.33766]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/soft-rubber-duck.glb]
+    approved_by: null
+  - id: soul_charm_soft_running_shoe
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-running-shoe.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-running-shoe.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-running-shoe.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:959c445ec923091935aa3cf9d9a2f3245e20f7917b198f5b07507f00a6767c1f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99374, 0.66035, 0.33664]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/soft-running-shoe.glb]
+    approved_by: null
+  - id: soul_charm_soft_seashell
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-seashell.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-seashell.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-seashell.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:3f44f226b0e058f2c3a444605c2fe61e058163a8647da50de12aa7b826ad41f3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99984, 0.86828, 0.33745]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/soft-seashell.glb]
+    approved_by: null
+  - id: soul_charm_soft_sleep_mask
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-sleep-mask.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-sleep-mask.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-sleep-mask.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:283e78126f3cc0a6bd4e2b085978ccfd906cbf535944101f3c2b6f7d73bf5939
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99714, 0.69527, 0.33681]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/soft-sleep-mask.glb]
+    approved_by: null
+  - id: soul_charm_soft_speech_bubble
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-speech-bubble.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-speech-bubble.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-speech-bubble.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:790b10cd6ed1da914d467be8d1bea2d3c7203b7790ffdc2e86a5ef6584825c0b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93121, 0.81337, 0.33836]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14428
+    lods: [assets/souls/charms/soft-speech-bubble.glb]
+    approved_by: null
+  - id: soul_charm_soft_sprout
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-sprout.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-sprout.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-sprout.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d62c0e3d7587f9af7f33539f6185660a7a08d733a88ca7a848ca9f0e27c22747
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.75607, 0.91265, 0.32518]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-sprout.glb]
+    approved_by: null
+  - id: soul_charm_soft_strawberry
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-strawberry.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-strawberry.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-strawberry.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b50f7ef12fd38f7ed6b478f584f8dff9c8acfb521d70f7f4912accf73095cad4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.83621, 0.89145, 0.33809]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/soft-strawberry.glb]
+    approved_by: null
+  - id: soul_charm_soft_sun
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-sun.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-sun.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-sun.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:83f665b1cb8a0f8cf78f941e70c464d4d606647ea88d190d151cf54bbaaabf4b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99621, 0.9959, 0.33951]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/soft-sun.glb]
+    approved_by: null
+  - id: soul_charm_soft_sunflower
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-sunflower.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-sunflower.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-sunflower.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:cb7b756570fe5e277de48afe9c7a0135862aaac6f7abdf451740f9e7d0a6bd11
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.84105, 1.00113, 0.33865]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/soft-sunflower.glb]
+    approved_by: null
+  - id: soul_charm_soft_tea_cup
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-tea-cup.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-tea-cup.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-tea-cup.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:5b38943c6a7eb5cdc91728227605523f83d4f839386103175094290703de4562
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.90331, 0.91936, 0.33866]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-tea-cup.glb]
+    approved_by: null
+  - id: soul_charm_soft_teapot
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-teapot.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-teapot.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-teapot.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:304502e3720263e928ac17016ff6ba5b9b057c19311c753ed0e99bf6ff83dd02
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98694, 0.78138, 0.33743]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/soft-teapot.glb]
+    approved_by: null
+  - id: soul_charm_soft_tulip
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-tulip.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-tulip.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-tulip.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:755e0e6f6edc3651f52f5472febd34615e9d556752c2bf342597766fce57a713
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.77669, 0.99393, 0.33615]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/soft-tulip.glb]
+    approved_by: null
+  - id: soul_charm_soft_umbrella
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-umbrella.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-umbrella.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-umbrella.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:cc312589903f0448bc1359ebc258912079bdbbf9949400b243a6bb40e3a7a5e4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.92458, 0.91299, 0.33722]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/soft-umbrella.glb]
+    approved_by: null
+  - id: soul_charm_soft_vinyl
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-vinyl.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-vinyl.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-vinyl.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8fbfaa33a544116d0ffe872eb00f355060a5e561cf86ceddfd16af2bda33da59
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.94792, 0.98085, 0.33742]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14364
+    lods: [assets/souls/charms/soft-vinyl.glb]
+    approved_by: null
+  - id: soul_charm_soft_water_bottle
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-water-bottle.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-water-bottle.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-water-bottle.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:16a0a35ef6b3e47ce3548ddb61122c7ebcf486751cab8d1d0d27a8f86bc8a65b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.65697, 0.98874, 0.33669]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/soft-water-bottle.glb]
+    approved_by: null
+  - id: soul_charm_soft_watering_can
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-watering-can.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-watering-can.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-watering-can.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e8aa4c5f14be824da9c210ae922fc940ab9c50984de4a60a21aa0a7d307ac0f7
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99086, 0.76613, 0.33735]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/soft-watering-can.glb]
+    approved_by: null
+  - id: soul_charm_soft_yarn
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-yarn.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-yarn.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-yarn.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:fc043288c2624c3dfe21ff2d2379e0aafa36c190d9365b581f5bfe6d2c6fb2e4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.90044, 0.81447, 0.33828]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/soft-yarn.glb]
+    approved_by: null
+  - id: soul_charm_soft_yoga_mat
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/soft-yoga-mat.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/soft-yoga-mat.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/soft-yoga-mat.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:910f3f5f00a26d9fd364bf0b6898f8798f9e39183d82291c79f491bd62963995
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.97747, 0.74805, 0.33694]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/soft-yoga-mat.glb]
+    approved_by: null
+  - id: soul_charm_tech_bar_chart
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-bar-chart.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-bar-chart.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-bar-chart.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9a60bb36ede11194b15ef0146b1b80632e549840b99cfcf336e71e862041dd9e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.91523, 0.78416, 0.33725]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-bar-chart.glb]
+    approved_by: null
+  - id: soul_charm_tech_battery
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-battery.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-battery.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-battery.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:7b9dc6bccac27680b6b771092e7815822253b81f0a0dda4295d42985db105137
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.7641, 0.98439, 0.33755]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-battery.glb]
+    approved_by: null
+  - id: soul_charm_tech_book
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-book.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-book.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-book.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:399f44b037eb8c723db7d88fed0f4140adb3a6e2ae6c1e622603c604384bc48c
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.9061, 0.8418, 0.33715]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14388
+    lods: [assets/souls/charms/tech-book.glb]
+    approved_by: null
+  - id: soul_charm_tech_calculator
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-calculator.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-calculator.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-calculator.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:78600e28712f97e9f1a65357e683f492ff8ba27e1001a23dded007f27059b29d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.84643, 0.9172, 0.3368]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-calculator.glb]
+    approved_by: null
+  - id: soul_charm_tech_camera
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-camera.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-camera.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-camera.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:170cff2cc4159c06e85147dc3d1fede3933817666a3260eee358c7a1a301a525
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93776, 0.77559, 0.33705]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-camera.glb]
+    approved_by: null
+  - id: soul_charm_tech_circuit
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-circuit.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-circuit.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-circuit.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1488d6d6b70bba32a0dfcce18396791ab79954870a1203c93fadb1796f94c1ca
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.94753, 0.88173, 0.33796]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-circuit.glb]
+    approved_by: null
+  - id: soul_charm_tech_clipboard
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-clipboard.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-clipboard.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-clipboard.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:34a1692b4f88bd19078710d5902f65e11a539e94b9ba7acfd6254c4d064d76e2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.75085, 0.92045, 0.33813]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-clipboard.glb]
+    approved_by: null
+  - id: soul_charm_tech_cloud_upload
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-cloud-upload.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-cloud-upload.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-cloud-upload.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:6fc345a2b7634227f1c38e4fe2287eb9ae0fd4411c101ac083a4afe473aa5c90
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99979, 0.76458, 0.33774]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14424
+    lods: [assets/souls/charms/tech-cloud-upload.glb]
+    approved_by: null
+  - id: soul_charm_tech_compass
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-compass.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-compass.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-compass.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e39f1b598515f53cf2032ee364b25eb0b159e62c435f4ff9415de802d190c4c7
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.82022, 0.88971, 0.33613]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-compass.glb]
+    approved_by: null
+  - id: soul_charm_tech_database
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-database.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-database.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-database.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8514519ee3b2fa65917fcabfbe11012c6fa2bb439368d105dbb72ca38ec1294e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.7672, 0.89895, 0.33786]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-database.glb]
+    approved_by: null
+  - id: soul_charm_tech_drone
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-drone.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-drone.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-drone.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:169c2f2486c2a980fa8dd54b130ee1601e2fc7efec433ca068839e6d9d09fb86
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.84216, 0.80785, 0.33754]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14392
+    lods: [assets/souls/charms/tech-drone.glb]
+    approved_by: null
+  - id: soul_charm_tech_flask
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-flask.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-flask.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-flask.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e6424c812f9d2cf7e55d111858f967b5ce6f421c5b245cbc420c6566a0258d6a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.8015, 0.98694, 0.33716]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-flask.glb]
+    approved_by: null
+  - id: soul_charm_tech_floppy
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-floppy.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-floppy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-floppy.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a57c04566ae077f65baeae2a6e94161d2a7712b50d5594762d075a7ba8552ab0
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85405, 0.84115, 0.33749]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-floppy.glb]
+    approved_by: null
+  - id: soul_charm_tech_gear
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-gear.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-gear.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-gear.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:992d008d0a715c8b43c9fad6103856dc941c33a1354dc3ec5c7040d5f2eb1d3d
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99639, 0.99575, 0.33774]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14392
+    lods: [assets/souls/charms/tech-gear.glb]
+    approved_by: null
+  - id: soul_charm_tech_hammer
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-hammer.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-hammer.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-hammer.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:34d78791e397404bc0ad02e0a19722f24b290939a75c5cb95111a30898cbb332
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88877, 0.90322, 0.31595]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-hammer.glb]
+    approved_by: null
+  - id: soul_charm_tech_hard_hat
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-hard-hat.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-hard-hat.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-hard-hat.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:350952d8f2756b18d1c7193587c774f66d0a0d655665953419aa1d995b540d95
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.96246, 0.81838, 0.33706]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-hard-hat.glb]
+    approved_by: null
+  - id: soul_charm_tech_headset
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-headset.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-headset.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-headset.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8f7cc2c2ae2a715989f05e74fe8faa74ec66c408b4dcae4dd799c804e09a7d9e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.95357, 0.9538, 0.33737]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-headset.glb]
+    approved_by: null
+  - id: soul_charm_tech_key
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-key.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-key.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-key.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a127240b606aa6544383a2a9c2d5145783bc178fe62f1dfcf8f7752ace85e532
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.86662, 0.82924, 0.33364]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14360
+    lods: [assets/souls/charms/tech-key.glb]
+    approved_by: null
+  - id: soul_charm_tech_keyboard
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-keyboard.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-keyboard.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-keyboard.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1f75f1cf14145adf0e067c0adfdf18b5bbf97b1a28677f9fd23021c4659a4bac
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.98904, 0.69484, 0.33749]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-keyboard.glb]
+    approved_by: null
+  - id: soul_charm_tech_laptop
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-laptop.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-laptop.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-laptop.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:5158caff6e25a6bb051c7401fbfb61b7ff0503b2536e93a88ff822a71779bd38
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.87178, 0.78459, 0.33768]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-laptop.glb]
+    approved_by: null
+  - id: soul_charm_tech_lightbulb
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-lightbulb.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-lightbulb.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-lightbulb.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:082953c09e4698d4f18a925b7196c3eecd7d92f0ef96c2709f898e76bb685f64
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.78134, 0.99937, 0.33625]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-lightbulb.glb]
+    approved_by: null
+  - id: soul_charm_tech_magnet
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-magnet.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-magnet.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-magnet.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:81ae0686a28e3f5c4a449a87fb93aaf7dd3385253286c6384281cbc8e6485a67
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.89532, 0.80701, 0.33751]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-magnet.glb]
+    approved_by: null
+  - id: soul_charm_tech_magnifier
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-magnifier.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-magnifier.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-magnifier.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9fe7b6850a2177dc5892b11764dcf7420d7aaf06b1adc47bef26d58bf7d0889e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.8285, 0.89937, 0.33744]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-magnifier.glb]
+    approved_by: null
+  - id: soul_charm_tech_microchip
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-microchip.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-microchip.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-microchip.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:65fa2e7439376c7fe291e6fc8f4bce38d9b6ad167b6dea6771998fd911581c16
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.99822, 0.85134, 0.33934]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-microchip.glb]
+    approved_by: null
+  - id: soul_charm_tech_microscope
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-microscope.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-microscope.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-microscope.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:6d5120fac1ad203aa650b2365a5f46ad476428923fe2dec0e86f5de7842f14d9
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.72815, 0.91666, 0.338]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-microscope.glb]
+    approved_by: null
+  - id: soul_charm_tech_monitor
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-monitor.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-monitor.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-monitor.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:87cb12f03428c251be1f463ecaafc79ae451d8298fc47375c9e5accaaf54dbad
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.92378, 0.84495, 0.3382]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-monitor.glb]
+    approved_by: null
+  - id: soul_charm_tech_mouse
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-mouse.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-mouse.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-mouse.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:4b4ff1bc494d20321aea0ea7256d98c3a2937a31cbccb65145a71dc04019a787
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.86605, 0.7922, 0.33734]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-mouse.glb]
+    approved_by: null
+  - id: soul_charm_tech_padlock
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-padlock.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-padlock.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-padlock.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a9450db1bf36362cacf967bf3d92b9f695177b16c6d0dc8de9504580bc792064
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.79483, 0.96078, 0.33664]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-padlock.glb]
+    approved_by: null
+  - id: soul_charm_tech_paintbrush
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-paintbrush.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-paintbrush.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-paintbrush.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:111519193e15938b211859d98c9481ebab91d2ade8fce1fb85513c312ac8963a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.84255, 0.85654, 0.33711]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-paintbrush.glb]
+    approved_by: null
+  - id: soul_charm_tech_palette
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-palette.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-palette.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-palette.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:035645f0e8e19f4b9353029de7028dd1d926a68758d0bf48159a159466ef9113
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.9949, 0.93113, 0.33709]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14404
+    lods: [assets/souls/charms/tech-palette.glb]
+    approved_by: null
+  - id: soul_charm_tech_pen
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-pen.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-pen.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-pen.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:40641e4f4f35abbce023f599a25d71c663694e86d7397fbcf6b601e88e448db4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.71125, 0.80878, 0.33483]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14384
+    lods: [assets/souls/charms/tech-pen.glb]
+    approved_by: null
+  - id: soul_charm_tech_pencil
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-pencil.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-pencil.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-pencil.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:43729571278a74f26c978510aae777502f526d0472c7605eaf982ad573a8bf50
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.81311, 0.82014, 0.33675]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-pencil.glb]
+    approved_by: null
+  - id: soul_charm_tech_pliers
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-pliers.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-pliers.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-pliers.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8177f01b156fab8bf49762e479b17e3650e0750606c1cd4a6d9ac240695e684b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.80414, 0.87858, 0.33385]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-pliers.glb]
+    approved_by: null
+  - id: soul_charm_tech_plug
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-plug.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-plug.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-plug.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b57f9030917e609b9681896a4f0ef2c56187e42dd9c759542ae217ec28a6c6b9
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.79549, 0.88016, 0.33813]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14384
+    lods: [assets/souls/charms/tech-plug.glb]
+    approved_by: null
+  - id: soul_charm_tech_printer_3d
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-printer-3d.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-printer-3d.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-printer-3d.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:c6c242ce2ec68de24ec231ef48b2408a5e6debe56025ec8d7f7ccea6a6b9f1cf
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.9034, 0.84406, 0.33771]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-printer-3d.glb]
+    approved_by: null
+  - id: soul_charm_tech_robot
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-robot.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-robot.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-robot.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:81788fbc0ebf664ff5181cd77a8a634182e3e04d21b53334570690cfbd1e3b93
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.90934, 0.94167, 0.33848]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14392
+    lods: [assets/souls/charms/tech-robot.glb]
+    approved_by: null
+  - id: soul_charm_tech_rocket
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-rocket.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-rocket.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-rocket.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:785207569148f0d4e01da460462dc6af021ebbe4dbc87ae3eaf8d924afe559fb
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.7689, 0.93655, 0.33727]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-rocket.glb]
+    approved_by: null
+  - id: soul_charm_tech_ruler
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-ruler.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-ruler.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-ruler.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1c392b1ab4439925679df39de342c2929706cb8346445b867d4323c0a0a8ac25
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.85662, 0.85638, 0.32038]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14368
+    lods: [assets/souls/charms/tech-ruler.glb]
+    approved_by: null
+  - id: soul_charm_tech_satellite
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-satellite.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-satellite.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-satellite.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:56840729f2cc93d6b91560cb02785ba60e2198492a504b80526fc9b6a0aa8408
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.92895, 0.75903, 0.3368]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-satellite.glb]
+    approved_by: null
+  - id: soul_charm_tech_screwdriver
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-screwdriver.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-screwdriver.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-screwdriver.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9dc45fa69eabb7669222b0bd146addeb9f7ea811d67046eaf78bfc1288ec4630
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.78541, 0.7851, 0.2967]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/tech-screwdriver.glb]
+    approved_by: null
+  - id: soul_charm_tech_server
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-server.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-server.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-server.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:ae3f37b01375e7c6f07166fec5bcb0ddf3a0377df845070485e1c7733356816c
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88968, 0.85628, 0.3378]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-server.glb]
+    approved_by: null
+  - id: soul_charm_tech_set_square
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-set-square.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-set-square.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-set-square.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9cde05a60484555a455828022f2423382f1d08a5eed7f7e642e3885615e0ba58
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.87436, 0.86181, 0.33702]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14416
+    lods: [assets/souls/charms/tech-set-square.glb]
+    approved_by: null
+  - id: soul_charm_tech_smartphone
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-smartphone.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-smartphone.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-smartphone.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:dc9f758396855d30f22ad3e2576aba70e07b4e4958aaf2ec96f1d378eff141ba
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.82247, 0.96364, 0.3375]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-smartphone.glb]
+    approved_by: null
+  - id: soul_charm_tech_stopwatch
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-stopwatch.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-stopwatch.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-stopwatch.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:57d3efa5c567d73fe03eecefa08af24cf5a2b4c06037cdd44b1037f78ccaf5ce
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.87452, 0.99413, 0.33743]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14412
+    lods: [assets/souls/charms/tech-stopwatch.glb]
+    approved_by: null
+  - id: soul_charm_tech_tablet
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-tablet.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-tablet.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-tablet.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:380185b0357fb06cdf73fbf357f10212ff10cdcc80d4db57df58a49a56f463fc
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.95697, 0.89216, 0.3382]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14396
+    lods: [assets/souls/charms/tech-tablet.glb]
+    approved_by: null
+  - id: soul_charm_tech_tape_measure
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-tape-measure.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-tape-measure.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-tape-measure.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:21e516987c2c58dd509144b3836f88512fcf52e4d8d1f167d63dba99b0fbedd8
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.93901, 0.80136, 0.33735]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14420
+    lods: [assets/souls/charms/tech-tape-measure.glb]
+    approved_by: null
+  - id: soul_charm_tech_telescope
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-telescope.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-telescope.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-telescope.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:5203f1684bb049b7581b792b170903aa09aeaacc0d8fcb7583e342a9f9bec128
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88037, 0.89933, 0.33534]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14408
+    lods: [assets/souls/charms/tech-telescope.glb]
+    approved_by: null
+  - id: soul_charm_tech_toolbox
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-toolbox.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-toolbox.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-toolbox.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:6e09e3923c58121102d9b5a86f51d345c0520f25581eac01b8ed7dfd4f4f19f5
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.94316, 0.80896, 0.3377]
+    pivot: [0, 0, 0]
+    triangle_count: 900
+    texture_memory_bytes: 14400
+    lods: [assets/souls/charms/tech-toolbox.glb]
+    approved_by: null
+  - id: soul_charm_tech_usb
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-usb.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-usb.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-usb.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1cfb68842194e9f00b5758d2a23e9857ade94bb7d38250efc2663c6aa13332a2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.88457, 0.85485, 0.33832]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14360
+    lods: [assets/souls/charms/tech-usb.glb]
+    approved_by: null
+  - id: soul_charm_tech_wrench
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/charms/tech-wrench.glb
+    source_format: glb
+    runtime_file: assets/souls/charms/tech-wrench.glb
+    runtime_format: glb
+    fallback_file: assets/souls/charms/tech-wrench.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:709c689b51baf7d2de8b12a630dbd06586699cc7f2c373a91fff494e60e703d1
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.84584, 0.84006, 0.31248]
+    pivot: [0, 0, 0]
+    triangle_count: 898
+    texture_memory_bytes: 14368
+    lods: [assets/souls/charms/tech-wrench.glb]
+    approved_by: null
   - id: soul_cohort_01_140e6ebb0fff0f
     kind: sprite
     source_file: assets-src/souls/cohort.json
@@ -137,14 +2873,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/140e6ebb0fff0f-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:724b1fe46b0ac50397b4e9f80018820a14c4754862189f57a0c27ead8c88e6d4
+    version: 4.0.0
+    checksum: sha256:36559eb5f1ef8590c432a29d5be0027ca7efeb6c068beba342d4c4330ef9ce4a
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5014
+    texture_memory_bytes: 4994
     lods: [assets/souls/cohort/140e6ebb0fff0f.svg, assets/souls/fallback/140e6ebb0fff0f-simple.svg, assets/souls/fallback/140e6ebb0fff0f-dot.svg, assets/souls/thumbnails/140e6ebb0fff0f-64.svg]
     approved_by: null
   - id: soul_cohort_02_0e7c71a4f4779e
@@ -155,14 +2891,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0e7c71a4f4779e-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:16ff65528a5d45f4f102a0e3d9d443d2b233444446e65bd541f28f6e2f5d6adc
+    version: 4.0.0
+    checksum: sha256:6271fd53b5d22dca8701da9c8a7e929a340c4c8009df040ee9e54aaa3591878b
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4886
+    texture_memory_bytes: 4875
     lods: [assets/souls/cohort/0e7c71a4f4779e.svg, assets/souls/fallback/0e7c71a4f4779e-simple.svg, assets/souls/fallback/0e7c71a4f4779e-dot.svg, assets/souls/thumbnails/0e7c71a4f4779e-64.svg]
     approved_by: null
   - id: soul_cohort_03_185edf81266a86
@@ -173,14 +2909,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/185edf81266a86-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:bad92ea203ff29011965ab9fcfcb32c3c75f4a93a01b582f54f4f119f9775122
+    version: 4.0.0
+    checksum: sha256:82c80f62bad8b1a0b641b87ea7f886dabb958bedd55017aa97153123eec0c35d
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5577
+    texture_memory_bytes: 5390
     lods: [assets/souls/cohort/185edf81266a86.svg, assets/souls/fallback/185edf81266a86-simple.svg, assets/souls/fallback/185edf81266a86-dot.svg, assets/souls/thumbnails/185edf81266a86-64.svg]
     approved_by: null
   - id: soul_cohort_04_0c8fda8ffef1d5
@@ -191,14 +2927,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0c8fda8ffef1d5-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:bd5f94209888e7b1a2e93c3c427f66acad17bcbb7123924be2e8da41fde39932
+    version: 4.0.0
+    checksum: sha256:b3c85355ec3d17b66f435b5f8e4d0d0a5514b7adcdf64d1bef68dc2e41a84b86
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4564
+    texture_memory_bytes: 4993
     lods: [assets/souls/cohort/0c8fda8ffef1d5.svg, assets/souls/fallback/0c8fda8ffef1d5-simple.svg, assets/souls/fallback/0c8fda8ffef1d5-dot.svg, assets/souls/thumbnails/0c8fda8ffef1d5-64.svg]
     approved_by: null
   - id: soul_cohort_05_0e39e2f5047a44
@@ -209,14 +2945,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0e39e2f5047a44-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:ea3c3c31d77634077a8ae9666ff3f84bd049f59449382b45543a6641124f7b70
+    version: 4.0.0
+    checksum: sha256:9074d5d6353c534180136cdf731e2c6f6401dfb7e7a3e01ae281ed7d23662594
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4597
+    texture_memory_bytes: 4980
     lods: [assets/souls/cohort/0e39e2f5047a44.svg, assets/souls/fallback/0e39e2f5047a44-simple.svg, assets/souls/fallback/0e39e2f5047a44-dot.svg, assets/souls/thumbnails/0e39e2f5047a44-64.svg]
     approved_by: null
   - id: soul_cohort_06_1a094e030d5e89
@@ -227,14 +2963,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/1a094e030d5e89-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:56f787d3b55cd83b0ff90013ae96852de291f29ea868737978de89f04c51631a
+    version: 4.0.0
+    checksum: sha256:a92c1a4d44a5f908dec6f1694ac91c075207f9defdc2c41770d944fbe04fa5aa
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4404
+    texture_memory_bytes: 4977
     lods: [assets/souls/cohort/1a094e030d5e89.svg, assets/souls/fallback/1a094e030d5e89-simple.svg, assets/souls/fallback/1a094e030d5e89-dot.svg, assets/souls/thumbnails/1a094e030d5e89-64.svg]
     approved_by: null
   - id: soul_cohort_07_045e48e3566287
@@ -245,14 +2981,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/045e48e3566287-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:aa3ac117fc87ec4b6abeef9d04a30bb03abc84c3a7300073bf62a8fd7e609f85
+    version: 4.0.0
+    checksum: sha256:6315477100d2a9e42b78d5c6b1a46a37f5a41fd591ad1a167e9500962b3c6cc0
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5096
+    texture_memory_bytes: 4979
     lods: [assets/souls/cohort/045e48e3566287.svg, assets/souls/fallback/045e48e3566287-simple.svg, assets/souls/fallback/045e48e3566287-dot.svg, assets/souls/thumbnails/045e48e3566287-64.svg]
     approved_by: null
   - id: soul_cohort_08_1ef9240343b1a0
@@ -263,14 +2999,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/1ef9240343b1a0-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:c23cca4ee4f990702a03f12678ac51361d74cd59d8d95697d6097168dfa7a103
+    version: 4.0.0
+    checksum: sha256:1ec7e8995752e9300e7b768cd297670f79809e65dbfa5619bcbb4e20b46c9d8f
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5081
+    texture_memory_bytes: 4875
     lods: [assets/souls/cohort/1ef9240343b1a0.svg, assets/souls/fallback/1ef9240343b1a0-simple.svg, assets/souls/fallback/1ef9240343b1a0-dot.svg, assets/souls/thumbnails/1ef9240343b1a0-64.svg]
     approved_by: null
   - id: soul_cohort_09_0f1be17ca9df8f
@@ -281,14 +3017,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0f1be17ca9df8f-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:0d2e1d51566fab983a3785c42716fb99bb0b6a1ddd8a4f426ec4ccc6c2268ac8
+    version: 4.0.0
+    checksum: sha256:de863e5ec0b34169385d7411207c9ed4e33f9a64fb380171a4b60b7b1bed27f6
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4838
+    texture_memory_bytes: 4979
     lods: [assets/souls/cohort/0f1be17ca9df8f.svg, assets/souls/fallback/0f1be17ca9df8f-simple.svg, assets/souls/fallback/0f1be17ca9df8f-dot.svg, assets/souls/thumbnails/0f1be17ca9df8f-64.svg]
     approved_by: null
   - id: soul_cohort_10_0539dc0c10513f
@@ -299,14 +3035,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0539dc0c10513f-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:7decaceee6f7a3984759870a4b9871f3c40dd1664bbe9e1ed79c5bce0ac22a95
+    version: 4.0.0
+    checksum: sha256:e9d1b0d1a18867e50ff338911d250ed6d686abc81f3085148bc0fd756539b0d3
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5362
+    texture_memory_bytes: 4978
     lods: [assets/souls/cohort/0539dc0c10513f.svg, assets/souls/fallback/0539dc0c10513f-simple.svg, assets/souls/fallback/0539dc0c10513f-dot.svg, assets/souls/thumbnails/0539dc0c10513f-64.svg]
     approved_by: null
   - id: soul_cohort_11_1d2e20987152b0
@@ -317,14 +3053,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/1d2e20987152b0-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:d3a4070e353cefd1bff3a7b09849f946f4f0d2574838b451317130ebfe0942a9
+    version: 4.0.0
+    checksum: sha256:4812ea2cadafb535e415de3ce1f3b60022f9c7aef8170cb5654b0b3d568fcde4
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5168
+    texture_memory_bytes: 5496
     lods: [assets/souls/cohort/1d2e20987152b0.svg, assets/souls/fallback/1d2e20987152b0-simple.svg, assets/souls/fallback/1d2e20987152b0-dot.svg, assets/souls/thumbnails/1d2e20987152b0-64.svg]
     approved_by: null
   - id: soul_cohort_12_064b5af3ba69c3
@@ -335,14 +3071,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/064b5af3ba69c3-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:123fe6aed207840fc848affd2215a045c36831260de81e540374e2f00f7dd421
+    version: 4.0.0
+    checksum: sha256:965b290af1d99626b3766c6520e0dff26c6daa3eacea36cdf7cb4896cf0dbf24
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5103
+    texture_memory_bytes: 4875
     lods: [assets/souls/cohort/064b5af3ba69c3.svg, assets/souls/fallback/064b5af3ba69c3-simple.svg, assets/souls/fallback/064b5af3ba69c3-dot.svg, assets/souls/thumbnails/064b5af3ba69c3-64.svg]
     approved_by: null
   - id: soul_cohort_13_1cdc2b005f78f8
@@ -353,14 +3089,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/1cdc2b005f78f8-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:c82806f2d85255c38fb4ee45374d348dda6636c3e06c574f7aa527509db208e8
+    version: 4.0.0
+    checksum: sha256:0a8d4ff8cdab83807bc3202f9cf2410c4ec5daa63c054b6c568f58d3e7529927
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4878
+    texture_memory_bytes: 4978
     lods: [assets/souls/cohort/1cdc2b005f78f8.svg, assets/souls/fallback/1cdc2b005f78f8-simple.svg, assets/souls/fallback/1cdc2b005f78f8-dot.svg, assets/souls/thumbnails/1cdc2b005f78f8-64.svg]
     approved_by: null
   - id: soul_cohort_14_08ff91eabc6d43
@@ -371,14 +3107,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/08ff91eabc6d43-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:97055862342e670831702554cf588282c4a09d6e87d3b69e3d95f083ec9a844c
+    version: 4.0.0
+    checksum: sha256:59337f207c811c4ccececc34989a72f55d53b08b5d8fd8ca6b1f1cc7ef848acd
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4770
+    texture_memory_bytes: 4874
     lods: [assets/souls/cohort/08ff91eabc6d43.svg, assets/souls/fallback/08ff91eabc6d43-simple.svg, assets/souls/fallback/08ff91eabc6d43-dot.svg, assets/souls/thumbnails/08ff91eabc6d43-64.svg]
     approved_by: null
   - id: soul_cohort_15_01a5bc0af65924
@@ -389,14 +3125,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/01a5bc0af65924-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:fd2fbbe3ca4c185f6d49117f416d2da4f1f211e837eb4e231e15aa35080d8303
+    version: 4.0.0
+    checksum: sha256:cc0a3e9ec7d784b9a79f2e12b2da1cf2bda2db37cb7a2a47d92c09de57f95198
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4294
+    texture_memory_bytes: 4995
     lods: [assets/souls/cohort/01a5bc0af65924.svg, assets/souls/fallback/01a5bc0af65924-simple.svg, assets/souls/fallback/01a5bc0af65924-dot.svg, assets/souls/thumbnails/01a5bc0af65924-64.svg]
     approved_by: null
   - id: soul_cohort_16_1ec3a1b6539cad
@@ -407,14 +3143,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/1ec3a1b6539cad-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:2dd1e2e70286d457df7c0e615690e81f90dffbc2358a33881c0d793950afffa7
+    version: 4.0.0
+    checksum: sha256:f73227821ac9bee731cff6692f3b7c99a3e667d73738478c4afb7594da6194e9
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5029
+    texture_memory_bytes: 4977
     lods: [assets/souls/cohort/1ec3a1b6539cad.svg, assets/souls/fallback/1ec3a1b6539cad-simple.svg, assets/souls/fallback/1ec3a1b6539cad-dot.svg, assets/souls/thumbnails/1ec3a1b6539cad-64.svg]
     approved_by: null
   - id: soul_cohort_17_0cf1c4f541ecc5
@@ -425,14 +3161,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0cf1c4f541ecc5-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:264b8e91d8e707f2bee2ed4b2eb6d26e877586d8633f83e102e8272593192b3c
+    version: 4.0.0
+    checksum: sha256:882f7cd20b941f870c8d0bac6b957017799d25dff975649accbcf29a85d660a8
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4533
+    texture_memory_bytes: 4993
     lods: [assets/souls/cohort/0cf1c4f541ecc5.svg, assets/souls/fallback/0cf1c4f541ecc5-simple.svg, assets/souls/fallback/0cf1c4f541ecc5-dot.svg, assets/souls/thumbnails/0cf1c4f541ecc5-64.svg]
     approved_by: null
   - id: soul_cohort_18_10e619a585d80a
@@ -443,14 +3179,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/10e619a585d80a-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:a3480b3d66a041eca4546b4370f83d8a694582a12c104fdd8f0d063a4633bfee
+    version: 4.0.0
+    checksum: sha256:9db5f12d9219c5d4ad4adb4fc64b90408757e2532fa8c7fdf67736b081e08e86
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5387
+    texture_memory_bytes: 4992
     lods: [assets/souls/cohort/10e619a585d80a.svg, assets/souls/fallback/10e619a585d80a-simple.svg, assets/souls/fallback/10e619a585d80a-dot.svg, assets/souls/thumbnails/10e619a585d80a-64.svg]
     approved_by: null
   - id: soul_cohort_19_12ce33f272ee40
@@ -461,14 +3197,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/12ce33f272ee40-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:6c6f770e8b913940e1780e62b369f58292dd7925d668f472a75e97b1ec26fa83
+    version: 4.0.0
+    checksum: sha256:86a9d2ebb27dd6493ae51f09926e322d0e6edb508b98d347aea07d52681b2493
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 5025
+    texture_memory_bytes: 5388
     lods: [assets/souls/cohort/12ce33f272ee40.svg, assets/souls/fallback/12ce33f272ee40-simple.svg, assets/souls/fallback/12ce33f272ee40-dot.svg, assets/souls/thumbnails/12ce33f272ee40-64.svg]
     approved_by: null
   - id: soul_cohort_20_0406b542e700a1
@@ -479,14 +3215,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0406b542e700a1-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:8c19cad53d5095760c46cbd6ed48073627a35b868df18461a7083d1983913b12
+    version: 4.0.0
+    checksum: sha256:98a602abcd557cc55ebdc913d0a0da167d9cd6c4b89d62e7970735f7075e0700
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4819
+    texture_memory_bytes: 4978
     lods: [assets/souls/cohort/0406b542e700a1.svg, assets/souls/fallback/0406b542e700a1-simple.svg, assets/souls/fallback/0406b542e700a1-dot.svg, assets/souls/thumbnails/0406b542e700a1-64.svg]
     approved_by: null
   - id: soul_cohort_21_19c576aacf1ebd
@@ -497,14 +3233,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/19c576aacf1ebd-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:3652ed2bc91915f1198b59290275718ad1c05299d57abd73242bbd25d7be63c6
+    version: 4.0.0
+    checksum: sha256:19247667bc384ce4ba60391cf956285d3102ee719e1a2d35fd45a05255baf127
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4674
+    texture_memory_bytes: 4873
     lods: [assets/souls/cohort/19c576aacf1ebd.svg, assets/souls/fallback/19c576aacf1ebd-simple.svg, assets/souls/fallback/19c576aacf1ebd-dot.svg, assets/souls/thumbnails/19c576aacf1ebd-64.svg]
     approved_by: null
   - id: soul_cohort_22_06f6f233f18448
@@ -515,14 +3251,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/06f6f233f18448-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:dd4e80656e10f0fed1ed20b2c321ff10d2796d3156508091aec610d771f2a5c4
+    version: 4.0.0
+    checksum: sha256:e640405d0ae40ea6df0e031e6881e4cfe9d19e2c53ef9d386f67a0ba4e0bb5d0
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4911
+    texture_memory_bytes: 4979
     lods: [assets/souls/cohort/06f6f233f18448.svg, assets/souls/fallback/06f6f233f18448-simple.svg, assets/souls/fallback/06f6f233f18448-dot.svg, assets/souls/thumbnails/06f6f233f18448-64.svg]
     approved_by: null
   - id: soul_cohort_23_15b36949ab1524
@@ -533,14 +3269,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/15b36949ab1524-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:e9d0898ace7188d41ff955b99f27767c69c0958f4ac243ff575d22d13efd6d29
+    version: 4.0.0
+    checksum: sha256:5c2d647b9f89f6545cb9e3c8117621a2a710e9ed10509dcc114736c76037416f
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4468
+    texture_memory_bytes: 4995
     lods: [assets/souls/cohort/15b36949ab1524.svg, assets/souls/fallback/15b36949ab1524-simple.svg, assets/souls/fallback/15b36949ab1524-dot.svg, assets/souls/thumbnails/15b36949ab1524-64.svg]
     approved_by: null
   - id: soul_cohort_24_0bc49cd4fd7217
@@ -551,14 +3287,14 @@ entries:
     runtime_format: svg
     fallback_file: assets/souls/fallback/0bc49cd4fd7217-simple.svg
     fallback_format: svg
-    version: 2.0.0
-    checksum: sha256:dcd2c82399e68f6508941bdbc37b0b74bb094988552a1b165d091d1d0dd76517
+    version: 4.0.0
+    checksum: sha256:9959237297210574d4609d44e43e2a78db524c2ed7221491c6b398ca58d0cc98
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [200, 200, 0]
     pivot: [100, 112, 0]
     triangle_count: 0
-    texture_memory_bytes: 4485
+    texture_memory_bytes: 4875
     lods: [assets/souls/cohort/0bc49cd4fd7217.svg, assets/souls/fallback/0bc49cd4fd7217-simple.svg, assets/souls/fallback/0bc49cd4fd7217-dot.svg, assets/souls/thumbnails/0bc49cd4fd7217-64.svg]
     approved_by: null
   - id: soul_cohort_index
@@ -569,14 +3305,14 @@ entries:
     runtime_format: json
     fallback_file: null
     fallback_format: null
-    version: 2.0.0
-    checksum: sha256:c512939c7b76e0decba26e63447df17c57c9fbd43b560060029c23215c675df5
+    version: 4.0.0
+    checksum: sha256:0f37df81ddf650a649cc05eb74a45c717832f33ed99446ce1fd336ef49317c61
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [0, 0, 0]
     pivot: [0, 0, 0]
     triangle_count: 0
-    texture_memory_bytes: 17999
+    texture_memory_bytes: 18842
     lods: []
     approved_by: null
   - id: soul_cohort_sheet
@@ -587,13 +3323,517 @@ entries:
     runtime_format: html
     fallback_file: null
     fallback_format: null
-    version: 2.0.0
-    checksum: sha256:e2f6d41b6428805c78104ec66fbdfcfe0069d6dfd3b16fce33ff803105dd9bad
+    version: 4.0.0
+    checksum: sha256:1bdb5a8bc855a66703b8c94dd2bf0de75a905955f2a2496a7b2753f9b4597534
     license: internal-original
     generator_script: tools/assets/build-souls.js
     bounds: [0, 0, 0]
     pivot: [0, 0, 0]
     triangle_count: 0
-    texture_memory_bytes: 304543
+    texture_memory_bytes: 319246
     lods: []
+    approved_by: null
+  - id: soul_face_angel
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/faces/face-angel.glb
+    source_format: glb
+    runtime_file: assets/souls/faces/face-angel.glb
+    runtime_format: glb
+    fallback_file: assets/souls/faces/face-angel-front.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f0710b8d4c2eccc924ddb2640dccc88449c19b758619d300be5d1383aacc1af4
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.69792, 1.08009, 0.66218]
+    pivot: [0, 0, 0]
+    triangle_count: 1612
+    texture_memory_bytes: 24296
+    lods: [assets/souls/faces/face-angel.glb]
+    approved_by: null
+  - id: soul_face_nerdy
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/faces/face-nerdy.glb
+    source_format: glb
+    runtime_file: assets/souls/faces/face-nerdy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/faces/face-nerdy-front.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:78354384663f281978cd7641d349fb74dbe8848c6c003ff775ed3333bd04a5d0
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.8738, 0.4193, 0.66943]
+    pivot: [0, 0, 0]
+    triangle_count: 3198
+    texture_memory_bytes: 42284
+    lods: [assets/souls/faces/face-nerdy.glb]
+    approved_by: null
+  - id: soul_face_pirate
+    kind: model
+    source_file: assets-src/generated/soul-decor/v1/faces/face-pirate.glb
+    source_format: glb
+    runtime_file: assets/souls/faces/face-pirate.glb
+    runtime_format: glb
+    fallback_file: assets/souls/faces/face-pirate-front.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:1ebdb76249616903b630a6d8bb3084e402e25b5f84d1463f84118efc3792ec3b
+    license: internal-original
+    generator_script: tools/ai/blender/soul_decor.py
+    bounds: [0.90655, 0.57593, 0.87495]
+    pivot: [0, 0, 0]
+    triangle_count: 5648
+    texture_memory_bytes: 73976
+    lods: [assets/souls/faces/face-pirate.glb]
+    approved_by: null
+  - id: soul_face_v3_body_hero
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/body/body-hero.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/body-hero.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/body-lite.glb
+    fallback_format: glb
+    version: 1.0.0
+    checksum: sha256:91a5884245ff8e53c39b2a1273160a9985eac425ab2b12beafeac1781ecfffef
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [1.45019, 2.10695, 0.89374]
+    pivot: [0, -0.02189, 0]
+    triangle_count: 24000
+    texture_memory_bytes: 338096
+    lods: [assets/souls/v3/body-hero.glb, assets/souls/v3/body-lite.glb]
+    approved_by: null
+  - id: soul_face_v3_body_lite
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/body/body-lite.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/body-lite.glb
+    runtime_format: glb
+    fallback_file: null
+    fallback_format: null
+    version: 1.0.0
+    checksum: sha256:5a81b6c2218ca770d7b7039753cbed4994734a99d03b24d00e2e327701055ae6
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [1.44924, 2.10773, 0.89394]
+    pivot: [0, -0.02189, 0]
+    triangle_count: 6000
+    texture_memory_bytes: 86088
+    lods: [assets/souls/v3/body-lite.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_bead
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-bead.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-bead.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-bead.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:372a41ad9f3c65875d03f4fa4ffa7c2a369441a7dfb0dbd57117e528eaf8c68a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48687, 0.17012, 0.08891]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 21800
+    lods: [assets/souls/v3/eyes-bead.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_button
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-button.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-button.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-button.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:f0895f84f946b9c4f1d8bb412169cf19a720410418b28ad7bfcb3ec76a6e785a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48687, 0.17012, 0.08891]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 21804
+    lods: [assets/souls/v3/eyes-button.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_fierce
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-fierce.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-fierce.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-fierce.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d32b8031fbb4c217ef74a172f679fcfc9a75b8dba2b5740022d86cb1e2af5f9c
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.50735, 0.11673, 0.09689]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 24932
+    lods: [assets/souls/v3/eyes-fierce.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_fierce_red
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-fierce-red.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-fierce-red.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-fierce-red.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:d22478224cb698ae805b4e3c77a274df5b880c294ff9b8d446b040cde71e7601
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.50735, 0.11673, 0.09689]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 24944
+    lods: [assets/souls/v3/eyes-fierce-red.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_happy
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-happy.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-happy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-happy.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:7d16ecdcf9926477d1229811c7a84d797b2ee0d362236c2cca0783e0d1642a95
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48692, 0.14457, 0.08893]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 24700
+    lods: [assets/souls/v3/eyes-happy.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_hearts
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-hearts.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-hearts.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-hearts.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a620750b87a879583250abc23fb958718fa5ba208f85fee5894ad22a2edf56cc
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48687, 0.17012, 0.08895]
+    pivot: [0, 0, 0]
+    triangle_count: 2100
+    texture_memory_bytes: 34468
+    lods: [assets/souls/v3/eyes-hearts.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_lashes
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-lashes.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-lashes.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-lashes.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:0e8d3efbdd561b08af4579ab66689a819285381e7f62577de66da8913979de39
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.4619, 0.07094, 0.07654]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 25412
+    lods: [assets/souls/v3/eyes-lashes.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_sleepy
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-sleepy.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-sleepy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-sleepy.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:c70f88fde496dffb9fa70a4c0a4dafb21d86a68d3244bec43e60569226386bd3
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48689, 0.10606, 0.08756]
+    pivot: [0, 0, 0]
+    triangle_count: 1500
+    texture_memory_bytes: 21796
+    lods: [assets/souls/v3/eyes-sleepy.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_sparkle
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-sparkle.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-sparkle.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-sparkle.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a2bfc2a53bafc6a071201f09585c26a939dd78971f8d188ee32b288616f913bc
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48687, 0.17012, 0.08891]
+    pivot: [0, 0, 0]
+    triangle_count: 2100
+    texture_memory_bytes: 32404
+    lods: [assets/souls/v3/eyes-sparkle.glb]
+    approved_by: null
+  - id: soul_face_v3_eyes_wink
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/eyes/eyes-wink.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/eyes-wink.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/eyes-wink.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:9682055caded5fa5cf41e38eda9634d315694394117b413405251876a386cf5f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.48138, 0.16993, 0.0924]
+    pivot: [0, 0, 0]
+    triangle_count: 3000
+    texture_memory_bytes: 47668
+    lods: [assets/souls/v3/eyes-wink.glb]
+    approved_by: null
+  - id: soul_face_v3_kit_angel
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/kits/face-angel.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/face-angel.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/face-angel.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:717414e9dda81f8e1eb06ab6aa7e53c825cd9e9f989dc5f7c65ccca275e62801
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.52371, 0.20327, 0.50167]
+    pivot: [0, 0, 0]
+    triangle_count: 1100
+    texture_memory_bytes: 14608
+    lods: [assets/souls/v3/face-angel.glb]
+    approved_by: null
+  - id: soul_face_v3_kit_nerdy
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/kits/face-nerdy.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/face-nerdy.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/face-nerdy.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:b28918d77491e5768c3a2f6d4a48f6db65b2734e669291c5982ce5c2b8cfea4a
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.85968, 0.2723, 0.66187]
+    pivot: [0, 0, 0]
+    triangle_count: 3000
+    texture_memory_bytes: 39924
+    lods: [assets/souls/v3/face-nerdy.glb]
+    approved_by: null
+  - id: soul_face_v3_kit_pirate
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/kits/face-pirate.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/face-pirate.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/face-pirate.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a5e63c6c59723fa481950af4a97a8b68befa71a0a59ddb4823b3ade091a96211
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.90556, 0.52298, 0.87944]
+    pivot: [0, 0, 0]
+    triangle_count: 5848
+    texture_memory_bytes: 76560
+    lods: [assets/souls/v3/face-pirate.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_bat
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-bat.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-bat.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-bat.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:cd84fefdd789f806a841fc43d929d2824a02937254801aa2a24a3b7ecd5e9061
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57543, 0.45621, 0.13912]
+    pivot: [0, 0, 0]
+    triangle_count: 2000
+    texture_memory_bytes: 27884
+    lods: [assets/souls/v3/plate-bat.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_bean
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-bean.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-bean.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-bean.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:a959eb143e609395b0d1abba4516dad3f997992edf6973492086706022cee200
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57451, 0.39125, 0.1404]
+    pivot: [0, 0, 0]
+    triangle_count: 2000
+    texture_memory_bytes: 27276
+    lods: [assets/souls/v3/plate-bean.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_bow
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-bow.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-bow.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-bow.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:8baaede8eeeeec31c86fe0d5c30b88b1a12587bd6a63a28ff5d73b698cab20b9
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57448, 0.35799, 0.15731]
+    pivot: [0, 0, 0]
+    triangle_count: 2000
+    texture_memory_bytes: 27652
+    lods: [assets/souls/v3/plate-bow.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_crack
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-crack.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-crack.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-crack.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:aa6ee8424dc901fd9a81f2a5676042184fed7e6e6335744b23f82077818d0b16
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57466, 0.55135, 0.139]
+    pivot: [0, 0, 0]
+    triangle_count: 2700
+    texture_memory_bytes: 36316
+    lods: [assets/souls/v3/plate-crack.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_cracked_bow
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-cracked-bow.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-cracked-bow.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-cracked-bow.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e5826811fabd44a2e399d325b18c8434c106937b6a02a2e982158ccd1a29b80e
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57433, 0.35639, 0.15298]
+    pivot: [0, 0, 0]
+    triangle_count: 2700
+    texture_memory_bytes: 36944
+    lods: [assets/souls/v3/plate-cracked-bow.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_dome
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-dome.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-dome.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-dome.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:dde77cd1eea783c4fa669c0d86854d2107529599289f233666369e4b9f2247d2
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57442, 0.46183, 0.1429]
+    pivot: [0, 0, 0]
+    triangle_count: 2000
+    texture_memory_bytes: 27276
+    lods: [assets/souls/v3/plate-dome.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_notch
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-notch.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-notch.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-notch.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:e0a4a1ed69a0ffaee95dd237f6dc9cab375a9682d59d758b1b4b658317a91cb0
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57376, 0.48098, 0.13673]
+    pivot: [0, 0, 0]
+    triangle_count: 1998
+    texture_memory_bytes: 27564
+    lods: [assets/souls/v3/plate-notch.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_round
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-round.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-round.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-round.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:94f36de40f20f2dd78d1707732c967750c88a3574c97bdd25bffe0e122ce2d3f
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57424, 0.55808, 0.13814]
+    pivot: [0, 0, 0]
+    triangle_count: 1998
+    texture_memory_bytes: 27180
+    lods: [assets/souls/v3/plate-round.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_skull
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-skull.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-skull.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-skull.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:27d8dda5ce2f811e7529f273adf82f505b35854a7bbe821f6b43cacab4458587
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.5755, 0.54769, 0.14906]
+    pivot: [0, 0, 0]
+    triangle_count: 2000
+    texture_memory_bytes: 27636
+    lods: [assets/souls/v3/plate-skull.glb]
+    approved_by: null
+  - id: soul_face_v3_plate_skull_x
+    kind: model
+    source_file: assets-src/generated/soul-face/v1/plates/plate-skull-x.glb
+    source_format: glb
+    runtime_file: assets/souls/v3/plate-skull-x.glb
+    runtime_format: glb
+    fallback_file: assets/souls/v3/plate-skull-x.png
+    fallback_format: png
+    version: 1.0.0
+    checksum: sha256:7edbb5eea358de425fc4d119908ce4ac2e04eb740991258ef6638fb6890a7e24
+    license: internal-original
+    generator_script: tools/ai/blender/soul_face.py
+    bounds: [0.57352, 0.54609, 0.14865]
+    pivot: [0, 0, 0]
+    triangle_count: 2700
+    texture_memory_bytes: 37124
+    lods: [assets/souls/v3/plate-skull-x.glb]
     approved_by: null

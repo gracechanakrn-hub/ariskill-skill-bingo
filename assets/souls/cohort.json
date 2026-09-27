@@ -1,7 +1,7 @@
 {
-  "rendererVersion": "2.0.0",
+  "rendererVersion": "4.0.0",
   "generator": "tools/assets/build-souls.js",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "members": [
     {
       "index": 1,
@@ -32,7 +32,7 @@
         ],
         "driftPhase": 0.285
       },
-      "alt": "Arise Soul, coral drop with sparkle eyes"
+      "alt": "Arise Soul, coral colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 2,
@@ -67,7 +67,7 @@
         ],
         "driftPhase": 0.133
       },
-      "alt": "Arise Soul, orchid bell with wide eyes"
+      "alt": "Arise Soul, orchid colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 3,
@@ -98,7 +98,7 @@
         ],
         "driftPhase": 0.161
       },
-      "alt": "Arise Soul, lilac drop with sparkle eyes. Bingo Star badge: completed a line this round"
+      "alt": "Arise Soul, lilac colour, with round button eyes and a glowing antenna orb. Bingo Star badge: completed a line this round"
     },
     {
       "index": 4,
@@ -125,7 +125,7 @@
         ],
         "driftPhase": 0.082
       },
-      "alt": "Arise Soul, mint flame with sparkle eyes"
+      "alt": "Arise Soul, mint colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 5,
@@ -152,7 +152,7 @@
         ],
         "driftPhase": 0.703
       },
-      "alt": "Arise Soul, orchid cloud with dot eyes"
+      "alt": "Arise Soul, orchid colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 6,
@@ -179,7 +179,7 @@
         ],
         "driftPhase": 0.526
       },
-      "alt": "Arise Soul, sky bean with dot eyes"
+      "alt": "Arise Soul, sky colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 7,
@@ -214,7 +214,7 @@
         ],
         "driftPhase": 0.033
       },
-      "alt": "Arise Soul, coral cloud with sparkle eyes"
+      "alt": "Arise Soul, coral colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 8,
@@ -253,7 +253,7 @@
         ],
         "driftPhase": 0.992
       },
-      "alt": "Arise Soul, lagoon pebble with sparkle eyes"
+      "alt": "Arise Soul, lagoon colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 9,
@@ -288,7 +288,7 @@
         ],
         "driftPhase": 0.974
       },
-      "alt": "Arise Soul, coral bell with wink eyes"
+      "alt": "Arise Soul, coral colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 10,
@@ -319,7 +319,7 @@
         ],
         "driftPhase": 0.072
       },
-      "alt": "Arise Soul, mint flame with sparkle eyes"
+      "alt": "Arise Soul, mint colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 11,
@@ -346,7 +346,7 @@
         ],
         "driftPhase": 0.587
       },
-      "alt": "Arise Soul, lagoon pebble with wide eyes. Bingo Star badge: completed a line this round"
+      "alt": "Arise Soul, lagoon colour, with round button eyes and a glowing antenna orb. Bingo Star badge: completed a line this round"
     },
     {
       "index": 12,
@@ -385,7 +385,7 @@
         ],
         "driftPhase": 0.542
       },
-      "alt": "Arise Soul, sunset bell with wide eyes"
+      "alt": "Arise Soul, sunset colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 13,
@@ -424,7 +424,7 @@
         ],
         "driftPhase": 0.883
       },
-      "alt": "Arise Soul, mint cloud with dot eyes"
+      "alt": "Arise Soul, mint colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 14,
@@ -459,7 +459,7 @@
         ],
         "driftPhase": 0.967
       },
-      "alt": "Arise Soul, lilac flame with star eyes"
+      "alt": "Arise Soul, lilac colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 15,
@@ -486,7 +486,7 @@
         ],
         "driftPhase": 0.975
       },
-      "alt": "Arise Soul, aurora drop with star eyes"
+      "alt": "Arise Soul, aurora colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 16,
@@ -521,7 +521,7 @@
         ],
         "driftPhase": 0.668
       },
-      "alt": "Arise Soul, sky flame with sleepy eyes"
+      "alt": "Arise Soul, sky colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 17,
@@ -548,7 +548,7 @@
         ],
         "driftPhase": 0.127
       },
-      "alt": "Arise Soul, mint bean with wink eyes"
+      "alt": "Arise Soul, mint colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 18,
@@ -587,7 +587,7 @@
         ],
         "driftPhase": 0.456
       },
-      "alt": "Arise Soul, sky flame with wide eyes"
+      "alt": "Arise Soul, sky colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 19,
@@ -618,7 +618,7 @@
         ],
         "driftPhase": 0.84
       },
-      "alt": "Arise Soul, lilac cloud with sparkle eyes. Bingo Star badge: completed a line this round"
+      "alt": "Arise Soul, lilac colour, with round button eyes and a glowing antenna orb. Bingo Star badge: completed a line this round"
     },
     {
       "index": 20,
@@ -653,7 +653,7 @@
         ],
         "driftPhase": 0.204
       },
-      "alt": "Arise Soul, orchid bell with sleepy eyes"
+      "alt": "Arise Soul, orchid colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 21,
@@ -688,7 +688,7 @@
         ],
         "driftPhase": 0.366
       },
-      "alt": "Arise Soul, mint flame with dot eyes"
+      "alt": "Arise Soul, mint colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 22,
@@ -727,7 +727,7 @@
         ],
         "driftPhase": 0.087
       },
-      "alt": "Arise Soul, lilac flame with wink eyes"
+      "alt": "Arise Soul, lilac colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 23,
@@ -758,7 +758,7 @@
         ],
         "driftPhase": 0.998
       },
-      "alt": "Arise Soul, orchid pebble with sparkle eyes"
+      "alt": "Arise Soul, orchid colour, with round button eyes and a glowing antenna orb"
     },
     {
       "index": 24,
@@ -785,7 +785,7 @@
         ],
         "driftPhase": 0.164
       },
-      "alt": "Arise Soul, orchid pebble with sleepy eyes"
+      "alt": "Arise Soul, orchid colour, with round button eyes and a glowing antenna orb"
     }
   ]
 }

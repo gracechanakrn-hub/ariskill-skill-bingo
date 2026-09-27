@@ -8,6 +8,8 @@ import { createLogger } from '../../services/game-service/src/log.js';
 import { createApp } from '../../services/game-service/src/app.js';
 import { signJoinToken } from '../../services/game-service/src/auth.js';
 import skillMaster from '../../packages/skill-master/data/skill-master.json' with { type: 'json' };
+import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
+import { splitCharmSlots, faceForMatches, countSkillKinds, pickPlate, pickEyes, pickTopper, CHARM_BY_ID } from '../../packages/game-rules/src/index.js';
 
 export const SKILL_MASTER = skillMaster;
 export const SKILLS_BY_ID = new Map(skillMaster.skills.map(s => [s.id, s]));
@@ -206,3 +208,23 @@ export const PRIVACY_TEXT_REGEX = /employee|email|selectedSkillIds|floatToken|se
 /** Skill ids whose id or name would trip PRIVACY_TEXT_REGEX (e.g. "Employee Experience") - excluded from privacy-scan boards. */
 export const REGEX_TRIPPING_SKILL_IDS = skillMaster.skills.filter(s => PRIVACY_TEXT_REGEX.test(`${s.id} ${s.name} ${s.domain ?? ''} ${s.cluster ?? ''}`)).map(s => s.id);
 export function privacyTextHits(obj) { const text = JSON.stringify(obj); const m = text.match(new RegExp(PRIVACY_TEXT_REGEX.source, 'gi')); return m ? [...new Set(m)] : []; }
+
+// ---- Soul decorations (D-29 contract 1.1.0, D-31 contract 1.2.0) -----------------------------------------------------
+/** SoulConfig v3 keys from contracts/realtime-events.json, sorted: a new Soul's served config carries exactly these, on every screen. */
+export const SOUL_CONFIG_KEYS = Object.keys(realtime.shapes.SoulConfig).sort();
+/** The same keys written out (contract 1.2.0), so a contract change cannot silently change what the privacy tests accept. */
+export const SOUL_CONFIG_V3_KEYS = ['catalog', 'charms', 'constellation', 'driftPhase', 'eyes', 'face', 'glow', 'gradient', 'plate', 'seed', 'topper', 'version'];
+const SKILL_STRINGS = new Set(skillMaster.skills.flatMap(s => [s.id, s.name]));
+const stringsIn = (v) => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(stringsIn) : []);
+/** Strings anywhere in a Soul config that are a skill id or a skill name (public and stage must see none). */
+export function skillStringsIn(config) { return stringsIn(config).filter(s => SKILL_STRINGS.has(s)); }
+/** Charm count per kind of a config's charms. */
+export function charmSplit(charms) { const out = { core: 0, technical: 0, soft: 0 }; for (const id of charms) out[CHARM_BY_ID.get(id).kind] += 1; return out; }
+/** The decoration a finished ParticipantBoard must get: split from the selected skills' kinds, face from the matched tiles' kinds. */
+export function expectedDecor(board) {
+  const kinds = (ids) => countSkillKinds(ids.map(id => SKILLS_BY_ID.get(id)?.kind));
+  const matched = new Set(board.matchedPositions);
+  return { split: splitCharmSlots(kinds(board.selectedSkillIds)), face: faceForMatches(kinds(board.cells.filter(c => matched.has(c.position)).map(c => c.skillId))) };
+}
+/** The v3 face plate, eyes and antenna charm a config must carry: picked from its seed (and, for the topper, its charms) only. */
+export function expectedSeedPicks(config) { return { plate: pickPlate(config.seed), eyes: pickEyes(config.seed), topper: pickTopper(config.seed, config.charms) }; }
