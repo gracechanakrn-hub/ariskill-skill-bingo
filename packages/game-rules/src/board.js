@@ -1,7 +1,7 @@
 import { CELLS } from './lines.js';
 import { shuffle } from './random.js';
 
-export const REQUIRED_SELECTIONS = 25;
+export const REQUIRED_SELECTIONS = CELLS;
 
 /**
  * Validate a draft selection set (BR-02). Returns { ok, code, message }.
@@ -21,7 +21,7 @@ export function validateSelections(skillIds, skills) {
   return { ok: true };
 }
 
-/** True when the set is exactly 25 unique active skills and may be finalized. */
+/** True when the set is exactly 16 unique active skills and may be finalized. */
 export function isComplete(skillIds, skills) {
   const v = validateSelections(skillIds, skills);
   return v.ok && skillIds.length === REQUIRED_SELECTIONS;
@@ -29,7 +29,7 @@ export function isComplete(skillIds, skills) {
 
 /** Server-side randomization (BR-04): returns cells [{position, skillId}] in position order. */
 export function randomizeBoard(skillIds, rng) {
-  if (skillIds.length !== CELLS) throw new RangeError('exactly 25 skills required');
+  if (skillIds.length !== CELLS) throw new RangeError(`exactly ${CELLS} skills required`);
   const order = shuffle(skillIds, rng);
   return order.map((skillId, position) => ({ position, skillId }));
 }

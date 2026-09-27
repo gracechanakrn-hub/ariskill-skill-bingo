@@ -269,7 +269,7 @@
       "skill": {
         "id": "string",
         "name": "string",
-        "kind": "Core|Critical",
+        "kind": "Core|Critical|Optional",
         "domain": "string"
       },
       "drawnAt": "ISO"

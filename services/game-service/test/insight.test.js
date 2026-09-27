@@ -1,6 +1,6 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, readyBoard, boardSet, startRound, drawUntilEnd, EVENT_ID } from './helpers.js';
+import { startServer, createRound, command, join, readyBoard, boardSet, startRound, drawUntilEnd, EVENT_ID, CELLS, OPTIONAL_IDS } from './helpers.js';
 import { ROLES, roleSkillSet, SKILLS, PLATFORMS, MATRIX_VERSION } from '../src/skills.js';
 import { computeInsights } from '../../analytics-projection/src/insights.js';
 import { findForbiddenKeys } from '../src/projections.js';
@@ -15,17 +15,17 @@ describe('private insight, aggregate insights with cohort suppression, retention
     const role = ROLES[2];
     const a = await join(t, { profile: { platformId: role.platformId, roleId: role.id } });
     const set = roleSkillSet(role.id);
-    const inMatrix = [...set].filter(id => SKILLS.get(id)?.status === 'active').sort().slice(0, 10);
-    const beyond = boardSet(0, 40).filter(id => !set.has(id)).slice(0, 15);
+    const inMatrix = [...set].filter(id => SKILLS.get(id)?.status === 'active').sort().slice(0, 6);
+    const beyond = boardSet(0, 40).filter(id => !set.has(id) && !inMatrix.includes(id)).slice(0, CELLS - 6);
     await readyBoard(t, a, [...inMatrix, ...beyond]);
     const b = await join(t); await readyBoard(t, b, boardSet(60));
     assert.equal((await t.api.get('/me/insight', a.token)).status, 404, 'not before FINISHED');
     const started = await startRound(t, round);
     await drawUntilEnd(t, started);
     const ins = (await t.api.get('/me/insight', a.token)).body;
-    assert.equal(ins.roundId, round.roundId); assert.equal(ins.matrixVersion, MATRIX_VERSION); assert.equal(ins.inMatrixCount, 10); assert.equal(ins.beyondMatrixCount, 15); assert.equal(ins.totalSelected, 25);
+    assert.equal(ins.roundId, round.roundId); assert.equal(ins.matrixVersion, MATRIX_VERSION); assert.equal(ins.inMatrixCount, 6); assert.equal(ins.beyondMatrixCount, 10); assert.equal(ins.totalSelected, CELLS);
     const other = (await t.api.get('/me/insight', b.token)).body;
-    assert.notDeepEqual([other.inMatrixCount, other.beyondMatrixCount], [10, 15]);
+    assert.notDeepEqual([other.inMatrixCount, other.beyondMatrixCount], [6, 10]);
     for (const [aud, path, tok] of [['public', `/events/${EVENT_ID}/snapshot`, null], ['stage', `/stage/events/${EVENT_ID}/snapshot`, t.stage], ['admin', `/admin/events/${EVENT_ID}/snapshot`, t.admin]]) {
       const body = (await t.api.get(path, tok)).body;
       assert.deepEqual(findForbiddenKeys(aud, body), [], aud); assert.ok(!JSON.stringify(body).includes('inMatrixCount'));
@@ -45,7 +45,7 @@ describe('private insight, aggregate insights with cohort suppression, retention
     assert.equal(r.platformEngagement.length, platformsExpected);
     assert.equal(r.suppressedCohorts, roleA.platformId === roleB.platformId ? 1 : 2);
     assert.equal(r.participation.joined, 9); assert.equal(r.participation.completedRate, 1); assert.equal(r.topSkills.length, 10); assert.equal(r.topSkills[0].count, 9);
-    assert.equal(r.coreCriticalDensity.totalSelections, 225); assert.equal(r.coreCriticalDensity.optional, 0);
+    assert.equal(r.coreCriticalDensity.totalSelections, 9 * CELLS); assert.equal(r.coreCriticalDensity.optional, 9 * boardSet(0).filter(id => OPTIONAL_IDS.includes(id)).length);
     assert.ok(r.matrixAlignment.rate >= 0 && r.matrixAlignment.rate <= 1); assert.equal(r.matrixAlignment.participants, 9); assert.ok(r.skillsBeyondMatrix.length <= 10);
     assert.deepEqual(findForbiddenKeys('insights', r), []); assert.ok(!JSON.stringify(r).includes('p0'));
     // API: a fresh server with 4 participants in one role suppresses it, a 5th reveals it

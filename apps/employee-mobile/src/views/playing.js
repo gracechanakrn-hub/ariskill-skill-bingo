@@ -1,5 +1,5 @@
 // apps/employee-mobile/src/views/playing.js - E6 Playing: accepted draws (latest as .draw-card), automatic matches
-// from server state (BR-11), draws 1-4 banner vs "Bingo is live" from draw 5 (M-09), matched count.
+// from server state (BR-11), draws 1-3 banner vs "Bingo is live" from draw 4 (M-09), matched count.
 import { h, mount } from '/packages/ui/dom.js';
 import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t } from '/packages/contracts/index.js';

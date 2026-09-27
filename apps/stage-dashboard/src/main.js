@@ -6,7 +6,7 @@ import { createSseClient } from '/packages/ui/sse-client.js';
 import { restoreReducedMotion, setReducedMotion, prefersReducedMotion, createCelebrationGuard } from '/packages/ui/motion.js';
 import { createAudioManager } from '/packages/ui/audio.js';
 import { track } from '/packages/ui/telemetry.js';
-import { t, exception } from '/packages/contracts/index.js';
+import { t, exception, BINGO_UNLOCK_DRAW } from '/packages/contracts/index.js';
 import { readToken, saveToken, clearToken, readEventId, createStageApi, ApiError } from './api.js';
 import { initialState, reduce, deriveView, changedTiles, isRoundEvent } from './state.js';
 import { renderShell, renderDashboard, renderTokenPrompt, renderError, renderLoading, setConnection, setControls, setCaption, tick, announceDraw, announceWinners, announceState, ageSeconds } from './view.js';
@@ -160,7 +160,7 @@ function onEvent(envelope, meta) {
     if (celebrate(`draw:${d.drawId || d.number}`)) {
       effects.drawArrival = true;
       audio.play('draw_reveal', { vars: { number: d.number }, sequence: envelope.sequence });
-      if (d.number === 5) audio.play('draw5_unlock', { sequence: envelope.sequence });
+      if (d.number === BINGO_UNLOCK_DRAW) audio.play('draw5_unlock', { sequence: envelope.sequence });
     }
   } else if (envelope.type === 'bingo.detected') {
     const roundKey = envelope.roundId || 'round';

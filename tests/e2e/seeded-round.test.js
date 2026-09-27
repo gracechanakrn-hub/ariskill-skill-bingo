@@ -5,17 +5,21 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { startServer, command, tryCommand, openStream, nextKey, SOUL_CONFIG_V3_KEYS, charmSplit, expectedDecor, expectedSeedPicks } from './helpers.js';
+import { startServer, command, tryCommand, openStream, nextKey, SOUL_CONFIG_V3_KEYS, charmSplit, expectedDecor, expectedSeedPicks, CELLS, MIN_DRAW_FOR_BINGO } from './helpers.js';
+import { DRAW_POLICY } from '../../packages/game-rules/src/index.js';
 
 const fixture = JSON.parse(readFileSync(new URL('../fixtures/seeded-round.json', import.meta.url), 'utf8'));
-// Soul decoration per fixture board (D-29), worked by hand: the kinds of the 25 selected skills give the charm split (floor
-// quota, largest remainder, at least one per kind picked); every board's matched tiles are mostly technical, so every face is pirate.
+// Soul decoration per fixture board (D-29), worked by hand: the kinds of the 16 selected skills give the charm split (floor
+// quota, largest remainder, at least one per kind picked); the face follows the kinds of the matched tiles at round end
+// (most core -> nerdy, most technical -> pirate, none matched -> nerdy).
 // The v3 plate, eyes and antenna charm (D-31) come from the Soul seed, whose participant id is random per run: checked against the seed picks.
 const DECOR = {
-  'fixture-001': { core: 2, technical: 7, soft: 1 }, 'fixture-002': { core: 2, technical: 7, soft: 1 }, // 4 core / 18 technical / 3 soft
-  'fixture-003': { core: 0, technical: 8, soft: 2 }, 'fixture-004': { core: 0, technical: 8, soft: 2 }, // 21 technical / 4 soft
-  'fixture-005': { core: 0, technical: 9, soft: 1 }, 'fixture-006': { core: 0, technical: 9, soft: 1 }, // 24/1 and 23/2
+  'fixture-001': { core: 2, technical: 6, soft: 2 }, 'fixture-002': { core: 2, technical: 6, soft: 2 }, // 4 core / 9 technical / 3 soft
+  'fixture-003': { core: 0, technical: 10, soft: 0 }, 'fixture-004': { core: 0, technical: 10, soft: 0 }, // 16 technical
+  'fixture-005': { core: 0, technical: 8, soft: 2 }, 'fixture-006': { core: 0, technical: 8, soft: 2 }, // 13/3 and 12/4
 };
+// matched at round end: 001/002 4 core + 2 technical + 2 soft (their row 0 won); 003/004 one technical; 005/006 nothing
+const FACE = { 'fixture-001': 'nerdy', 'fixture-002': 'nerdy', 'fixture-003': 'pirate', 'fixture-004': 'pirate', 'fixture-005': 'nerdy', 'fixture-006': 'nerdy' };
 
 describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
   let t, round, streams, players, refOf;
@@ -62,7 +66,7 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
     for (const [k, s] of Object.entries(streams)) assert.equal(s.status, 200, `${k} stream`);
   });
 
-  test('lock and start match the fixture: 6 active / 0 deferred boards, pool of 100 eligible skills', async () => {
+  test('lock and start match the fixture: 6 active / 0 deferred boards, pool of the 64 distinct active skills on them', async () => {
     const lock = await command(t, round.roundId, 'round.lock', round.version);
     assert.equal(lock.effects.activeBoards, fixture.expected.lock.activeBoards); assert.equal(lock.effects.deferredBoards, fixture.expected.lock.deferredBoards);
     const start = await command(t, round.roundId, 'round.start', lock.resultingVersion);
@@ -71,13 +75,15 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
     const pool = JSON.parse(t.db.get('SELECT pool_json FROM rounds WHERE id = ?', round.roundId).pool_json);
     assert.deepEqual(pool, fixture.expected.pool, 'pool content is exactly the fixture pool');
     assert.equal(new Set(pool).size, pool.length, 'pool has no duplicates');
+    assert.deepEqual(pool, [...new Set(fixture.boards.flatMap(b => b.skillIds))].sort(), 'pool = every skill on an active board (D-33)');
+    assert.equal(pool.length, 64);
     const adm = (await t.api.get(`/admin/events/${fixture.eventId}/snapshot`, t.admin)).body.currentRound;
     assert.equal(adm.readiness.poolSize, fixture.expected.poolSize); assert.equal(adm.poolRemaining, fixture.expected.poolSize);
     await streams.public.waitFor(ev => ev.some(e => e.event === 'round.started'), 2000, 'round.started');
     assert.equal(streams.public.events.find(e => e.event === 'round.started').data.payload.poolSize, fixture.expected.poolSize);
   });
 
-  test('draw order, matched-board counts and pool remaining replay exactly; no winner before draw 5; WINNER on the expected draw', async () => {
+  test('draw order, matched-board counts and pool remaining replay exactly; no winner before draw 4 (BR-12); guided WINNER on the expected draw inside 6..12 (D-33)', async () => {
     let cur = round;
     for (let i = 0; i < 300 && cur.state === 'PLAYING'; i++) {
       const r = await command(t, cur.roundId, 'round.draw.next', cur.version);
@@ -89,8 +95,8 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
       const exp = fixture.expected.draws[i];
       assert.equal(r.effects.draw.number, exp.number); assert.equal(r.effects.draw.skill.id, exp.skillId, `draw ${exp.number}`); assert.equal(r.effects.draw.skill.name, exp.name); assert.equal(r.effects.draw.skill.kind, exp.kind);
       assert.equal(r.effects.matchedBoards, exp.matchedBoards, `matchedBoards after draw ${exp.number}`); assert.equal(r.effects.poolRemaining, exp.poolRemaining, `poolRemaining after draw ${exp.number}`);
-      assert.ok(['Core', 'Critical'].includes(r.effects.draw.skill.kind), 'every drawn skill is Core or Critical (AC 4)');
-      if (exp.number < 5) assert.equal(r.effects.winners, undefined, `no winner before draw 5 (draw ${exp.number})`);
+      assert.ok(['Core', 'Critical', 'Optional'].includes(r.effects.draw.skill.kind), 'every drawn skill is an active skill of a known kind (AC 4, D-33)');
+      if (exp.number < MIN_DRAW_FOR_BINGO) assert.equal(r.effects.winners, undefined, `no winner before draw 4 (draw ${exp.number})`);
       if (exp.number < fixture.expected.winningDrawNumber) assert.equal(r.round.state, 'PLAYING');
     });
     const skillIds = results.map(r => r.effects.draw.skill.id);
@@ -98,6 +104,9 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
     assert.ok(skillIds.every(id => fixture.expected.pool.includes(id)), 'every draw comes from the pool');
     const last = results.at(-1);
     assert.equal(last.round.state, 'WINNER'); assert.equal(last.effects.draw.number, fixture.expected.winningDrawNumber);
+    assert.ok(fixture.expected.winningDrawNumber >= DRAW_POLICY.winFrom && fixture.expected.winningDrawNumber <= DRAW_POLICY.winTo, 'guided win lands in the target window');
+    assert.ok(results.some(r => r.effects.draw.skill.kind === 'Optional'), 'the fixture draws a non-core/critical skill');
+    for (const b of fixture.expected.boardLayouts) assert.equal(b.cells.length, CELLS);
     assert.equal(t.db.get('SELECT COUNT(*) AS c FROM draws WHERE round_id = ?', round.roundId).c, fixture.expected.totalDraws);
     round = cur;
   });
@@ -116,9 +125,9 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
       assert.equal(m.result.isWinner, isWinner, p.employeeRef); assert.equal(m.result.winningDrawNumber, fixture.expected.winningDrawNumber); assert.equal(m.result.coWinnerCount, winners.length);
       assert.equal(m.board.state, 'FINISHED'); assert.ok(m.soul, 'every finished board gets a Soul'); assert.equal(m.soul.badge, isWinner ? 'bingo-star' : null);
       assert.equal(m.soul.config.version, 3); assert.deepEqual(Object.keys(m.soul.config).sort(), SOUL_CONFIG_V3_KEYS, `${p.employeeRef} SoulConfig v3 keys`);
-      assert.deepEqual(charmSplit(m.soul.config.charms), DECOR[p.employeeRef], `${p.employeeRef} charm split`); assert.equal(m.soul.config.face, 'pirate', `${p.employeeRef} face`);
+      assert.deepEqual(charmSplit(m.soul.config.charms), DECOR[p.employeeRef], `${p.employeeRef} charm split`); assert.equal(m.soul.config.face, FACE[p.employeeRef], `${p.employeeRef} face`);
       assert.deepEqual({ plate: m.soul.config.plate, eyes: m.soul.config.eyes, topper: m.soul.config.topper }, expectedSeedPicks(m.soul.config), `${p.employeeRef} seed picks`);
-      assert.deepEqual(expectedDecor(m.board), { split: DECOR[p.employeeRef], face: 'pirate' }, `${p.employeeRef} decoration follows the board`);
+      assert.deepEqual(expectedDecor(m.board), { split: DECOR[p.employeeRef], face: FACE[p.employeeRef] }, `${p.employeeRef} decoration follows the board`);
       assert.equal(m.draws.length, fixture.expected.totalDraws);
       assert.deepEqual(m.draws.map(d => d.skill.id), fixture.expected.draws.map(d => d.skillId), 'participant sees the same draw order');
     }
@@ -144,7 +153,7 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
       const draws = s.events.filter(e => e.event === 'draw.accepted');
       assert.equal(draws.length, fixture.expected.totalDraws, `${k} saw every draw`);
       assert.deepEqual(draws.map(d => d.data.payload.draw.skill.id), fixture.expected.draws.map(d => d.skillId), `${k} draw order`);
-      assert.ok(draws.slice(0, 4).every(d => d.data.payload.bingoEvaluationActive === false) && draws.slice(4).every(d => d.data.payload.bingoEvaluationActive === true), `${k} bingoEvaluationActive from draw 5`);
+      assert.ok(draws.slice(0, MIN_DRAW_FOR_BINGO - 1).every(d => d.data.payload.bingoEvaluationActive === false) && draws.slice(MIN_DRAW_FOR_BINGO - 1).every(d => d.data.payload.bingoEvaluationActive === true), `${k} bingoEvaluationActive from draw 4`);
       const bingo = s.events.filter(e => e.event === 'bingo.detected');
       assert.equal(bingo.length, 1, `${k} bingo.detected once`); assert.equal(bingo[0].data.payload.drawNumber, fixture.expected.winningDrawNumber); assert.equal(bingo[0].data.payload.winnerCount, winners.length);
       const lastDraw = draws.at(-1);

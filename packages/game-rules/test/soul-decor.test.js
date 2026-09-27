@@ -9,6 +9,7 @@ import {
 } from '../src/soul.js';
 import { CATALOG_VERSION, CHARM_BY_ID, CHARMS, GRADIENTS, SLOT_COUNT, KINDS } from '../src/soul-catalog.js';
 import { SKILL_MASTER } from './helpers.js';
+import { REQUIRED_SELECTIONS } from '../src/board.js';
 import realtime from '../../../contracts/realtime-events.json' with { type: 'json' };
 
 const split = (core, technical, soft) => ({ core, technical, soft });
@@ -60,19 +61,21 @@ test('split: total 0 gives no slots; missing, negative and non-numeric counts co
   assert.deepEqual(splitCharmSlots(split(1, 1, 1), 2), split(1, 1, 0), 'fewer slots than kinds picked still terminates and sums up');
 });
 
-test('split: for every selection of 25 the slots sum to 10, follow the kinds picked and stay within 2 of the exact share', () => {
-  let n = 0;
-  for (let c = 0; c <= 25; c++) for (let t = 0; t + c <= 25; t++) {
-    const counts = split(c, t, 25 - c - t);
-    const s = splitCharmSlots(counts);
-    assert.equal(s.core + s.technical + s.soft, 10, JSON.stringify(counts));
-    for (const k of KINDS) {
-      assert.equal(s[k] >= 1, counts[k] >= 1, `${k} ${JSON.stringify(counts)}`);
-      assert.ok(Math.abs(s[k] - (10 * counts[k]) / 25) < 2, `${k} near its share ${JSON.stringify(counts)} -> ${JSON.stringify(s)}`);
+test('split: for every selection of 16 (the 4 x 4 board; 25 kept to show the rule is size-agnostic) the slots sum to 10, follow the kinds picked and stay within 2 of the exact share', () => {
+  for (const [N, combos] of [[REQUIRED_SELECTIONS, 153], [25, 351]]) {
+    let n = 0;
+    for (let c = 0; c <= N; c++) for (let t = 0; t + c <= N; t++) {
+      const counts = split(c, t, N - c - t);
+      const s = splitCharmSlots(counts);
+      assert.equal(s.core + s.technical + s.soft, 10, JSON.stringify(counts));
+      for (const k of KINDS) {
+        assert.equal(s[k] >= 1, counts[k] >= 1, `${k} ${JSON.stringify(counts)}`);
+        assert.ok(Math.abs(s[k] - (10 * counts[k]) / N) < 2, `${k} near its share ${JSON.stringify(counts)} -> ${JSON.stringify(s)}`);
+      }
+      n += 1;
     }
-    n += 1;
+    assert.equal(n, combos);
   }
-  assert.equal(n, 351);
   for (let total = 1; total <= 60; total++) {
     const c = total % 5, t = Math.floor((total - c) / 2);
     const s = splitCharmSlots(split(c, t, total - c - t));

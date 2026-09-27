@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Skill picker mockup</title>
+<style>
+@font-face{font-family:Fredoka;src:url(fredoka-latin.woff2) format('woff2');font-weight:300 700}
+@font-face{font-family:Jakarta;src:url(plus-jakarta-sans-latin.woff2) format('woff2');font-weight:200 800}
+:root{--navy:#0B1030;--lilac:#8B7CF0;--pale:#DCD4FF;--mint:#7CF5C8;--lime:#B6FF5C;--gold:#F6C453;--ink:#E7DFFF;--badge:#2D2670}
+*{box-sizing:border-box;margin:0}
+body{background:#05071a;font-family:Jakarta,sans-serif;display:flex;gap:36px;padding:36px;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:14px}
+.cap{color:#b9b3e6;font:600 15px Jakarta}
+.phone{width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:url(backdrop-540x1170.png) center/cover;box-shadow:0 0 0 10px #1a1740,0 20px 60px rgba(0,0,0,.6)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:54px 22px 6px}
+.steps{display:flex;gap:6px;align-items:center}
+.dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:600 13px Fredoka;color:var(--ink);background:rgba(45,38,112,.8);border:2px solid rgba(231,223,255,.25)}
+.dot.on{background:var(--lime);color:var(--navy);border-color:#fff}
+.dot.done{background:var(--lilac);border-color:#fff}
+.dot.skip{opacity:.35;text-decoration:line-through}
+.line{width:12px;height:2px;background:rgba(231,223,255,.3)}
+.count{font:600 17px Fredoka;color:var(--navy);background:var(--pale);padding:5px 12px;border-radius:99px;border:2px solid #fff;box-shadow:0 4px 10px rgba(5,8,30,.5)}
+.count.full{background:var(--mint)}
+.board{width:346px;height:346px;margin:8px auto 0;background:url(board-tray.png) center/100% 100%;position:relative;padding:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.t{background:url(tile-empty.png) center/100% 100%;display:grid;place-items:center;text-align:center;padding:8px 4px;font:700 10px/1.18 Jakarta;color:#1a1545;overflow:hidden}
+.t.p{background-image:url(tile-picked.png)}
+.t.new{animation:none;transform:scale(1.06);filter:drop-shadow(0 0 8px var(--lime))}
+.t.e::after{content:'+';font:500 20px Fredoka;color:rgba(231,223,255,.28)}
+.t span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sheet{position:absolute;left:0;right:0;bottom:0;padding:20px 20px 28px;background:linear-gradient(180deg,rgba(21,28,72,.86),rgba(11,16,48,.96));backdrop-filter:blur(10px);border-top:2px solid rgba(231,223,255,.18);border-radius:30px 30px 0 0}
+h2{font:600 25px Fredoka;color:#fff;letter-spacing:.2px}
+.hint{color:#b9b3e6;font:500 13.5px Jakarta;margin:4px 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;max-height:212px;overflow:hidden}
+.c{font:600 13.5px Jakarta;color:var(--ink);padding:9px 13px;border-radius:99px;border:2px solid rgba(139,124,240,.7);background:rgba(45,38,112,.55)}
+.c.s{background:var(--pale);color:var(--navy);border-color:#fff}
+.c.s::before{content:'✓ ';font-weight:800}
+.c.off{opacity:.35}
+.search{display:flex;align-items:center;gap:8px;background:rgba(11,16,48,.8);border:2px solid rgba(139,124,240,.7);border-radius:16px;padding:11px 14px;color:#8f89c4;font:500 14px Jakarta;margin-bottom:10px}
+.row{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;text-align:center;font:600 17px Fredoka;padding:14px;border-radius:18px;color:var(--navy);background:var(--lime);border:2px solid #fff;box-shadow:0 6px 14px rgba(5,8,30,.55)}
+.btn.ghost{flex:0 0 96px;background:transparent;color:var(--ink);border-color:rgba(231,223,255,.35);box-shadow:none}
+.pill{display:inline-flex;gap:6px;align-items:center;font:600 13px Fredoka;color:var(--navy);background:var(--mint);border:2px solid #fff;border-radius:99px;padding:4px 11px;margin-left:8px;vertical-align:middle}
+.toast{position:absolute;top:410px;left:50%;transform:translateX(-50%);font:600 14px Fredoka;color:var(--navy);background:var(--gold);border:2px solid #fff;border-radius:99px;padding:6px 14px;box-shadow:0 6px 14px rgba(5,8,30,.55)}
+.sparkle{position:absolute;color:var(--gold);font:700 22px Fredoka;text-shadow:0 0 10px var(--gold)}
+</style></head><body>
+
+<!-- A: question 1 -->
+<div class="col"><div class="phone">
+  <div class="top"><div class="steps"><div class="dot on">1</div><div class="line"></div><div class="dot">2</div><div class="line"></div><div class="dot">3</div></div><div class="count">4/16</div></div>
+  <div class="board">
+    <div class="t p"><span>AI Literacy</span></div><div class="t p"><span>Prompt</span></div><div class="t p"><span>AI Utilization</span></div><div class="t p new"><span>Responsible AI (RAI)</span></div>
+    <div class="t e"></div><div class="t e"></div><div class="t e"></div><div class="t e"></div>
+    <div class="t e"></div><div class="t e"></div><div class="t e"></div><div class="t e"></div>
+    <div class="t e"></div><div class="t e"></div><div class="t e"></div><div class="t e"></div>
+  </div>
+  <div class="sheet">
+    <h2>Arise core skills</h2>
+    <div class="hint">Pick the ones you're good at.</div>
+    <div class="chips">
+      <div class="c s">AI Literacy</div><div class="c s">Prompt</div><div class="c s">AI Utilization</div><div class="c s">Responsible AI (RAI)</div>
+      <div class="c">Agile Mindset &amp; Ways of Working</div><div class="c">AI Evaluation/Assessment</div><div class="c">Security &amp; Compliance Awareness</div>
+    </div>
+    <div class="row"><div class="btn">Next →</div></div>
+  </div>
+</div><div class="cap">① Arise core skills — tiles pop in as you tap</div></div>
+
+<!-- B: question 2, board full -->
+<div class="col"><div class="phone">
+  <div class="top"><div class="steps"><div class="dot done">✓</div><div class="line"></div><div class="dot on">2</div><div class="line"></div><div class="dot skip">3</div></div><div class="count full">16/16 ✓</div></div>
+  <div class="board">
+    <div class="t p"><span>AI Literacy</span></div><div class="t p"><span>Prompt</span></div><div class="t p"><span>AI Utilization</span></div><div class="t p"><span>Responsible AI (RAI)</span></div>
+    <div class="t p"><span>Machine Learning</span></div><div class="t p"><span>AI Model Deployment</span></div><div class="t p"><span>Coding &amp; Programming</span></div><div class="t p"><span>Cloud Architecture</span></div>
+    <div class="t p"><span>Data Quality</span></div><div class="t p"><span>Critical Thinking</span></div><div class="t p"><span>Collaboration</span></div><div class="t p"><span>CI/CD</span></div>
+    <div class="t p"><span>Big Data Technologies</span></div><div class="t p"><span>Data Visualization</span></div><div class="t p"><span>Communication</span></div><div class="t p new"><span>Design Thinking</span></div>
+  </div>
+  <div class="sheet">
+    <h2>Skills in your role <span class="pill">Board full</span></h2>
+    <div class="hint">Tap a tile to swap one out.</div>
+    <div class="chips">
+      <div class="c s">Machine Learning</div><div class="c s">AI Model Deployment</div><div class="c s">Coding &amp; Programming</div><div class="c off">Adaptability</div><div class="c s">Cloud Architecture</div><div class="c off">Analytical Thinking</div><div class="c s">Data Quality</div><div class="c s">Critical Thinking</div><div class="c off">Application Development</div><div class="c s">Collaboration</div><div class="c s">CI/CD</div><div class="c off">Data Strategy</div><div class="c s">Big Data Technologies</div>
+    </div>
+    <div class="row"><div class="btn ghost">Back</div><div class="btn">Review board →</div></div>
+  </div>
+</div><div class="cap">② Role skills — board full, so ③ is skipped</div></div>
+
+<!-- C: question 3 (only if not full) -->
+<div class="col"><div class="phone">
+  <div class="top"><div class="steps"><div class="dot done">✓</div><div class="line"></div><div class="dot done">✓</div><div class="line"></div><div class="dot on">3</div></div><div class="count">13/16</div></div>
+  <div class="board">
+    <div class="t p"><span>AI Literacy</span></div><div class="t p"><span>Prompt</span></div><div class="t p"><span>Leadership</span></div><div class="t p"><span>Communication</span></div>
+    <div class="t p"><span>Data Strategy</span></div><div class="t p"><span>Data Quality</span></div><div class="t p"><span>Collaboration</span></div><div class="t p"><span>Critical Thinking</span></div>
+    <div class="t p"><span>Data Visualization</span></div><div class="t p"><span>Creativity</span></div><div class="t p"><span>Data Architecture</span></div><div class="t p"><span>Design Thinking</span></div>
+    <div class="t p new"><span>Design System</span></div><div class="t e"></div><div class="t e"></div><div class="t e"></div>
+  </div>
+  <div class="sheet">
+    <h2>Anything else?</h2>
+    <div class="hint">Search to fill the last 3.</div>
+    <div class="search">🔍 <span style="color:#fff">design</span></div>
+    <div class="chips">
+      <div class="c s">Design System</div><div class="c">Design Principles</div><div class="c">Creative Design</div><div class="c">Android Design Pattern</div>
+    </div>
+    <div class="row"><div class="btn ghost">Back</div><div class="btn" style="opacity:.45">Add 3 more</div></div>
+  </div>
+</div><div class="cap">③ Search — only if the board isn't full</div></div>
+
+<!-- D: confirm -->
+<div class="col"><div class="phone">
+  <div class="top"><div class="steps"><div class="dot done">✓</div><div class="line"></div><div class="dot done">✓</div><div class="line"></div><div class="dot done">✓</div></div><div class="count full">16/16 ✓</div></div>
+  <div class="board">
+    <div class="t p"><span>Cloud Architecture</span></div><div class="t p"><span>Communication</span></div><div class="t p"><span>Prompt</span></div><div class="t p"><span>Data Quality</span></div>
+    <div class="t p"><span>Design Thinking</span></div><div class="t p"><span>AI Model Deployment</span></div><div class="t p"><span>Collaboration</span></div><div class="t p"><span>Big Data Technologies</span></div>
+    <div class="t p"><span>Responsible AI (RAI)</span></div><div class="t p"><span>CI/CD</span></div><div class="t p"><span>Machine Learning</span></div><div class="t p"><span>AI Literacy</span></div>
+    <div class="t p"><span>Critical Thinking</span></div><div class="t p"><span>Data Visualization</span></div><div class="t p"><span>AI Utilization</span></div><div class="t p"><span>Coding &amp; Programming</span></div>
+  </div>
+  <span class="sparkle" style="top:118px;left:26px">✦</span><span class="sparkle" style="top:430px;right:30px">✦</span>
+  <div class="toast">Shuffled!</div>
+  <div class="sheet">
+    <h2>Your board</h2>
+    <div class="hint">You can still edit until the round locks.</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(45,38,112,.6);border:2px solid rgba(231,223,255,.2);border-radius:18px;padding:12px 16px">
+      <span style="color:#b9b3e6;font:600 13px Jakarta">Round 1 locks in</span><span style="font:600 26px Fredoka;color:var(--lime)">02:41</span>
+    </div>
+    <div class="row"><div class="btn ghost">Edit</div><div class="btn">I'm ready ✓</div></div>
+  </div>
+</div><div class="cap">④ Shuffle + ready</div></div>
+
+<script>for(const s of document.querySelectorAll(".t span")){const w=Math.max(...s.textContent.split(/\s+/).map(x=>x.length));s.style.fontSize=w>12?"8px":w>10?"8.8px":"10px"}</script></body></html>

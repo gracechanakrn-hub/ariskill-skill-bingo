@@ -10,8 +10,8 @@ import {
   resultWindowEndsAt, latestSequence, boardOf, participantBoard, getParticipant,
 } from './queries.js';
 import {
-  isCommandAllowed, buildDrawPool, readiness as poolReadiness, drawNext, evaluateDraw, positionsFromMask, bestLineProgress,
-  secureRng, seededRng, POOL_MINIMUM, soulSeed, decoratedSoulConfig, validateSoulConfig, neutralSoulConfig, shuffle,
+  isCommandAllowed, buildDrawPool, readiness as poolReadiness, guidedDraw, drawNext, evaluateDraw, positionsFromMask, bestLineProgress,
+  secureRng, seededRng, POOL_MINIMUM, GRID, soulSeed, decoratedSoulConfig, validateSoulConfig, neutralSoulConfig, shuffle,
 } from '../../../packages/game-rules/src/index.js';
 
 export const COMMANDS = ['round.update', 'round.registration.open', 'round.reschedule', 'round.lock', 'round.start', 'round.start_now', 'round.draw.next', 'round.cancel', 'round.close'];
@@ -239,11 +239,13 @@ export function createGame({ db, clock, config, log, hub = null }) {
     const remaining = pool.filter(s => !drawnSet.has(s));
     if (!remaining.length) throw new ApiError('POOL_EXHAUSTED');
     const number = previous.length + 1;
-    const skillId = drawNext(remaining, rngForDraw(round, number));
+    const boards = activeBoardsWithCells(db, round.id, ['LOCKED_ACTIVE']);
+    const rng = rngForDraw(round, number);
+    const pick = config.drawGuidance ? guidedDraw(remaining, boards, drawnSet, number, rng) : { skillId: drawNext(remaining, rng), mode: 'random' };
+    const skillId = pick.skillId;
     const drawId = newId('draw');
     const t = now();
     db.run('INSERT INTO draws(id, round_id, number, skill_id, drawn_at, command_id, matched_boards) VALUES (?, ?, ?, ?, ?, ?, 0)', drawId, round.id, number, skillId, t, meta.commandId ?? newId('command'));
-    const boards = activeBoardsWithCells(db, round.id, ['LOCKED_ACTIVE']);
     drawnSet.add(skillId);
     const ev = evaluateDraw(boards, drawnSet, number, skillId);
     const matchedPositionsByParticipant = {};
@@ -251,7 +253,7 @@ export function createGame({ db, clock, config, log, hub = null }) {
     for (const m of ev.matches) {
       for (const pos of m.newlyMatched) db.run('INSERT INTO board_matches(board_id, draw_id, position, matched_at) VALUES (?, ?, ?, ?)', m.boardId, drawId, pos, t);
       if (m.matchedCount > 0) matchedBoards += 1;
-      if (bestLineProgress(m.mask) >= 4) fourInLine += 1;
+      if (bestLineProgress(m.mask) >= GRID - 1) fourInLine += 1;
       matchedPositionsByParticipant[m.participantId] = positionsFromMask(m.mask);
     }
     db.run('UPDATE draws SET matched_boards = ? WHERE id = ?', matchedBoards, drawId);
@@ -277,21 +279,21 @@ export function createGame({ db, clock, config, log, hub = null }) {
       ctx.emit('result.published', { ...e, payload: { round: roundSummary(after), winners, resultWindowEndsAt: resultWindowEndsAt(after) } });
       emitSouls(ctx, after, version, souls);
       effects.winners = winners.map(({ soulId, ...w }) => w);
-      effects.audit = { drawNumber: number, skillId, matchedBoards, winners: winners.map(w => w.participantId), outcome: 'WINNER' };
+      effects.audit = { drawNumber: number, skillId, drawMode: pick.mode, matchedBoards, winners: winners.map(w => w.participantId), outcome: 'WINNER' };
     } else if (poolRemaining === 0) {
       const souls = finishRound(ctx, after, version, new Set());
       ctx.emit('round.exhausted', { ...e, payload: { round: roundSummary(after) } });
       emitSouls(ctx, after, version, souls);
-      effects.audit = { drawNumber: number, skillId, matchedBoards, outcome: 'EXHAUSTED' };
+      effects.audit = { drawNumber: number, skillId, drawMode: pick.mode, matchedBoards, outcome: 'EXHAUSTED' };
     } else {
-      effects.audit = { drawNumber: number, skillId, matchedBoards };
+      effects.audit = { drawNumber: number, skillId, drawMode: pick.mode, matchedBoards };
     }
     emitCounts(ctx, after, version);
     return effects;
   }
 
   /**
-   * Soul decoration inputs (D-29): kind counts of the 25 selected skills (charm split) and of the tiles matched at round end
+   * Soul decoration inputs (D-29): kind counts of the 16 selected skills (charm split) and of the tiles matched at round end
    * (face). The v3 face plate, eyes and antenna charm (D-31) take nothing but the seed and the picked charms.
    */
   function soulInputs(board) {

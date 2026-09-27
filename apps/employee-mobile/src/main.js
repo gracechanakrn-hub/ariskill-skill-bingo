@@ -192,7 +192,7 @@ function afterRender(state) {
   // The round-end Soul config is known on the result screen: warm its own models too - the v3 body of a v3 Soul (D-31)
   // and its charm / face models (D-29, D-31) - so the reveal opens decorated without waiting on the network.
   if ((screen === 'result' || screen === 'soul') && state.soul && state.soul.config) { prefetchSoulBody(state.soul.config); prefetchSoulDecor(state.soul.config); }
-  // Auto-finalize a server DRAFT that already holds 25 (reassigned deferred board or resumed session).
+  // Auto-finalize a server DRAFT that already holds 16 (reassigned deferred board or resumed session).
   if (screen === 'select' && shouldAutoFinalize(state) && autoFinalizedFor !== `${state.board.boardId}:${state.board.version}`) {
     autoFinalizedFor = `${state.board.boardId}:${state.board.version}`;
     finalizeBoard(state.board.version);
@@ -448,7 +448,7 @@ function tapSkill(skillId) {
   const st = store.get();
   const r = addSkill(st, skillId);
   if (!r.changed) { if (r.reason === 'duplicate') toast('E4', { tone: 'info', ms: 3000 }); return; }
-  store.set(r.state);
+  store.set({ ...r.state, ui: { ...r.state.ui, picking: true } });
   if (!selectionStartedAt) selectionStartedAt = Date.now();
   track('client.selection_progress', { count: r.count, elapsedMs: Date.now() - selectionStartedAt });
   scheduleSave();
@@ -476,14 +476,29 @@ function retryFinalize() {
 function startEditing() {
   const st = store.get();
   const server = st.board ? st.board.selectedSkillIds.slice() : [];
-  store.set({ ...st, ui: { ...st.ui, editing: true, draft: server, undo: null, draftDirty: false, draftRoundId: st.board ? st.board.roundId : st.ui.draftRoundId } });
+  store.set({ ...st, ui: { ...st.ui, editing: true, picking: true, pickStep: 1, readyAck: false, draft: server, undo: null, draftDirty: false, draftRoundId: st.board ? st.board.roundId : st.ui.draftRoundId } });
 }
-function stopEditing() { patchUi({ editing: false }); }
+function stopEditing() { patchUi({ editing: false, picking: false }); }
+/** Picker question change (D-35); the view decides when question 3 is skipped (nextPickStep). */
+function setPickStep(step) { patchUi({ pickStep: step, picking: true }); }
+/**
+ * "Review board": leave the picker for the shuffled board. The server finalizes (and shuffles) as soon as a save holds
+ * 16, so this only flushes a pending save or retries a finalize that has not happened yet.
+ */
+function reviewBoard() {
+  const st = store.get();
+  patchUi({ picking: false, editing: false, readyAck: false, justShuffled: !audioMotion.isReduced() });
+  if (st.ui.draftDirty) { if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; } performSave().catch(() => {}); return; }
+  const b = st.board;
+  if (b && b.state === 'DRAFT' && b.selectedSkillIds.length === REQUIRED_SELECTIONS && !pendingFinalize) finalizeBoard(b.version);
+}
+function consumeShuffled() { patchUi({ justShuffled: false }); }
+function readyAck() { patchUi({ readyAck: true }); announce(t('board.readyDone'), { politeness: 'polite' }); }
 function startNextRound(round = null) {
   const st = store.get();
   const next = round || st.nextRound || editableRound(st, clockNow());
   if (!next) return;
-  store.set({ ...st, ui: { ...st.ui, draft: [], undo: null, draftDirty: false, draftRoundId: next.roundId, editing: false } });
+  store.set({ ...st, ui: { ...st.ui, draft: [], undo: null, draftDirty: false, draftRoundId: next.roundId, editing: false, picking: true, pickStep: 1, readyAck: false } });
   selectionStartedAt = Date.now();
 }
 
@@ -525,8 +540,8 @@ async function floatNow() {
 // ---- wire actions and go -------------------------------------------------------------------------------------
 Object.assign(ctx.actions, {
   join, loadTaxonomy, setProfile,
-  discovery: (mode, q) => api.discovery({ mode, q }),
-  tapSkill, removeSkill: removeSelected, undo, retrySave, retryFinalize, startEditing, stopEditing,
+  discovery: (mode, q, limit) => api.discovery({ mode, q, limit }),
+  tapSkill, removeSkill: removeSelected, undo, retrySave, retryFinalize, startEditing, stopEditing, setPickStep, reviewBoard, readyAck, consumeShuffled,
   revealSoul, soulRevealed, floatStart, floatNow, startNextRound, toast,
 });
 

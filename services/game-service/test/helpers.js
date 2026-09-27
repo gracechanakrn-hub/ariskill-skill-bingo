@@ -6,9 +6,13 @@ import { createLogger } from '../src/log.js';
 import { createApp } from '../src/app.js';
 import { SKILL_MASTER, ROLE_SKILL_LEVELS, ROLES } from '../src/skills.js';
 import { signJoinToken } from '../src/auth.js';
+import { CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS } from '../../../packages/game-rules/src/index.js';
 
-export const ELIGIBLE_IDS = SKILL_MASTER.skills.filter(s => s.isCore || s.isCritical).map(s => s.id).sort();
-export const OPTIONAL_IDS = SKILL_MASTER.skills.filter(s => !(s.isCore || s.isCritical)).map(s => s.id).sort();
+export { CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS };
+/** Draw-eligible skills (D-33, BR-08): every active skill, whatever its kind. */
+export const ELIGIBLE_IDS = SKILL_MASTER.skills.filter(s => s.status === 'active').map(s => s.id).sort();
+export const CORE_CRITICAL_IDS = SKILL_MASTER.skills.filter(s => s.status === 'active' && (s.isCore || s.isCritical)).map(s => s.id).sort();
+export const OPTIONAL_IDS = SKILL_MASTER.skills.filter(s => s.status === 'active' && !(s.isCore || s.isCritical)).map(s => s.id).sort();
 export const ALL_IDS = SKILL_MASTER.skills.map(s => s.id).sort();
 export const EVENT_ID = 'evt_test';
 let keyCounter = 0;
@@ -132,33 +136,46 @@ function parseFrame(frame) {
   }
   return ev.event || ev.comment ? ev : null;
 }
-/** Boards that share row 0 (positions 0-4) cannot be hand-built (server shuffles); with a deterministic seed identical sets get identical layouts. */
-export function boardSet(offset, n = 25, from = ELIGIBLE_IDS) { return from.slice(offset, offset + n); }
+/** A 16-skill selection set starting at `offset` (with a deterministic seed identical sets get identical layouts). */
+export function boardSet(offset, n = REQUIRED_SELECTIONS, from = ELIGIBLE_IDS) { return from.slice(offset, offset + n); }
 export function roleSkills(roleId) { return [...(ROLE_SKILL_LEVELS.get(roleId) ?? new Map()).keys()]; }
 
 /** Re-lay a READY/LOCKED_ACTIVE board's cells in the given order (test-only: forces a known line layout for boundary tests). */
 export function arrangeCells(db, boardId, orderedSkillIds) {
-  if (orderedSkillIds.length !== 25) throw new Error('need 25');
+  if (orderedSkillIds.length !== CELLS) throw new Error(`need ${CELLS}`);
   db.run('DELETE FROM board_cells WHERE board_id = ?', boardId);
   orderedSkillIds.forEach((s, i) => db.run('INSERT INTO board_cells(board_id, position, skill_id) VALUES (?, ?, ?)', boardId, i, s));
 }
-/** A 25-skill set with exactly `eligibleCount` draw-eligible skills (rest optional). */
-export function mixedSet(eligibleCount, eligibleOffset = 0, optionalOffset = 0) {
-  return [...ELIGIBLE_IDS.slice(eligibleOffset, eligibleOffset + eligibleCount), ...OPTIONAL_IDS.slice(optionalOffset, optionalOffset + (25 - eligibleCount))];
-}
-/** Build a PLAYING round whose pool is exactly the 5 eligible skills of `p`'s board placed in row 0 (positions 0-4). */
-export async function fiveSkillLineScenario(t, { extraPlayers = [], linePositions = [0, 1, 2, 3, 4] } = {}) {
+/**
+ * Test-only: narrow a round's pool snapshot to `skillIds`. Every active skill on an active board is draw-eligible (D-33),
+ * so a round whose draws must be known exactly (BR-12 boundary, co-winners, EXHAUSTED) pins its pool here. Call it after
+ * round.start when fewer than POOL_MINIMUM skills are wanted (start checks the snapshot; draws read it each time).
+ */
+export function setPool(db, roundId, skillIds) { db.run('UPDATE rounds SET pool_json = ? WHERE id = ?', JSON.stringify([...skillIds].sort()), roundId); }
+/** A layout with `placed` ({position: skillId}) and the remaining cells filled in order from `fill`. */
+export function layoutWith(placed, fill) { const out = []; let k = 0; for (let i = 0; i < CELLS; i++) out.push(placed[i] ?? fill[k++]); return out; }
+/**
+ * Build a PLAYING round whose pool is exactly the GRID line skills of `p`'s board placed on `linePositions` (row 0 by
+ * default), so draw GRID - 1 completes no bingo and draw GRID (= MIN_DRAW_FOR_BINGO) completes the line.
+ * extraPlayers: [{ join, linePositions? }] -> each gets the same line skills at its own positions plus unique fill skills.
+ */
+export async function lineScenario(t, { extraPlayers = [], linePositions = LINE_MASKS[0].positions } = {}) {
   const round = await createRound(t);
-  const eligible5 = ELIGIBLE_IDS.slice(0, 5);
-  const set = mixedSet(5);
+  const lineSkills = ELIGIBLE_IDS.slice(0, GRID);
+  const set = boardSet(0);
   const p = await join(t, { displayName: 'Line Player' });
   const b = await readyBoard(t, p, set);
-  const layout = new Array(25).fill(null); const opt = OPTIONAL_IDS.slice(0, 20);
-  linePositions.forEach((pos, i) => { layout[pos] = eligible5[i]; });
-  let k = 0; for (let i = 0; i < 25; i++) if (!layout[i]) layout[i] = opt[k++];
-  arrangeCells(t.db, b.boardId, layout);
+  const at = (positions) => Object.fromEntries(positions.map((pos, i) => [pos, lineSkills[i]]));
+  arrangeCells(t.db, b.boardId, layoutWith(at(linePositions), set.slice(GRID)));
   const others = [];
-  for (const o of extraPlayers) { const op = await join(t, o.join ?? {}); const ob = await readyBoard(t, op, o.set ?? mixedSet(5, 0, 20)); if (o.layout) arrangeCells(t.db, ob.boardId, o.layout(eligible5)); others.push({ p: op, b: ob }); }
+  for (const [i, o] of extraPlayers.entries()) {
+    const fill = ELIGIBLE_IDS.slice(100 + i * CELLS, 100 + i * CELLS + CELLS - GRID);
+    const op = await join(t, o.join ?? {});
+    const ob = await readyBoard(t, op, o.linePositions ? [...lineSkills, ...fill] : boardSet(100 + i * CELLS));
+    if (o.linePositions) arrangeCells(t.db, ob.boardId, layoutWith(at(o.linePositions), fill));
+    others.push({ p: op, b: ob });
+  }
   const started = await startRound(t, round);
-  return { round: started, p, b, eligible5, others };
+  setPool(t.db, round.roundId, lineSkills);
+  return { round: started, p, b, lineSkills, others };
 }

@@ -23,7 +23,7 @@ for (const m of skillMaster.roleSkillMap) {
 export function roleSkillSet(roleId) { return new Set((ROLE_SKILL_LEVELS.get(roleId) ?? new Map()).keys()); }
 export function roleLevel(roleId, skillId) { return ROLE_SKILL_LEVELS.get(roleId)?.get(skillId) ?? null; }
 
-/** Draw/cell kind label: Core | Critical | Optional (contract Draw.skill.kind is Core|Critical). */
+/** Draw/cell kind label: Core | Critical | Optional (contract Draw.skill.kind is Core|Critical|Optional; any active skill may be drawn, D-33). */
 export function skillKind(skill) { return skill?.isCore ? 'Core' : skill?.isCritical ? 'Critical' : 'Optional'; }
 export function isEligible(skillId) { return isEligibleSkill(SKILLS.get(skillId)); }
 

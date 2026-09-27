@@ -10,7 +10,7 @@
     "nextRound": "same shape as round | null",
     "join": { "joinUrl": "string", "expiresAt": "ISO" },
     "counts": { "joined": "int", "completed": "int", "active": "int", "matchedBoards": "int" },
-    "currentDraw": { "number": "int", "skill": { "id": "string", "name": "string", "kind": "Core|Critical", "domain": "string" }, "drawnAt": "ISO", "poolRemaining": "int", "bingoEvaluationActive": "bool" },
+    "currentDraw": { "number": "int", "skill": { "id": "string", "name": "string", "kind": "Core|Critical|Optional", "domain": "string" }, "drawnAt": "ISO", "poolRemaining": "int", "bingoEvaluationActive": "bool" },
     "recentDraws": "[{number, skillName, kind}] (last 5)",
     "pacingMessage": "string",
     "winners": "[{label, soulId}]",

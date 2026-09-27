@@ -1,14 +1,14 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, drawUntilEnd, fiveSkillLineScenario, readSse, nextKey, EVENT_ID } from './helpers.js';
+import { startServer, drawUntilEnd, lineScenario, readSse, nextKey, EVENT_ID } from './helpers.js';
 import { validateSoulConfig } from '../../../packages/game-rules/src/index.js';
 import { findForbiddenKeys } from '../src/projections.js';
 
 describe('Soul + Float (M-13, P-05, BR-16, BR-17, D-11)', () => {
   let t, p, me, others;
   before(async () => {
-    t = await startServer();
-    const sc = await fiveSkillLineScenario(t, { extraPlayers: [{ join: { displayName: 'Quiet', consent: false } }] });
+    t = await startServer({ drawGuidance: false });
+    const sc = await lineScenario(t, { extraPlayers: [{ join: { displayName: 'Quiet', consent: false } }] });
     p = sc.p; others = sc.others;
     await drawUntilEnd(t, sc.round);
     me = (await t.api.get('/me', p.token)).body;

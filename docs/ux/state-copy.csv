@@ -10,8 +10,8 @@ id,kind,trigger_or_key,copy,recovery
 "profile.platform",state,"profile.platform","Your Platform",
 "profile.role",state,"profile.role","Your Role",
 "profile.cta",state,"profile.cta","Start building my board",
-"select.title",state,"select.title","Pick your 25 skills",
-"select.progress",state,"select.progress","{count} / 25 skills selected",
+"select.title",state,"select.title","Pick your 16 skills",
+"select.progress",state,"select.progress","{count} / 16 skills selected",
 "select.tab.recommended",state,"select.tab.recommended","Recommended for Your Role",
 "select.tab.popular",state,"select.tab.popular","Popular at Arise",
 "select.tab.search",state,"select.tab.search","Search All Skills",
@@ -20,7 +20,26 @@ id,kind,trigger_or_key,copy,recovery
 "select.undo",state,"select.undo","Undo",
 "select.eligible",state,"select.eligible","Can be drawn",
 "select.notEligible",state,"select.notEligible","Not in the draw pool",
-"select.hint",state,"select.hint","Tap a skill to fill your next slot. The server shuffles positions when you reach 25.",
+"select.hint",state,"select.hint","Tap a skill to fill your next slot. The server shuffles positions when you reach 16.",
+"pick.q1.title",state,"pick.q1.title","Arise core skills",
+"pick.q1.hint",state,"pick.q1.hint","Pick the ones you're good at.",
+"pick.q2.title",state,"pick.q2.title","Skills in your role",
+"pick.q2.hint",state,"pick.q2.hint","Pick the skills you have.",
+"pick.q3.title",state,"pick.q3.title","Anything else?",
+"pick.q3.hint",state,"pick.q3.hint","Search to fill the last {count}.",
+"pick.full",state,"pick.full","Board full",
+"pick.swapHint",state,"pick.swapHint","Tap a tile to swap one out.",
+"pick.next",state,"pick.next","Next",
+"pick.back",state,"pick.back","Back",
+"pick.review",state,"pick.review","Review board",
+"pick.addMore",state,"pick.addMore","Add {count} more",
+"pick.removeTile",state,"pick.removeTile","Remove {name}",
+"pick.step",state,"pick.step","Question {number} of 3",
+"board.title",state,"board.title","Your board",
+"board.canEdit",state,"board.canEdit","You can still edit until the round locks.",
+"board.shuffled",state,"board.shuffled","Shuffled!",
+"board.ready",state,"board.ready","I'm ready",
+"board.readyDone",state,"board.readyDone","You're in! Your board locks with the countdown.",
 "board.complete",state,"board.complete","Your Skill Bingo is ready!",
 "board.waiting",state,"board.waiting","Your board will lock when the countdown reaches 00:00.",
 "board.edit",state,"board.edit","Edit skills",
@@ -30,7 +49,7 @@ id,kind,trigger_or_key,copy,recovery
 "board.noRound",state,"board.noRound","The next Skill Bingo hasn't been scheduled yet.",
 "play.waitingStart",state,"play.waitingStart","Board locked. Waiting for the host to start...",
 "play.drawsBeforeFive",state,"play.drawsBeforeFive","Bingo unlocks next draw",
-"play.drawsBeforeFiveN",state,"play.drawsBeforeFiveN","Bingo unlocks at draw 5",
+"play.drawsBeforeFiveN",state,"play.drawsBeforeFiveN","Bingo unlocks at draw 4",
 "play.evaluationActive",state,"play.evaluationActive","Bingo is live",
 "play.draw",state,"play.draw","Draw {number}",
 "play.matched",state,"play.matched","{count} matched on your board",
@@ -48,7 +67,7 @@ id,kind,trigger_or_key,copy,recovery
 "soul.badge",state,"soul.badge","Bingo Star",
 "soul.badgeLabel",state,"soul.badgeLabel","Bingo Star badge: completed a line this round",
 "insight.title",state,"insight.title","Your Role Skill Matrix insight",
-"insight.inMatrix",state,"insight.inMatrix","{count} of your 25 skills are in the {role} matrix",
+"insight.inMatrix",state,"insight.inMatrix","{count} of your 16 skills are in the {role} matrix",
 "insight.beyond",state,"insight.beyond","{count} go beyond the current matrix",
 "insight.private",state,"insight.private","Only you can see this.",
 "reconnect",state,"reconnect","Reconnecting to the Skill Galaxy...",
@@ -77,7 +96,7 @@ id,kind,trigger_or_key,copy,recovery
 "public.waiting.previous",state,"public.waiting.previous","Previous winners",
 "public.playing.draw",state,"public.playing.draw","Draw {number}",
 "public.playing.matched",state,"public.playing.matched","{count} boards matched",
-"public.playing.pacing",state,"public.playing.pacing","Bingo unlocks at draw 5",
+"public.playing.pacing",state,"public.playing.pacing","Bingo unlocks at draw 4",
 "public.playing.live",state,"public.playing.live","Bingo is live",
 "public.winner.title",state,"public.winner.title","Bingo!",
 "public.winner.round",state,"public.winner.round","Round {number}",
@@ -94,7 +113,7 @@ id,kind,trigger_or_key,copy,recovery
 "E2",exception,"QR/session expired","This event link has expired. Scan the event QR code again.","Reject token; rescan"
 "E3",exception,"Platform/Role load failed","We couldn't load your role options.","Retry; retain session"
 "E4",exception,"Duplicate skill","You already added this skill.","No state change"
-"E5",exception,"Fewer than 25 at lock","Registration for this round is closed. Your board is saved for the next round.","Mark DEFERRED"
+"E5",exception,"Fewer than 16 at lock","Registration for this round is closed. Your board is saved for the next round.","Mark DEFERRED"
 "E6",exception,"Save failed","Your latest skill wasn't saved. Try again.","Keep local draft; retry/reconcile"
 "E7",exception,"Clock correction","Syncing with the event...","Replace local time with server time"
 "E8",exception,"Late arrival","This round is already in progress. Your board will join the next round.","Assign next eligible round"
@@ -107,7 +126,7 @@ id,kind,trigger_or_key,copy,recovery
 "E15",exception,"Round cancelled","This round was cancelled. Your board is saved for the next round.","Unlock/reassign eligible drafts"
 "E16",exception,"Platform or Role missing","Choose your Platform and Role to start building your board.","Keep skill selection unavailable until both are explicitly selected"
 "E17",exception,"Skill discovery unavailable","We couldn't load the Skill Master. Your selections are safe.","Preserve the draft and retry loading"
-"E18",exception,"Board finalization failed","We couldn't build your board yet. Your 25 skills are saved.","Retry server randomization; do not accept client positions"
+"E18",exception,"Board finalization failed","We couldn't build your board yet. Your 16 skills are saved.","Retry server randomization; do not accept client positions"
 "E19",exception,"Round lock failed","The round couldn't finish locking. Player edits are closed.","Keep the prior version, reject edits after lock_at, and let the admin retry or cancel"
 "E20",exception,"Round not ready to start","This round needs at least five eligible skills before it can start.","Keep the round locked; reschedule or cancel"
 "E21",exception,"Draw transaction failed","The next skill wasn't drawn. Try again.","Commit and publish nothing; retry with the same idempotency key"

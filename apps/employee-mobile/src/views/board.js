@@ -1,9 +1,10 @@
-// apps/employee-mobile/src/views/board.js - E4 Board ready (countdown, Edit skills), E4b No round,
+// apps/employee-mobile/src/views/board.js - E4 Your board (shuffled board, countdown, Edit / I'm ready, D-35), E4b No round,
 // E5 Locked / waiting for start, E5b Deferred (incomplete / late / cancelled) with next-round info.
 // The countdown is display only (formatCountdown over the synced server clock); lock and start are server events.
 import { h, mount } from '/packages/ui/dom.js';
 import { formatCountdown } from '/packages/ui/clock-sync.js';
 import { formatTime } from '/packages/ui/format.js';
+import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t } from '/packages/contracts/index.js';
 import { tl, exceptionCopy, notice, button, roundLine } from './common.js';
 import { createGrid } from './grid.js';
@@ -45,9 +46,18 @@ export function mountBoard(root, ctx, screen) {
     els.sky = h('div', { className: 'waiting-sky', 'aria-hidden': 'true' }, ...doodadPlan(s, window.innerWidth).map((d) => doodad(d.kind, { size: d.size })));
     els.countdown = h('p', { className: 'countdown', 'aria-live': 'off' });
     els.countdownBlock = h('div', { className: 'countdown-block', hidden: true }, h('span', { className: 'countdown__label' }, tl('ui.locksIn')), els.countdown);
+    els.hint = h('p', { className: 'board-hint', 'aria-live': 'polite' });
     els.lockLabel = h('p', { className: 'lock-label m-lock-label', hidden: true }, `\u{1F512}︎ ${t('board.locked')}`);
-    els.actions = h('div', { className: 'cluster' });
-    const gridWrap = h('div', { className: 'board-wrap' }, grid.el, els.lockLabel, grid.legend);
+    els.shuffled = h('p', { className: 'shuffled-badge', role: 'status', hidden: true }, t('board.shuffled'));
+    els.actions = h('div', { className: s === 'board' ? 'board-actions' : 'cluster' });
+    const gridWrap = h('div', { className: 'board-wrap' }, grid.el, els.shuffled, els.lockLabel, grid.legend);
+    if (s === 'board') {
+      // D-35 layout: board first, then the countdown card and the two actions (mockup docs/ux/mockups/mobile-v2-picker.html).
+      mount(root, h('div', { className: 'stack' },
+        els.title, h('div', { className: 'round-row' }, els.round, els.sky), gridWrap, els.notices,
+        h('div', { className: 'board-status board-status--card' }, els.countdownBlock, els.hint), els.actions));
+      return;
+    }
     mount(root, h('div', { className: 'stack' },
       els.title, h('div', { className: 'round-row' }, els.round, els.sky), els.notices,
       s === 'deferred' ? null : h('div', { className: 'cluster cluster--between board-status' }, els.countdownBlock, els.actions),
@@ -62,11 +72,12 @@ export function mountBoard(root, ctx, screen) {
     const actions = [];
     if (screen === 'board') {
       const editable = editableRound(state);
-      els.title.textContent = t('board.complete');
+      els.title.textContent = t('board.title');
       if (editable) {
-        notices.push(h('p', { className: 'lead' }, t('board.waiting')));
-        actions.push(button(t('board.edit'), { onClick: ctx.actions.startEditing, 'aria-describedby': 'edit-warning' }));
+        els.hint.textContent = state.ui.readyAck ? t('board.readyDone') : t('board.canEdit');
+        actions.push(button(t('board.edit'), { className: 'btn--ghost', onClick: ctx.actions.startEditing, 'aria-describedby': 'edit-warning' }));
         actions.push(h('span', { id: 'edit-warning', className: 'visually-hidden' }, t('board.editWarning')));
+        actions.push(button(`${t('board.ready')} ✓`, { variant: 'primary', className: `board-ready${state.ui.readyAck ? ' is-done' : ''}`, onClick: ctx.actions.readyAck, disabled: state.ui.readyAck, 'aria-pressed': state.ui.readyAck ? 'true' : 'false' }));
       } else {
         notices.push(notice(t('board.noRound'), { tone: 'info' }));
       }
@@ -96,10 +107,28 @@ export function mountBoard(root, ctx, screen) {
     tick();
   }
 
+  /** One-shot "Shuffled!" badge after the server randomized the board (live only). */
+  function showShuffled() {
+    if (!els.shuffled) return;
+    els.shuffled.hidden = false;
+    animateOnce(els.shuffled, 'm-add', { durationMs: MOTION.interactions.addSkill.ms });
+    setTimeout(() => { if (els.shuffled) els.shuffled.hidden = true; }, 2600);
+  }
+
   return {
-    update(state) { lastState = state; render(state); if (!timer && screen === 'board') timer = setInterval(tick, 250); },
+    update(state) {
+      lastState = state;
+      render(state);
+      if (!timer && screen === 'board') timer = setInterval(tick, 250);
+      // Arriving from "Review board": play the shuffle moment once (cleared after this render, never inside it).
+      if (screen === 'board' && state.ui.justShuffled && state.board && state.board.state === 'READY') {
+        queueMicrotask(ctx.actions.consumeShuffled);
+        grid.celebrateComplete();
+        showShuffled();
+      }
+    },
     effect(e) {
-      if (e.type === 'board.ready' && e.live) { grid.celebrateComplete(); ctx.audioMotion.cueBoardReady(); }
+      if (e.type === 'board.ready' && e.live) { grid.celebrateComplete(); ctx.audioMotion.cueBoardReady(); showShuffled(); }
       if (e.type === 'lock') { grid.update(lastState.board, { locked: true }); els.lockLabel.hidden = false; if (e.live) grid.celebrateLock(); }
     },
     unmount() { if (timer) clearInterval(timer); mount(root, null); },

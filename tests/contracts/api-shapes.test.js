@@ -4,7 +4,8 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { startServer, createRound, command, join, me, readyBoard, saveBoard, boardSet, mixedSet, startRound, drawUntilEnd, readSse, nextKey, ELIGIBLE_IDS, roleAt } from '../e2e/helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, saveBoard, boardSet, setPool, startRound, drawUntilEnd, readSse, nextKey, ELIGIBLE_IDS, roleAt } from '../e2e/helpers.js';
+import { CELLS, POOL_MINIMUM } from '../../packages/game-rules/src/index.js';
 import { ERROR_CODES } from '../../services/game-service/src/errors.js';
 import { PLATE_IDS, EYE_IDS, CHARM_BY_ID } from '../../packages/game-rules/src/soul-catalog.js';
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
@@ -87,7 +88,7 @@ describe('api contract shapes', () => {
         expectError(await t.api.post('/me/board/finalize', { boardVersion: 1 }, short.token), 400, 'VALIDATION', null);
         const v = (await me(t, p)).board.version; expectOk(await t.api.post('/me/board/finalize', { boardVersion: v }, p.token), 200, ['board'], { mutation: true });
       },
-      'me.insight': async () => { expectError(await t.api.get('/me/insight'), 401, 'UNAUTHORIZED', 'E9'); expectError(await t.api.get('/me/insight', p.token), 404, 'NOT_FOUND', null); const r = await finished.api.get('/me/insight', finished.p.token); expectOk(r, 200, ['roundId', 'matrixVersion', 'inMatrixCount', 'beyondMatrixCount', 'totalSelected']); assert.equal(r.body.totalSelected, 25); },
+      'me.insight': async () => { expectError(await t.api.get('/me/insight'), 401, 'UNAUTHORIZED', 'E9'); expectError(await t.api.get('/me/insight', p.token), 404, 'NOT_FOUND', null); const r = await finished.api.get('/me/insight', finished.p.token); expectOk(r, 200, ['roundId', 'matrixVersion', 'inMatrixCount', 'beyondMatrixCount', 'totalSelected']); assert.equal(r.body.totalSelected, CELLS); },
       'soul.float': async () => {
         expectError(await t.api.post('/me/soul/float', { soulId: 'x', floatToken: 'y' }), 401, 'UNAUTHORIZED', 'E9');
         expectError(await finished.api.call('POST', '/me/soul/float', { body: { soulId: 'x', floatToken: 'y' }, token: finished.p.token }), 400, 'VALIDATION', null);
@@ -118,7 +119,7 @@ describe('api contract shapes', () => {
         expectOk(r, 200, ['accepted', 'round', 'effects'], { mutation: true }); assert.equal(r.body.accepted, true);
         expectError(await t.api.post(path, { command: 'round.reschedule', expectedVersion: round.version, params: { title: 'Other' } }, t.admin, key), 422, 'IDEMPOTENCY_MISMATCH', null);
         round = r.body.round;
-        const small = await startServer(); try { const sr = await createRound(small); const sp = await join(small); await readyBoard(small, sp, mixedSet(3)); const l = await command(small, sr.roundId, 'round.lock', sr.version); expectError(await small.api.post(`/admin/rounds/${sr.roundId}/commands`, { command: 'round.start', expectedVersion: l.resultingVersion }, small.admin), 409, 'POOL_TOO_SMALL', 'E20'); } finally { await small.close(); }
+        const small = await startServer(); try { const sr = await createRound(small); const sp = await join(small); await readyBoard(small, sp, boardSet(0)); const l = await command(small, sr.roundId, 'round.lock', sr.version); setPool(small, sr.roundId, boardSet(0, POOL_MINIMUM - 1)); expectError(await small.api.post(`/admin/rounds/${sr.roundId}/commands`, { command: 'round.start', expectedVersion: l.resultingVersion }, small.admin), 409, 'POOL_TOO_SMALL', 'E20'); } finally { await small.close(); }
         const fr = finished.db.get("SELECT id, version FROM rounds WHERE state = 'WINNER'"); if (fr) expectError(await finished.api.post(`/admin/rounds/${fr.id}/commands`, { command: 'round.draw.next', expectedVersion: fr.version }, finished.admin), 409, 'ILLEGAL_TRANSITION', 'E10');
       },
       'admin.insights': async () => { expectError(await t.api.get(`/admin/events/${E}/insights`), 401, 'UNAUTHORIZED', 'E9'); expectError(await t.api.get(`/admin/events/${E}/insights`, t.stage), 403, 'FORBIDDEN', 'E9'); expectOk(await t.api.get(`/admin/events/${E}/insights`, t.admin), 200, ['participation', 'platformEngagement', 'roleEngagement', 'topSkills', 'coreCriticalDensity', 'matrixAlignment', 'skillsBeyondMatrix', 'suppressedCohorts', 'matrixVersion', 'computedAt']); },

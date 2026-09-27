@@ -2,6 +2,8 @@
 // Pure function over already-loaded rows: never emits per-participant values, employee references or display names.
 // Analytics are not on the authoritative draw path (game service caches the result for ~2 s).
 
+import { CELLS } from '../../../packages/game-rules/src/lines.js';
+
 export const MIN_COHORT = 5;
 
 function rate(n, d) { return d > 0 ? Math.round((n / d) * 1000) / 1000 : null; }
@@ -21,7 +23,7 @@ function kindOf(s) { return s?.isCore ? 'Core' : s?.isCritical ? 'Critical' : 'O
 export function computeInsights({ participants, boards, skills, platforms, roles, roleSkillSet, matrixVersion, computedAt, minCohort = MIN_COHORT }) {
   const joined = participants.length;
   const completedStates = new Set(['READY', 'LOCKED_ACTIVE', 'FINISHED']);
-  const completedBoards = boards.filter(b => completedStates.has(b.state) && b.selectedSkillIds.length === 25);
+  const completedBoards = boards.filter(b => completedStates.has(b.state) && b.selectedSkillIds.length === CELLS);
   const active = boards.filter(b => b.state === 'LOCKED_ACTIVE' || b.state === 'FINISHED').length;
   const deferred = boards.filter(b => b.state === 'DEFERRED').length;
   const completedByParticipant = new Set(completedBoards.map(b => b.participantId));
@@ -58,7 +60,7 @@ export function computeInsights({ participants, boards, skills, platforms, roles
   const topSkills = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10)
     .map(([skillId, count]) => ({ skillId, name: skills.get(skillId)?.name ?? skillId, kind: kindOf(skills.get(skillId)), count }));
 
-  // Matrix alignment: mean of inMatrixCount/25 over completed boards whose participant has a role; beyond-matrix aggregate.
+  // Matrix alignment: mean of inMatrixCount/CELLS over completed boards whose participant has a role; beyond-matrix aggregate.
   const roleOf = new Map(participants.map(p => [p.participantId, p.roleId]));
   const beyond = new Map();
   let alignSum = 0, alignN = 0;
@@ -68,7 +70,7 @@ export function computeInsights({ participants, boards, skills, platforms, roles
     const set = roleSkillSet(roleId);
     let inMatrix = 0;
     for (const id of b.selectedSkillIds) { if (set.has(id)) inMatrix += 1; else beyond.set(id, (beyond.get(id) ?? 0) + 1); }
-    alignSum += inMatrix / 25; alignN += 1;
+    alignSum += inMatrix / CELLS; alignN += 1;
   }
   const matrixAlignment = { rate: alignN ? Math.round((alignSum / alignN) * 1000) / 1000 : null, matrixVersion, participants: alignN };
   const skillsBeyondMatrix = [...beyond.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10)

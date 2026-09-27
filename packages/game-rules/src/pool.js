@@ -1,9 +1,9 @@
-import { LINE_MASKS } from './lines.js';
+import { LINE_MASKS, CELLS } from './lines.js';
 
 export const POOL_MINIMUM = 5;
 
-/** A skill is draw-eligible when active and Core or Critical (D-06, BR-08). */
-export function isEligibleSkill(skill) { return !!skill && skill.status === 'active' && (skill.isCore === true || skill.isCritical === true); }
+/** A skill is draw-eligible when active; any kind may be drawn (D-33, BR-08). */
+export function isEligibleSkill(skill) { return !!skill && skill.status === 'active'; }
 
 /**
  * Build the draw pool: unique eligible skills present on at least one active board.
@@ -18,7 +18,7 @@ export function buildDrawPool(activeBoards, skills) {
 
 /** Whether a board could ever complete a line given the pool (A-03). */
 export function boardCanWin(cells, poolSet) {
-  const byPos = new Array(25);
+  const byPos = new Array(CELLS);
   for (const c of cells) byPos[c.position] = c.skillId;
   return LINE_MASKS.some(l => l.positions.every(p => poolSet.has(byPos[p])));
 }

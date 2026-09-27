@@ -1,6 +1,7 @@
-import { bingoLines, isEvaluationActive } from './lines.js';
+import { bingoLines, isEvaluationActive, CELLS } from './lines.js';
 import { matchMask } from './board.js';
 import { pickOne } from './random.js';
+import { guidedDraw } from './director.js';
 
 /** Choose the next skill from the remaining pool (BR-10). Returns skillId. */
 export function drawNext(remainingPool, rng) { if (!remainingPool.length) return null; return pickOne(remainingPool, rng); }
@@ -15,7 +16,7 @@ export function evaluateDraw(activeBoards, drawnSet, drawNumber, newSkillId) {
   const winners = [];
   for (const b of activeBoards) {
     const mask = matchMask(b.cells, drawnSet);
-    let count = 0; for (let p = 0; p < 25; p++) if (mask & (1 << p)) count++;
+    let count = 0; for (let p = 0; p < CELLS; p++) if (mask & (1 << p)) count++;
     const newlyMatched = newSkillId ? b.cells.filter(c => c.skillId === newSkillId).map(c => c.position) : [];
     matches.push({ boardId: b.boardId, participantId: b.participantId, mask, matchedCount: count, newlyMatched });
     const lines = bingoLines(mask, drawNumber);
@@ -25,17 +26,17 @@ export function evaluateDraw(activeBoards, drawnSet, drawNumber, newSkillId) {
 }
 
 /**
- * Deterministically simulate a whole round for fixtures/tests.
+ * Deterministically simulate a whole round for fixtures/tests (plain random, or guided with { guided: true }).
  * Returns { draws: [{number, skillId}], winners, winningDrawNumber|null, outcome: 'WINNER'|'EXHAUSTED' }
  */
-export function simulateRound(activeBoards, pool, rng) {
+export function simulateRound(activeBoards, pool, rng, { guided = false, policy } = {}) {
   let remaining = pool.slice();
   const drawn = new Set();
   const draws = [];
   let n = 0;
   while (remaining.length) {
     n += 1;
-    const skillId = drawNext(remaining, rng);
+    const skillId = guided ? guidedDraw(remaining, activeBoards, drawn, n, rng, policy).skillId : drawNext(remaining, rng);
     remaining = remaining.filter(s => s !== skillId);
     drawn.add(skillId);
     draws.push({ number: n, skillId });

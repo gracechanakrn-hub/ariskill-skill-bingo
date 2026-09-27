@@ -26,7 +26,7 @@ test('key copy from requirement 8.2 is present', () => {
   for (const s of expected) assert.ok(values.includes(s), s);
 });
 test('t() interpolates and falls back to the key', () => {
-  assert.equal(t('select.progress', { count: 17 }), '17 / 25 skills selected');
+  assert.equal(t('select.progress', { count: 15 }), '15 / 16 skills selected');
   assert.equal(t('nope.key'), 'nope.key');
 });
 test('state-copy.csv mirrors copy.json', () => {

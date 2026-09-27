@@ -36,9 +36,24 @@ describe('skill discovery and profile (M-02, M-03, BR-01, BR-03)', () => {
     for (const s of r.skills) {
       assert.equal(s.roleLevel, levels.get(s.id));
       const m = SKILLS.get(s.id);
-      assert.equal(s.eligible, !!(m.isCore || m.isCritical)); assert.equal(s.isCore, !!m.isCore); assert.equal(s.name, m.name); assert.ok('domain' in s && 'cluster' in s && 'kind' in s);
+      assert.equal(s.eligible, m.status === 'active', 'any active skill is draw-eligible (D-33)'); assert.equal(s.isCore, !!m.isCore); assert.equal(s.name, m.name); assert.ok('domain' in s && 'cluster' in s && 'kind' in s);
     }
     assert.deepEqual(Object.keys(r.skills[0]).sort(), ['cluster', 'domain', 'eligible', 'id', 'isCore', 'isCritical', 'kind', 'name', 'roleLevel']);
+  });
+
+  test('picker lists (D-35): core is the 7 Core Skill kind; role is the role list without them; unknown mode is 400', async () => {
+    const role = ROLES[5];
+    const p = await join(t, { profile: { platformId: role.platformId, roleId: role.id } });
+    const core = (await t.api.get('/skills/discovery?mode=core&limit=500', p.token)).body;
+    const expected = [...SKILLS.values()].filter(s => s.status === 'active' && s.kind === 'Core Skill').map(s => s.name).sort((a, b) => a.localeCompare(b));
+    assert.equal(core.mode, 'core'); assert.equal(expected.length, 7);
+    assert.deepEqual(core.skills.map(s => s.name), expected);
+    const rec = (await t.api.get('/skills/discovery?mode=recommended&limit=500', p.token)).body.skills;
+    const roleList = (await t.api.get('/skills/discovery?mode=role&limit=500', p.token)).body;
+    assert.equal(roleList.mode, 'role');
+    assert.ok(roleList.skills.every(s => s.kind !== 'Core Skill'), 'no core skill repeats in question 2');
+    assert.deepEqual(roleList.skills.map(s => s.id), rec.filter(s => s.kind !== 'Core Skill').map(s => s.id), 'same order as recommended');
+    assert.equal((await t.api.get('/skills/discovery?mode=nope', p.token)).status, 400);
   });
 
   test('popular: falls back to matrix frequency when nothing is selected, then reflects selections across the event; selectedCount tracks the board', async () => {

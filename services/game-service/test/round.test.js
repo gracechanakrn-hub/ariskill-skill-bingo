@@ -1,10 +1,12 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, tryCommand, join, readyBoard, saveBoard, finalizeBoard, boardSet, mixedSet, startRound, drawUntilEnd, EVENT_ID, fiveSkillLineScenario, OPTIONAL_IDS } from './helpers.js';
+import { startServer, createRound, command, tryCommand, join, readyBoard, saveBoard, finalizeBoard, boardSet, setPool, startRound, drawUntilEnd, EVENT_ID, lineScenario, CELLS, GRID } from './helpers.js';
+import { POOL_MINIMUM } from '../../../packages/game-rules/src/index.js';
 
 describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..BR-08, E15, E20, E23)', () => {
   let t;
-  before(async () => { t = await startServer(); });
+  // Plain uniform random draws (drawGuidance: false): WINNER/EXHAUSTED cases need exact draw counts.
+  before(async () => { t = await startServer({ drawGuidance: false }); });
   after(async () => { await t.close(); });
 
   test('create -> DRAFT; illegal command is ILLEGAL_TRANSITION; stale version is STALE_VERSION with snapshot; neither mutates', async () => {
@@ -37,7 +39,7 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
   test('lock is atomic: READY -> LOCKED_ACTIVE, DRAFT -> DEFERRED (E5), pool snapshot, one version increment', async () => {
     const round = await createRound(t);
     const a = await join(t), b = await join(t), c = await join(t);
-    await readyBoard(t, a, boardSet(0)); await readyBoard(t, b, boardSet(20)); await saveBoard(t, c, boardSet(0, 10));
+    await readyBoard(t, a, boardSet(0)); await readyBoard(t, b, boardSet(12)); await saveBoard(t, c, boardSet(0, 10));
     const l = await command(t, round.roundId, 'round.lock', round.version);
     assert.equal(l.round.state, 'LOCKED'); assert.equal(l.resultingVersion, round.version + 1);
     assert.deepEqual({ a: l.effects.activeBoards, d: l.effects.deferredBoards }, { a: 2, d: 1 });
@@ -45,7 +47,7 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
     const cm = (await t.api.get('/me', c.token)).body;
     assert.equal(cm.board.state, 'DEFERRED'); assert.deepEqual(cm.board.selectedSkillIds, boardSet(0, 10)); assert.equal(cm.board.cells, null);
     const adm = (await t.api.get(`/admin/events/${EVENT_ID}/snapshot`, t.admin)).body.currentRound;
-    assert.equal(adm.readiness.poolSize, 45); assert.equal(adm.readiness.anyBoardCanWin, true); assert.equal(adm.readiness.boardsThatCanWin, 2);
+    assert.equal(adm.readiness.poolSize, new Set([...boardSet(0), ...boardSet(12)]).size); assert.equal(adm.readiness.poolSize, 28); assert.equal(adm.readiness.anyBoardCanWin, true); assert.equal(adm.readiness.boardsThatCanWin, 2);
     assert.deepEqual({ ...adm.counts, connections: undefined }, { joined: adm.counts.joined, completed: 2, incomplete: 0, active: 2, deferred: 1, matchedBoards: 0, connections: undefined });
     await command(t, round.roundId, 'round.cancel', l.resultingVersion, { reason: 'cleanup' });
   });
@@ -76,8 +78,10 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
 
   test('start is blocked with pool < 5 (POOL_TOO_SMALL, E20) and the round stays LOCKED', async () => {
     const round = await createRound(t);
-    const a = await join(t); await readyBoard(t, a, mixedSet(4));
+    // Any 16-skill board gives a pool of at least 16 (D-33), so the snapshot is narrowed to POOL_MINIMUM - 1 skills.
+    const a = await join(t); await readyBoard(t, a, boardSet(0));
     const l = await command(t, round.roundId, 'round.lock', round.version);
+    setPool(t.db, round.roundId, boardSet(0, POOL_MINIMUM - 1));
     const s = await tryCommand(t, round.roundId, 'round.start', l.resultingVersion);
     assert.equal(s.status, 409); assert.equal(s.body.error.code, 'POOL_TOO_SMALL'); assert.equal(s.body.error.exceptionId, 'E20'); assert.equal(s.body.error.details.poolSize, 4);
     const r = t.db.get('SELECT state, version FROM rounds WHERE id = ?', round.roundId);
@@ -95,24 +99,25 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
     assert.equal(t.db.get('SELECT state FROM rounds WHERE id = ?', round.roundId).state, 'REGISTRATION_OPEN');
     const ok = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
     assert.equal(ok.round.state, 'PLAYING'); assert.equal(ok.resultingVersion, round.version + 1);
-    assert.equal(ok.effects.activeBoards, 1); assert.equal(ok.effects.deferredBoards, draftsBefore); assert.ok(draftsBefore >= 1); assert.equal(ok.effects.poolSize, 25);
+    assert.equal(ok.effects.activeBoards, 1); assert.equal(ok.effects.deferredBoards, draftsBefore); assert.ok(draftsBefore >= 1); assert.equal(ok.effects.poolSize, CELLS);
     await command(t, round.roundId, 'round.cancel', ok.resultingVersion, { reason: 'cleanup' });
   });
 
   test('start_now with a pool < 5 is rejected and the round stays REGISTRATION_OPEN (atomic lock+start rolled back)', async () => {
     const round = await createRound(t);
-    const a = await join(t); await readyBoard(t, a, mixedSet(3));
+    // Only a DRAFT board (3 skills): it is deferred by the lock, so the pool is empty.
+    const a = await join(t); await saveBoard(t, a, boardSet(0, 3));
     const r = await tryCommand(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
-    assert.equal(r.status, 409); assert.equal(r.body.error.code, 'POOL_TOO_SMALL');
+    assert.equal(r.status, 409); assert.equal(r.body.error.code, 'POOL_TOO_SMALL'); assert.equal(r.body.error.details.poolSize, 0);
     assert.equal(t.db.get('SELECT state FROM rounds WHERE id = ?', round.roundId).state, 'REGISTRATION_OPEN');
-    assert.equal((await t.api.get('/me', a.token)).body.board.state, 'READY');
+    assert.equal((await t.api.get('/me', a.token)).body.board.state, 'DRAFT', 'rolled back: not deferred');
     await command(t, round.roundId, 'round.cancel', round.version, { reason: 'cleanup' });
   });
 
   test('cancel requires a reason (REASON_REQUIRED); cancelled round defers READY and LOCKED_ACTIVE boards (E15) and creates no Souls', async () => {
     const round = await createRound(t);
     const a = await join(t); await readyBoard(t, a, boardSet(0));
-    const b = await join(t); await readyBoard(t, b, boardSet(25));
+    const b = await join(t); await readyBoard(t, b, boardSet(CELLS));
     const started = await startRound(t, round);
     await command(t, round.roundId, 'round.draw.next', started.version);
     const v = t.db.get('SELECT version FROM rounds WHERE id = ?', round.roundId).version;
@@ -176,12 +181,12 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
     const s2 = await saveBoard(t, late, boardSet(30), 1);
     assert.equal(s2.status, 200); assert.equal(s2.body.board.state, 'DRAFT');
     const fin = await finalizeBoard(t, late);
-    assert.equal(fin.status, 200); assert.equal(fin.body.board.state, 'READY'); assert.equal(fin.body.board.cells.length, 25);
+    assert.equal(fin.status, 200); assert.equal(fin.body.board.state, 'READY'); assert.equal(fin.body.board.cells.length, CELLS);
     await command(t, next.roundId, 'round.cancel', next.version, { reason: 'cleanup' });
   });
 
   test('WINNER auto-closes after resultWindowSeconds via the timer; result stays visible', async () => {
-    const { round, p } = await fiveSkillLineScenario(t);
+    const { round, p } = await lineScenario(t);
     const { round: end } = await drawUntilEnd(t, round);
     assert.equal(end.state, 'WINNER');
     const r = t.db.get('SELECT * FROM rounds WHERE id = ?', round.roundId);
@@ -200,9 +205,9 @@ describe('round state machine, lock, start, cancel, timers (A-01, A-07, BR-05..B
   });
 
   test('EXHAUSTED (E23): pool empties without a winner, then round.close -> CLOSED; Souls exist without badge', async () => {
-    const { round, p } = await fiveSkillLineScenario(t, { linePositions: [0, 1, 2, 3, 5] });
+    const { round, p } = await lineScenario(t, { linePositions: [0, 1, 2, 4] }); // the pool's four skills are on no single line
     const { results, round: end } = await drawUntilEnd(t, round);
-    assert.equal(results.length, 5); assert.equal(end.state, 'EXHAUSTED');
+    assert.equal(results.length, GRID); assert.equal(end.state, 'EXHAUSTED');
     const me = (await t.api.get('/me', p.token)).body;
     assert.equal(me.board.state, 'FINISHED'); assert.equal(me.result.isWinner, false); assert.equal(me.soul.badge, null); assert.ok(me.soul.floatToken);
     const pub = (await t.api.get(`/events/${EVENT_ID}/snapshot`)).body;

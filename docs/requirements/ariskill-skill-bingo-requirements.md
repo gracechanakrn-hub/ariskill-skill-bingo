@@ -6,11 +6,11 @@
 
 ## 1. Product Summary
 
-AriSkill Skill Bingo turns employee-selected skills into a live event game and a shared visual artifact. Each employee actively selects 25 unique skills, the service randomizes those skills into a 5 x 5 board, and an event administrator triggers random draws from eligible Core and Critical Skills. Matches are applied automatically. From draw five onward, the service checks all active boards; everyone who completes a valid line on the same winning draw is a co-winner. After the round, every participant receives an Arise Soul based on their selections and may launch it into the persistent public Arise Galaxy.
+AriSkill Skill Bingo turns employee-selected skills into a live event game and a shared visual artifact. Each employee actively selects 16 unique skills by answering three short questions, the service randomizes those skills into a 4 x 4 board, and an event administrator triggers guided random draws from the skills on the locked boards (D-33). Matches are applied automatically. From draw four onward, the service checks all active boards; everyone who completes a valid line on the same winning draw is a co-winner. After the round, every participant receives an Arise Soul based on their selections and may launch it into the persistent public Arise Galaxy.
 
 The experience has four coordinated interfaces:
 
-1. **Employee mobile:** join, identify Platform and Role, select all 25 skills, play, see results and Role Skill Matrix insight, reveal a Soul, and launch it.
+1. **Employee mobile:** join, identify Platform and Role, select all 16 skills, play, see results and Role Skill Matrix insight, reveal a Soul, and launch it.
 2. **Admin portal:** configure and operate rounds, monitor readiness, trigger server-randomized draws, handle cancellation, and inspect event analytics.
 3. **Public event screen:** keep the Arise Galaxy alive while showing Waiting, Playing, and Winner information.
 4. **Stage dashboard:** give the presenter a distance-readable view of round status, participation, winners, and the aggregate skill insights named in the approved concept.
@@ -35,7 +35,7 @@ The experience has four coordinated interfaces:
 - No skill assessment, verification, ranking, or performance-management use.
 - No competitive ranking based on Role Skill Matrix alignment.
 - No automatic profile update in the AriSkill system of record.
-- No profile-derived Platform/Role prefill and no bulk or one-tap acceptance of 25 suggested skills; the employee makes each selection.
+- No profile-derived Platform/Role prefill and no bulk or one-tap acceptance of 16 suggested skills; the employee makes each selection.
 - No employee development recommendations beyond the post-round comparison summary.
 - No separate event-analyst role or analytics export.
 - No admin-only public-screen blackout/freeze control; cancellation and reconnect behavior use the normal round states.
@@ -55,14 +55,14 @@ The experience has four coordinated interfaces:
 
 ### 4.1 Employee mobile
 
-`Scan event QR -> Join session -> Select Platform -> Select Role -> Select 25 unique skills -> Board randomized and saved -> Countdown -> Board locks -> Automatic matching -> Result -> Soul reveal -> Matrix insight -> Ready to Float -> Soul joins Galaxy`
+`Scan event QR -> Join session -> Select Platform -> Select Role -> Answer 3 questions to select 16 unique skills -> Board randomized and saved -> Countdown -> Board locks -> Automatic matching -> Result -> Soul reveal -> Matrix insight -> Ready to Float -> Soul joins Galaxy`
 
 Optimizations:
 
-- Skill discovery is divided into **Recommended for Your Role**, **Popular at Arise**, and **Search All Skills**.
-- Employees explicitly select Platform and Role, then actively choose every skill. Profile data does not prefill either field, and there is no one-tap option to accept 25 suggested skills.
+- Skill selection is three short questions (D-35): **Arise core skills** (the 7 Core Skill kind, pick any), **Skills in your role** (role skills without the core ones, shown without Core / Critical / Optional labels), and **Anything else?** (search), which is skipped when the board is already full.
+- Employees explicitly select Platform and Role, then actively choose every skill. Profile data does not prefill either field, and there is no one-tap option to accept 16 suggested skills.
 - Tapping a skill fills the next selection slot; the server shuffles board positions at completion.
-- Show persistent progress such as `17 / 25 skills selected`, selected chips, undo/remove, and search.
+- The 4 x 4 board is always visible and fills in tap order; a counter such as `9/16` shows progress; tapping a chip again or a filled tile removes it; selection stops at 16 with a `Board full` marker. `Review board` shows the server-shuffled board, where the player can Edit or tap `I'm ready`.
 - Allow skill edits until the round locks. Re-randomize only after an explicit board change and save.
 - If no round is open, retain the draft and show the next scheduled round when available.
 - Mobile should remain understandable with sound off and under unstable event Wi-Fi.
@@ -103,12 +103,12 @@ It must not duplicate the public spectacle or display individual gaps.
 | M-01 | Resolve the event from a signed QR/deep link and display event and round status. |
 | M-02 | Require the employee to explicitly select Platform and Role before skill selection; do not prefill either value from a profile. |
 | M-03 | Load skill recommendations, popular skills, and searchable Skill Master results. |
-| M-04 | Permit exactly 25 unique, active skill selections; duplicate taps do not change state. |
+| M-04 | Permit exactly 16 unique, active skill selections; duplicate taps do not change state. |
 | M-05 | Save drafts incrementally and reconcile local unsaved changes after reconnection. |
-| M-06 | Ask the server to create a randomized 5 x 5 board after the 25th selection. |
+| M-06 | Ask the server to create a randomized 4 x 4 board after the 16th selection. |
 | M-07 | Permit editing until the server lock time and clearly show the synchronized countdown. |
 | M-08 | Render accepted draw events and automatically mark all matching cells. |
-| M-09 | Show that Bingo evaluation is locked for draws 1-4 and active from draw 5. |
+| M-09 | Show that Bingo evaluation is locked for draws 1-3 and active from draw 4. |
 | M-10 | Show winner/non-winner result without implying employee capability. |
 | M-11 | Reveal a Soul derived from selected-skill categories using cosmetic, non-ranking rules. |
 | M-12 | Show Role Skill Matrix match count and beyond-matrix count privately. |
@@ -155,18 +155,18 @@ Each rule includes its failure behavior or states why it cannot fail independent
 | ID | Rule | Failure handling / non-failing reason |
 |---|---|---|
 | BR-01 | A participant explicitly selects Platform and Role before building a board. | Missing selection blocks skill selection and uses E16; profile values are never silently substituted. |
-| BR-02 | A board contains exactly 25 unique skills, all actively chosen by the employee. | Duplicate input uses E4; fewer than 25 at lock uses E5; finalization rejects any other count. |
+| BR-02 | A board contains exactly 16 unique skills, all actively chosen by the employee. | Duplicate input uses E4; fewer than 16 at lock uses E5; finalization rejects any other count. |
 | BR-03 | Skills may be discovered through role recommendations, popularity, or Skill Master search. | If discovery data cannot load, use E17, preserve the draft, and retry; no synthetic skills are inserted. |
-| BR-04 | The server, not the client, randomizes selected skills into the 5 x 5 board. | Finalization failure uses E18 and preserves the 25 selections; client-supplied positions are ignored. |
+| BR-04 | The server, not the client, randomizes selected skills into the 4 x 4 board. | Finalization failure uses E18 and preserves the 16 selections; client-supplied positions are ignored. |
 | BR-05 | A participant may edit until the authoritative lock time; `00:00` locks but never starts play, while confirmed admin `Start Now` may lock and start early. | A save accepted after lock is rejected without mutation and uses E8; an unconfirmed early-start request has no effect. |
-| BR-06 | At lock, a complete board enters the round; an incomplete board is saved for the next eligible round. | This is a total decision over 0-25 selections: complete becomes `LOCKED_ACTIVE`; every incomplete board becomes `DEFERRED` and uses E5. |
+| BR-06 | At lock, a complete board enters the round; an incomplete board is saved for the next eligible round. | This is a total decision over 0-16 selections: complete becomes `LOCKED_ACTIVE`; every incomplete board becomes `DEFERRED` and uses E5. |
 | BR-07 | Locking all eligible boards is atomic from the round's point of view. | If the lock transaction fails, no board changes state; the elapsed `lock_at` still rejects further player edits, and the admin uses E19 to retry or cancel. |
-| BR-08 | The draw pool is the unique set of active **Core or Critical** Skills present on at least one locked board. | Start is blocked if the pool has fewer than five skills; the admin uses E20 and may reschedule or cancel. |
+| BR-08 | The draw pool is the unique set of active Skills (any kind, D-33) present on at least one locked board. | Start is blocked if the pool has fewer than five skills; the admin uses E20 and may reschedule or cancel. |
 | BR-09 | A skill may be drawn at most once per round. | Durable-store uniqueness and idempotency reject a duplicate; clients retain the last accepted draw and the admin receives E10 for a stale command. |
-| BR-10 | An unbiased server-side random selection chooses from the remaining eligible pool. | If selection or persistence fails, the command accepts no draw, emits no event, and uses E21 so the admin can retry. |
+| BR-10 | A guided server-side random selection (D-33) chooses from the remaining pool: at random among the skills that keep the round on target (no winner before draw 6, at most 2 co-winners, a win by about draw 12), reading boards only as position patterns. `BINGO_DRAW_GUIDANCE=off` restores uniform random. | If selection or persistence fails, the command accepts no draw, emits no event, and uses E21 so the admin can retry. |
 | BR-11 | Client taps never mark cells; accepted draw events determine matches. | Unauthorized local changes have no server effect and are replaced by the next authoritative snapshot. |
-| BR-12 | Bingo evaluation starts on draw five. | This is deterministic from the accepted draw number; draws 1-4 cannot invoke winner persistence and are covered by automated boundary tests. |
-| BR-13 | Valid lines are the five rows, five columns, and two corner-to-corner diagonals. | The fixed 12-mask set has no runtime choice; any evaluator error aborts the draw transaction under E21. |
+| BR-12 | Bingo evaluation starts on draw four. | This is deterministic from the accepted draw number; draws 1-3 cannot invoke winner persistence and are covered by automated boundary tests. |
+| BR-13 | Valid lines are the four rows, four columns, and two corner-to-corner diagonals. | The fixed 10-mask set has no runtime choice; any evaluator error aborts the draw transaction under E21. |
 | BR-14 | All participants completing at least one line from the same winning draw are co-winners. | Evaluation occurs across all active boards in one transaction; any partial computation aborts the draw under E21. |
 | BR-15 | The winning draw atomically closes further drawing and fixes the winner set. | A concurrent or later draw is rejected as stale under E10; a transaction failure publishes neither draw nor winners under E21. |
 | BR-16 | Every completed participant receives a Soul, whether they win or lose. | Soul creation is idempotently retried; the employee sees E22 until creation succeeds. |
@@ -196,8 +196,8 @@ The transition transaction for `draw-next` must: verify `PLAYING` and version, c
 
 | State | Meaning |
 |---|---|
-| `DRAFT` | 0-24 unique selections or editable completed selection |
-| `READY` | 25 selections, randomized grid saved, registration still open |
+| `DRAFT` | 0-15 unique selections or editable completed selection |
+| `READY` | 16 selections, randomized grid saved, registration still open |
 | `LOCKED_ACTIVE` | Complete at round lock and included in draw/evaluation |
 | `DEFERRED` | Incomplete or arrived after lock; preserved for a future round |
 | `FINISHED` | Active round ended; immutable game record |
@@ -246,7 +246,7 @@ The existing AriSkill design system was not available for inspection. The follow
 | E2 | QR/session expired | `This event link has expired. Scan the event QR code again.` | Reject token; rescan |
 | E3 | Platform/Role load failed | `We couldn't load your role options.` | Retry; retain session |
 | E4 | Duplicate skill | `You already added this skill.` | No state change |
-| E5 | Fewer than 25 at lock | `Registration for this round is closed. Your board is saved for the next round.` | Mark `DEFERRED` |
+| E5 | Fewer than 16 at lock | `Registration for this round is closed. Your board is saved for the next round.` | Mark `DEFERRED` |
 | E6 | Save failed | `Your latest skill wasn't saved. Try again.` | Keep local draft; retry/reconcile |
 | E7 | Clock correction | `Syncing with the event...` | Replace local time with server time |
 | E8 | Late arrival | `This round is already in progress. Your board will join the next round.` | Assign next eligible round |
@@ -259,7 +259,7 @@ The existing AriSkill design system was not available for inspection. The follow
 | E15 | Round cancelled | `This round was cancelled. Your board is saved for the next round.` | Unlock/reassign eligible drafts |
 | E16 | Platform or Role missing | `Choose your Platform and Role to start building your board.` | Keep skill selection unavailable until both are explicitly selected |
 | E17 | Skill discovery unavailable | `We couldn't load the Skill Master. Your selections are safe.` | Preserve the draft and retry loading |
-| E18 | Board finalization failed | `We couldn't build your board yet. Your 25 skills are saved.` | Retry server randomization; do not accept client positions |
+| E18 | Board finalization failed | `We couldn't build your board yet. Your 16 skills are saved.` | Retry server randomization; do not accept client positions |
 | E19 | Round lock failed | `The round couldn't finish locking. Player edits are closed.` | Keep the prior version, reject edits after `lock_at`, and let the admin retry or cancel |
 | E20 | Round not ready to start | `This round needs at least five eligible skills before it can start.` | Keep the round locked; reschedule or cancel |
 | E21 | Draw transaction failed | `The next skill wasn't drawn. Try again.` | Commit and publish nothing; retry with the same idempotency key |
@@ -391,7 +391,7 @@ The implementation stack is intentionally undecided. Select client, server, pers
 | `Skill` | id, canonical name, status, taxonomy, Core/Critical flags |
 | `RoleSkillMap` | role_id, level if used, skill_id, effective dates |
 | `Board` | id, round_id, participant_id, state, version, randomized_at, locked_at |
-| `BoardCell` | board_id, position 0-24, skill_id; unique position and unique board/skill |
+| `BoardCell` | board_id, position 0-15, skill_id; unique position and unique board/skill |
 | `Draw` | id, round_id, number, skill_id, drawn_at, command_id; unique round/number and round/skill |
 | `BoardMatch` | board_id, draw_id, cell position, matched_at; derivable but persisted/auditable if useful |
 | `Winner` | round_id, participant_id, winning_draw_id, line masks; unique round/participant |
@@ -415,7 +415,7 @@ Operation names are logical and transport-neutral; the implementation team maps 
 | `event.session.create` | Exchange a signed join token for a scoped session |
 | `skill.discovery.query` | Return recommended, popular, and searched skills |
 | `board.selections.save` | Idempotently save selected skill IDs with board version |
-| `board.finalize` | Validate 25 unique skills and create server-randomized positions |
+| `board.finalize` | Validate 16 unique skills and create server-randomized positions |
 | `round.registration.open` | Open registration |
 | `round.lock` | Atomically decide active/deferred boards |
 | `round.start` | Fix the eligible pool and enter Playing |
@@ -514,12 +514,12 @@ Metric definitions, denominators, effective Skill Matrix version, and suppressio
 
 ## 17. Acceptance Criteria
 
-1. **Selection:** Given an eligible employee, when they choose 25 unique skills, then the service saves exactly those 25, creates one randomized 5 x 5 board, and shows `READY`.
+1. **Selection:** Given an eligible employee, when they choose 16 unique skills, then the service saves exactly those 16, creates one randomized 4 x 4 board, and shows `READY`.
 2. **No prefill or auto-fill:** Given employee profile data or role recommendations, when the journey begins, then Platform and Role remain unselected and no action can accept all recommended skills without individual employee selection.
 3. **Lock:** Given completed and incomplete boards at lock, when lock succeeds, then completed boards become `LOCKED_ACTIVE` and incomplete boards become `DEFERRED` atomically.
-4. **Eligibility:** Given active boards, when the round starts, then every draw-pool skill is Core or Critical and appears on at least one active board.
+4. **Eligibility:** Given active boards, when the round starts, then every draw-pool skill is active and appears on at least one active board.
 5. **Unique draw:** Given retries or concurrent Next Skill requests, then each accepted draw number and skill is unique and clients converge on the same order.
-6. **Minimum draw:** Given a complete line on draw four, no Bingo is declared; when draw five or later completes a line, evaluation occurs.
+6. **Minimum draw:** Given a complete line on draw three, no Bingo is declared; when draw four or later completes a line, evaluation occurs. With guided draws (D-33) the first winner lands between draws 6 and 12 in simulation.
 7. **Co-winners:** Given multiple boards complete a valid line on one draw, all and only those participants are persisted and displayed as co-winners.
 8. **Server authority:** Given a manipulated client, it cannot mark a cell, select a draw, alter time, or declare a winner.
 9. **Late entry:** Given registration is locked, a new/incomplete board cannot join the active round and is preserved for a later round.
@@ -534,7 +534,7 @@ Metric definitions, denominators, effective Skill Matrix version, and suppressio
 
 ### 18.1 Automated
 
-- Unit tests for pool eligibility, 12 Bingo line masks, draw-five threshold, co-winner calculation, Soul seed stability, copy/state mappings, and permission rules.
+- Unit tests for pool eligibility, 10 Bingo line masks, draw-four threshold, guided-draw policy, co-winner calculation, Soul seed stability, copy/state mappings, and permission rules.
 - Property-based tests: no duplicate skills/draws; any declared winner owns a valid line; same input events produce the same projection.
 - State-machine tests for every valid and invalid transition.
 - Durable-store concurrency tests for duplicate commands, simultaneous draws, lock races, winner atomicity, and Float replay.
@@ -561,7 +561,7 @@ Metric definitions, denominators, effective Skill Matrix version, and suppressio
 | Draw only player-selected eligible skills may produce no viable game | Block start if fewer than five eligible skills; warn if no active board has a possible line. Product may reschedule/cancel, not silently expand the pool. |
 | Public display and stage dashboard appear redundant | Public view prioritizes spectacle; stage dashboard prioritizes large, narration-friendly round and aggregate insight information. |
 | Mobile launch must appear once publicly | Use a one-use server-issued Float token and atomic consumption. |
-| 25 selections create friction | Keep active self-selection for methodological integrity; optimize discovery, save drafts, and test completion time. Do not add a 25-skill auto-accept option. |
+| 16 selections create friction | Keep active self-selection for methodological integrity; optimize discovery, save drafts, and test completion time. Do not add a 16-skill auto-accept option. |
 | 3D lecture suggests a game engine | Use its asset/pipeline/QC lessons only. The required synchronized multi-client product remains web-based; engine choice is open. |
 
 ## 20. Assumptions

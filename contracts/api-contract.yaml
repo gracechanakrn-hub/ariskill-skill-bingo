@@ -106,7 +106,7 @@ operations:
     method: GET
     path: /skills/discovery
     auth: participant
-    query: { mode: "recommended|popular|search", q: string?, limit: int? }
+    query: { mode: "core|role|recommended|popular|search", q: string?, limit: int? }  # core = the 7 Core Skill kind (picker Q1); role = role skills minus core (picker Q2), D-35
     rule: recommended = role's core+critical then optional skills; popular = most selected across the event (falls back to matrix frequency); search = case-insensitive substring across name/domain/cluster.
     response: { mode, skills: [{ id, name, domain, cluster, kind, isCore, isCritical, eligible, roleLevel: "core|critical|optional|null" }], selectedCount: int }
     errors: [PROFILE_REQUIRED]
@@ -118,7 +118,7 @@ operations:
     headers: [Idempotency-Key]
     body: { skillIds: string[], boardVersion: int }
     rule: >
-      Replaces the draft selection set. Max 25, all unique, all active. Duplicates in the list -> DUPLICATE_SKILL.
+      Replaces the draft selection set. Max 16, all unique, all active. Duplicates in the list -> DUPLICATE_SKILL.
       If the participant already holds a board in the current round and that round is locked -> ROUND_LOCKED (E8) with no mutation.
       Late joiner (no board in the current round while it is LOCKED/PLAYING/WINNER/EXHAUSTED): the selections are persisted as a
       DEFERRED board (reason `late`, no positions) on that round, the response is 200 with `notice` { kind:'late', exceptionId:'E8', text },
@@ -133,7 +133,7 @@ operations:
     auth: participant
     headers: [Idempotency-Key]
     body: { boardVersion: int }
-    rule: Requires exactly 25 unique selections; server shuffles positions; snapshots matrixVersion; state READY. Client-supplied positions are ignored (none accepted in body).
+    rule: Requires exactly 16 unique selections; server shuffles positions; snapshots matrixVersion; state READY. Client-supplied positions are ignored (none accepted in body).
     response: { board: ParticipantBoard, resultingVersion: int }
     errors: [VALIDATION (E18 on persistence failure), ROUND_LOCKED, STALE_VERSION]
 
@@ -142,7 +142,7 @@ operations:
     path: /me/insight
     auth: participant
     rule: Available once the participant's board is FINISHED. Private only.
-    response: { roundId, matrixVersion, inMatrixCount: int, beyondMatrixCount: int, totalSelected: 25 }
+    response: { roundId, matrixVersion, inMatrixCount: int, beyondMatrixCount: int, totalSelected: 16 }
 
   - id: soul.float
     method: POST

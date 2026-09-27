@@ -1,10 +1,10 @@
 // Soul decorations at round end (D-29, D-31, BR-16, BR-17): each finished board gets a v3 Soul whose charm split follows its
-// 25 selected skills' kinds, whose face follows the kinds of its matched tiles, and whose face plate, eyes and antenna charm
+// 16 selected skills' kinds, whose face follows the kinds of its matched tiles, and whose face plate, eyes and antenna charm
 // (topper) come from its seed only; the phone, the public screen and the stage stream all carry that same config. Any
 // decoration fault gives the neutral Soul, still a v2 config, and Souls stored under earlier contracts are served unchanged.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, join, readyBoard, startRound, drawUntilEnd, readSse, fiveSkillLineScenario, OPTIONAL_IDS, EVENT_ID } from './helpers.js';
+import { startServer, createRound, join, readyBoard, startRound, drawUntilEnd, readSse, lineScenario, setPool, OPTIONAL_IDS, EVENT_ID, CELLS } from './helpers.js';
 import { SKILL_MASTER, SKILLS } from '../src/skills.js';
 import { findForbiddenKeys } from '../src/projections.js';
 import {
@@ -23,26 +23,29 @@ const kindsOfIds = (ids) => countSkillKinds(ids.map(id => SKILLS.get(id).kind));
 
 // selection -> expected split, worked by hand from the rule (floor quota, largest remainder, at least one per kind picked)
 const PLAYERS = [
-  { name: 'Mixed', set: [...CORE.slice(0, 7), ...HARD.slice(0, 6), ...SOFT.slice(0, 12)], split: { core: 3, technical: 2, soft: 5 } },
-  { name: 'Technical', set: HARD.slice(10, 35), split: { core: 0, technical: 10, soft: 0 } },
-  { name: 'MinOne', set: [CORE[0], SOFT[0], ...HARD.slice(40, 63)], split: { core: 1, technical: 8, soft: 1 } },
-  { name: 'NeverMatched', set: [...OPT_SOFT.slice(0, 10), ...OPT_HARD.slice(0, 15)], split: { core: 0, technical: 6, soft: 4 } },
+  { name: 'Mixed', set: [...CORE.slice(0, 7), ...HARD.slice(0, 3), ...SOFT.slice(0, 6)], split: { core: 4, technical: 2, soft: 4 } },
+  { name: 'Technical', set: HARD.slice(10, 26), split: { core: 0, technical: 10, soft: 0 } },
+  { name: 'MinOne', set: [CORE[0], SOFT[0], ...HARD.slice(40, 54)], split: { core: 1, technical: 8, soft: 1 } },
+  // every active skill is drawable (D-33), so this board's skills are kept out of the round's pool below
+  { name: 'NeverMatched', set: [...OPT_SOFT.slice(0, 6), ...OPT_HARD.slice(0, 10)], split: { core: 0, technical: 6, soft: 4 } },
 ];
 
 describe('Soul decorations at round end (D-29)', () => {
   let t, players, publicStream, stageStream, participantStream;
   before(async () => {
-    assert.equal(CORE.length, 7); assert.ok(SOFT.length >= 12 && OPT_SOFT.length >= 10 && OPT_HARD.length >= 15 && HARD.length >= 63);
+    assert.equal(CORE.length, 7); assert.ok(SOFT.length >= 6 && OPT_SOFT.length >= 6 && OPT_HARD.length >= 10 && HARD.length >= 54);
     t = await startServer({ rngSeed: 'svc-soul-decor-1' });
     const round = await createRound(t, { title: 'Decor' });
     players = [];
     for (const [i, def] of PLAYERS.entries()) {
-      assert.equal(new Set(def.set).size, 25, def.name);
+      assert.equal(new Set(def.set).size, CELLS, def.name);
       const p = await join(t, { displayName: def.name, consent: i % 2 === 0 });
       await readyBoard(t, p, def.set);
       players.push({ ...def, p });
     }
     const started = await startRound(t, round);
+    const never = new Set(PLAYERS.find(d => d.name === 'NeverMatched').set);
+    setPool(t.db, round.roundId, [...new Set(PLAYERS.flatMap(d => d.set))].filter(id => !never.has(id)));
     participantStream = readSse(t.baseUrl, '/me/stream', { token: players[0].p.token, timeoutMs: 2000, until: ev => ev.some(e => e.event === 'soul.created') });
     await new Promise(r => setTimeout(r, 50));
     const end = await drawUntilEnd(t, started);
@@ -125,7 +128,7 @@ test('a Soul stored under an earlier contract (v2, v1) is served exactly as stor
   try {
     const round = await createRound(t, { title: 'Stored' });
     const players = [];
-    for (const name of ['Stored V2', 'Stored V1']) { const p = await join(t, { displayName: name }); await readyBoard(t, p, HARD.slice(players.length * 25, players.length * 25 + 25)); players.push(p); }
+    for (const name of ['Stored V2', 'Stored V1']) { const p = await join(t, { displayName: name }); await readyBoard(t, p, HARD.slice(players.length * CELLS, players.length * CELLS + CELLS)); players.push(p); }
     await drawUntilEnd(t, await startRound(t, round));
     // what the service wrote at round end under contracts 1.1.0 (v2, catalog 1) and 1.0.x (v1)
     const stored = [
@@ -156,7 +159,7 @@ test('a Soul stored under an earlier contract (v2, v1) is served exactly as stor
 test('a decoration that cannot be built never fails the final draw: the Soul gets the neutral config, a v2 config (BR-17)', async () => {
   const t = await startServer({ rngSeed: 'svc-soul-decor-2' });
   try {
-    const sc = await fiveSkillLineScenario(t);
+    const sc = await lineScenario(t);
     const saved = t.db.get('SELECT selected_json FROM boards WHERE id = ?', sc.b.boardId).selected_json;
     t.db.run('UPDATE boards SET selected_json = ? WHERE id = ?', '{not json', sc.b.boardId);
     const end = await drawUntilEnd(t, sc.round);
@@ -173,7 +176,7 @@ test('a decoration that cannot be built never fails the final draw: the Soul get
 test('a v3 config that fails validation (no skill kind counted, so no charms) also gives the neutral v2 Soul; the draw commits', async () => {
   const t = await startServer({ rngSeed: 'svc-soul-decor-4' });
   try {
-    const sc = await fiveSkillLineScenario(t, { extraPlayers: [{ join: { displayName: 'Other Player' } }] });
+    const sc = await lineScenario(t, { extraPlayers: [{ join: { displayName: 'Other Player' } }] });
     const saved = t.db.get('SELECT selected_json FROM boards WHERE id = ?', sc.b.boardId).selected_json;
     const gone = JSON.parse(saved).map((_, i) => `skill_retired_${i}`); // valid JSON, but no skill the catalogue knows
     assert.deepEqual(countSkillKinds(gone.map(id => SKILLS.get(id)?.kind)), { core: 0, technical: 0, soft: 0 }, 'no skill kind counted, so the v3 config has no charms');

@@ -2,7 +2,7 @@
 // Source of truth: the stage snapshot (contracts/projections/stage.json) and the stage-audience events in
 // contracts/realtime-events.json. Everything here only reshapes server data for display: no winners, matches or
 // timings are computed locally (requirement 7.3 / wave-2 non-negotiables).
-import { PUBLIC_STATE_BY_ROUND } from '../../../packages/contracts/index.js';
+import { PUBLIC_STATE_BY_ROUND, BINGO_UNLOCK_DRAW } from '../../../packages/contracts/index.js';
 
 export const RECENT_LIMIT = 10;
 export const STALE_AFTER_MS = 10_000;
@@ -178,7 +178,7 @@ export function deriveView(state, { nowMs = Date.now() } = {}) {
   else if (rs === 'CLOSED') hero = state.nextRound ? { kind: 'scheduled', target: state.nextRound.lockAt } : { kind: 'closed' };
   else hero = { kind: 'scheduled', target: focusRound.lockAt }; // DRAFT (as current or as nextRound)
 
-  const pacingLive = !!state.currentDraw?.bingoEvaluationActive || (state.currentDraw?.number ?? 0) >= 5;
+  const pacingLive = !!state.currentDraw?.bingoEvaluationActive || (state.currentDraw?.number ?? 0) >= BINGO_UNLOCK_DRAW;
   return {
     layout: layoutFor(state),
     eventName: state.eventName || '',

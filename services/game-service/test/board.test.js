@@ -1,6 +1,6 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, saveBoard, finalizeBoard, readyBoard, boardSet, ELIGIBLE_IDS, ALL_IDS, nextKey, EVENT_ID } from './helpers.js';
+import { startServer, createRound, command, join, saveBoard, finalizeBoard, readyBoard, boardSet, ELIGIBLE_IDS, ALL_IDS, nextKey, EVENT_ID, CELLS, REQUIRED_SELECTIONS } from './helpers.js';
 
 describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, BR-02, BR-04, D-12)', () => {
   let t, round;
@@ -17,12 +17,12 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
     assert.equal(d.status, 409); assert.equal(d.body.error.code, 'PROFILE_REQUIRED');
   });
 
-  test('duplicate skill in the list is DUPLICATE_SKILL (E4) with no mutation; 26 skills and unknown skills are VALIDATION', async () => {
+  test('duplicate skill in the list is DUPLICATE_SKILL (E4) with no mutation; 17 skills and unknown skills are VALIDATION', async () => {
     const p = await join(t);
     const dup = await saveBoard(t, p, [ELIGIBLE_IDS[0], ELIGIBLE_IDS[1], ELIGIBLE_IDS[0]]);
     assert.equal(dup.status, 409); assert.equal(dup.body.error.code, 'DUPLICATE_SKILL'); assert.equal(dup.body.error.exceptionId, 'E4');
     assert.equal((await t.api.get('/me', p.token)).body.board, null, 'no board created by the rejected save');
-    const many = await saveBoard(t, p, ALL_IDS.slice(0, 26));
+    const many = await saveBoard(t, p, ALL_IDS.slice(0, REQUIRED_SELECTIONS + 1));
     assert.equal(many.status, 400); assert.equal(many.body.error.code, 'VALIDATION');
     const unknown = await saveBoard(t, p, ['skill_does_not_exist']);
     assert.equal(unknown.status, 400);
@@ -31,19 +31,19 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
     assert.ok(ok.body.correlationId && ok.body.serverTime, 'envelope fields');
   });
 
-  test('finalize needs exactly 25; positions are a server permutation; client-supplied positions are ignored; matrixVersion snapshot', async () => {
+  test('finalize needs exactly 16; positions are a server permutation; client-supplied positions are ignored; matrixVersion snapshot', async () => {
     const p = await join(t);
-    await saveBoard(t, p, boardSet(0, 24));
+    await saveBoard(t, p, boardSet(0, REQUIRED_SELECTIONS - 1));
     const short = await finalizeBoard(t, p);
     assert.equal(short.status, 400); assert.equal(short.body.error.code, 'VALIDATION');
-    const set = boardSet(0, 25);
+    const set = boardSet(0, REQUIRED_SELECTIONS);
     await saveBoard(t, p, set);
     const me = await t.api.get('/me', p.token);
-    const fin = await t.api.post('/me/board/finalize', { boardVersion: me.body.board.version, cells: set.map((skillId, position) => ({ position, skillId })), positions: [...Array(25).keys()] }, p.token);
+    const fin = await t.api.post('/me/board/finalize', { boardVersion: me.body.board.version, cells: set.map((skillId, position) => ({ position, skillId })), positions: [...Array(CELLS).keys()] }, p.token);
     assert.equal(fin.status, 200);
     const b = fin.body.board;
-    assert.equal(b.state, 'READY'); assert.equal(b.cells.length, 25); assert.equal(b.matrixVersion, 'skill-matrix-2026-tech-role-20260319');
-    assert.deepEqual(b.cells.map(c => c.position), [...Array(25).keys()]);
+    assert.equal(b.state, 'READY'); assert.equal(b.cells.length, CELLS); assert.equal(b.matrixVersion, 'skill-matrix-2026-tech-role-20260319');
+    assert.deepEqual(b.cells.map(c => c.position), [...Array(CELLS).keys()]);
     assert.deepEqual(b.cells.map(c => c.skillId).sort(), set.slice().sort(), 'cells are a permutation of the selection');
     assert.notDeepEqual(b.cells.map(c => c.skillId), set, 'server shuffled (client order not accepted)');
     assert.ok(b.cells.every(c => typeof c.name === 'string' && ['Core', 'Critical', 'Optional'].includes(c.kind)));
@@ -56,7 +56,7 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
     const b1 = await readyBoard(t, p, set);
     const same = await saveBoard(t, p, set);
     assert.equal(same.status, 200); assert.equal(same.body.board.state, 'READY'); assert.equal(same.body.resultingVersion, b1.version);
-    const changed = [...set.slice(0, 24), ELIGIBLE_IDS[60]];
+    const changed = [...set.slice(0, REQUIRED_SELECTIONS - 1), ELIGIBLE_IDS[60]];
     const s2 = await saveBoard(t, p, changed);
     assert.equal(s2.status, 200); assert.equal(s2.body.board.state, 'DRAFT'); assert.equal(s2.body.board.cells, null); assert.equal(s2.body.board.matrixVersion, null); assert.equal(s2.body.resultingVersion, b1.version + 1);
     const f2 = await finalizeBoard(t, p);

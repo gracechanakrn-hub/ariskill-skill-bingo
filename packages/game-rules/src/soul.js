@@ -71,7 +71,7 @@ function constellationOf(domainCounts) {
 }
 const driftPhaseOf = (seed) => (hashString(`${seed}:drift`) % 1000) / 1000;
 
-/** Version 1 config: deterministic trait selection. domainCounts: {domain: count} from the 25 selected skills. */
+/** Version 1 config: deterministic trait selection. domainCounts: {domain: count} from the 16 selected skills. */
 export function soulConfigFromSeed(seed, domainCounts = {}) {
   const pick = (name, salt) => hashString(`${seed}:${salt}`) % SOUL_TRAITS[name].length;
   return {
@@ -160,7 +160,7 @@ export function pickTopper(seed, charms = []) {
 }
 
 /**
- * Version 3 config, built once at round end. selectedKinds / matchedKinds: {core, technical, soft} counts of the 25
+ * Version 3 config, built once at round end. selectedKinds / matchedKinds: {core, technical, soft} counts of the 16
  * selected skills and of the tiles matched when the round ends (countSkillKinds). Constellation and driftPhase are the
  * v1 values; face and charms follow the v2 rules; everything else is picked from the seed. With no kind counted there
  * are no charms, which v3 rejects, so the caller serves the neutral fallback.

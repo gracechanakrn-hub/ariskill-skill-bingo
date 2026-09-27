@@ -9,12 +9,16 @@ import { createApp } from '../../services/game-service/src/app.js';
 import { signJoinToken } from '../../services/game-service/src/auth.js';
 import skillMaster from '../../packages/skill-master/data/skill-master.json' with { type: 'json' };
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
-import { splitCharmSlots, faceForMatches, countSkillKinds, pickPlate, pickEyes, pickTopper, CHARM_BY_ID } from '../../packages/game-rules/src/index.js';
+import { splitCharmSlots, faceForMatches, countSkillKinds, pickPlate, pickEyes, pickTopper, CHARM_BY_ID, CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS, MIN_DRAW_FOR_BINGO, POOL_MINIMUM } from '../../packages/game-rules/src/index.js';
+
+export { CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS, MIN_DRAW_FOR_BINGO, POOL_MINIMUM };
 
 export const SKILL_MASTER = skillMaster;
 export const SKILLS_BY_ID = new Map(skillMaster.skills.map(s => [s.id, s]));
 export const ACTIVE_IDS = skillMaster.skills.filter(s => s.status === 'active').map(s => s.id).sort();
-export const ELIGIBLE_IDS = skillMaster.skills.filter(s => s.status === 'active' && (s.isCore || s.isCritical)).map(s => s.id).sort();
+/** Draw-eligible skills (D-33, BR-08): every active skill, whatever its kind. */
+export const ELIGIBLE_IDS = ACTIVE_IDS;
+export const CORE_CRITICAL_IDS = skillMaster.skills.filter(s => s.status === 'active' && (s.isCore || s.isCritical)).map(s => s.id).sort();
 export const OPTIONAL_IDS = skillMaster.skills.filter(s => s.status === 'active' && !(s.isCore || s.isCritical)).map(s => s.id).sort();
 export const ROLES = skillMaster.roles.map(r => ({ id: r.id, name: r.name, platformId: r.platformId }));
 export const PLATFORMS = skillMaster.platforms.map(p => ({ id: p.id, name: p.name }));
@@ -122,11 +126,13 @@ export function closeByTimer(t, roundId) {
   try { t.app.timers.tick(); } finally { t.clock.unfreeze(); }
   return t.db.get('SELECT state, version FROM rounds WHERE id = ?', roundId);
 }
-/** 25 skills drawn from `from` starting at offset; `exclude` removes ids that must not appear (e.g. names matching a privacy regex). */
-export function boardSet(offset, n = 25, from = ELIGIBLE_IDS, exclude = []) { const ex = new Set(exclude); return from.filter(id => !ex.has(id)).slice(offset, offset + n); }
-export function mixedSet(eligibleCount, eligibleOffset = 0, optionalOffset = 0) {
-  return [...ELIGIBLE_IDS.slice(eligibleOffset, eligibleOffset + eligibleCount), ...OPTIONAL_IDS.slice(optionalOffset, optionalOffset + (25 - eligibleCount))];
-}
+/** 16 skills drawn from `from` starting at offset; `exclude` removes ids that must not appear (e.g. names matching a privacy regex). */
+export function boardSet(offset, n = REQUIRED_SELECTIONS, from = ELIGIBLE_IDS, exclude = []) { const ex = new Set(exclude); return from.filter(id => !ex.has(id)).slice(offset, offset + n); }
+/**
+ * Test-only: narrow a started round's pool snapshot. Every active skill on an active board is draw-eligible (D-33), so a
+ * pool smaller than a board (or one that avoids a board) can only be set up by editing the snapshot the draws read.
+ */
+export function setPool(t, roundId, skillIds) { t.db.run('UPDATE rounds SET pool_json = ? WHERE id = ?', JSON.stringify([...skillIds].sort()), roundId); }
 
 // ---- SSE ---------------------------------------------------------------------------------------------------------
 export function parseSseFrame(frame) {

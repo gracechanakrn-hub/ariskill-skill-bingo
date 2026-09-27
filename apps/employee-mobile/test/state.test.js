@@ -5,6 +5,7 @@ import {
   initialState, applyParticipantSnapshot, reduceEvent, placeRound, placeBoard, reconcileDraft, sameSet,
   addSkill, removeSkill, undoSelection, kindOf, editableRound, saveBlockedReason, screenFor, selectionProgress,
   playingBannerKey, deferredCopyKey, cellsByPosition, shouldAutoFinalize, applySaveResponse, nextRoundAction, REQUIRED_SELECTIONS,
+  nextPickStep, pickerSlots, PICK_STEPS,
 } from '../src/state.js';
 
 const round = (over = {}) => ({ roundId: 'r1', number: 1, title: 'Round 1', state: 'REGISTRATION_OPEN', version: 2, lockAt: '2026-09-22T10:00:00.000Z', startedAt: null, resultWindowSeconds: 12, cancellationReason: null, ...over });
@@ -21,7 +22,7 @@ test('screenFor follows the canonical flow E1 -> E10', () => {
   assert.equal(screenFor(joined({ participant: { participantId: 'p1', platformId: null, roleId: null } })), 'profile');
   assert.equal(screenFor(joined()), 'select');
   assert.equal(screenFor(joined({ board: board() })), 'select');
-  assert.equal(screenFor(joined({ board: board({ state: 'READY', cells: cells(ids(25)) }) })), 'board');
+  assert.equal(screenFor(joined({ board: board({ state: 'READY', cells: cells(ids(16)) }) })), 'board');
   assert.equal(screenFor(joined({ board: board({ state: 'READY' }), ui: { ...initialState().ui, editing: true } })), 'select');
   assert.equal(screenFor(joined({ board: board({ state: 'LOCKED_ACTIVE' }), round: round({ state: 'LOCKED' }) })), 'locked');
   assert.equal(screenFor(joined({ board: board({ state: 'LOCKED_ACTIVE' }), round: round({ state: 'PLAYING' }) })), 'playing');
@@ -42,7 +43,7 @@ test('profile is never prefilled: missing platform or role always projects to th
   assert.equal(screenFor(joined({ participant: { participantId: 'p1', platformId: null, roleId: 'ro' } })), 'profile');
 });
 
-test('addSkill fills the next slot, duplicates are a no-op, 25 is the cap, undo is one level', () => {
+test('addSkill fills the next slot, duplicates are a no-op, 16 is the cap, undo is one level', () => {
   let s = joined();
   let r = addSkill(s, 'a'); assert.equal(r.changed, true); assert.deepEqual(r.state.ui.draft, ['a']); assert.equal(r.state.ui.draftDirty, true);
   s = r.state;
@@ -52,9 +53,9 @@ test('addSkill fills the next slot, duplicates are a no-op, 25 is the cap, undo 
   r = undoSelection(r.state); assert.equal(r.changed, false, 'only one level of undo');
   r = removeSkill(s, 'a'); assert.deepEqual(r.state.ui.draft, ['b']); assert.deepEqual(r.state.ui.undo, ['a', 'b']);
   r = removeSkill(s, 'zzz'); assert.equal(r.changed, false);
-  let full = { ...s, ui: { ...s.ui, draft: ids(25) } };
+  let full = { ...s, ui: { ...s.ui, draft: ids(16) } };
   r = addSkill(full, 'extra'); assert.equal(r.changed, false); assert.equal(r.reason, 'full');
-  assert.deepEqual(selectionProgress(full), { count: 25, total: REQUIRED_SELECTIONS, percent: 100, complete: true });
+  assert.deepEqual(selectionProgress(full), { count: 16, total: REQUIRED_SELECTIONS, percent: 100, complete: true });
   assert.equal(selectionProgress(s).count, 2);
 });
 
@@ -80,8 +81,8 @@ test('reconcileDraft keeps a dirty local draft that differs from the server set 
 });
 
 test('board.ready event places the READY board, clears editing and emits a guarded board.ready effect', () => {
-  const s = joined({ board: board({ selectedSkillIds: ids(25) }), ui: { ...initialState().ui, editing: true, draft: ids(25) } });
-  const ready = board({ state: 'READY', version: 2, selectedSkillIds: ids(25), cells: cells(ids(25)) });
+  const s = joined({ board: board({ selectedSkillIds: ids(16) }), ui: { ...initialState().ui, editing: true, draft: ids(16) } });
+  const ready = board({ state: 'READY', version: 2, selectedSkillIds: ids(16), cells: cells(ids(16)) });
   const { state, effects } = reduceEvent(s, env('board.ready', { board: ready }, 11));
   assert.equal(state.board.state, 'READY');
   assert.equal(state.ui.editing, false);
@@ -91,8 +92,8 @@ test('board.ready event places the READY board, clears editing and emits a guard
 });
 
 test('round.locked + board.locked_active project to the locked screen with a lock effect', () => {
-  const s = joined({ board: board({ state: 'READY', version: 2, cells: cells(ids(25)) }) });
-  const r1 = reduceEvent(s, env('board.locked_active', { board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(25)) }) }, 12));
+  const s = joined({ board: board({ state: 'READY', version: 2, cells: cells(ids(16)) }) });
+  const r1 = reduceEvent(s, env('board.locked_active', { board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(16)) }) }, 12));
   assert.equal(r1.effects[0].type, 'lock');
   const r2 = reduceEvent(r1.state, env('round.locked', { round: round({ state: 'LOCKED', version: 3 }), activeBoards: 10, deferredBoards: 2 }, 13));
   assert.equal(r2.state.round.state, 'LOCKED');
@@ -101,9 +102,9 @@ test('round.locked + board.locked_active project to the locked screen with a loc
   assert.equal(screenFor(r3.state), 'playing');
 });
 
-test('draw.accepted: matches come only from myMatchedPositions (BR-11); banner flips at draw 5 (M-09)', () => {
-  let s = joined({ board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(25)) }), round: round({ state: 'PLAYING' }) });
-  const draw = (n, positions) => env('draw.accepted', { draw: { drawId: `d${n}`, number: n, skill: { id: `s${n}`, name: `S${n}`, kind: 'Core', domain: 'Cloud' }, drawnAt: '2026-09-22T09:00:00.000Z' }, poolRemaining: 30 - n, myMatchedPositions: positions, bingoEvaluationActive: n >= 5 }, 20 + n);
+test('draw.accepted: matches come only from myMatchedPositions (BR-11); banner flips at draw 4 (M-09)', () => {
+  let s = joined({ board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(16)) }), round: round({ state: 'PLAYING' }) });
+  const draw = (n, positions) => env('draw.accepted', { draw: { drawId: `d${n}`, number: n, skill: { id: `s${n}`, name: `S${n}`, kind: 'Core', domain: 'Cloud' }, drawnAt: '2026-09-22T09:00:00.000Z' }, poolRemaining: 30 - n, myMatchedPositions: positions, bingoEvaluationActive: n >= 4 }, 20 + n);
   let r = reduceEvent(s, draw(1, [3]));
   assert.deepEqual(r.state.board.matchedPositions, [3]);
   assert.deepEqual(r.effects[0].newPositions, [3]);
@@ -112,17 +113,17 @@ test('draw.accepted: matches come only from myMatchedPositions (BR-11); banner f
   s = r.state;
   r = reduceEvent(s, draw(1, [3]));
   assert.equal(r.effects.length, 0, 'duplicate drawId is ignored');
-  for (const n of [2, 3, 4]) s = reduceEvent(s, draw(n, [3])).state;
+  for (const n of [2, 3]) s = reduceEvent(s, draw(n, [3])).state;
   assert.equal(playingBannerKey(s), 'play.drawsBeforeFiveN');
-  r = reduceEvent(s, draw(5, [3, 8]));
+  r = reduceEvent(s, draw(4, [3, 8]));
   assert.equal(r.effects[0].unlocksBingo, true);
   assert.deepEqual(r.effects[0].newPositions, [8]);
   assert.equal(playingBannerKey(r.state), 'play.evaluationActive');
-  assert.equal(r.state.draws.length, 5);
+  assert.equal(r.state.draws.length, 4);
 });
 
 test('bingo.detected + result.published: winner/co-winner projection, FINISHED board, result screen', () => {
-  const s = joined({ board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(25)) }), round: round({ state: 'PLAYING' }), draws: [{ drawId: 'd7', number: 7, skill: { id: 'x', name: 'X', kind: 'Core' } }] });
+  const s = joined({ board: board({ state: 'LOCKED_ACTIVE', version: 3, cells: cells(ids(16)) }), round: round({ state: 'PLAYING' }), draws: [{ drawId: 'd7', number: 7, skill: { id: 'x', name: 'X', kind: 'Core' } }] });
   const r1 = reduceEvent(s, env('bingo.detected', { drawNumber: 7, winnerCount: 3 }, 30));
   assert.equal(r1.effects[0].key, 'bingo:r1:7');
   const r2 = reduceEvent(r1.state, env('result.published', { round: round({ state: 'WINNER', version: 9 }), winners: [{ label: 'A', soulId: 'a' }, { label: 'B', soulId: 'b' }, { label: 'C', soulId: 'c' }], myResult: { isWinner: true, lineIds: ['row-1', 'col-2'] }, resultWindowEndsAt: '2026-09-22T09:01:00.000Z' }, 31));
@@ -150,7 +151,7 @@ test('soul.created then soul.float_accepted (own soul only) -> floated; foreign 
 });
 
 test('board.deferred carries its reason to the copy key (E5 / E8 / E15) and round.cancelled marks cancelled', () => {
-  const s = joined({ board: board({ state: 'READY', version: 2, cells: cells(ids(25)) }) });
+  const s = joined({ board: board({ state: 'READY', version: 2, cells: cells(ids(16)) }) });
   const late = reduceEvent(s, env('board.deferred', { board: board({ state: 'DEFERRED', version: 3 }), reason: 'late' }, 50));
   assert.equal(late.state.board.deferredReason, 'late');
   assert.equal(deferredCopyKey(late.state.board.deferredReason), 'E8');
@@ -173,7 +174,7 @@ test('placeRound follows /me semantics: own round updates in place, other rounds
   assert.equal(opened.nextRound.state, 'REGISTRATION_OPEN');
   assert.equal(placeRound(joined({ round: null }), r2).round.roundId, 'r2', 'no board: the new round is the round');
   // A board saved into the next round moves the attached round and resets round-scoped state.
-  const moved = placeBoard({ ...opened, draws: [{ drawId: 'd1' }], result: { isWinner: true }, soul: { soulId: 'x' } }, board({ boardId: 'b2', roundId: 'r2', selectedSkillIds: ids(25) }));
+  const moved = placeBoard({ ...opened, draws: [{ drawId: 'd1' }], result: { isWinner: true }, soul: { soulId: 'x' } }, board({ boardId: 'b2', roundId: 'r2', selectedSkillIds: ids(16) }));
   assert.equal(moved.round.roundId, 'r2');
   assert.equal(moved.nextRound, null);
   assert.deepEqual(moved.draws, []);
@@ -205,13 +206,13 @@ test('kindOf maps discovery flags and cell/draw kinds to Core | Critical | Optio
 });
 
 test('cellsByPosition and shouldAutoFinalize', () => {
-  const b = board({ state: 'READY', cells: cells(ids(25)) });
+  const b = board({ state: 'READY', cells: cells(ids(16)) });
   const byPos = cellsByPosition(b);
-  assert.equal(byPos.length, 25);
-  assert.equal(byPos[24].skillId, 's25');
+  assert.equal(byPos.length, 16);
+  assert.equal(byPos[15].skillId, 's16');
   assert.equal(cellsByPosition(board()), null);
-  const s = joined({ board: board({ selectedSkillIds: ids(25) }), ui: { ...initialState().ui, draft: ids(25), draftDirty: false } });
-  assert.equal(shouldAutoFinalize(s), true, 'reassigned 25-skill DRAFT finalizes without a new tap');
+  const s = joined({ board: board({ selectedSkillIds: ids(16) }), ui: { ...initialState().ui, draft: ids(16), draftDirty: false } });
+  assert.equal(shouldAutoFinalize(s), true, 'reassigned 16-skill DRAFT finalizes without a new tap');
   assert.equal(shouldAutoFinalize({ ...s, ui: { ...s.ui, draftDirty: true } }), false);
   assert.equal(shouldAutoFinalize(joined({ board: board({ selectedSkillIds: ids(24) }), ui: { ...initialState().ui, draft: ids(24) } })), false);
 });
@@ -255,4 +256,19 @@ test('F-01: a participant without a board may save during LOCKED/PLAYING; the la
   const ev = reduceEvent(late, env('board.deferred', { board: board({ state: 'DEFERRED', selectedSkillIds: ids(7) }), reason: 'late' }, 70));
   assert.equal(ev.state.board.deferredReason, 'late');
   assert.equal(screenFor(ev.state), 'deferred');
+});
+
+test('picker (D-35): question 3 is skipped when the board is full; slots keep tap order; READY stays in the picker while picking', () => {
+  assert.equal(nextPickStep(1, 3), 2);
+  assert.equal(nextPickStep(2, 13), 3);
+  assert.equal(nextPickStep(2, 16), 'review', 'full after question 2: skip the search');
+  assert.equal(nextPickStep(1, 16), 'review');
+  assert.equal(nextPickStep(3, 15), 3);
+  assert.deepEqual(pickerSlots(['b', 'a']).slice(0, 3), ['b', 'a', null]);
+  assert.equal(pickerSlots(ids(16)).length, 16);
+  const ready = board({ state: 'READY', version: 2, selectedSkillIds: ids(16), cells: cells(ids(16)) });
+  const s = joined({ board: ready });
+  assert.equal(screenFor(s), 'board');
+  assert.equal(screenFor({ ...s, ui: { ...s.ui, picking: true } }), 'select', 'server finalized at 16 while the player is still answering');
+  assert.equal(REQUIRED_SELECTIONS, 16); assert.equal(PICK_STEPS, 3);
 });

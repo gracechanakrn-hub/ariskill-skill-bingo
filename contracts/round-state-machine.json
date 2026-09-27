@@ -50,15 +50,15 @@
   "board": {
     "initial": "DRAFT",
     "states": {
-      "DRAFT": "0-25 unique selections; editable; no positions",
-      "READY": "25 selections with server-randomized positions; registration still open; editable (returns to DRAFT)",
+      "DRAFT": "0-16 unique selections; editable; no positions",
+      "READY": "16 selections with server-randomized positions; registration still open; editable (returns to DRAFT)",
       "LOCKED_ACTIVE": "READY at round lock; included in draw pool and evaluation; immutable",
       "DEFERRED": "Not READY at lock, or arrived after lock; preserved and reassigned to the next eligible round",
       "FINISHED": "Round ended (WINNER/EXHAUSTED/CANCELLED/CLOSED); immutable game record"
     },
     "transitions": [
-      { "from": "DRAFT", "op": "board.selections.save", "to": "DRAFT", "guard": "0-25 unique active skills; Platform and Role selected (E16); round not locked (E8)" },
-      { "from": "DRAFT", "op": "board.finalize", "to": "READY", "guard": "exactly 25 unique; server assigns positions; matrixVersion snapshot" },
+      { "from": "DRAFT", "op": "board.selections.save", "to": "DRAFT", "guard": "0-16 unique active skills; Platform and Role selected (E16); round not locked (E8)" },
+      { "from": "DRAFT", "op": "board.finalize", "to": "READY", "guard": "exactly 16 unique; server assigns positions; matrixVersion snapshot" },
       { "from": "READY", "op": "board.selections.save", "to": "DRAFT", "guard": "any change clears positions; identical set is a no-op" },
       { "from": "READY", "op": "round.lock", "to": "LOCKED_ACTIVE", "guard": "atomic with all boards of the round" },
       { "from": "DRAFT", "op": "round.lock", "to": "DEFERRED", "guard": "atomic; E5 copy" },

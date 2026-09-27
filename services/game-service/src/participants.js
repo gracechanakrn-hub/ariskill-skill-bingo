@@ -10,6 +10,9 @@ import { activeRound, boardOf, getBoard, participantBoard, roundSummary, winnerL
 import { validateSelections, isComplete, REQUIRED_SELECTIONS, matrixInsight } from '../../../packages/game-rules/src/index.js';
 
 const LEVEL_ORDER = { core: 0, critical: 1, optional: 2 };
+/** Discovery lists; 'core' and 'role' feed picker questions 1 and 2 (D-35). */
+export const DISCOVERY_MODES = ['core', 'role', 'recommended', 'popular', 'search'];
+const CORE_KIND = 'Core Skill';
 
 export function createParticipants({ db, clock, config, game, log }) {
   const now = () => clock.iso();
@@ -62,16 +65,21 @@ export function createParticipants({ db, clock, config, game, log }) {
   function discovery(participant, query) {
     requireProfile(participant);
     const mode = query.mode ?? 'recommended';
-    if (!['recommended', 'popular', 'search'].includes(mode)) throw new ApiError('VALIDATION', 'mode must be recommended|popular|search');
+    if (!DISCOVERY_MODES.includes(mode)) throw new ApiError('VALIDATION', `mode must be ${DISCOVERY_MODES.join('|')}`);
     let limit = Number.parseInt(query.limit ?? '', 10);
     if (!Number.isFinite(limit) || limit < 1) limit = 50;
     limit = Math.min(limit, SKILL_MASTER.skills.length);
     const roleId = participant.role_id;
     let skills;
-    if (mode === 'recommended') {
+    if (mode === 'core') {
+      // Picker question 1 (D-35): the organisation's Core Skill kind, alphabetical.
+      skills = SKILL_MASTER.skills.filter(s => s.status === 'active' && s.kind === CORE_KIND).sort((a, b) => a.name.localeCompare(b.name));
+    } else if (mode === 'recommended' || mode === 'role') {
       const levels = ROLE_SKILL_LEVELS.get(roleId) ?? new Map();
       skills = [...levels.entries()].map(([id, level]) => ({ s: SKILLS.get(id), level })).filter(x => x.s && x.s.status === 'active')
         .sort((a, b) => (LEVEL_ORDER[a.level] - LEVEL_ORDER[b.level]) || a.s.name.localeCompare(b.s.name)).map(x => x.s);
+      // Picker question 2 (D-35): the role's skills without the core ones already asked in question 1.
+      if (mode === 'role') skills = skills.filter(s => s.kind !== CORE_KIND);
     } else if (mode === 'popular') {
       const counts = new Map();
       for (const row of db.all('SELECT selected_json FROM boards WHERE event_id = ?', participant.event_id)) for (const id of json.parse(row.selected_json, [])) counts.set(id, (counts.get(id) ?? 0) + 1);
@@ -162,7 +170,7 @@ export function createParticipants({ db, clock, config, game, log }) {
     });
   }
 
-  /** POST /me/board/finalize (BR-04): exactly 25 unique active skills; server randomizes; matrixVersion snapshot; READY. */
+  /** POST /me/board/finalize (BR-04): exactly 16 unique active skills; server randomizes; matrixVersion snapshot; READY. */
   function finalize(participant, body, meta) {
     requireProfile(participant);
     const round = editableRound(participant);

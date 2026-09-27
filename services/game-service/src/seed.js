@@ -12,23 +12,26 @@ import { createApp } from './app.js';
 import { signJoinToken, employeeRefHash } from './auth.js';
 import { newId } from './ids.js';
 import { SKILL_MASTER, ROLES, ROLE_SKILL_LEVELS } from './skills.js';
-import { seededRng, shuffle } from '../../../packages/game-rules/src/index.js';
+import { seededRng, shuffle, CELLS } from '../../../packages/game-rules/src/index.js';
 
 const FIRST = ['Avery', 'Blake', 'Casey', 'Devin', 'Emery', 'Finley', 'Harper', 'Jordan', 'Kai', 'Logan', 'Morgan', 'Noel', 'Parker', 'Quinn', 'Reese', 'Sage', 'Taylor', 'Uma', 'Val', 'Wren'];
 const LAST = ['Rivera', 'Chen', 'Okafor', 'Silva', 'Novak', 'Haddad', 'Ito', 'Mbeki', 'Larsen', 'Patel'];
-const ELIGIBLE = SKILL_MASTER.skills.filter(s => s.isCore || s.isCritical).map(s => s.id).sort();
 const ACTIVE = SKILL_MASTER.skills.filter(s => s.status === 'active').map(s => s.id).sort();
+const ELIGIBLE = ACTIVE;
+const CORE7 = SKILL_MASTER.skills.filter(s => s.kind === 'Core Skill' && s.status === 'active').map(s => s.id).sort();
 const LEVEL_ORDER = { core: 0, critical: 1, optional: 2 };
 
 export function simulatedName(i) { return `${FIRST[i % FIRST.length]} ${LAST[Math.floor(i / FIRST.length) % LAST.length]}`; }
-/** 25 deterministic skills for a role: recommended (core, critical, optional) first, then eligible fill. */
+/** 16 deterministic skills picked like the 3-question flow: some of the 7 core skills, then role skills, then search fill. */
 export function boardForRole(roleId, ref) {
   const rng = seededRng(`seed-board:${ref}`);
   const levels = ROLE_SKILL_LEVELS.get(roleId) ?? new Map();
   const rec = [...levels.entries()].sort((a, b) => LEVEL_ORDER[a[1]] - LEVEL_ORDER[b[1]] || a[0].localeCompare(b[0])).map(e => e[0]).filter(id => ACTIVE.includes(id));
-  const picked = shuffle(rec, rng).slice(0, 20);
-  for (const id of shuffle(ELIGIBLE, rng)) { if (picked.length >= 25) break; if (!picked.includes(id)) picked.push(id); }
-  return picked.slice(0, 25);
+  const picked = CORE7.filter(() => rng.int(100) < 55);
+  const add = (id) => { if (picked.length < CELLS && !picked.includes(id)) picked.push(id); };
+  for (const id of shuffle(rec, rng)) if (rng.int(100) < 60) add(id);
+  for (const id of shuffle(ACTIVE, rng)) add(id);
+  return picked;
 }
 function meta(actor) { return { actor, correlationId: newId('correlation'), commandId: newId('command') }; }
 
@@ -97,7 +100,7 @@ export async function buildFixture() {
   const app = createApp({ db, clock, config, log: createLogger('silent') });
   const eventId = config.defaultEventId;
   app.game.ensureEvent(eventId, config.defaultEventName);
-  const A = ELIGIBLE.slice(0, 25), B = ELIGIBLE.slice(25, 50), C = ELIGIBLE.slice(50, 75), D = ELIGIBLE.slice(75, 100);
+  const A = ELIGIBLE.slice(0, CELLS), B = ELIGIBLE.slice(CELLS, 2 * CELLS), C = ELIGIBLE.slice(2 * CELLS, 3 * CELLS), D = ELIGIBLE.slice(3 * CELLS, 4 * CELLS);
   const roles = [ROLES[1], ROLES[1], ROLES[6], ROLES[6], ROLES[12], ROLES[20]];
   const defs = [
     { employeeRef: 'fixture-001', displayName: 'Avery Rivera', consent: true, skillIds: A },
@@ -126,10 +129,10 @@ export async function buildFixture() {
   const refOf = new Map(boards.map(b => [b.participantId, b.employeeRef]));
   const fixture = {
     fixtureVersion: 1,
-    description: 'Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, lock, start, then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.',
+    description: 'Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1, default guided draws): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, lock, start, then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.',
     generatedAt: clock.iso(),
-    env: { BINGO_ENV: 'test', BINGO_DB_PATH: ':memory:', BINGO_RNG_SEED: config.rngSeed },
-    determinism: { draws: 'seededRng(`${BINGO_RNG_SEED}:${eventId}:round-${roundNumber}:draw-${drawNumber}`) over the sorted remaining pool', boardLayout: 'seededRng(`${BINGO_RNG_SEED}:board:${sortedSkillIds.join(",")}`) Fisher-Yates over the selection set; identical sets get identical layouts' },
+    env: { BINGO_ENV: 'test', BINGO_DB_PATH: ':memory:', BINGO_RNG_SEED: config.rngSeed, BINGO_DRAW_GUIDANCE: config.drawGuidance ? 'on' : 'off' },
+    determinism: { draws: `${config.drawGuidance ? 'guidedDraw (D-33, DRAW_POLICY) driven by' : 'uniform pick with'} seededRng(\`\${BINGO_RNG_SEED}:\${eventId}:round-\${roundNumber}:draw-\${drawNumber}\`) over the sorted remaining pool`, boardLayout: 'seededRng(`${BINGO_RNG_SEED}:board:${sortedSkillIds.join(",")}`) Fisher-Yates over the selection set; identical sets get identical layouts' },
     eventId,
     round: { title: 'Fixture Round', number: 1, resultWindowSeconds: 12, lockAtHint: '+1h from now (any future time; lock is triggered by round.lock)' },
     commands: ['round.registration.open', 'round.lock', 'round.start', 'round.draw.next (repeat until state != PLAYING)'],

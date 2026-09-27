@@ -1,17 +1,18 @@
-// Bingo line rules (contracts/bingo-rules.json). Positions are row-major 0..24.
-export const GRID = 5;
-export const CELLS = 25;
-export const MIN_DRAW_FOR_BINGO = 5;
+// Bingo line rules (contracts/bingo-rules.json). Positions are row-major 0..15 on a 4 x 4 board.
+export const GRID = 4;
+export const CELLS = GRID * GRID;
+export const MIN_DRAW_FOR_BINGO = 4;
 
 function mask(positions) { let m = 0; for (const p of positions) m |= (1 << p); return m >>> 0; }
 
 const defs = [];
-for (let r = 0; r < GRID; r++) defs.push({ id: `row-${r}`, positions: [0, 1, 2, 3, 4].map(c => r * GRID + c) });
-for (let c = 0; c < GRID; c++) defs.push({ id: `col-${c}`, positions: [0, 1, 2, 3, 4].map(r => r * GRID + c) });
-defs.push({ id: 'diag-main', positions: [0, 6, 12, 18, 24] });
-defs.push({ id: 'diag-anti', positions: [4, 8, 12, 16, 20] });
+const idx = [...Array(GRID).keys()];
+for (const r of idx) defs.push({ id: `row-${r}`, positions: idx.map(c => r * GRID + c) });
+for (const c of idx) defs.push({ id: `col-${c}`, positions: idx.map(r => r * GRID + c) });
+defs.push({ id: 'diag-main', positions: idx.map(i => i * GRID + i) });
+defs.push({ id: 'diag-anti', positions: idx.map(i => i * GRID + (GRID - 1 - i)) });
 
-/** The fixed set of 12 winning lines: 5 rows, 5 columns, 2 diagonals. */
+/** The fixed set of 10 winning lines: 4 rows, 4 columns, 2 diagonals. */
 export const LINE_MASKS = Object.freeze(defs.map(d => Object.freeze({ id: d.id, positions: Object.freeze(d.positions), mask: mask(d.positions) })));
 
 export function maskFromPositions(positions) { return mask(positions); }
@@ -29,7 +30,7 @@ export function bingoLines(matchMask, drawNumber) {
   return completedLines(matchMask).map(l => l.id);
 }
 
-/** Number of matched cells in the best (most-filled) line: used for admin "four in a line" readiness. */
+/** Number of matched cells in the best (most-filled) line: used for admin "one away" readiness. */
 export function bestLineProgress(matchMask) {
   let best = 0;
   for (const l of LINE_MASKS) { let n = 0; for (const p of l.positions) if (matchMask & (1 << p)) n++; if (n > best) best = n; }

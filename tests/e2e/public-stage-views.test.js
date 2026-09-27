@@ -4,7 +4,8 @@
 // The deterministic RNG seed makes the two identical boards win on the same draw (a consented and a non-consented co-winner).
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract, SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, skillStringsIn, charmSplit, expectedDecor, expectedSeedPicks } from './helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, boardSet, setPool, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract, SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, skillStringsIn, charmSplit, expectedDecor, expectedSeedPicks, CELLS, REQUIRED_SELECTIONS } from './helpers.js';
+import { DRAW_POLICY } from '../../packages/game-rules/src/index.js';
 import publicContract from '../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../contracts/projections/stage.json' with { type: 'json' };
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
@@ -15,9 +16,11 @@ const safeRoles = ROLES.filter(r => !PRIVACY_TEXT_REGEX.test(`${r.id} ${r.name}`
 const byPlatform = new Map(); for (const r of safeRoles) { if (!byPlatform.has(r.platformId)) byPlatform.set(r.platformId, []); byPlatform.get(r.platformId).push(r); }
 const [cohortRole, otherRole] = [...byPlatform.values()].find(rs => rs.length >= 2);
 const profileOf = (r) => ({ platformId: r.platformId, roleId: r.id });
-const winnerSet = boardSet(0, 25, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
-const safeOptional = OPTIONAL_IDS.filter(id => !REGEX_TRIPPING_SKILL_IDS.includes(id));
-const fiveEligibleSet = (i) => [...winnerSet.slice(i * 5, i * 5 + 5), ...safeOptional.slice(0, 20)];
+const winnerSet = boardSet(0, REQUIRED_SELECTIONS, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
+const safeOthers = ELIGIBLE_IDS.filter(id => !REGEX_TRIPPING_SKILL_IDS.includes(id) && !winnerSet.includes(id));
+// Cohort boards hold only 3 of the pair's skills (never a full line of 4) plus 13 shared skills kept out of the pool below,
+// so the two identical boards are the only ones that can win.
+const cohortSet = (i) => [...winnerSet.slice(i * 3, i * 3 + 3), ...safeOthers.slice(0, REQUIRED_SELECTIONS - 3)];
 
 function scan(audience, label, payload) {
   assert.deepEqual(findKeys(payload, FORBIDDEN[audience]), [], `${audience} ${label}: forbidden keys`);
@@ -30,7 +33,7 @@ describe('public + stage views across a full round', () => {
   const snapshots = [];
   before(async () => {
     assert.ok(REGEX_TRIPPING_SKILL_IDS.length >= 1, 'the Skill Master contains names that trip the privacy regex (e.g. Employee Experience); they are excluded from boards');
-    assert.equal(fiveEligibleSet(0).length, 25);
+    assert.equal(new Set(cohortSet(4)).size, REQUIRED_SELECTIONS);
     t = await startServer({ rngSeed: 'qa-views-1' });
   });
   after(async () => { await t.close(); });
@@ -48,7 +51,7 @@ describe('public + stage views across a full round', () => {
     streams = { public: await openStream(t.baseUrl, `/events/${t.eventId}/stream`), stage: await openStream(t.baseUrl, `/stage/events/${t.eventId}/stream`, { token: t.stage }) };
     round = (await command(t, round.roundId, 'round.registration.open', round.version)).round;
     cohort = [];
-    for (let i = 0; i < 4; i++) { const p = await join(t, { displayName: `Cohort ${i}`, consent: i % 2 === 0, profile: profileOf(cohortRole) }); await readyBoard(t, p, fiveEligibleSet(i)); cohort.push(p); }
+    for (let i = 0; i < 4; i++) { const p = await join(t, { displayName: `Cohort ${i}`, consent: i % 2 === 0, profile: profileOf(cohortRole) }); await readyBoard(t, p, cohortSet(i)); cohort.push(p); }
     publicName = await join(t, { displayName: 'Public Name', consent: true, profile: profileOf(otherRole) });
     hiddenName = await join(t, { displayName: 'Hidden Name', consent: false, profile: profileOf(otherRole) });
     const b1 = await readyBoard(t, publicName, winnerSet), b2 = await readyBoard(t, hiddenName, winnerSet);
@@ -65,10 +68,10 @@ describe('public + stage views across a full round', () => {
     assert.deepEqual(Object.keys(ins).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topSkills']);
     assert.ok(!ins.roleEngagement.some(r => r.roleId === cohortRole.id), 'a 4-person role cohort is suppressed');
     assert.ok(!ins.roleEngagement.some(r => r.roleId === otherRole.id), 'a 2-person role cohort is suppressed');
-    assert.ok(ins.suppressedCohorts >= 2); assert.equal(ins.coreCriticalDensity.totalSelections, 150); assert.ok(ins.topSkills.length <= 10 && ins.topSkills.every(s => 'count' in s && !('participantId' in s)));
+    assert.ok(ins.suppressedCohorts >= 2); assert.equal(ins.coreCriticalDensity.totalSelections, 6 * CELLS); assert.ok(ins.topSkills.length <= 10 && ins.topSkills.every(s => 'count' in s && !('participantId' in s)));
     assert.ok(ins.matrixAlignment.rate >= 0 && ins.matrixAlignment.rate <= 1 && ins.matrixAlignment.matrixVersion);
     // a fifth member of the cohort reveals the aggregate (after the 2 s insights cache)
-    const fifth = await join(t, { displayName: 'Cohort 4', consent: true, profile: profileOf(cohortRole) }); await readyBoard(t, fifth, fiveEligibleSet(4)); cohort.push(fifth);
+    const fifth = await join(t, { displayName: 'Cohort 4', consent: true, profile: profileOf(cohortRole) }); await readyBoard(t, fifth, cohortSet(4)); cohort.push(fifth);
     t.clock.advance(2500);
     const { stage: s2 } = await snapshotPair('waiting-5-cohort');
     const row = s2.insights.roleEngagement.find(r => r.roleId === cohortRole.id);
@@ -82,16 +85,17 @@ describe('public + stage views across a full round', () => {
     const { pub: locked, stage: lockedStage } = await snapshotPair('locked');
     assert.equal(locked.publicState, 'Waiting'); assert.equal(locked.join, null, 'no QR once locked'); assert.equal(locked.counts.active, 7); assert.equal(lockedStage.counts.active, 7);
     const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+    setPool(t, round.roundId, winnerSet); // every active skill is drawable (D-33): keep the cohort's shared skills out
     let cur = s.round;
     for (let i = 0; i < 2; i++) cur = (await command(t, cur.roundId, 'round.draw.next', cur.version)).round;
     const { pub: playing, stage: playingStage } = await snapshotPair('playing');
-    assert.equal(playing.publicState, 'Playing'); assert.equal(playing.currentDraw.number, 2); assert.equal(playing.currentDraw.bingoEvaluationActive, false); assert.ok(['Core', 'Critical'].includes(playing.currentDraw.skill.kind));
-    assert.equal(playing.recentDraws.length, 2); assert.deepEqual(Object.keys(playing.recentDraws[0]).sort(), ['kind', 'number', 'skillName']); assert.equal(playing.pacingMessage, 'Bingo unlocks at draw 5');
+    assert.equal(playing.publicState, 'Playing'); assert.equal(playing.currentDraw.number, 2); assert.equal(playing.currentDraw.bingoEvaluationActive, false); assert.ok(['Core', 'Critical', 'Optional'].includes(playing.currentDraw.skill.kind));
+    assert.equal(playing.recentDraws.length, 2); assert.deepEqual(Object.keys(playing.recentDraws[0]).sort(), ['kind', 'number', 'skillName']); assert.equal(playing.pacingMessage, 'Bingo unlocks at draw 4');
     assert.equal(playingStage.recentDraws.length, 2); assert.equal(playingStage.publicState, 'Playing');
     const { round: end, results } = await drawUntilEnd(t, cur);
     assert.equal(end.state, 'WINNER'); round = end;
     const winners = results.at(-1).effects.winners; const totalDraws = results.at(-1).effects.draw.number;
-    assert.equal(totalDraws, results.length + 2); assert.ok(totalDraws >= 5, 'no Bingo before draw 5');
+    assert.equal(totalDraws, results.length + 2); assert.ok(totalDraws >= DRAW_POLICY.winFrom, 'guided draws (default): no Bingo before draw 6');
     assert.ok(winners.length >= 2);
     const winnerIds = winners.map(w => w.participantId);
     assert.ok(winnerIds.includes(publicName.participantId) && winnerIds.includes(hiddenName.participantId), 'both identical boards co-win on the same draw');

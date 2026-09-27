@@ -2,10 +2,11 @@
 // Independent QA evidence: everything goes through the HTTP API of an in-process server on port 0.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, saveBoard, finalizeBoard, readyBoard, boardSet, startRound, drawUntilEnd, openStream, closeByTimer, nextKey, sleep, ELIGIBLE_IDS, ACTIVE_IDS, roleAt, SKILLS_BY_ID } from './helpers.js';
+import { startServer, createRound, command, join, me, saveBoard, finalizeBoard, readyBoard, boardSet, startRound, drawUntilEnd, openStream, closeByTimer, nextKey, sleep, ELIGIBLE_IDS, ACTIVE_IDS, roleAt, SKILLS_BY_ID, CELLS, REQUIRED_SELECTIONS } from './helpers.js';
+import { DRAW_POLICY } from '../../packages/game-rules/src/index.js';
 import { exception, t as copy } from '../../packages/contracts/index.js';
 
-describe('employee journey: join -> profile -> discover -> 25 skills -> READY -> lock -> play -> Soul -> Float', () => {
+describe('employee journey: join -> profile -> discover -> 16 skills -> READY -> lock -> play -> Soul -> Float', () => {
   let t, round, alice, bob, carol, aliceFirstLayout;
   const aliceSet = boardSet(0);
   before(async () => { t = await startServer(); round = await createRound(t, { title: 'Journey 1' }); });
@@ -62,7 +63,7 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
     const levels = rec.body.skills.map(s => order[s.roleLevel]);
     assert.ok(levels.every(l => l !== undefined), 'recommended skills carry a role level');
     assert.ok(levels.every((l, i) => i === 0 || l >= levels[i - 1]), 'core before critical before optional');
-    for (const s of rec.body.skills) { for (const k of ['id', 'name', 'domain', 'cluster', 'kind', 'isCore', 'isCritical', 'eligible', 'roleLevel']) assert.ok(k in s, k); assert.equal(s.eligible, !!(s.isCore || s.isCritical)); }
+    for (const s of rec.body.skills) { for (const k of ['id', 'name', 'domain', 'cluster', 'kind', 'isCore', 'isCritical', 'eligible', 'roleLevel']) assert.ok(k in s, k); assert.equal(s.eligible, true, 'every active skill is draw-eligible (D-33)'); }
     const pop = await t.api.get('/skills/discovery?mode=popular&limit=20', alice.token);
     assert.equal(pop.status, 200); assert.equal(pop.body.mode, 'popular'); assert.ok(pop.body.skills.length > 0 && pop.body.skills.length <= 20);
     const q = 'data';
@@ -79,27 +80,27 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
     assert.equal(noAuth.status, 401);
   });
 
-  test('25 unique skills: duplicate rejected (E4), 26th rejected, finalize -> READY with 25 unique positions holding the requested skills (M-04..M-06, AC 1)', async () => {
-    const partial = await saveBoard(t, alice, aliceSet.slice(0, 24));
-    assert.equal(partial.status, 200); assert.equal(partial.body.board.state, 'DRAFT'); assert.equal(partial.body.board.selectedSkillIds.length, 24); assert.equal(partial.body.board.cells, null); assert.equal(partial.body.resultingVersion, 1);
-    assert.equal((await t.api.get('/skills/discovery?mode=recommended', alice.token)).body.selectedCount, 24);
-    const dup = await saveBoard(t, alice, [...aliceSet.slice(0, 24), aliceSet[3]]);
+  test('16 unique skills: duplicate rejected (E4), 17th rejected, finalize -> READY with 16 unique positions holding the requested skills (M-04..M-06, AC 1)', async () => {
+    const partial = await saveBoard(t, alice, aliceSet.slice(0, REQUIRED_SELECTIONS - 1));
+    assert.equal(partial.status, 200); assert.equal(partial.body.board.state, 'DRAFT'); assert.equal(partial.body.board.selectedSkillIds.length, REQUIRED_SELECTIONS - 1); assert.equal(partial.body.board.cells, null); assert.equal(partial.body.resultingVersion, 1);
+    assert.equal((await t.api.get('/skills/discovery?mode=recommended', alice.token)).body.selectedCount, REQUIRED_SELECTIONS - 1);
+    const dup = await saveBoard(t, alice, [...aliceSet.slice(0, REQUIRED_SELECTIONS - 1), aliceSet[3]]);
     assert.equal(dup.status, 409); assert.equal(dup.body.error.code, 'DUPLICATE_SKILL'); assert.equal(dup.body.error.exceptionId, 'E4'); assert.equal(dup.body.error.message, exception('E4').copy);
     assert.equal((await me(t, alice)).board.version, 1, 'rejected save did not mutate');
-    const twentySix = await saveBoard(t, alice, ACTIVE_IDS.slice(0, 26));
-    assert.equal(twentySix.status, 400); assert.equal(twentySix.body.error.code, 'VALIDATION');
-    const inactiveOrUnknown = await saveBoard(t, alice, [...aliceSet.slice(0, 24), 'skill_not_in_master']);
+    const seventeen = await saveBoard(t, alice, ACTIVE_IDS.slice(0, REQUIRED_SELECTIONS + 1));
+    assert.equal(seventeen.status, 400); assert.equal(seventeen.body.error.code, 'VALIDATION');
+    const inactiveOrUnknown = await saveBoard(t, alice, [...aliceSet.slice(0, REQUIRED_SELECTIONS - 1), 'skill_not_in_master']);
     assert.equal(inactiveOrUnknown.status, 400);
     const early = await finalizeBoard(t, alice);
-    assert.equal(early.status, 400, 'finalize needs exactly 25');
+    assert.equal(early.status, 400, 'finalize needs exactly 16');
     const full = await saveBoard(t, alice, aliceSet);
     assert.equal(full.status, 200); assert.deepEqual(full.body.board.selectedSkillIds, aliceSet); assert.equal(full.body.board.state, 'DRAFT');
     const fin = await t.api.post('/me/board/finalize', { boardVersion: full.body.resultingVersion, cells: aliceSet.map((skillId, position) => ({ position, skillId })) }, alice.token);
     assert.equal(fin.status, 200);
     const b = fin.body.board;
-    assert.equal(b.state, 'READY'); assert.equal(b.cells.length, 25); assert.ok(b.matrixVersion);
-    assert.deepEqual(b.cells.map(c => c.position), [...Array(25).keys()], 'positions 0..24 exactly once');
-    assert.equal(new Set(b.cells.map(c => c.skillId)).size, 25, 'no skill twice on the board');
+    assert.equal(b.state, 'READY'); assert.equal(b.cells.length, CELLS); assert.ok(b.matrixVersion);
+    assert.deepEqual(b.cells.map(c => c.position), [...Array(CELLS).keys()], 'positions 0..15 exactly once');
+    assert.equal(new Set(b.cells.map(c => c.skillId)).size, CELLS, 'no skill twice on the board');
     assert.deepEqual(b.cells.map(c => c.skillId).sort(), aliceSet.slice().sort(), 'the board holds exactly the requested skills');
     assert.notDeepEqual(b.cells.map(c => c.skillId), aliceSet, 'client-supplied positions are ignored; server randomizes');
     for (const c of b.cells) { assert.equal(c.name, SKILLS_BY_ID.get(c.skillId).name); assert.ok(['Core', 'Critical', 'Optional'].includes(c.kind)); }
@@ -109,7 +110,7 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
   });
 
   test('editing after READY returns the board to DRAFT (positions cleared); re-finalizing the same set yields a new permutation (D-12)', async () => {
-    const changed = [...aliceSet.slice(0, 24), ELIGIBLE_IDS[80]];
+    const changed = [...aliceSet.slice(0, REQUIRED_SELECTIONS - 1), ELIGIBLE_IDS[80]];
     const s1 = await saveBoard(t, alice, changed);
     assert.equal(s1.status, 200); assert.equal(s1.body.board.state, 'DRAFT'); assert.equal(s1.body.board.cells, null); assert.equal(s1.body.board.matrixVersion, null);
     const s2 = await saveBoard(t, alice, aliceSet);
@@ -120,7 +121,7 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
     assert.equal(fin.status, 200); assert.equal(fin.body.board.state, 'READY');
     const layout = fin.body.board.cells.map(c => c.skillId);
     assert.deepEqual(layout.slice().sort(), aliceSet.slice().sort());
-    assert.notDeepEqual(layout, aliceFirstLayout, 'a fresh random permutation (chance of equality 1/25!)');
+    assert.notDeepEqual(layout, aliceFirstLayout, 'a fresh random permutation (chance of equality 1/16!)');
     aliceFirstLayout = layout;
   });
 
@@ -174,10 +175,10 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
   test('play to the end: Soul present, private insight only for the finished board, Float once, replay returns the original entrance, never a second entrance (M-12, M-13, AC 11)', async () => {
     const aliceStream = await openStream(t.baseUrl, '/me/stream', { token: alice.token });
     const started = await command(t, round.roundId, 'round.start', round.version);
-    assert.equal(started.round.state, 'PLAYING'); assert.equal(started.effects.poolSize, 25);
+    assert.equal(started.round.state, 'PLAYING'); assert.equal(started.effects.poolSize, CELLS);
     const { results, round: end } = await drawUntilEnd(t, started.round);
-    assert.equal(end.state, 'WINNER'); assert.ok(results.length >= 5, 'no Bingo before draw 5');
-    assert.ok(results.slice(0, 4).every(r => r.effects.winners === undefined && r.round.state === 'PLAYING'));
+    assert.equal(end.state, 'WINNER'); assert.ok(results.length >= DRAW_POLICY.winFrom, 'guided draws (default): no Bingo before draw 6 while a safe skill exists');
+    assert.ok(results.slice(0, -1).every(r => r.effects.winners === undefined && r.round.state === 'PLAYING'));
     const last = results.at(-1);
     assert.equal(last.effects.winners.length, 1); assert.equal(last.effects.winners[0].participantId, alice.participantId); assert.equal(last.effects.winners[0].winningDrawNumber, results.length);
     assert.equal(t.db.get("SELECT COUNT(*) AS c FROM board_matches m JOIN boards b ON b.id = m.board_id WHERE b.participant_id = ?", carol.participantId).c, 0, 'the late board never receives matches');
@@ -196,8 +197,8 @@ describe('employee journey: join -> profile -> discover -> 25 skills -> READY ->
     assert.equal(am.board.state, 'FINISHED'); assert.equal(am.result.isWinner, true); assert.equal(am.result.coWinnerCount, 1); assert.equal(am.insightAvailable, true);
     assert.ok(am.soul && am.soul.floatToken && am.soul.floated === false && am.soul.badge === 'bingo-star');
     const insight = await t.api.get('/me/insight', alice.token);
-    assert.equal(insight.status, 200); assert.equal(insight.body.roundId, round.roundId); assert.equal(insight.body.totalSelected, 25);
-    assert.equal(insight.body.inMatrixCount + insight.body.beyondMatrixCount, 25); assert.ok(insight.body.matrixVersion);
+    assert.equal(insight.status, 200); assert.equal(insight.body.roundId, round.roundId); assert.equal(insight.body.totalSelected, CELLS);
+    assert.equal(insight.body.inMatrixCount + insight.body.beyondMatrixCount, CELLS); assert.ok(insight.body.matrixVersion);
     const bobInsight = await t.api.get('/me/insight', bob.token);
     assert.equal(bobInsight.status, 404, 'deferred (unfinished) board has no insight');
     assert.equal((await me(t, bob)).soul, null, 'no Soul for a deferred board'); assert.equal((await me(t, bob)).insightAvailable, false);

@@ -1,7 +1,7 @@
 // Public screen state: reducer for the public projection (snapshot + SSE events) and the panel view-model.
 // Pure ESM (no DOM), tested in test/state.test.js. Only public-projection fields are ever stored
 // (contracts/projections/public.json); nothing is inferred beyond display mapping.
-import { t, exception, PUBLIC_STATE_BY_ROUND } from '../../../packages/contracts/index.js';
+import { t, exception, PUBLIC_STATE_BY_ROUND, BINGO_UNLOCK_DRAW } from '../../../packages/contracts/index.js';
 import { formatCountdown } from '../../../packages/ui/clock-sync.js';
 import { pseudonymLabel } from '../../../packages/ui/format.js';
 import { label } from './copy.js';
@@ -60,7 +60,7 @@ function noticeFor(round) {
 
 function pacingFor(round, drawCount) {
   if (!round) return t('board.noRound');
-  if (round.state === 'PLAYING') return drawCount < 5 ? t('public.playing.pacing') : t('public.playing.live');
+  if (round.state === 'PLAYING') return drawCount < BINGO_UNLOCK_DRAW ? t('public.playing.pacing') : t('public.playing.live');
   if (round.state === 'WINNER') return t('public.winner.title');
   if (round.state === 'LOCKED') return t('play.waitingStart');
   return t('public.waiting.title');
@@ -108,11 +108,11 @@ export function reduceEvent(state, envelope) {
     }
     case 'draw.accepted': {
       const d = p.draw || {};
-      s.currentDraw = { number: d.number, skill: d.skill, drawnAt: d.drawnAt, poolRemaining: p.poolRemaining ?? 0, bingoEvaluationActive: !!p.bingoEvaluationActive || d.number >= 5 };
+      s.currentDraw = { number: d.number, skill: d.skill, drawnAt: d.drawnAt, poolRemaining: p.poolRemaining ?? 0, bingoEvaluationActive: !!p.bingoEvaluationActive || d.number >= BINGO_UNLOCK_DRAW };
       s.recentDraws = [...(s.recentDraws || []), { number: d.number, skillName: d.skill && d.skill.name, kind: d.skill && d.skill.kind }].slice(-5);
       if (typeof p.matchedBoards === 'number') s.counts = { ...s.counts, matchedBoards: p.matchedBoards };
       s.publicState = 'Playing';
-      s.pacingMessage = d.number < 5 ? t('public.playing.pacing') : t('public.playing.live');
+      s.pacingMessage = d.number < BINGO_UNLOCK_DRAW ? t('public.playing.pacing') : t('public.playing.live');
       break;
     }
     case 'draw.match_counts_updated':

@@ -1,177 +1,149 @@
-// apps/employee-mobile/src/views/select.js - E3 Skill selection: three discovery tabs, active selection into the next
-// slot, chips with Remove and one-level Undo, progress, autosave state, finalize retry (E18), no-round / late banners.
-// There is deliberately no "accept all recommended" control (requirement 4.1, non-negotiable).
+// apps/employee-mobile/src/views/select.js - E3 Skill picker (D-35): three short questions fill a live 4 x 4 board.
+//   1. Arise core skills (discovery mode 'core'), 2. skills in your role without the core ones ('role', no kind labels),
+//   3. search ('search'), skipped when the board is already full. Tapping a chip adds or removes it; tapping a filled
+//   tile removes it (swap). The board shows the draft in tap order; the server shuffles it on finalize (BR-04), and
+//   "Review board" leaves the picker for the shuffled board. There is no "accept all" control (requirement 4.1).
 import { h, mount } from '/packages/ui/dom.js';
 import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t } from '/packages/contracts/index.js';
-import { tl, exceptionCopy, kindChip, kindClass, notice, button, placeholder } from './common.js';
-import { selectionProgress, saveBlockedReason, REQUIRED_SELECTIONS } from '../state.js';
+import { tl, exceptionCopy, notice, button, placeholder } from './common.js';
+import { selectionProgress, saveBlockedReason, pickerSlots, nextPickStep, REQUIRED_SELECTIONS, PICK_STEPS } from '../state.js';
 
-const TABS = [
-  { id: 'recommended', key: 'select.tab.recommended' },
-  { id: 'popular', key: 'select.tab.popular' },
-  { id: 'search', key: 'select.tab.search' },
-];
+const STEP_MODE = { 1: 'core', 2: 'role', 3: 'search' };
 const SEARCH_DEBOUNCE_MS = 300;
+const SEARCH_LIMIT = 40;
 
 export function mountSelect(root, ctx) {
-  let activeTab = 'recommended';
   let query = '';
   let searchTimer = null;
   const lists = new Map();      // `${mode}|${q}` -> { skills, loading, error }
-  const skillsById = new Map(); // id -> skill (for chip labels)
-  const rowsById = new Map();   // id -> option button (current list)
-  const chipsById = new Map();  // id -> chip element
+  const skillsById = new Map(); // id -> skill (tile and chip labels)
   let els = {};
   let lastState = null;
   let lastDraft = null;
+  let renderedStep = null;
 
   // ---- data ------------------------------------------------------------------------------------
-  function listKey(mode, q) { return `${mode}|${mode === 'search' ? q : ''}`; }
-  async function ensureList(mode, q) {
+  const listKey = (mode, q) => `${mode}|${mode === 'search' ? q : ''}`;
+  async function ensureList(mode, q = '', { limit } = {}) {
     const key = listKey(mode, q);
     if (lists.has(key) && !lists.get(key).error) return;
     lists.set(key, { skills: [], loading: true, error: null });
-    renderList();
     try {
-      const res = await ctx.actions.discovery(mode, q);
+      const res = await ctx.actions.discovery(mode, q, limit);
       for (const s of res.skills) skillsById.set(s.id, s);
       lists.set(key, { skills: res.skills, loading: false, error: null });
     } catch (err) {
       lists.set(key, { skills: [], loading: false, error: (err && err.exceptionId) || 'E17' });
     }
-    if (activeTab === mode && (mode !== 'search' || query === q)) renderList();
+    renderChips();
+    renderBoard();
+  }
+  function currentList() {
+    const mode = STEP_MODE[step()];
+    if (mode === 'search' && !query) return { skills: [], loading: false, error: null, idle: true };
+    return lists.get(listKey(mode, query)) || { skills: [], loading: true, error: null };
+  }
+  function nameOf(id) {
+    const s = skillsById.get(id) || (lastState && lastState.cellSkill(id));
+    return s ? s.name : '…';
+  }
+  const step = () => Math.min(Math.max(lastState ? lastState.ui.pickStep || 1 : 1, 1), PICK_STEPS);
+  const full = () => lastState.ui.draft.length >= REQUIRED_SELECTIONS;
+
+  // ---- board (tap order) -----------------------------------------------------------------------
+  function renderBoard({ added = null } = {}) {
+    if (!els.grid || !lastState) return;
+    const slots = pickerSlots(lastState.ui.draft);
+    const tiles = slots.map((id, i) => {
+      if (!id) return h('li', { className: 'pick-tile pick-tile--empty', dataset: { position: String(i) } }, h('span', { 'aria-hidden': 'true' }, '+'));
+      const name = nameOf(id);
+      const longest = Math.max(...name.split(/[\s/]+/).map((w) => w.length));
+      const tile = h('li', { className: 'pick-tile-slot', dataset: { position: String(i) } },
+        h('button', { type: 'button', className: `pick-tile${longest > 12 ? ' pick-tile--xs' : longest > 10 ? ' pick-tile--sm' : ''}`, 'aria-label': t('pick.removeTile', { name }), onClick: () => ctx.actions.removeSkill(id) },
+          h('span', { className: 'pick-tile__name' }, name.replace(/\//g, '/\u200b'))));
+      if (id === added) animateOnce(tile, 'm-add', { durationMs: MOTION.interactions.addSkill.ms });
+      return tile;
+    });
+    mount(els.grid, tiles);
+  }
+
+  // ---- question sheet --------------------------------------------------------------------------
+  function renderSteps() {
+    const s = step();
+    const dots = [];
+    for (let i = 1; i <= PICK_STEPS; i++) {
+      const done = i < s;
+      const skipped = i === 3 && s < 3 && full();
+      if (i > 1) dots.push(h('li', { className: 'pick-steps__line', 'aria-hidden': 'true' }));
+      dots.push(h('li', { className: `pick-steps__dot${i === s ? ' is-on' : ''}${done ? ' is-done' : ''}${skipped ? ' is-skipped' : ''}`, 'aria-current': i === s ? 'step' : null }, done ? '✓' : String(i)));
+    }
+    mount(els.steps, dots);
+    els.steps.setAttribute('aria-label', t('pick.step', { number: s }));
+    const p = selectionProgress(lastState);
+    els.count.textContent = `${p.count}/${REQUIRED_SELECTIONS}${p.complete ? ' ✓' : ''}`;
+    els.count.classList.toggle('is-full', p.complete);
+    els.count.setAttribute('aria-label', t('select.progress', { count: p.count }));
+  }
+
+  function renderQuestion({ focus = false } = {}) {
+    const s = step();
+    const isFull = full();
+    const left = REQUIRED_SELECTIONS - lastState.ui.draft.length;
+    els.title.textContent = t(`pick.q${s}.title`);
+    els.fullPill.hidden = !isFull;
+    els.hint.textContent = isFull ? t('pick.swapHint') : s === 3 ? t('pick.q3.hint', { count: left }) : t(`pick.q${s}.hint`);
+    els.search.hidden = s !== 3;
+    const actions = [];
+    if (s > 1) actions.push(button(t('pick.back'), { className: 'btn--ghost pick-back', onClick: () => ctx.actions.setPickStep(s - 1) }));
+    else if (lastState.ui.editing && lastState.board && lastState.board.state === 'READY') actions.push(button(tl('ui.backToBoard'), { className: 'btn--ghost pick-back', onClick: ctx.actions.stopEditing }));
+    const next = nextPickStep(s, lastState.ui.draft.length);
+    if (next === 'review') actions.push(button(`${t('pick.review')} →`, { variant: 'primary', className: 'pick-next', onClick: ctx.actions.reviewBoard }));
+    else if (s < PICK_STEPS) actions.push(button(`${t('pick.next')} →`, { variant: 'primary', className: 'pick-next', onClick: () => ctx.actions.setPickStep(next) }));
+    else actions.push(button(t('pick.addMore', { count: left }), { variant: 'primary', className: 'pick-next', disabled: true }));
+    mount(els.actions, actions);
+    if (renderedStep !== s) {
+      renderedStep = s;
+      const mode = STEP_MODE[s];
+      if (mode !== 'search') ensureList(mode, '', { limit: 500 });
+      if (s === 3) els.searchInput.value = query;
+      if (focus) (s === 3 ? els.searchInput : els.title).focus({ preventScroll: true });
+    }
     renderChips();
   }
 
-  // ---- tabs ------------------------------------------------------------------------------------
-  function selectTab(id, { focus = false } = {}) {
-    activeTab = id;
-    for (const tab of TABS) {
-      const el = els.tabs[tab.id];
-      const on = tab.id === id;
-      el.setAttribute('aria-selected', on ? 'true' : 'false');
-      el.tabIndex = on ? 0 : -1;
-      if (on && focus) el.focus();
+  function renderChips() {
+    if (!els.chips || !lastState) return;
+    const entry = currentList();
+    const draft = lastState.ui.draft;
+    const isFull = draft.length >= REQUIRED_SELECTIONS;
+    const children = [];
+    if (entry.error) children.push(h('li', null, notice(exceptionCopy(entry.error), { tone: 'danger', role: 'alert', extra: button(tl('ui.retry'), { onClick: () => { lists.delete(listKey(STEP_MODE[step()], query)); ensureList(STEP_MODE[step()], query, { limit: STEP_MODE[step()] === 'search' ? SEARCH_LIMIT : 500 }); } }) })));
+    else if (entry.loading) children.push(h('li', null, placeholder(tl('ui.loading'))));
+    else if (!entry.idle && !entry.skills.length) children.push(h('li', null, placeholder(tl('ui.noResults'))));
+    for (const s of entry.skills) {
+      const on = draft.includes(s.id);
+      const off = isFull && !on;
+      children.push(h('li', null, h('button', {
+        type: 'button', className: `pick-chip${on ? ' is-on' : ''}${off ? ' is-off' : ''}`, 'aria-pressed': on ? 'true' : 'false',
+        'aria-disabled': off ? 'true' : null, dataset: { skillId: s.id },
+        onClick: () => { if (on) ctx.actions.removeSkill(s.id); else if (!off) { skillsById.set(s.id, s); ctx.actions.tapSkill(s.id); } },
+      }, s.name)));
     }
-    els.search.hidden = id !== 'search';
-    els.panel.setAttribute('aria-labelledby', `tab-${id}`);
-    ensureList(id, query);
-    renderList();
+    mount(els.chips, children);
   }
-  function onTabKey(e) {
-    const idx = TABS.findIndex((tab) => tab.id === activeTab);
-    let next = null;
-    if (e.key === 'ArrowRight') next = (idx + 1) % TABS.length;
-    else if (e.key === 'ArrowLeft') next = (idx - 1 + TABS.length) % TABS.length;
-    else if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = TABS.length - 1;
-    if (next === null) return;
-    e.preventDefault();
-    selectTab(TABS[next].id, { focus: true });
-  }
+
   function onSearchInput() {
     const value = els.searchInput.value.trim();
     if (searchTimer) clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => { query = value; ensureList('search', query); renderList(); }, SEARCH_DEBOUNCE_MS);
-  }
-
-  // ---- list ------------------------------------------------------------------------------------
-  function renderList() {
-    if (!els.list || !lastState) return;
-    const entry = lists.get(listKey(activeTab, query)) || { skills: [], loading: true, error: null };
-    const draft = lastState.ui.draft;
-    const full = draft.length >= REQUIRED_SELECTIONS;
-    rowsById.clear();
-    const children = [];
-    if (entry.error) children.push(h('li', null, notice(exceptionCopy(entry.error), { tone: 'danger', role: 'alert', extra: button(tl('ui.retry'), { onClick: () => { lists.delete(listKey(activeTab, query)); ensureList(activeTab, query); } }) })));
-    else if (entry.loading) children.push(h('li', null, placeholder(tl('ui.loading'))));
-    else if (!entry.skills.length) children.push(h('li', null, placeholder(tl('ui.noResults'))));
-    for (const s of entry.skills) {
-      const pressed = draft.includes(s.id);
-      const row = h('button', {
-        type: 'button', className: ['option', 'skill-row', kindClass('skill-row', s), pressed ? 'is-selected' : ''].filter(Boolean).join(' '),
-        'aria-pressed': pressed ? 'true' : 'false', dataset: { skillId: s.id }, onClick: () => onRowTap(s),
-      },
-        h('span', { className: 'skill-row__main' },
-          h('span', { className: 'skill-row__name' }, s.name),
-          h('span', { className: 'option__meta skill-row__meta' }, s.domain || '')),
-        h('span', { className: 'skill-row__side' },
-          kindChip(s),
-          h('span', { className: `skill-row__eligible ${s.eligible ? 'is-eligible' : 'is-not-eligible'}` }, s.eligible ? t('select.eligible') : t('select.notEligible')),
-          h('span', { className: 'skill-row__state', 'aria-hidden': 'true' }, pressed ? '✓' : '+')));
-      if (full && !pressed) row.setAttribute('aria-disabled', 'true');
-      rowsById.set(s.id, row);
-      children.push(h('li', null, row));
-    }
-    mount(els.list, children);
-  }
-  function syncRows(draft) {
-    const full = draft.length >= REQUIRED_SELECTIONS;
-    for (const [id, row] of rowsById) {
-      const pressed = draft.includes(id);
-      row.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-      row.classList.toggle('is-selected', pressed);
-      const mark = row.querySelector('.skill-row__state'); if (mark) mark.textContent = pressed ? '✓' : '+';
-      if (full && !pressed) row.setAttribute('aria-disabled', 'true'); else row.removeAttribute('aria-disabled');
-    }
-  }
-  function onRowTap(skill) {
-    skillsById.set(skill.id, skill);
-    ctx.actions.tapSkill(skill.id);
-  }
-
-  // ---- chips -----------------------------------------------------------------------------------
-  function chipFor(id) {
-    const s = skillsById.get(id) || lastState.cellSkill(id) || { id, name: id };
-    const chip = h('li', { className: ['chip', kindClass('chip', s)].join(' '), dataset: { skillId: id } },
-      h('span', { className: 'chip__label' }, s.name),
-      h('button', { type: 'button', className: 'chip__remove', 'aria-label': tl('ui.remove', { name: s.name }), onClick: () => ctx.actions.removeSkill(id) }, '×'));
-    return chip;
-  }
-  function renderChips({ animateAdded = false } = {}) {
-    if (!els.chips || !lastState) return;
-    const draft = lastState.ui.draft;
-    const wanted = new Set(draft);
-    for (const [id, chip] of chipsById) {
-      if (!wanted.has(id)) {
-        chipsById.delete(id);
-        animateOnce(chip, 'm-remove', { durationMs: MOTION.interactions.removeSkill.ms, onEnd: () => chip.remove() });
-      }
-    }
-    const order = [];
-    for (const id of draft) {
-      let chip = chipsById.get(id);
-      if (!chip) { chip = chipFor(id); chipsById.set(id, chip); if (animateAdded) animateOnce(chip, 'm-add', { durationMs: MOTION.interactions.addSkill.ms }); }
-      else { const label = chip.querySelector('.chip__label'); const s = skillsById.get(id); if (s && label && label.textContent !== s.name) label.textContent = s.name; }
-      order.push(chip);
-    }
-    // Keep DOM order equal to tap order (leaving-chips stay in place until their fade ends).
-    let cursor = els.chips.firstChild;
-    for (const chip of order) {
-      while (cursor && cursor !== chip && !chipsById.has(cursor.dataset.skillId)) cursor = cursor.nextSibling;
-      if (cursor === chip) { cursor = chip.nextSibling; continue; }
-      els.chips.insertBefore(chip, cursor);
-    }
-    els.chipsEmpty.hidden = draft.length > 0;
-    els.undo.disabled = !Array.isArray(lastState.ui.undo);
+    searchTimer = setTimeout(() => { query = value; if (query) ensureList('search', query, { limit: SEARCH_LIMIT }); renderChips(); }, SEARCH_DEBOUNCE_MS);
   }
 
   // ---- status blocks ---------------------------------------------------------------------------
   function renderStatus(state) {
-    const p = selectionProgress(state);
-    els.progressText.textContent = t('select.progress', { count: p.count });
-    els.progress.style.setProperty('--p', String(p.percent));
-    els.progressValue.textContent = String(p.count);
-    els.progress.setAttribute('aria-valuenow', String(p.count));
-    els.progress.setAttribute('aria-valuetext', t('select.progress', { count: p.count }));
-    els.progress.classList.toggle('ring--complete', p.complete);
-
     const blocked = saveBlockedReason(state, ctx.clockNow());
     const notices = [];
-    if (state.ui.editing && state.board && state.board.state === 'READY') {
-      notices.push(notice(t('board.editWarning'), { tone: 'warning', extra: button(tl('ui.backToBoard'), { onClick: ctx.actions.stopEditing, className: 'btn--sm' }) }));
-    }
+    if (state.ui.editing && state.board && state.board.state === 'READY') notices.push(notice(t('board.editWarning'), { tone: 'warning' }));
     if (blocked === 'E1') notices.push(notice(t('board.noRound'), { tone: 'info' }));
     else if (blocked) notices.push(notice(exceptionCopy(blocked), { tone: 'warning' }));
     else if (state.ui.saveNotice) notices.push(notice(state.ui.saveNotice, { tone: 'warning' }));
@@ -181,60 +153,48 @@ export function mountSelect(root, ctx) {
   }
 
   // ---- shell -----------------------------------------------------------------------------------
-  function renderShell(state) {
-    els = { tabs: {} };
-    // Radial progress ring (game experience, D-22): conic-gradient driven by --p; the catalog copy stays the label.
-    els.progressValue = h('span', { className: 'ring__value tabular' }, '0');
-    els.progress = h('div', { className: 'ring', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(REQUIRED_SELECTIONS), 'aria-valuenow': '0', 'aria-labelledby': 'select-progress-text', style: { '--p': '0' } },
-      h('span', { className: 'ring__inner', 'aria-hidden': 'true' }, els.progressValue, h('span', { className: 'ring__total' }, `/ ${REQUIRED_SELECTIONS}`)));
-    els.progressText = h('p', { className: 'select-progress', id: 'select-progress-text', 'aria-live': 'polite' });
+  function renderShell() {
+    els = {};
+    els.steps = h('ol', { className: 'pick-steps', role: 'list' });
+    els.count = h('p', { className: 'pick-count tabular', role: 'status', 'aria-live': 'polite' });
+    els.grid = h('ol', { className: 'pick-grid', role: 'list', 'aria-label': tl('ui.yourBoard') });
     els.notices = h('div', { className: 'stack stack--tight' });
-    const tablist = h('div', { className: 'tabs', role: 'tablist', 'aria-label': tl('ui.tabs'), onKeydown: onTabKey });
-    for (const tab of TABS) {
-      els.tabs[tab.id] = h('button', { type: 'button', role: 'tab', id: `tab-${tab.id}`, className: 'tab', 'aria-selected': 'false', 'aria-controls': 'select-panel', tabIndex: -1, onClick: () => selectTab(tab.id) }, t(tab.key));
-      tablist.appendChild(els.tabs[tab.id]);
-    }
-    els.searchInput = h('input', { className: 'input', type: 'search', id: 'select-search', placeholder: t('select.search.placeholder'), 'aria-label': t('select.search.placeholder'), autocomplete: 'off', onInput: onSearchInput });
-    els.search = h('div', { className: 'search', hidden: true }, els.searchInput);
-    els.list = h('ul', { className: 'skill-list', role: 'list' });
-    els.panel = h('div', { className: 'tabpanel', role: 'tabpanel', id: 'select-panel', tabIndex: 0 }, els.search, els.list);
-    els.chips = h('ul', { className: 'chip-list', role: 'list', 'aria-label': tl('ui.selected') });
-    els.chipsEmpty = h('p', { className: 'muted' }, tl('ui.noneSelected'));
-    els.undo = h('button', { type: 'button', className: 'btn btn--ghost btn--sm', onClick: ctx.actions.undo, disabled: true }, t('select.undo'));
-    const selected = h('section', { className: 'card selected-panel stack stack--tight', 'aria-labelledby': 'selected-title' },
-      h('div', { className: 'cluster cluster--between' }, h('h2', { id: 'selected-title', className: 'section__title' }, tl('ui.selected')), els.undo),
-      els.chipsEmpty, els.chips);
-
-    mount(root, h('div', { className: 'stack' },
-      h('div', { className: 'stack stack--tight' }, h('h1', { className: 'screen-title' }, t('select.title'))),
-      h('div', { className: 'select-progress-block' }, els.progress, h('div', { className: 'select-progress-copy' }, els.progressText, h('p', { className: 'muted select-progress-hint' }, t('select.hint')))),
+    els.title = h('h1', { className: 'pick-title', tabIndex: -1 });
+    els.fullPill = h('span', { className: 'pick-full', hidden: true }, t('pick.full'));
+    els.hint = h('p', { className: 'pick-hint', 'aria-live': 'polite' });
+    els.searchInput = h('input', { className: 'input pick-search__input', type: 'search', id: 'pick-search', placeholder: t('select.search.placeholder'), 'aria-label': t('select.search.placeholder'), autocomplete: 'off', onInput: onSearchInput });
+    els.search = h('div', { className: 'pick-search', hidden: true }, els.searchInput);
+    els.chips = h('ul', { className: 'pick-chips', role: 'list' });
+    els.actions = h('div', { className: 'pick-actions' });
+    mount(root, h('div', { className: 'picker' },
+      h('div', { className: 'pick-top' }, els.steps, els.count),
+      h('div', { className: 'pick-board' }, els.grid),
       els.notices,
-      h('section', { className: 'stack stack--tight', 'aria-label': tl('ui.tabs') }, tablist, els.panel),
-      selected));
-    selectTab(activeTab);
-    ensureList('search', ''); // primes skill names for chips restored from a saved draft
+      h('section', { className: 'pick-sheet', 'aria-labelledby': 'pick-title' },
+        h('div', { className: 'pick-head' }, Object.assign(els.title, { id: 'pick-title' }), els.fullPill),
+        els.hint, els.search, els.chips, els.actions)));
+    ensureList('search', '', { limit: 500 }); // names for tiles restored from a saved draft
   }
 
   return {
-    update(state, prev) {
+    update(state) {
       lastState = withCellLookup(state);
-      if (!els.list) renderShell(state);
+      const first = !els.grid;
+      if (first) renderShell();
       const draftChanged = lastDraft !== state.ui.draft;
+      const added = draftChanged && lastDraft && state.ui.draft.length > lastDraft.length ? state.ui.draft[state.ui.draft.length - 1] : null;
       renderStatus(state);
-      if (draftChanged) {
-        const added = lastDraft ? state.ui.draft.length > lastDraft.length : false;
-        syncRows(state.ui.draft);
-        renderChips({ animateAdded: added });
-        lastDraft = state.ui.draft;
-      }
-      if (!prev || prev.board !== state.board) renderChips();
+      renderSteps();
+      if (first || draftChanged || renderedStep !== step()) renderQuestion({ focus: !first && renderedStep !== step() });
+      if (first || draftChanged) renderBoard({ added });
+      lastDraft = state.ui.draft;
     },
     effect() {},
     unmount() { if (searchTimer) clearTimeout(searchTimer); mount(root, null); },
   };
 }
 
-/** Lets chips resolve names of skills that came from the server board rather than a discovery list. */
+/** Lets tiles resolve names of skills that came from the server board rather than a discovery list. */
 function withCellLookup(state) {
   const cells = state.board && Array.isArray(state.board.cells) ? state.board.cells : [];
   return { ...state, cellSkill: (id) => cells.find((c) => c.skillId === id) || null };

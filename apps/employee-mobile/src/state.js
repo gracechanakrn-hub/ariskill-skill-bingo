@@ -6,10 +6,12 @@
 //     winners or lock/start transitions;
 //   - reducers return the next state and a list of `effects` (one-shot celebrations the view MAY play, gated
 //     by the celebration guard in main.js);
-//   - the local draft (25-skill selection) is the only client-owned state and is reconciled against the server set.
+//   - the local draft (16-skill selection) is the only client-owned state and is reconciled against the server set.
 
-export const REQUIRED_SELECTIONS = 25;
-export const BINGO_UNLOCK_DRAW = 5;
+// Mirrors packages/game-rules (CELLS, MIN_DRAW_FOR_BINGO); this module stays import-free for node:test.
+export const REQUIRED_SELECTIONS = 16;
+export const BINGO_UNLOCK_DRAW = 4;
+export const PICK_STEPS = 3; // picker questions: 1 core, 2 role, 3 search (D-35)
 export const EDITABLE_ROUND_STATES = ['DRAFT', 'REGISTRATION_OPEN'];
 export const IN_PROGRESS_ROUND_STATES = ['LOCKED', 'PLAYING'];
 export const RESULT_ROUND_STATES = ['WINNER', 'EXHAUSTED', 'CLOSED'];
@@ -41,6 +43,10 @@ export function initialState() {
       draftDirty: false,    // local changes not yet confirmed by the server
       draftRoundId: null,   // round the draft belongs to
       editing: false,       // "Edit skills" on a READY board
+      picking: false,       // inside the 3-question picker; keeps it on screen after the server finalizes at 16
+      pickStep: 1,          // current picker question (1..PICK_STEPS)
+      readyAck: false,      // "I'm ready" tapped on the board screen (display only)
+      justShuffled: false,  // "Review board" pressed: the board screen plays its shuffle moment once
       saveError: null,      // exception id of the last failed save (E6)
       saveNotice: null,     // server notice text for a save that was parked (older backend ROUND_LOCKED E8/E1)
       finalizeError: null,  // E18
@@ -345,7 +351,7 @@ export function screenFor(state) {
   const r = state.round;
   if (!b) return 'select';
   if (b.state === 'DRAFT') return 'select';
-  if (b.state === 'READY') return state.ui.editing ? 'select' : 'board';
+  if (b.state === 'READY') return state.ui.editing || state.ui.picking ? 'select' : 'board';
   if (b.state === 'DEFERRED') return 'deferred';
   if (b.state === 'LOCKED_ACTIVE') return r && r.state === 'PLAYING' ? 'playing' : 'locked';
   if (b.state === 'FINISHED') {
@@ -364,7 +370,7 @@ export function selectionProgress(state) {
   return { count, total: REQUIRED_SELECTIONS, percent: Math.round((count / REQUIRED_SELECTIONS) * 100), complete: count >= REQUIRED_SELECTIONS };
 }
 
-/** Banner key for the playing screen: 'play.drawsBeforeFiveN' for draws 1-4, 'play.evaluationActive' from draw 5. */
+/** Banner key for the playing screen: 'play.drawsBeforeFiveN' before BINGO_UNLOCK_DRAW, then 'play.evaluationActive'. */
 export function playingBannerKey(state) {
   const n = state.draws.length;
   if (state.bingoEvaluationActive || n >= BINGO_UNLOCK_DRAW) return 'play.evaluationActive';
@@ -378,19 +384,35 @@ export function deferredCopyKey(reason) {
   return 'board.deferred';
 }
 
-/** Cells indexed by position 0..24 (null when the board has no cells yet). */
+/** Cells indexed by position 0..15 (null when the board has no cells yet). */
 export function cellsByPosition(board) {
   if (!board || !Array.isArray(board.cells)) return null;
-  const arr = new Array(25).fill(null);
-  for (const c of board.cells) if (Number.isInteger(c.position) && c.position >= 0 && c.position < 25) arr[c.position] = c;
+  const arr = new Array(REQUIRED_SELECTIONS).fill(null);
+  for (const c of board.cells) if (Number.isInteger(c.position) && c.position >= 0 && c.position < REQUIRED_SELECTIONS) arr[c.position] = c;
   return arr;
 }
 
-/** True when the server DRAFT board already holds 25 (e.g. reassigned deferred board) and the local draft agrees. */
+/** True when the server DRAFT board already holds 16 (e.g. reassigned deferred board) and the local draft agrees. */
 export function shouldAutoFinalize(state) {
   const b = state.board;
   if (!b || b.state !== 'DRAFT') return false;
   if (!Array.isArray(b.selectedSkillIds) || b.selectedSkillIds.length !== REQUIRED_SELECTIONS) return false;
   if (state.ui.draftDirty) return false;
   return sameSet(state.ui.draft, b.selectedSkillIds);
+}
+
+/**
+ * Picker step after "Next" on `step` (D-35): question 3 (search) is skipped when the board is already full, and
+ * 'review' means leave the picker for the shuffled board.
+ */
+export function nextPickStep(step, count) {
+  if (count >= REQUIRED_SELECTIONS) return 'review';
+  return Math.min(step + 1, PICK_STEPS);
+}
+
+/** Slots of the live picker board in tap order: skill ids first, then nulls up to 16. */
+export function pickerSlots(draft) {
+  const out = draft.slice(0, REQUIRED_SELECTIONS);
+  while (out.length < REQUIRED_SELECTIONS) out.push(null);
+  return out;
 }

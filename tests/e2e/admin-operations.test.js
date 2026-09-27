@@ -1,7 +1,8 @@
 // Admin round control (requirement 4.2, 5.2, 15.1; AC 5, 15; A-01, A-04, A-05, A-07, A-09; E10, E15, E20; rate limits).
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, tryCommand, join, me, readyBoard, saveBoard, boardSet, mixedSet, startRound, drawUntilEnd, openStream, sleep, nextKey } from './helpers.js';
+import { startServer, createRound, command, tryCommand, join, me, readyBoard, saveBoard, boardSet, setPool, startRound, drawUntilEnd, openStream, sleep, nextKey } from './helpers.js';
+import { CELLS, POOL_MINIMUM } from '../../packages/game-rules/src/index.js';
 import { exception, t as copy } from '../../packages/contracts/index.js';
 import sm from '../../contracts/round-state-machine.json' with { type: 'json' };
 
@@ -45,7 +46,7 @@ describe('admin operations: versions, idempotency, concurrency, guards, cancella
   test('two simultaneous draw-next -> exactly one accepted, one draw row; retry with the same key of the accepted one replays (AC 5, BR-09)', async () => {
     const round = await createRound(t, { title: 'Race' });
     const a = await join(t), b = await join(t);
-    await readyBoard(t, a, boardSet(0)); await readyBoard(t, b, boardSet(25));
+    await readyBoard(t, a, boardSet(0)); await readyBoard(t, b, boardSet(CELLS));
     const started = await startRound(t, round);
     const k1 = nextKey('race'), k2 = nextKey('race');
     const [r1, r2] = await Promise.all([tryCommand(t, round.roundId, 'round.draw.next', started.version, {}, k1), tryCommand(t, round.roundId, 'round.draw.next', started.version, {}, k2)]);
@@ -70,9 +71,10 @@ describe('admin operations: versions, idempotency, concurrency, guards, cancella
 
   test('start with pool < 5 -> POOL_TOO_SMALL (E20), round stays LOCKED; start_now without confirmed -> rejected; illegal transitions rejected', async () => {
     const round = await createRound(t, { title: 'Guards' });
-    const a = await join(t); await readyBoard(t, a, mixedSet(4));
+    const a = await join(t); await readyBoard(t, a, boardSet(0));
     const adm = (await t.api.get(`/admin/events/${t.eventId}/snapshot`, t.admin)).body.currentRound;
-    assert.equal(adm.readiness.poolSize, 4); assert.equal(adm.readiness.poolMinimum, 5); assert.equal(adm.readiness.anyBoardCanWin, false);
+    // every skill on the board is draw-eligible (D-33): readiness reports all 16 and a winnable board
+    assert.equal(adm.readiness.poolSize, CELLS); assert.equal(adm.readiness.poolMinimum, POOL_MINIMUM); assert.equal(adm.readiness.anyBoardCanWin, true);
     const startNowUnconfirmed = await tryCommand(t, round.roundId, 'round.start_now', round.version, {});
     assert.equal(startNowUnconfirmed.status, 400); assert.equal(startNowUnconfirmed.body.error.code, 'VALIDATION');
     const startNowFalse = await tryCommand(t, round.roundId, 'round.start_now', round.version, { confirmed: false });
@@ -81,9 +83,10 @@ describe('admin operations: versions, idempotency, concurrency, guards, cancella
     const drawBeforeStart = await tryCommand(t, round.roundId, 'round.draw.next', round.version);
     assert.equal(drawBeforeStart.status, 409); assert.equal(drawBeforeStart.body.error.code, 'ILLEGAL_TRANSITION');
     const l = await command(t, round.roundId, 'round.lock', round.version);
+    setPool(t, round.roundId, boardSet(0, POOL_MINIMUM - 1)); // a pool below the minimum can only be set up by narrowing the snapshot
     const s = await tryCommand(t, round.roundId, 'round.start', l.resultingVersion);
     assert.equal(s.status, 409); assert.equal(s.body.error.code, 'POOL_TOO_SMALL'); assert.equal(s.body.error.exceptionId, 'E20'); assert.equal(s.body.error.message, exception('E20').copy);
-    assert.equal(s.body.error.details.poolSize, 4);
+    assert.equal(s.body.error.details.poolSize, POOL_MINIMUM - 1);
     const r = t.db.get('SELECT state, version FROM rounds WHERE id = ?', round.roundId);
     assert.equal(r.state, 'LOCKED'); assert.equal(r.version, l.resultingVersion, 'rejection never mutates');
     assert.equal((await t.api.get(`/events/${t.eventId}/snapshot`)).body.publicState, 'Waiting');
@@ -160,6 +163,7 @@ describe('admin operations: versions, idempotency, concurrency, guards, cancella
     assert.deepEqual(draws.map(d => d.details.drawNumber), results.map((_, i) => i + 1));
     assert.deepEqual(draws.map(d => d.details.skillId), results.map(r => r.effects.draw.skill.id), 'audit draw order equals the accepted order');
     assert.ok(draws.every(d => d.commandId), 'each draw records its command (idempotency) id');
+    assert.ok(draws.every(d => ['hold', 'open', 'push', 'build', 'fallback'].includes(d.details.drawMode)), 'each draw records how the guided draw picked it (D-33)');
     assert.equal(draws.at(-1).details.outcome, 'WINNER'); assert.deepEqual(draws.at(-1).details.winners.sort(), results.at(-1).effects.winners.map(w => w.participantId).sort());
     const rejected = chrono.filter(e => e.outcome === 'rejected' && e.actor === 'admin');
     assert.deepEqual(rejected.map(e => e.details.code), ['ILLEGAL_TRANSITION', 'STALE_VERSION', 'ILLEGAL_TRANSITION']);

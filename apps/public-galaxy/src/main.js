@@ -12,6 +12,7 @@ import { initialState, applyPublicSnapshot, reduceEvent, panelViewModel, effecti
 import { createPanel } from './panel.js';
 import { createGalaxy, loadSceneAssets, normaliseMode } from './galaxy.js';
 import { t, exception, label } from './copy.js';
+import { BINGO_UNLOCK_DRAW } from '../../../packages/contracts/index.js';
 
 const EVENT_ID = 'evt_demo';
 const params = new URLSearchParams(location.search);
@@ -137,7 +138,7 @@ function onEvent(envelope, meta) {
       if (guard.shouldCelebrate(key, guardMeta)) {
         celebrateDraw = true;
         if (galaxy) galaxy.ripple();
-        if (audio) { audio.play('draw_reveal', { fresh: true, sequence: envelope.sequence }); if (p.draw && p.draw.number === 5) audio.play('draw5_unlock', { fresh: true, sequence: envelope.sequence }); }
+        if (audio) { audio.play('draw_reveal', { fresh: true, sequence: envelope.sequence }); if (p.draw && p.draw.number === BINGO_UNLOCK_DRAW) audio.play('draw5_unlock', { fresh: true, sequence: envelope.sequence }); }
         announce(`${t('public.playing.draw', { number: p.draw && p.draw.number })}. ${p.draw && p.draw.skill ? p.draw.skill.kind + ' ' + p.draw.skill.name : ''}`);
       }
       break;

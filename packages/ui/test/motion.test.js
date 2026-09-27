@@ -238,32 +238,34 @@ test('entranceStartMs keys the public entrance to enteredAt + configured offset'
 
 // --------------------------------------------------------------------------------------------- lines
 
-test('lineTracePositions returns 5 ordered positions for all 12 lines', () => {
-  const ids = ['row-0', 'row-1', 'row-2', 'row-3', 'row-4', 'col-0', 'col-1', 'col-2', 'col-3', 'col-4', 'diag-main', 'diag-anti'];
-  for (const id of ids) {
-    const p = lineTracePositions(id);
-    assert.equal(p.length, 5, id);
-    assert.ok(p.every(x => Number.isInteger(x) && x >= 0 && x < 25), id);
-    assert.equal(new Set(p).size, 5, id);
+test('lineTracePositions returns 4 ordered positions for all 10 lines, matching the game rules', async () => {
+  const { LINE_MASKS, CELLS, GRID } = await import(path.join(root, 'packages', 'game-rules', 'src', 'lines.js'));
+  assert.equal(LINE_MASKS.length, 10);
+  for (const l of LINE_MASKS) {
+    const p = lineTracePositions(l.id);
+    assert.equal(p.length, GRID, l.id);
+    assert.ok(p.every(x => Number.isInteger(x) && x >= 0 && x < CELLS), l.id);
+    assert.deepEqual(p, [...l.positions], l.id);
   }
-  assert.deepEqual(lineTracePositions('row-2'), [10, 11, 12, 13, 14]);
-  assert.deepEqual(lineTracePositions('col-4'), [4, 9, 14, 19, 24]);
-  assert.deepEqual(lineTracePositions('diag-anti'), [4, 8, 12, 16, 20]);
+  assert.deepEqual(lineTracePositions('row-2'), [8, 9, 10, 11]);
+  assert.deepEqual(lineTracePositions('col-3'), [3, 7, 11, 15]);
+  assert.deepEqual(lineTracePositions('diag-anti'), [3, 6, 9, 12]);
+  assert.deepEqual(lineTracePositions('row-4'), [], 'no fifth row on a 4 x 4 board');
   assert.deepEqual(lineTracePositions('nope'), []);
   lineTracePositions('row-0').push(99);
-  assert.equal(lineTracePositions('row-0').length, 5, 'returned arrays are copies');
+  assert.equal(lineTracePositions('row-0').length, 4, 'returned arrays are copies');
 });
 
 test('markLine and staggerIndex set persistent classes and CSS indices', () => {
-  const cells = Array.from({ length: 25 }, () => fakeElement());
+  const cells = Array.from({ length: 16 }, () => fakeElement());
   const marked = markLine(cells, 'diag-main');
-  assert.deepEqual(marked, [0, 6, 12, 18, 24]);
-  assert.equal(cells[12].classList.contains('is-on-line'), true);
-  assert.equal(cells[12].styles.get('--line-i'), '2');
+  assert.deepEqual(marked, [0, 5, 10, 15]);
+  assert.equal(cells[10].classList.contains('is-on-line'), true);
+  assert.equal(cells[10].styles.get('--line-i'), '2');
   assert.equal(cells[1].classList.contains('is-on-line'), false);
   const grid = { children: cells };
-  assert.equal(staggerIndex(grid), 25);
-  assert.equal(cells[24].styles.get('--i'), '24');
+  assert.equal(staggerIndex(grid), 16);
+  assert.equal(cells[15].styles.get('--i'), '15');
 });
 
 // --------------------------------------------------------------------------------------------- animateOnce

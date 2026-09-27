@@ -4,7 +4,8 @@
 // the HTTP API; every snapshot of every audience and every SSE payload of every audience is scanned.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, readyBoard, boardSet, mixedSet, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS, privacyTextHits, findKeys, forbiddenKeysFromContract, roleAt, SOUL_CONFIG_KEYS, skillStringsIn } from '../e2e/helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, boardSet, setPool, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS, privacyTextHits, findKeys, forbiddenKeysFromContract, roleAt, SOUL_CONFIG_KEYS, skillStringsIn } from '../e2e/helpers.js';
+import { REQUIRED_SELECTIONS, MIN_DRAW_FOR_BINGO } from '../../packages/game-rules/src/index.js';
 import publicContract from '../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../contracts/projections/stage.json' with { type: 'json' };
 import adminContract from '../../contracts/projections/admin.json' with { type: 'json' };
@@ -26,8 +27,8 @@ function assertSoulConfig(cfg, where) {
   assert.ok(!cfg.charms.includes(cfg.topper), `${where}: the topper is not a body charm`);
   assert.deepEqual(skillStringsIn(cfg), [], `${where}: no skill id or skill name`);
 }
-const set = boardSet(0, 25, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
-const third = mixedSet(5, 30, 0).filter(id => !REGEX_TRIPPING_SKILL_IDS.includes(id));
+const set = boardSet(0, REQUIRED_SELECTIONS, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
+const third = boardSet(40, REQUIRED_SELECTIONS, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
 
 describe('projection redaction across audiences', () => {
   let t, streams, A, B, C, secrets, snaps = {}, insights;
@@ -45,9 +46,10 @@ describe('projection redaction across audiences', () => {
       A: await openStream(t.baseUrl, '/me/stream', { token: A.token }), B: await openStream(t.baseUrl, '/me/stream', { token: B.token }), C: await openStream(t.baseUrl, '/me/stream', { token: C.token }),
     };
     round = (await command(t, round.roundId, 'round.registration.open', round.version)).round;
-    await readyBoard(t, A, set); await readyBoard(t, B, set); await readyBoard(t, C, third.length === 25 ? third : mixedSet(5, 30, 0));
+    await readyBoard(t, A, set); await readyBoard(t, B, set); await readyBoard(t, C, third);
     snaps.waiting = await all();
     const l = await command(t, round.roundId, 'round.lock', round.version); const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+    setPool(t, round.roundId, set); // every active skill is drawable (D-33): only the A/B pair's skills are drawn, so A and B co-win and C does not
     const { round: end } = await drawUntilEnd(t, s.round);
     assert.equal(end.state, 'WINNER');
     snaps.winner = await all();
@@ -183,7 +185,7 @@ describe('projection redaction across audiences', () => {
         const res = s.events.find(e => e.event === 'result.published').data.payload;
         assert.ok(!('myResult' in res));
         const draws = s.events.filter(e => e.event === 'draw.accepted');
-        assert.ok(draws.length >= 5 && draws.every(d => !('myMatchedPositions' in d.data.payload) && !('matchedPositionsByParticipant' in d.data.payload)));
+        assert.ok(draws.length >= MIN_DRAW_FOR_BINGO && draws.every(d => !('myMatchedPositions' in d.data.payload) && !('matchedPositionsByParticipant' in d.data.payload)));
         const counts = s.events.filter(e => e.event === 'draw.match_counts_updated');
         if (aud === 'admin') assert.ok(counts.every(c => 'boardsWithFourInLine' in c.data.payload)); else assert.ok(counts.every(c => !('boardsWithFourInLine' in c.data.payload)));
         const floats = s.events.filter(e => e.event === 'soul.float_accepted');

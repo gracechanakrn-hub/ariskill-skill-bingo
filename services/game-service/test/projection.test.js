@@ -1,6 +1,6 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, readyBoard, boardSet, mixedSet, startRound, drawUntilEnd, readSse, fiveSkillLineScenario, EVENT_ID, OPTIONAL_IDS } from './helpers.js';
+import { startServer, createRound, command, join, readyBoard, boardSet, startRound, drawUntilEnd, readSse, lineScenario, EVENT_ID, CELLS, LINE_MASKS } from './helpers.js';
 import { FORBIDDEN_KEYS, findForbiddenKeys, redact } from '../src/projections.js';
 import publicContract from '../../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../../contracts/projections/stage.json' with { type: 'json' };
@@ -10,7 +10,7 @@ const contractKeys = (list) => list.map(s => s.split(/\s+/)[0]).filter(w => /^[a
 
 describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D-08)', () => {
   let t;
-  before(async () => { t = await startServer({ extra: { sseReplayLimit: 40 } }); });
+  before(async () => { t = await startServer({ extra: { sseReplayLimit: 40 }, drawGuidance: false }); });
   after(async () => { await t.close(); });
 
   test('FORBIDDEN_KEYS cover every key of the contract forbidden lists and redact() strips them recursively', () => {
@@ -36,7 +36,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
   });
 
   test('public/stage snapshots and every SSE payload contain no forbidden keys across Playing, Winner and Closed; winner labels follow consent', async () => {
-    const sc = await fiveSkillLineScenario(t, { extraPlayers: [{ join: { displayName: 'Hidden Name', consent: false }, layout: (e5) => [...OPTIONAL_IDS.slice(20, 25), ...e5, ...OPTIONAL_IDS.slice(25, 40)] }] });
+    const sc = await lineScenario(t, { extraPlayers: [{ join: { displayName: 'Hidden Name', consent: false }, linePositions: LINE_MASKS.find(l => l.id === 'row-1').positions }] });
     const seq0 = t.db.get('SELECT MAX(sequence) AS s FROM events_outbox WHERE event_id = ?', EVENT_ID).s;
     const pubStream = readSse(t.baseUrl, `/events/${EVENT_ID}/stream`, { timeoutMs: 1500, until: ev => ev.some(e => e.event === 'result.published') });
     const stageStream = readSse(t.baseUrl, `/stage/events/${EVENT_ID}/stream`, { token: t.stage, timeoutMs: 1500, until: ev => ev.some(e => e.event === 'result.published') });
@@ -45,17 +45,18 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
     for (let i = 0; i < 2; i++) { const r = await command(t, cur.roundId, 'round.draw.next', cur.version); cur = r.round; }
     const playing = (await t.api.get(`/events/${EVENT_ID}/snapshot`)).body;
     assert.equal(playing.publicState, 'Playing'); assert.equal(playing.currentDraw.number, 2); assert.equal(playing.currentDraw.bingoEvaluationActive, false); assert.equal(playing.recentDraws.length, 2); assert.equal(playing.counts.matchedBoards, 2);
-    assert.equal(playing.pacingMessage, 'Bingo unlocks at draw 5'); assert.deepEqual(findForbiddenKeys('public', playing), []);
+    assert.equal(playing.pacingMessage, 'Bingo unlocks at draw 4'); assert.deepEqual(findForbiddenKeys('public', playing), []);
     const { round: end } = await drawUntilEnd(t, cur);
     assert.equal(end.state, 'WINNER');
     const winner = (await t.api.get(`/events/${EVENT_ID}/snapshot`)).body;
     assert.equal(winner.publicState, 'Winner'); assert.equal(winner.winners.length, 2);
+    assert.equal(winner.currentDraw.number, 4); assert.equal(winner.currentDraw.bingoEvaluationActive, true, 'evaluation is active from draw 4 (BR-12), same as draw.accepted');
     const labels = winner.winners.map(w => w.label).sort();
     assert.equal(labels.includes('Line Player'), true); assert.ok(labels.some(l => /^Soul #\d{4}$/.test(l))); assert.ok(!labels.includes('Hidden Name'));
     assert.deepEqual(findForbiddenKeys('public', winner), []); assert.ok(winner.round.resultWindowEndsAt);
     const stage = (await t.api.get(`/stage/events/${EVENT_ID}/snapshot`, t.stage)).body;
-    assert.equal(stage.publicState, 'Winner'); assert.equal(stage.winners[0].winningDrawNumber, 5); assert.equal(stage.resultTiming.winningDrawNumber, 5); assert.deepEqual(findForbiddenKeys('stage', stage), []);
-    assert.equal(stage.recentDraws.length, 5);
+    assert.equal(stage.publicState, 'Winner'); assert.equal(stage.winners[0].winningDrawNumber, 4); assert.equal(stage.resultTiming.winningDrawNumber, 4); assert.deepEqual(findForbiddenKeys('stage', stage), []);
+    assert.equal(stage.recentDraws.length, 4);
     const [pubEvents, stageEvents] = [await pubStream, await stageStream];
     assert.ok(pubEvents.events.filter(e => e.event).length >= 5);
     for (const [aud, evs] of [['public', pubEvents.events], ['stage', stageEvents.events]]) for (const e of evs.filter(x => x.event)) {
@@ -93,7 +94,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
     await new Promise(r => setTimeout(r, 50));
     const adm = (await t.api.get(`/admin/events/${EVENT_ID}/snapshot`, t.admin)).body;
     assert.equal(adm.connections.participants, 1); assert.ok(adm.join.joinUrl); assert.equal(adm.currentRound.counts.connections, 1);
-    assert.equal(adm.currentRound.counts.completed, 2); assert.equal(adm.currentRound.readiness.poolSize, 25); assert.deepEqual(adm.currentRound.pacingHintSeconds, [5, 8]);
+    assert.equal(adm.currentRound.counts.completed, 2); assert.equal(adm.currentRound.readiness.poolSize, CELLS); assert.deepEqual(adm.currentRound.pacingHintSeconds, [5, 8]);
     assert.deepEqual(findForbiddenKeys('admin', adm), []);
     const started = await startRound(t, round);
     const d = await command(t, round.roundId, 'round.draw.next', started.version);
@@ -136,9 +137,9 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
   });
 
   test('DEF-01 regression: non-consented winner labels in public/stage/admin snapshots and previousWinners equal the pseudonym in result.published', async () => {
-    const sc = await fiveSkillLineScenario(t, { extraPlayers: [
-      { join: { displayName: 'Hidden A', consent: false }, layout: (e5) => [...OPTIONAL_IDS.slice(20, 25), ...e5, ...OPTIONAL_IDS.slice(25, 40)] },
-      { join: { displayName: 'Hidden B', consent: false }, set: mixedSet(5, 0, 28), layout: (e5) => [...OPTIONAL_IDS.slice(28, 38), ...e5, ...OPTIONAL_IDS.slice(38, 48)] },
+    const sc = await lineScenario(t, { extraPlayers: [
+      { join: { displayName: 'Hidden A', consent: false }, linePositions: LINE_MASKS.find(l => l.id === 'row-1').positions },
+      { join: { displayName: 'Hidden B', consent: false }, linePositions: LINE_MASKS.find(l => l.id === 'row-2').positions },
     ] });
     const { round: end } = await drawUntilEnd(t, sc.round);
     assert.equal(end.state, 'WINNER');
@@ -164,7 +165,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
   });
 
   test('DEF-02 regression: cancelling a DRAFT next round while the current round is PLAYING keeps the PLAYING round as the display round', async () => {
-    const sc = await fiveSkillLineScenario(t);
+    const sc = await lineScenario(t);
     let cur = sc.round;
     cur = (await command(t, cur.roundId, 'round.draw.next', cur.version)).round;
     const draft = await createRound(t, { title: 'Next (draft)', open: false });
@@ -190,7 +191,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
   });
 
   test('DEF-03 / ADM-01: stage snapshot has no galaxy; admin round summaries carry resultWindowEndsAt', async () => {
-    const sc = await fiveSkillLineScenario(t);
+    const sc = await lineScenario(t);
     const stage = (await t.api.get(`/stage/events/${EVENT_ID}/snapshot`, t.stage)).body;
     assert.ok(!('galaxy' in stage), 'stage must not include the public galaxy');
     for (const k of Object.keys(stage)) assert.ok(k in stageContract.allow || ['correlationId', 'serverTime'].includes(k), `stage key ${k} is allowlisted`);
@@ -208,7 +209,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
   });
 
   test('EO-02: participant.publicLabel equals the label result.published uses for that participant (consented and pseudonymous)', async () => {
-    const sc = await fiveSkillLineScenario(t, { extraPlayers: [{ join: { displayName: 'Anon Winner', consent: false }, layout: (e5) => [...OPTIONAL_IDS.slice(20, 25), ...e5, ...OPTIONAL_IDS.slice(25, 40)] }] });
+    const sc = await lineScenario(t, { extraPlayers: [{ join: { displayName: 'Anon Winner', consent: false }, linePositions: LINE_MASKS.find(l => l.id === 'row-1').positions }] });
     const anon = sc.others[0].p;
     const before = (await t.api.get('/me', anon.token)).body.participant;
     assert.match(before.publicLabel, /^Soul #\d{4}$/); assert.equal(before.displayName, 'Anon Winner');
@@ -233,7 +234,7 @@ describe('projections and realtime (P-02, P-03, P-04, P-06, S-01..S-03, BR-18, D
     assert.deepEqual(Object.keys(me).sort(), ['board', 'correlationId', 'draws', 'event', 'insightAvailable', 'nextRound', 'participant', 'result', 'round', 'sequence', 'serverTime', 'soul']);
     assert.deepEqual(me.participant, { participantId: a.participantId, displayName: 'Only Me', consentPublicName: false, platformId: me.participant.platformId, roleId: me.participant.roleId, publicLabel: me.participant.publicLabel });
     assert.match(me.participant.publicLabel, /^Soul #\d{4}$/);
-    assert.equal(me.board.selectedSkillIds.length, 25); assert.equal(me.board.cells.length, 25);
+    assert.equal(me.board.selectedSkillIds.length, CELLS); assert.equal(me.board.cells.length, CELLS);
     assert.deepEqual(findForbiddenKeys('participant', me), []); assert.ok(!JSON.stringify(me).includes(a.employeeRef));
     await command(t, round.roundId, 'round.cancel', round.version, { reason: 'cleanup' });
   });

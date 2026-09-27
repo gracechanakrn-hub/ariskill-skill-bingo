@@ -67,7 +67,7 @@ export const MOTION = Object.freeze({
       "ms": 780,
       "cellMs": 300,
       "staggerMs": 20,
-      "cells": 25,
+      "cells": 16,
       "easing": "standard",
       "reduced": "static-glow"
     },
@@ -210,20 +210,18 @@ export const MOTION = Object.freeze({
 export const REDUCED_MOTION_ATTR = 'data-reduced-motion';
 export const REDUCED_MOTION_STORAGE_KEY = 'ariskill.reducedMotion';
 
-/** Ordered cell positions (row-major 0..24) for each of the 12 Bingo lines (contracts/bingo-rules.json). */
+/** Ordered cell positions (row-major 0..15) for each of the 10 Bingo lines of the 4 x 4 board (contracts/bingo-rules.json). */
 export const LINE_POSITIONS = Object.freeze({
-  'row-0': Object.freeze([0, 1, 2, 3, 4]),
-  'row-1': Object.freeze([5, 6, 7, 8, 9]),
-  'row-2': Object.freeze([10, 11, 12, 13, 14]),
-  'row-3': Object.freeze([15, 16, 17, 18, 19]),
-  'row-4': Object.freeze([20, 21, 22, 23, 24]),
-  'col-0': Object.freeze([0, 5, 10, 15, 20]),
-  'col-1': Object.freeze([1, 6, 11, 16, 21]),
-  'col-2': Object.freeze([2, 7, 12, 17, 22]),
-  'col-3': Object.freeze([3, 8, 13, 18, 23]),
-  'col-4': Object.freeze([4, 9, 14, 19, 24]),
-  'diag-main': Object.freeze([0, 6, 12, 18, 24]),
-  'diag-anti': Object.freeze([4, 8, 12, 16, 20]),
+  'row-0': Object.freeze([0, 1, 2, 3]),
+  'row-1': Object.freeze([4, 5, 6, 7]),
+  'row-2': Object.freeze([8, 9, 10, 11]),
+  'row-3': Object.freeze([12, 13, 14, 15]),
+  'col-0': Object.freeze([0, 4, 8, 12]),
+  'col-1': Object.freeze([1, 5, 9, 13]),
+  'col-2': Object.freeze([2, 6, 10, 14]),
+  'col-3': Object.freeze([3, 7, 11, 15]),
+  'diag-main': Object.freeze([0, 5, 10, 15]),
+  'diag-anti': Object.freeze([3, 6, 9, 12]),
 });
 
 /**
@@ -238,7 +236,7 @@ export const EVENT_MOTION = Object.freeze({
                             public: { className: 'm-fade', fn: 'animateOnce', reduced: 'fade', sound: null, celebrate: false } },
   'round.started':        { participant: { className: 'm-fade', fn: 'animateOnce', reduced: 'fade', sound: null, celebrate: false },
                             public: { className: 'm-fade', fn: 'animateOnce', reduced: 'fade', sound: null, celebrate: false } },
-  'draw.accepted':        { participant: { className: 'm-draw-arrival', then: 'm-match (+is-matched)', fn: 'animateOnce, applyMatch', reduced: 'fade / static', sound: 'draw_reveal, cell_match, draw5_unlock (drawNumber===5)', celebrate: true },
+  'draw.accepted':        { participant: { className: 'm-draw-arrival', then: 'm-match (+is-matched)', fn: 'animateOnce, applyMatch', reduced: 'fade / static', sound: 'draw_reveal, cell_match, draw5_unlock (drawNumber===4, the Bingo unlock draw)', celebrate: true },
                             public: { className: 'm-draw-arrival', fn: 'animateOnce', reduced: 'fade', sound: 'draw_reveal', celebrate: true },
                             stage: { className: 'm-fade', fn: 'animateOnce', reduced: 'fade', sound: null, celebrate: false } },
   'draw.match_counts_updated': { public: { className: 'm-fade', fn: 'animateOnce', reduced: 'fade', sound: null, celebrate: false },

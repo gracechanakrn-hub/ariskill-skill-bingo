@@ -7,6 +7,7 @@ import participantContract from '../../../contracts/projections/participant.json
 import insightsContract from '../../../contracts/projections/insights.json' with { type: 'json' };
 import realtime from '../../../contracts/realtime-events.json' with { type: 'json' };
 import { t } from '../../../packages/contracts/index.js';
+import { MIN_DRAW_FOR_BINGO, isEvaluationActive } from '../../../packages/game-rules/src/index.js';
 import { json } from './db.js';
 import { SKILLS, PLATFORMS, ROLES, MATRIX_VERSION, roleSkillSet } from './skills.js';
 import { currentJoinLink } from './auth.js';
@@ -69,14 +70,14 @@ export function createProjections({ db, clock, config, game, participants, hub =
     const pool = json.parse(r.pool_json, []);
     const poolRemaining = Math.max(0, pool.length - draws.length);
     const last = draws[draws.length - 1];
-    const currentDraw = last ? { ...drawShape(last), poolRemaining, bingoEvaluationActive: last.number >= 5 } : null;
+    const currentDraw = last ? { ...drawShape(last), poolRemaining, bingoEvaluationActive: isEvaluationActive(last.number) } : null;
     if (currentDraw) delete currentDraw.drawId;
     return { draws, currentDraw, poolRemaining };
   }
   function recent(draws, n) { return draws.slice(-n).map(d => { const s = drawShape(d); return { number: s.number, skillName: s.skill.name, kind: s.skill.kind }; }); }
   function pacing(r, draws) {
     if (!r) return t('board.noRound');
-    if (r.state === 'PLAYING') return draws.length < 5 ? t('public.playing.pacing') : t('public.playing.live');
+    if (r.state === 'PLAYING') return draws.length < MIN_DRAW_FOR_BINGO ? t('public.playing.pacing') : t('public.playing.live');
     if (r.state === 'WINNER') return t('public.winner.title');
     if (r.state === 'LOCKED') return t('play.waitingStart');
     return t('public.waiting.title');

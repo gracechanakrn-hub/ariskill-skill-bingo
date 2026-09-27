@@ -50,7 +50,7 @@
       "ms": 780,
       "cellMs": 300,
       "staggerMs": 20,
-      "cells": 25,
+      "cells": 16,
       "easing": "standard",
       "reduced": "static-glow"
     },
