@@ -14,6 +14,7 @@ import {
   addSkill, removeSkill, undoSelection, screenFor, editableRound, saveBlockedReason, shouldAutoFinalize, applySaveResponse, REQUIRED_SELECTIONS,
 } from './state.js';
 import { tl, exceptionCopy } from './views/common.js';
+import { mountLanding } from './views/landing.js';
 import { mountJoin } from './views/join.js';
 import { mountProfile } from './views/profile.js';
 import { mountSelect } from './views/select.js';
@@ -32,6 +33,7 @@ const LAST_EVENT_KEY = 'ariskill.play.lastEvent';
 const DRAFT_KEY = (evt, participantId) => `ariskill.play.draft:${evt}:${participantId}`;
 const FLOAT_KEY = (soulId) => `ariskill.play.floatKey:${soulId}`;
 const RESULT_SEEN_KEY = (roundId) => `ariskill.play.resultSeen:${roundId}`;
+const DEVICE_REF_KEY = 'ariskill.play.deviceRef';
 const SAVE_DEBOUNCE_MS = 400;
 const NO_ROUND_REFRESH_MS = 20_000;
 const TOAST_MS = 8000;
@@ -66,8 +68,9 @@ const api = createParticipantApi({ getToken: () => (store.get().session ? store.
 const clockNow = () => api.clockSync.now();
 let sse = null;
 const audioMotion = createAudioMotion({ clockNow, getConnectionEpoch: () => (sse ? sse.connectionEpoch : 0) });
-// Violet night-forest backdrop: Canvas 2D stars / fireflies behind every screen (static under reduced motion).
-createBackdrop(document.querySelector('.cosmos__stars'));
+// Cinematic sky (D-41): Blender layers + CSS motion live in index.html / app.css; the canvas adds a few twinkling stars
+// on top (no aurora band, no motes). Everything is static under reduced motion.
+createBackdrop(document.querySelector('.cosmos__stars'), { aurora: false, fireflies: false, starCount: 45 });
 // Sparse participant stream: gap -> snapshot acknowledgement window (see src/liveness.js).
 const gaps = createGapTracker();
 
@@ -136,6 +139,7 @@ function renderSettings() {
 
 // ---- rendering -----------------------------------------------------------------------------------------
 const VIEWS = {
+  landing: (r, c) => mountLanding(r, c),
   join: (r, c) => mountJoin(r, c),
   loading: (r) => ({ update() { mount(r, h('p', { className: 'placeholder muted', role: 'status' }, tl('ui.loading'))); }, effect() {}, unmount() { mount(r, null); } }),
   profile: (r, c) => mountProfile(r, c),
@@ -211,7 +215,20 @@ function afterRender(state) {
 }
 
 // ---- session ---------------------------------------------------------------------------------------------
-async function join({ employeeRef, displayName, consentPublicName }) {
+/**
+ * The phone's own participant reference (D-40: no employee-ID field). Random, created once, kept in localStorage so a
+ * re-opened link on the same phone resumes the same seat; the server only ever stores its HMAC (employeeRefHash).
+ */
+function deviceRef() {
+  let ref = storage.get(DEVICE_REF_KEY);
+  if (typeof ref !== 'string' || !ref) {
+    ref = `device-${(crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`)}`;
+    storage.set(DEVICE_REF_KEY, ref);
+  }
+  return ref;
+}
+
+async function join({ employeeRef = deviceRef(), displayName, consentPublicName }) {
   audioMotion.unlock().then(renderSettings); // inside the tap; the sound switch reflects the unlocked state
   track('client.join_started', { eventId });
   const tokenEvent = eventIdFromToken(store.get().joinToken);
@@ -493,6 +510,8 @@ function reviewBoard() {
   if (b && b.state === 'DRAFT' && b.selectedSkillIds.length === REQUIRED_SELECTIONS && !pendingFinalize) finalizeBoard(b.version);
 }
 function consumeShuffled() { patchUi({ justShuffled: false }); }
+/** Landing Start (D-39): also the first tap, so the audio unlock (autoplay policy) happens here. */
+function enterJoin() { audioMotion.unlock().then(renderSettings); patchUi({ landingDone: true }); }
 function readyAck() { patchUi({ readyAck: true }); announce(t('board.readyDone'), { politeness: 'polite' }); }
 function startNextRound(round = null) {
   const st = store.get();
@@ -541,7 +560,7 @@ async function floatNow() {
 Object.assign(ctx.actions, {
   join, loadTaxonomy, setProfile,
   discovery: (mode, q, limit) => api.discovery({ mode, q, limit }),
-  tapSkill, removeSkill: removeSelected, undo, retrySave, retryFinalize, startEditing, stopEditing, setPickStep, reviewBoard, readyAck, consumeShuffled,
+  tapSkill, removeSkill: removeSelected, undo, retrySave, retryFinalize, startEditing, stopEditing, setPickStep, reviewBoard, readyAck, consumeShuffled, enterJoin,
   revealSoul, soulRevealed, floatStart, floatNow, startNextRound, toast,
 });
 

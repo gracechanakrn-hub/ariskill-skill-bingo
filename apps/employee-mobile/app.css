@@ -392,9 +392,41 @@ body { background: var(--play-ink); }
   --v2-ink: #1A1545;
   --v2-chip-edge: rgba(139, 124, 240, .7);
 }
-.cosmos { background: #0B1030 url(/play/art/backdrop-540.jpg) center bottom / cover no-repeat; }
-@media (min-width: 541px), (min-resolution: 2dppx) { .cosmos { background-image: url(/play/art/backdrop-1080.jpg); } }
-.cosmos::before { display: none; } /* the rendered forest replaces the CSS foliage blobs */
+.cosmos::before, .cosmos::after { display: none; }
+
+/* ---- Cinematic sky (D-41; replaces the D-38 minimal sky): four Blender layers from one camera
+   (tools/ai/blender/mobile_sky.py -> art/sky.jpg + sky-{aurora,meteors,ground}.webp). .scene covers the viewport with
+   the render's aspect ratio, anchored to the bottom so the horizon stays low. Micro movement only: the aurora sways and
+   shimmers (14-19 s), the meteorites drift (34 s), a shooting star crosses every 17 s; the ground holds still. ---- */
+.cosmos { background: #07061c; }
+.cosmos > .sky__shoot { position: absolute; pointer-events: none; }
+.scene {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: max(100vw, calc(100vh * 1080 / 2340)); aspect-ratio: 1080 / 2340;
+}
+.scene__layer { position: absolute; inset: 0; background: center / 100% 100% no-repeat; pointer-events: none; }
+.scene__sky { background-image: url(/play/art/sky.jpg); }
+.scene__aurora { background-image: url(/play/art/sky-aurora.webp); transform-origin: 50% 40%; animation: aurora-sway 14s ease-in-out infinite alternate; }
+.scene__aurora--shimmer { mix-blend-mode: screen; opacity: 0; animation: aurora-shimmer 19s ease-in-out infinite alternate; }
+.scene__meteors { background-image: url(/play/art/sky-meteors.webp); animation: meteor-drift 34s ease-in-out infinite alternate; }
+.scene__ground { background-image: url(/play/art/sky-ground.webp); }
+@keyframes aurora-sway { from { transform: translateX(-1.4%) skewX(-1.2deg); opacity: .78; } to { transform: translateX(1.4%) skewX(1.2deg); opacity: 1; } }
+@keyframes aurora-shimmer { 0% { opacity: 0; transform: translateX(2%) scaleY(1.02); } 50% { opacity: .38; } 100% { opacity: .1; transform: translateX(-2%) scaleY(.99); } }
+@keyframes meteor-drift { from { transform: translate3d(0, 0, 0) rotate(0deg); } to { transform: translate3d(-2.2%, 1.4%, 0) rotate(.6deg); } }
+.sky__shoot {
+  top: 14vh; left: 78vw; width: 26vw; height: 1.5px; border-radius: 2px; opacity: 0; transform-origin: 0 50%;
+  background: linear-gradient(270deg, rgba(255, 255, 255, .85), rgba(200, 190, 255, .3) 40%, transparent);
+  animation: sky-shoot 17s linear 4s infinite;
+}
+@media (prefers-reduced-motion: reduce) { .scene__layer, .sky__shoot { animation: none !important; } .sky__shoot, .scene__aurora--shimmer { display: none; } }
+:root[data-reduced-motion="true"] .scene__layer, :root[data-reduced-motion="true"] .sky__shoot { animation: none !important; }
+:root[data-reduced-motion="true"] .sky__shoot, :root[data-reduced-motion="true"] .scene__aurora--shimmer { display: none; }
+@keyframes sky-shoot {
+  0% { opacity: 0; transform: rotate(158deg) translateX(0); }
+  1.5% { opacity: .9; }
+  6% { opacity: 0; transform: rotate(158deg) translateX(150%); }
+  100% { opacity: 0; transform: rotate(158deg) translateX(150%); }
+}
 
 /* ---- Tray + tiles (all board screens) ---- */
 .tray {
@@ -477,3 +509,58 @@ body { background: var(--play-ink); }
   border: 2px solid #fff; border-radius: 999px; padding: 4px 14px; box-shadow: 0 6px 14px rgba(5, 8, 30, .55);
 }
 .board-status--card .board-hint { margin: 0; color: #D9D3FA; font-size: .88rem; text-align: center; }
+
+/* ---- Mobile type (D-38): "divergent" = Electrolize for all UI text; "Cloverfield" = Asleepytiming for titles, with
+   Comfortaa Light standing in until Asleepytiming has a commercial licence (OD-23). Mobile only; other apps keep theirs. ---- */
+:root {
+  --font-ui: "Electrolize", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-title: "Asleepytiming", "Comfortaa", "Electrolize", system-ui, sans-serif;
+  --ui-font-sans: var(--font-ui);
+  --font-sans: var(--font-ui);
+  --font-display: var(--font-ui);
+}
+body { font-family: var(--font-ui); letter-spacing: .01em; }
+h1, h2, .screen-title, .pick-title, .join-hero__title, .brand__name, .draw-card__name {
+  font-family: var(--font-title); font-weight: 400; letter-spacing: .02em;
+}
+.join-hero__title { font-weight: 300; }
+
+/* ---- Landing (D-41): sign, 3D mascot stage, copy revealed on touchdown ---- */
+.landing { min-height: calc(100dvh - 90px); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: var(--ui-space-2); text-align: center; padding-top: var(--ui-space-2); }
+.landing__sign { width: min(84vw, 22rem); height: auto; filter: drop-shadow(0 10px 24px rgba(5, 8, 30, .6)); animation: sign-drop .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+.landing__stage { position: relative; width: 100%; max-width: 30rem; height: min(50dvh, 26rem); }
+.landing__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.landing__still { position: absolute; left: 50%; bottom: 4%; height: 82%; width: auto; transform: translateX(-50%); }
+.landing__copy { display: flex; flex-direction: column; align-items: center; gap: var(--ui-space-3); opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1); }
+.landing.is-landed .landing__copy { opacity: 1; transform: none; }
+.landing__tagline { margin: 0; color: #E7DFFF; font: 400 1.1rem var(--font-title); text-shadow: 0 2px 10px rgba(5, 8, 30, .9); }
+.landing__start { min-width: 12rem; min-height: 56px; font: 400 1.25rem var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--v2-navy); background: var(--v2-lime); border: 2px solid #fff; border-radius: 999px; box-shadow: 0 0 0 6px rgba(182, 255, 92, .12), 0 8px 20px rgba(5, 8, 30, .55); }
+@keyframes sign-drop { from { opacity: 0; transform: translateY(-24px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes landing-in { from { opacity: 0; transform: translateY(18px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes landing-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .landing__sign { animation: none; } .landing__copy { transition: none; } }
+:root[data-reduced-motion="true"] .landing__sign { animation: none; }
+:root[data-reduced-motion="true"] .landing__copy { transition: none; }
+
+/* D-40: deadline wording */
+.pick-deadline { margin: -4px 0 0; text-align: center; color: #D9D3FA; font-size: .9rem; }
+.board-status--card .countdown__label { text-transform: none; letter-spacing: .01em; font-size: .95rem; color: #E7DFFF; }
+.countdown__left { font-size: .85rem; color: #CFC8F5; }
+
+/* ---- Join, continued from the landing (D-40) ---- */
+#main[data-screen="landing"] ~ .app-footer, #main[data-screen="join"] ~ .app-footer { display: none; } /* no sound / motion toggles here */
+.join2 { display: flex; flex-direction: column; align-items: center; gap: var(--ui-space-3); padding-top: var(--ui-space-2); }
+.join2__sign { width: min(86vw, 22rem); height: auto; filter: drop-shadow(0 10px 24px rgba(5, 8, 30, .6)); animation: landing-in .8s cubic-bezier(.2, .8, .2, 1) both; }
+.join2__hello { display: flex; align-items: flex-end; gap: var(--ui-space-2); width: 100%; max-width: 26rem; }
+.join2__soul { width: 34%; height: auto; flex: 0 0 auto; animation: soul-hover 4s ease-in-out infinite alternate; }
+@keyframes soul-hover { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+.join2__bubble {
+  position: relative; margin: 0 0 18%; padding: 12px 16px; border-radius: 20px 20px 20px 6px; font: 400 1.05rem / 1.3 var(--font-title);
+  color: var(--v2-navy); background: var(--v2-lavender); border: 2px solid #fff; box-shadow: 0 8px 18px rgba(5, 8, 30, .45);
+  animation: landing-rise .7s .35s cubic-bezier(.2, .8, .2, 1) both;
+}
+.join2__card { width: 100%; max-width: 26rem; padding: var(--ui-space-4); border-radius: 26px; background: linear-gradient(180deg, rgba(21, 28, 72, .86), rgba(11, 16, 48, .94)); border: 2px solid rgba(231, 223, 255, .18); backdrop-filter: blur(10px); }
+.join2__cta { width: 100%; min-height: 54px; font: 400 1.15rem var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--v2-navy); background: var(--v2-lime); border: 2px solid #fff; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .join2 * { animation: none !important; } }
+:root[data-reduced-motion="true"] .join2 * { animation: none !important; }
+.board-status--card .countdown-block { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }

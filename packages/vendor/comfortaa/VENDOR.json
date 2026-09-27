@@ -1,0 +1,24 @@
+{
+  "name": "comfortaa",
+  "version": "Google Fonts API (variable 300-500)",
+  "license": "OFL-1.1",
+  "source": "https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..500 (latin woff2 from fonts.gstatic.com); OFL.txt from https://github.com/google/fonts/blob/main/ofl/comfortaa/OFL.txt (Comfortaa Project Authors)",
+  "vendoredBy": "manual (2026-09-27, stage 16): Mobile title face, stand-in for Asleepytiming until a commercial licence is bought (D-38, OD-23).",
+  "files": [
+    {
+      "path": "packages/vendor/comfortaa/OFL.txt",
+      "bytes": 4519,
+      "sha256": "bc85bae0b512b799bbfb2b916e4d0a34cfd963d09778cd783e248b479e67760a"
+    },
+    {
+      "path": "packages/vendor/comfortaa/comfortaa-latin.woff2",
+      "bytes": 30912,
+      "sha256": "4c53d8e2a813441bf080c4c50f68d5d104f211063f16994cc79df3d40bce50b5"
+    },
+    {
+      "path": "packages/vendor/comfortaa/fonts.css",
+      "bytes": 709,
+      "sha256": "3703da600b1261fe193a1dc5a0e786864ce84e4fa0c06cec8d11e912bd3f76e0"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "electrolize",
+  "version": "20 (Google Fonts API v20)",
+  "license": "OFL-1.1",
+  "source": "https://fonts.googleapis.com/css2?family=Electrolize (latin woff2 from fonts.gstatic.com/s/electrolize/v20); OFL.txt from https://github.com/google/fonts/blob/main/ofl/electrolize/OFL.txt (Cyreal)",
+  "vendoredBy": "manual (2026-09-27, stage 16): Mobile UI face (\"divergent\" in the owner's sheet), D-38.",
+  "files": [
+    {
+      "path": "packages/vendor/electrolize/OFL.txt",
+      "bytes": 4387,
+      "sha256": "c4955dfe15a5db10326aa58ef767460c42cd12a3acdb3e698eee2704eb373d94"
+    },
+    {
+      "path": "packages/vendor/electrolize/electrolize-latin.woff2",
+      "bytes": 8504,
+      "sha256": "b515be0ae5f2547baec4b15af702ae1c6b344a8e793a19f9943097959ee497bf"
+    },
+    {
+      "path": "packages/vendor/electrolize/fonts.css",
+      "bytes": 414,
+      "sha256": "c6dd9ced321c952f7c8d61ebbb7c1283d0033d6fd81f08273daaff5c251c60be"
+    }
+  ]
+}

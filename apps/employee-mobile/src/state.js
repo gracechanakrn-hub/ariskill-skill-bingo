@@ -47,6 +47,7 @@ export function initialState() {
       pickStep: 1,          // current picker question (1..PICK_STEPS)
       readyAck: false,      // "I'm ready" tapped on the board screen (display only)
       justShuffled: false,  // "Review board" pressed: the board screen plays its shuffle moment once
+      landingDone: false,   // "Start" tapped on the landing screen (D-39); in memory only, so every fresh open shows it
       saveError: null,      // exception id of the last failed save (E6)
       saveNotice: null,     // server notice text for a save that was parked (older backend ROUND_LOCKED E8/E1)
       finalizeError: null,  // E18
@@ -340,11 +341,11 @@ export function nextRoundAction(state, nowMs = null) {
   return editable;
 }
 
-export const SCREENS = ['join', 'loading', 'profile', 'select', 'board', 'locked', 'deferred', 'playing', 'result', 'soul', 'floated'];
+export const SCREENS = ['landing', 'join', 'loading', 'profile', 'select', 'board', 'locked', 'deferred', 'playing', 'result', 'soul', 'floated'];
 
 /** Which screen (canonical-flow section 1) the state projects to. */
 export function screenFor(state) {
-  if (!state.session) return 'join';
+  if (!state.session) return state.ui.landingDone ? 'join' : 'landing';
   if (!state.participant) return 'loading';
   if (!state.participant.platformId || !state.participant.roleId) return 'profile';
   const b = state.board;

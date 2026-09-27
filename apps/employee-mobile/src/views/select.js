@@ -4,10 +4,11 @@
 //   tile removes it (swap). The board shows the draft in tap order; the server shuffles it on finalize (BR-04), and
 //   "Review board" leaves the picker for the shuffled board. There is no "accept all" control (requirement 4.1).
 import { h, mount } from '/packages/ui/dom.js';
+import { formatTime } from '/packages/ui/format.js';
 import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t } from '/packages/contracts/index.js';
 import { tl, exceptionCopy, notice, button, placeholder } from './common.js';
-import { selectionProgress, saveBlockedReason, pickerSlots, nextPickStep, REQUIRED_SELECTIONS, PICK_STEPS } from '../state.js';
+import { selectionProgress, saveBlockedReason, editableRound, pickerSlots, nextPickStep, REQUIRED_SELECTIONS, PICK_STEPS } from '../state.js';
 
 const STEP_MODE = { 1: 'core', 2: 'role', 3: 'search' };
 const SEARCH_DEBOUNCE_MS = 300;
@@ -84,6 +85,9 @@ export function mountSelect(root, ctx) {
     els.count.textContent = `${p.count}/${REQUIRED_SELECTIONS}${p.complete ? ' ✓' : ''}`;
     els.count.classList.toggle('is-full', p.complete);
     els.count.setAttribute('aria-label', t('select.progress', { count: p.count }));
+    const r = editableRound(lastState, ctx.clockNow());
+    els.deadline.hidden = !(r && r.lockAt);
+    if (r && r.lockAt) els.deadline.textContent = t('pick.deadline', { time: formatTime(r.lockAt) });
   }
 
   function renderQuestion({ focus = false } = {}) {
@@ -157,6 +161,7 @@ export function mountSelect(root, ctx) {
     els = {};
     els.steps = h('ol', { className: 'pick-steps', role: 'list' });
     els.count = h('p', { className: 'pick-count tabular', role: 'status', 'aria-live': 'polite' });
+    els.deadline = h('p', { className: 'pick-deadline', hidden: true });
     els.grid = h('ol', { className: 'pick-grid', role: 'list', 'aria-label': tl('ui.yourBoard') });
     els.notices = h('div', { className: 'stack stack--tight' });
     els.title = h('h1', { className: 'pick-title', tabIndex: -1 });
@@ -168,6 +173,7 @@ export function mountSelect(root, ctx) {
     els.actions = h('div', { className: 'pick-actions' });
     mount(root, h('div', { className: 'picker' },
       h('div', { className: 'pick-top' }, els.steps, els.count),
+      els.deadline,
       h('div', { className: 'pick-board' }, els.grid),
       els.notices,
       h('section', { className: 'pick-sheet', 'aria-labelledby': 'pick-title' },

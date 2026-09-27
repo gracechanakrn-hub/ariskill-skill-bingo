@@ -21,7 +21,7 @@ export const SECURITY_HEADERS = Object.freeze({
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:",
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: blob:; connect-src 'self' blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; worker-src 'self' blob:",  // connect-src blob: lets GLTFLoader decode embedded GLB textures (D-41)
   'Cache-Control': 'no-store',
 });
 

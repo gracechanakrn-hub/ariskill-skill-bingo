@@ -1,0 +1,9 @@
+/* Vendored Electrolize v20 (SIL OFL 1.1), "divergent" in the owner's font sheet (D-38). Self-hosted so the apps stay offline
+   and CSP-safe. Single weight (400), latin subset. Mobile UI face: body text, buttons, chips, tiles. See VENDOR.json. */
+@font-face {
+  font-family: "Electrolize";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./electrolize-latin.woff2") format("woff2");
+}

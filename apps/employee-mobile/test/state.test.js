@@ -17,7 +17,8 @@ const withSession = (s) => ({ ...s, session: { sessionToken: 'tok', participantI
 const joined = (over = {}) => ({ ...withSession(initialState()), participant: { participantId: 'p1', displayName: 'A', consentPublicName: true, platformId: 'pl', roleId: 'ro' }, round: round(), ...over });
 
 test('screenFor follows the canonical flow E1 -> E10', () => {
-  assert.equal(screenFor(initialState()), 'join');
+  assert.equal(screenFor(initialState()), 'landing', 'a fresh open starts on the landing (D-39)');
+  assert.equal(screenFor({ ...initialState(), ui: { ...initialState().ui, landingDone: true } }), 'join');
   assert.equal(screenFor(withSession(initialState())), 'loading');
   assert.equal(screenFor(joined({ participant: { participantId: 'p1', platformId: null, roleId: null } })), 'profile');
   assert.equal(screenFor(joined()), 'select');

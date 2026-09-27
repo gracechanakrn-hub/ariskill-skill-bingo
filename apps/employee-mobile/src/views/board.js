@@ -28,6 +28,8 @@ export function mountBoard(root, ctx, screen) {
     const r = screen === 'board' ? countdownTarget(lastState) : null;
     if (!r) { els.countdownBlock.hidden = true; return; }
     els.countdownBlock.hidden = false;
+    const label = t('board.editUntil', { time: formatTime(r.lockAt) });
+    if (els.countdownLabel.textContent !== label) els.countdownLabel.textContent = label;
     if (!ctx.clockSynced()) { els.countdown.textContent = exceptionCopy('E7'); els.countdown.classList.add('countdown--syncing'); return; }
     els.countdown.classList.remove('countdown--syncing');
     const text = formatCountdown(r.lockAt, ctx.clockNow());
@@ -45,7 +47,10 @@ export function mountBoard(root, ctx, screen) {
     // Waiting screens park a ringed planet in a reserved strip (never over text / controls; hidden below 360 px).
     els.sky = h('div', { className: 'waiting-sky', 'aria-hidden': 'true' }, ...doodadPlan(s, window.innerWidth).map((d) => doodad(d.kind, { size: d.size })));
     els.countdown = h('p', { className: 'countdown', 'aria-live': 'off' });
-    els.countdownBlock = h('div', { className: 'countdown-block', hidden: true }, h('span', { className: 'countdown__label' }, tl('ui.locksIn')), els.countdown);
+    // D-40: say what the deadline means ("You can edit your board until 18:08") instead of a bare "Locks in".
+    els.countdownLabel = h('span', { className: 'countdown__label' });
+    els.countdownLeft = h('span', { className: 'countdown__left' }, t('board.timeLeft'));
+    els.countdownBlock = h('div', { className: 'countdown-block', hidden: true }, els.countdownLabel, els.countdown, els.countdownLeft);
     els.hint = h('p', { className: 'board-hint', 'aria-live': 'polite' });
     els.lockLabel = h('p', { className: 'lock-label m-lock-label', hidden: true }, `\u{1F512}︎ ${t('board.locked')}`);
     els.shuffled = h('p', { className: 'shuffled-badge', role: 'status', hidden: true }, t('board.shuffled'));
@@ -81,7 +86,7 @@ export function mountBoard(root, ctx, screen) {
       } else {
         notices.push(notice(t('board.noRound'), { tone: 'info' }));
       }
-      mount(els.round, roundLine(editable || r, editable && editable.lockAt ? `${tl('ui.locksAt')} ${formatTime(editable.lockAt)}` : null));
+      mount(els.round, roundLine(editable || r)); // the deadline lives in the countdown card (D-40)
       grid.update(state.board, { locked: false });
       els.lockLabel.hidden = true;
     } else if (screen === 'locked') {

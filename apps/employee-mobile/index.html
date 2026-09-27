@@ -9,6 +9,8 @@
   <title>AriSkill Skill Bingo</title>
   <link rel="stylesheet" href="/packages/vendor/plus-jakarta-sans/fonts.css">
   <link rel="stylesheet" href="/packages/vendor/fredoka/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/electrolize/fonts.css">
+  <link rel="stylesheet" href="/packages/vendor/comfortaa/fonts.css">
   <link rel="stylesheet" href="/packages/design-tokens/tokens.css">
   <link rel="stylesheet" href="/packages/ui/base.css">
   <link rel="stylesheet" href="/packages/ui/motion.css">
@@ -17,7 +19,16 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="cosmos" aria-hidden="true"><canvas class="cosmos__stars" aria-hidden="true"></canvas></div>
+  <div class="cosmos" aria-hidden="true">
+    <div class="scene">
+      <span class="scene__layer scene__sky"></span>
+      <span class="scene__layer scene__aurora"></span><span class="scene__layer scene__aurora scene__aurora--shimmer"></span>
+      <span class="scene__layer scene__meteors"></span>
+      <span class="scene__layer scene__ground"></span>
+    </div>
+    <span class="sky__shoot"></span>
+    <canvas class="cosmos__stars" aria-hidden="true"></canvas>
+  </div>
   <header class="app-header" role="banner">
     <p class="brand"><span class="brand__mark" aria-hidden="true"></span><span class="brand__name">AriSkill Skill Bingo</span></p>
     <div id="header-status" class="cluster header-status"></div>

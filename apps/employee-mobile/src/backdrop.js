@@ -25,14 +25,17 @@ function reducedNow() {
   } catch { return false; }
 }
 
-/** Mounts the layer on `canvas` (already in the DOM). Returns { dispose }. */
-export function createBackdrop(canvas) {
+/**
+ * Mounts the layer on `canvas` (already in the DOM). Returns { dispose }.
+ * Options (D-37 / D-38 backdrops): `aurora` / `fireflies` switch those layers off; `starCount` sets the twinkling stars.
+ */
+export function createBackdrop(canvas, { aurora: withAurora = true, fireflies = true, starCount = STAR_COUNT } = {}) {
   if (!canvas || typeof canvas.getContext !== 'function') return { dispose() {} };
   const ctx = canvas.getContext('2d', { alpha: true });
   if (!ctx) return { dispose() {} };
   const r = rand(0x5eed);
-  const stars = Array.from({ length: STAR_COUNT }, () => ({ x: r(), y: r() * 0.82, s: 0.6 + r() * 1.5, p: r() * Math.PI * 2, f: 0.15 + r() * 0.3, warm: r() < 0.12 }));
-  const flies = Array.from({ length: FIREFLY_COUNT }, () => ({ x: r(), y: 0.35 + r() * 0.6, s: 2 + r() * 2.2, p: r() * Math.PI * 2, vx: (r() - 0.5) * 0.012, vy: (r() - 0.5) * 0.008, f: 0.2 + r() * 0.25, hue: r() < 0.7 ? 'gold' : 'cyan' }));
+  const stars = Array.from({ length: starCount }, () => ({ x: r(), y: r() * 0.82, s: 0.6 + r() * 1.5, p: r() * Math.PI * 2, f: 0.15 + r() * 0.3, warm: r() < 0.12 }));
+  const flies = Array.from({ length: fireflies ? FIREFLY_COUNT : 0 }, () => ({ x: r(), y: 0.35 + r() * 0.6, s: 2 + r() * 2.2, p: r() * Math.PI * 2, vx: (r() - 0.5) * 0.012, vy: (r() - 0.5) * 0.008, f: 0.2 + r() * 0.25, hue: r() < 0.7 ? 'gold' : 'cyan' }));
   let w = 0, h = 0, dpr = 1, raf = 0, last = 0, disposed = false, reduced = reducedNow();
   const glow = makeGlowSprite();
   let aurora = null; // { canvas, length, thickness } pre-rendered band, rebuilt on resize
@@ -71,7 +74,7 @@ export function createBackdrop(canvas) {
     canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const a = auroraState(0, { width: w, height: h, reduced: true });
-    aurora = { canvas: makeAuroraBand(a.length, a.thickness), length: a.length, thickness: a.thickness };
+    aurora = withAurora ? { canvas: makeAuroraBand(a.length, a.thickness), length: a.length, thickness: a.thickness } : null;
     draw(performance.now(), true);
   }
 

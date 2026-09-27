@@ -1,0 +1,17 @@
+/* Vendored Comfortaa (SIL OFL 1.1), variable weight 300-500, latin subset. Stand-in for the owner's title font
+   Asleepytiming ("Cloverfield"), whose free version is licensed to individuals / non-profits only (D-38, OD-23).
+   Drop a licensed asleepytiming.woff2 in packages/vendor/asleepytiming/ and it takes over via the font stack. */
+@font-face {
+  font-family: "Comfortaa";
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url("./comfortaa-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Asleepytiming";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local("Asleepytiming"), url("../asleepytiming/asleepytiming.woff2") format("woff2");
+}
