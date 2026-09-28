@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS events (
   name TEXT NOT NULL,
   timezone TEXT NOT NULL DEFAULT 'UTC',
   status TEXT NOT NULL DEFAULT 'active',
+  test_mode INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
   archived_at TEXT
 );
@@ -35,6 +36,8 @@ CREATE TABLE IF NOT EXISTS rounds (
   cancellation_reason TEXT,
   pool_json TEXT,
   overdue_notified INTEGER NOT NULL DEFAULT 0,
+  start_delay_minutes INTEGER,
+  opened_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   UNIQUE(event_id, number)
@@ -119,6 +122,7 @@ CREATE TABLE IF NOT EXISTS winners (
   winning_draw_id TEXT NOT NULL,
   winning_draw_number INTEGER NOT NULL,
   line_ids_json TEXT NOT NULL,
+  closest INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
   PRIMARY KEY(round_id, participant_id)
 );
@@ -214,6 +218,14 @@ export function openDatabase(path = ':memory:') {
 
 export function migrate(db) {
   db.exec(SCHEMA_SQL);
+  // D-53: columns added after v1 databases were created (start-in-X-minutes rounds, registration-opened time).
+  const cols = new Set(db.prepare('PRAGMA table_info(rounds)').all().map(c => c.name));
+  if (!cols.has('start_delay_minutes')) db.exec('ALTER TABLE rounds ADD COLUMN start_delay_minutes INTEGER');
+  if (!cols.has('opened_at')) db.exec('ALTER TABLE rounds ADD COLUMN opened_at TEXT');
+  const wcols = new Set(db.prepare('PRAGMA table_info(winners)').all().map(c => c.name));
+  if (!wcols.has('closest')) db.exec('ALTER TABLE winners ADD COLUMN closest INTEGER NOT NULL DEFAULT 0'); // D-53 closest-line win
+  const ecols = new Set(db.prepare('PRAGMA table_info(events)').all().map(c => c.name));
+  if (!ecols.has('test_mode')) db.exec('ALTER TABLE events ADD COLUMN test_mode INTEGER NOT NULL DEFAULT 0'); // D-56 test mode
   db.prepare('INSERT OR IGNORE INTO meta(key, value) VALUES (?, ?)').run('schema_version', String(SCHEMA_VERSION));
 }
 

@@ -15,7 +15,7 @@ function kindOf(s) { return s?.isCore ? 'Core' : s?.isCritical ? 'Critical' : 'O
  * @param {Array<{participantId:string, state:string, selectedSkillIds:string[], matrixVersion:string|null}>} input.boards  boards of the current or last round
  * @param {Map<string, object>} input.skills  Skill Master map (id -> skill)
  * @param {Array<{id,name}>} input.platforms
- * @param {Array<{id,name,platformId}>} input.roles
+ * @param {Array<{id,name}>} input.roles  (D-55: independent of platforms)
  * @param {(roleId:string) => Set<string>} input.roleSkillSet  role -> skill ids at matrixVersion
  * @param {string} input.matrixVersion
  * @param {string} input.computedAt ISO
@@ -64,6 +64,12 @@ export function computeInsights({ participants, boards, skills, platforms, roles
   const topCoreSkills = [...skills.values()].filter(sk => sk.kind === 'Core Skill' && sk.status === 'active')
     .map(sk => ({ skillId: sk.id, name: sk.name, count: counts.get(sk.id) ?? 0 }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  // Top technical / soft skills (D-54, the picker's questions 2 and 3): the ten most picked of each Skill Master kind.
+  const topOfKind = (kind) => [...counts.entries()].filter(([id]) => skills.get(id)?.kind === kind)
+    .sort((a, b) => b[1] - a[1] || String(skills.get(a[0])?.name).localeCompare(String(skills.get(b[0])?.name))).slice(0, 10)
+    .map(([skillId, count]) => ({ skillId, name: skills.get(skillId)?.name ?? skillId, count }));
+  const topTechSkills = topOfKind('Hard Skill');
+  const topSoftSkills = topOfKind('Soft Skill');
 
   // Matrix alignment: mean of inMatrixCount/CELLS over completed boards whose participant has a role; beyond-matrix aggregate.
   const roleOf = new Map(participants.map(p => [p.participantId, p.roleId]));
@@ -74,6 +80,7 @@ export function computeInsights({ participants, boards, skills, platforms, roles
     const roleId = roleOf.get(b.participantId);
     if (!roleId) continue;
     const set = roleSkillSet(roleId);
+    if (!set.size) continue; // D-55: a role without Skill Matrix data has nothing to match against
     let inMatrix = 0;
     for (const id of b.selectedSkillIds) { if (set.has(id)) inMatrix += 1; else beyond.set(id, (beyond.get(id) ?? 0) + 1); }
     alignSum += inMatrix / CELLS; alignN += 1;
@@ -85,13 +92,13 @@ export function computeInsights({ participants, boards, skills, platforms, roles
   const skillsBeyondMatrix = [...beyond.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10)
     .map(([skillId, count]) => ({ skillId, name: skills.get(skillId)?.name ?? skillId, count }));
 
-  return { participation, platformEngagement, roleEngagement, topSkills, topCoreSkills, coreCriticalDensity: density, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, matrixVersion, computedAt };
+  return { participation, platformEngagement, roleEngagement, topSkills, topCoreSkills, topTechSkills, topSoftSkills, coreCriticalDensity: density, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, matrixVersion, computedAt };
 }
 
 /** Keys the stage dashboard may show (contracts/projections/stage.json insights block). */
 export function stageInsights(full) {
   if (!full) return null;
-  const { topSkills, topCoreSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, participation } = full;
+  const { topSkills, topCoreSkills, topTechSkills, topSoftSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts, participation } = full;
   const totals = { participants: participation.joined, completed: participation.completedParticipants }; // D-48: aggregate counts only
-  return { totals, topSkills, topCoreSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts };
+  return { totals, topSkills, topCoreSkills, topTechSkills, topSoftSkills, coreCriticalDensity, platformEngagement, roleEngagement, matrixAlignment, skillsBeyondMatrix, suppressedCohorts };
 }

@@ -137,7 +137,9 @@ export function createProjections({ db, clock, config, game, participants, hub =
     };
     return redact('stage', snap);
   }
-  function adminRoundSummary(r) { const rd = ['CLOSED', 'CANCELLED'].includes(r.state) ? null : game.readinessOf(r); return { ...roundSummary(r), resultWindowEndsAt: resultWindowEndsAt(r), startOverdue: rd?.startOverdue ?? false, readiness: rd ? withoutPool(rd) : null }; }
+  // D-53: the admin also sees how the start time was set ("in N minutes" counts from Open for players) and when it was made
+  function adminSummary(r) { return { ...roundSummary(r), startInMinutes: r.start_delay_minutes ?? null, openedAt: r.opened_at ?? null, createdAt: r.created_at }; }
+  function adminRoundSummary(r) { const rd = ['CLOSED', 'CANCELLED'].includes(r.state) ? null : game.readinessOf(r); return { ...adminSummary(r), resultWindowEndsAt: resultWindowEndsAt(r), startOverdue: rd?.startOverdue ?? false, readiness: rd ? withoutPool(rd) : null }; }
   function withoutPool(rd) { const { pool, ...rest } = rd; return rest; }
   function lastCommandFor(roundId) {
     const a = db.get(`SELECT * FROM audit_log WHERE round_id = ? AND action LIKE 'round.%' ORDER BY id DESC LIMIT 1`, roundId);
@@ -151,14 +153,14 @@ export function createProjections({ db, clock, config, game, participants, hub =
     if (cur) {
       const { draws, poolRemaining } = drawInfo(cur);
       currentRound = {
-        summary: { ...roundSummary(cur), resultWindowEndsAt: resultWindowEndsAt(cur) }, readiness: withoutPool(game.readinessOf(cur)),
+        summary: { ...adminSummary(cur), resultWindowEndsAt: resultWindowEndsAt(cur) }, readiness: withoutPool(game.readinessOf(cur)),
         counts: { ...game.countsOf(cur), connections: conns.public + conns.stage + conns.participants + conns.admin },
         draws: draws.map(d => ({ ...drawShape(d), matchedBoards: d.matched_boards })), poolRemaining,
-        winners: winnersOf(db, cur.id).map(w => ({ participantId: w.participant_id, label: winnerLabel(w), lineIds: json.parse(w.line_ids_json, []), winningDrawNumber: w.winning_draw_number })),
+        winners: winnersOf(db, cur.id).map(w => ({ participantId: w.participant_id, label: winnerLabel(w), lineIds: json.parse(w.line_ids_json, []), winningDrawNumber: w.winning_draw_number, closest: !!w.closest })),
         lastCommand: lastCommandFor(cur.id), pacingHintSeconds: [5, 8],
       };
     }
-    const snap = { eventId, eventName: event.name, sequence: latestSequence(db, eventId), serverTime: clock.iso(), rounds: roundsOfEvent(db, eventId).map(adminRoundSummary), currentRound, join: currentJoinLink(db, config, clock, eventId), connections: conns };
+    const snap = { eventId, eventName: event.name, sequence: latestSequence(db, eventId), serverTime: clock.iso(), rounds: roundsOfEvent(db, eventId).map(adminRoundSummary), currentRound, join: currentJoinLink(db, config, clock, eventId), connections: conns, testMode: !!event.test_mode && !config.testModeLocked, testModeLocked: !!config.testModeLocked, canClearData: !!event.test_mode && !config.testModeLocked };
     return redact('admin', snap);
   }
   function participantSnapshot(p) {

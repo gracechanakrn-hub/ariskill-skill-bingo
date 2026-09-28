@@ -182,7 +182,7 @@ function onEvent(envelope, meta) {
     else if (envelope.type === 'result.published') announceWinners(deriveView(next));
     else if (isRoundEvent(envelope.type) && (prev.round?.state ?? null) !== (next.round?.state ?? null)) announceState(deriveView(next));
     // Round lifecycle changes may change which round is "current": reconcile with the server projection.
-    if (['round.created', 'round.closed', 'round.cancelled', 'round.exhausted', 'round.registration_opened'].includes(envelope.type)) refreshSnapshot('round-change');
+    if (['round.created', 'round.started', 'round.closed', 'round.cancelled', 'round.registration_opened', 'round.deleted', 'event.reset'].includes(envelope.type)) refreshSnapshot('round-change');
   }
   void key;
 }

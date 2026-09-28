@@ -11,8 +11,12 @@ import { validateSelections, isComplete, REQUIRED_SELECTIONS, matrixInsight, che
 
 const LEVEL_ORDER = { core: 0, critical: 1, optional: 2 };
 /** Discovery lists; 'core' and 'role' feed picker questions 1 and 2 (D-35). */
-export const DISCOVERY_MODES = ['core', 'role', 'recommended', 'popular', 'search'];
+export const DISCOVERY_MODES = ['core', 'role', 'tech', 'soft', 'recommended', 'popular', 'search'];
 const CORE_KIND = 'Core Skill';
+const TECH_KIND = 'Hard Skill';
+const SOFT_KIND = 'Soft Skill';
+const SOFT_MIN_CHOICES = 8; // D-54: a role with few soft skills in its matrix gets the other soft skills after its own
+const TECH_FALLBACK_CHOICES = 30; // D-55: a role without Skill Matrix data gets the technical skills most roles share
 
 export function createParticipants({ db, clock, config, game, log }) {
   const now = () => clock.iso();
@@ -51,7 +55,7 @@ export function createParticipants({ db, clock, config, game, log }) {
     if (typeof platformId !== 'string' || !PLATFORM_BY_ID.has(platformId)) throw new ApiError('VALIDATION', 'platformId must be an explicit valid platform id');
     const role = typeof roleId === 'string' ? ROLE_BY_ID.get(roleId) : null;
     if (!role) throw new ApiError('VALIDATION', 'roleId must be an explicit valid role id');
-    if (role.platformId !== platformId) throw new ApiError('VALIDATION', 'roleId does not belong to platformId', { platformId, roleId });
+    // D-55: platform and role are independent choices (any role in any platform).
     db.run('UPDATE participants SET platform_id = ?, role_id = ?, updated_at = ? WHERE id = ?', platformId, roleId, now(), participant.id);
     game.audit({ eventId: participant.event_id, actor: participant.id, action: 'profile.set', target: participant.id, outcome: 'accepted', correlationId: meta.correlationId, details: { platformId, roleId } });
     return { participant: participantSelf(db.get('SELECT * FROM participants WHERE id = ?', participant.id)) };
@@ -80,6 +84,23 @@ export function createParticipants({ db, clock, config, game, log }) {
         .sort((a, b) => (LEVEL_ORDER[a.level] - LEVEL_ORDER[b.level]) || a.s.name.localeCompare(b.s.name)).map(x => x.s);
       // Picker question 2 (D-35): the role's skills without the core ones already asked in question 1.
       if (mode === 'role') skills = skills.filter(s => s.kind !== CORE_KIND);
+    } else if (mode === 'tech' || mode === 'soft') {
+      // Picker questions 2 and 3 (D-54): the role's technical (Hard Skill) or soft skills from the Skill Matrix in level order
+      // (core, critical, optional), alphabetical within a level. Technical skills are only ever critical or optional in
+      // the matrix; soft skills are core or optional, so every mapped level is offered.
+      const kind = mode === 'tech' ? TECH_KIND : SOFT_KIND;
+      const levels = ROLE_SKILL_LEVELS.get(roleId) ?? new Map();
+      skills = [...levels.entries()].map(([id, level]) => ({ s: SKILLS.get(id), level })).filter(x => x.s && x.s.status === 'active' && x.s.kind === kind)
+        .sort((a, b) => (LEVEL_ORDER[a.level] - LEVEL_ORDER[b.level]) || a.s.name.localeCompare(b.s.name)).map(x => x.s);
+      if (mode === 'tech' && !skills.length) {
+        skills = SKILL_MASTER.skills.filter(s => s.status === 'active' && s.kind === TECH_KIND)
+          .sort((a, b) => (MATRIX_FREQUENCY.get(b.id) ?? 0) - (MATRIX_FREQUENCY.get(a.id) ?? 0) || a.name.localeCompare(b.name)).slice(0, TECH_FALLBACK_CHOICES)
+          .sort((a, b) => a.name.localeCompare(b.name));
+      }
+      if (mode === 'soft' && skills.length < SOFT_MIN_CHOICES) {
+        const have = new Set(skills.map(s => s.id));
+        skills = skills.concat(SKILL_MASTER.skills.filter(s => s.status === 'active' && s.kind === SOFT_KIND && !have.has(s.id)).sort((a, b) => a.name.localeCompare(b.name)));
+      }
     } else if (mode === 'popular') {
       const counts = new Map();
       for (const row of db.all('SELECT selected_json FROM boards WHERE event_id = ?', participant.event_id)) for (const id of json.parse(row.selected_json, [])) counts.set(id, (counts.get(id) ?? 0) + 1);
@@ -202,8 +223,9 @@ export function createParticipants({ db, clock, config, game, log }) {
     const board = db.get(`SELECT * FROM boards WHERE participant_id = ? AND state = 'FINISHED' ORDER BY finished_at DESC LIMIT 1`, participant.id);
     if (!board) throw new ApiError('NOT_FOUND', 'insight is available once your board is FINISHED');
     const ids = json.parse(board.selected_json, []);
-    const r = matrixInsight(ids, roleSkillSet(participant.role_id), board.matrix_version ?? MATRIX_VERSION);
-    return { roundId: board.round_id, matrixVersion: r.matrixVersion, inMatrixCount: r.inMatrixCount, beyondMatrixCount: r.beyondMatrixCount, totalSelected: r.totalSelected };
+    const roleSet = roleSkillSet(participant.role_id);
+    const r = matrixInsight(ids, roleSet, board.matrix_version ?? MATRIX_VERSION);
+    return { roundId: board.round_id, matrixVersion: r.matrixVersion, roleInMatrix: roleSet.size > 0, inMatrixCount: r.inMatrixCount, beyondMatrixCount: r.beyondMatrixCount, totalSelected: r.totalSelected };
   }
 
   // ---- Soul + Float (BR-16, D-11) ---------------------------------------------------------------------------------

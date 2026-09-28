@@ -11,7 +11,7 @@
 // Mirrors packages/game-rules (CELLS, MIN_DRAW_FOR_BINGO); this module stays import-free for node:test.
 export const REQUIRED_SELECTIONS = 16;
 export const BINGO_UNLOCK_DRAW = 4;
-export const PICK_STEPS = 3; // picker questions: 1 core, 2 role, 3 search (D-35)
+export const PICK_STEPS = 4; // picker questions: 1 core, 2 technical, 3 soft, 4 search (D-35, D-54)
 export const EDITABLE_ROUND_STATES = ['DRAFT', 'REGISTRATION_OPEN'];
 export const IN_PROGRESS_ROUND_STATES = ['LOCKED', 'PLAYING'];
 export const RESULT_ROUND_STATES = ['WINNER', 'EXHAUSTED', 'CLOSED'];

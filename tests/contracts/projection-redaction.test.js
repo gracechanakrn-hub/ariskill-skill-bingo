@@ -48,7 +48,7 @@ describe('projection redaction across audiences', () => {
     round = (await command(t, round.roundId, 'round.registration.open', round.version)).round;
     await readyBoard(t, A, set); await readyBoard(t, B, set); await readyBoard(t, C, third);
     snaps.waiting = await all();
-    const l = await command(t, round.roundId, 'round.lock', round.version); const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+    const s = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true }); // D-53: one step, no LOCKED
     setPool(t, round.roundId, set); // every active skill is drawable (D-33): only the A/B pair's skills are drawn, so A and B co-win and C does not
     const { round: end } = await drawUntilEnd(t, s.round);
     assert.equal(end.state, 'WINNER');
@@ -63,6 +63,9 @@ describe('projection redaction across audiences', () => {
     const next = await createRound(t, { title: 'Redaction 2' });
     snaps.next = await all();
     await command(t, next.roundId, 'round.cancel', next.version, { reason: 'end' });
+    // D-53: deleting the cancelled round sends round.deleted to every audience; it is checked below like every other event
+    assert.equal((await t.api.call('DELETE', `/admin/rounds/${next.roundId}`, { token: t.admin, key: nextKey('del') })).status, 200);
+    await streams.public.waitFor(ev => ev.some(e => e.event === 'round.deleted'), 3000, 'deleted');
     await sleep(100);
     for (const s of Object.values(streams)) { s.close(); await s.done; }
   });
@@ -124,7 +127,7 @@ describe('projection redaction across audiences', () => {
     assert.equal(w.public.winners.length, 2); assert.equal(w.stage.winners.length, 2); assert.equal(w.admin.currentRound.winners.length, 2);
     for (const x of w.public.winners) assert.deepEqual(Object.keys(x).sort(), ['label', 'soulId']);
     for (const x of w.stage.winners) assert.deepEqual(Object.keys(x).sort(), ['label', 'soulId', 'winningDrawNumber']);
-    for (const x of w.admin.currentRound.winners) assert.deepEqual(Object.keys(x).sort(), ['label', 'lineIds', 'participantId', 'winningDrawNumber']);
+    for (const x of w.admin.currentRound.winners) assert.deepEqual(Object.keys(x).sort(), ['closest', 'label', 'lineIds', 'participantId', 'winningDrawNumber']);
     assert.deepEqual(w.admin.currentRound.winners.map(x => x.participantId).sort(), [A.participantId, B.participantId].sort());
     const publicLabels = w.public.winners.map(x => x.label);
     assert.ok(publicLabels.includes('Consented Winner')); assert.ok(!publicLabels.includes('Hidden Winner')); assert.ok(publicLabels.some(l => /^Soul #\d{4}$/.test(l)));
@@ -150,7 +153,7 @@ describe('projection redaction across audiences', () => {
     assert.ok(insights.topSkills.every(s => typeof s.count === 'number' && Object.keys(s).every(k => ['skillId', 'name', 'kind', 'count'].includes(k))));
     const stageIns = snaps.winner.stage.insights;
     assert.deepEqual(findKeys(stageIns, [...FORBIDDEN.stage, ...INDIVIDUAL_KEYS]), []);
-    assert.deepEqual(Object.keys(stageIns).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
+    assert.deepEqual(Object.keys(stageIns).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'topSoftSkills', 'topTechSkills', 'totals']);
     assert.ok(!('participation' in stageIns) && !('computedAt' in stageIns), 'stage gets the stage subset only');
   });
 

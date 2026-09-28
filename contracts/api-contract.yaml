@@ -93,21 +93,21 @@ operations:
     method: GET
     path: /taxonomy
     auth: participant
-    response: { platforms: [{id,name}], roles: [{id,name,platformId}], matrixVersion: string }
+    response: { platforms: [{id,name}], roles: [{id,name,inMatrix}], matrixVersion: string }  # D-55: from packages/skill-master/data/taxonomy.json (the owner's platform / role CSVs); platform and role are independent
 
   - id: me.profile.set
     method: POST
     path: /me/profile
     auth: participant
     body: { platformId: string, roleId: string }
-    rule: Both values must be sent explicitly by the client; the server never derives them from employeeRef.
+    rule: Both values must be sent explicitly by the client; the server never derives them from employeeRef. Any role may be combined with any platform (D-55).
     response: { participant: ParticipantPublicSelf }
 
   - id: skill.discovery.query
     method: GET
     path: /skills/discovery
     auth: participant
-    query: { mode: "core|role|recommended|popular|search", q: string?, limit: int? }  # core = the 7 Core Skill kind (picker Q1); role = role skills minus core (picker Q2), D-35
+    query: { mode: "core|role|tech|soft|recommended|popular|search", q: string?, limit: int? }  # core = the 7 Core Skill kind (picker Q1); tech / soft = the role's Hard / Soft Skills from the Skill Matrix (picker Q2 / Q3, D-54; soft tops up with other soft skills below 8); role = role skills minus core (D-35)
     rule: recommended = role's core+critical then optional skills; popular = most selected across the event (falls back to matrix frequency); search = case-insensitive substring across name/domain/cluster.
     response: { mode, skills: [{ id, name, domain, cluster, kind, isCore, isCritical, eligible, roleLevel: "core|critical|optional|null" }], selectedCount: int }
     errors: [PROFILE_REQUIRED]
@@ -143,7 +143,7 @@ operations:
     path: /me/insight
     auth: participant
     rule: Available once the participant's board is FINISHED. Private only.
-    response: { roundId, matrixVersion, inMatrixCount: int, beyondMatrixCount: int, totalSelected: 16 }
+    response: { roundId, matrixVersion, roleInMatrix: bool, inMatrixCount: int, beyondMatrixCount: int, totalSelected: 16 }  # roleInMatrix false (D-55): the role has no Skill Matrix data, counts are not meaningful
 
   - id: soul.float
     method: POST
@@ -177,7 +177,7 @@ operations:
     path: /admin/events/{eventId}/rounds
     auth: admin
     headers: [Idempotency-Key]
-    body: { title: string, lockAt: ISO, resultWindowSeconds: int? }
+    body: { title: string, lockAt: ISO?, startInMinutes: int?, resultWindowSeconds: int? }   # D-53: a start time (lockAt) or startInMinutes 1-240 (counted from Open for players); resultWindowSeconds defaults to 12
     response: { round: RoundSummary, resultingVersion: int }
 
   - id: round.command
@@ -186,18 +186,47 @@ operations:
     auth: admin
     headers: [Idempotency-Key]
     body:
-      command: "round.update|round.registration.open|round.reschedule|round.lock|round.start|round.start_now|round.draw.next|round.cancel|round.close"
+      command: "round.update|round.registration.open|round.reschedule|round.start_now|round.draw.next|round.cancel"   # D-53: no lock/start/close; the start time or start_now starts play
       expectedVersion: int
       params:
-        round.update / round.reschedule: { title?: string, lockAt?: ISO, resultWindowSeconds?: int }
+        round.update: { title?: string, lockAt?: ISO, startInMinutes?: int, resultWindowSeconds?: int }
+        round.reschedule: { lockAt?: ISO, extendMinutes?: int }   # extendMinutes 1-60 from max(start time, now)
         round.start_now: { confirmed: true }
         round.cancel: { reason: string }
         round.draw.next: {}   # never contains a skill identifier
     rule: >
       Pending/accepted/rejected semantics: the client shows pending until the response arrives; on network
       loss it retries with the same Idempotency-Key. Rejections never mutate the round.
-    response: { accepted: true, round: RoundSummary, resultingVersion: int, effects: { draw?: Draw, winners?: WinnerAdmin[], activeBoards?: int, deferredBoards?: int } }
+    response: { accepted: true, round: RoundSummary, resultingVersion: int, effects: { draw?: Draw, winners?: WinnerAdmin[], activeBoards?: int, unfinishedBoards?: int, deferredBoards?: int, poolSize?: int } }
     errors: [STALE_VERSION, ILLEGAL_TRANSITION, POOL_TOO_SMALL, POOL_EXHAUSTED, REASON_REQUIRED, DRAW_FAILED, VALIDATION]
+
+  - id: round.delete
+    method: DELETE
+    path: /admin/rounds/{roundId}
+    auth: admin
+    headers: [Idempotency-Key]
+    rule: D-53. Any state. Removes the round with its boards, cells, matches, draws, winners, Souls and float tokens; the audit log keeps one record; emits round.deleted.
+    response: { deleted: true, roundId: string, boards: int, draws: int, winners: int, souls: int }
+    errors: [NOT_FOUND]
+
+  - id: event.test_mode
+    method: POST
+    path: /admin/events/{eventId}/test-mode
+    auth: admin
+    headers: [Idempotency-Key]
+    body: { enabled: bool }
+    rule: D-56. Stored per event, off by default. Turning it on is refused (FORBIDDEN) when the server sets BINGO_ALLOW_RESET=off. Emits event.updated {testMode} (admin); audited as event.test_mode.
+    response: { testMode: bool }
+
+  - id: event.reset
+    method: POST
+    path: /admin/events/{eventId}/reset
+    auth: admin
+    headers: [Idempotency-Key]
+    body: { confirm: "DELETE" }
+    rule: D-53, D-56. Only while test mode is on (FORBIDDEN otherwise, and always when BINGO_ALLOW_RESET=off). Clears every round, player and Soul of the event; test mode stays as it is; emits event.reset.
+    response: { reset: true, rounds: int, boards: int, draws: int, winners: int, souls: int, participants: int }
+    errors: [FORBIDDEN, VALIDATION, NOT_FOUND]
 
   - id: admin.insights
     method: GET

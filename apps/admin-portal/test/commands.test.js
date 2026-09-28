@@ -85,21 +85,21 @@ test('network failure followed by a different action drops the retry key', async
   const round = { roundId: 'r1', state: 'REGISTRATION_OPEN', version: 2 };
   const api = fakeApi([{ error: err('NETWORK') }, { accepted: true }, { accepted: true }]);
   const runner = createCommandRunner({ post: api.post, newKey, getRound: () => round });
-  await runner.run('round.lock');
-  await runner.run('round.reschedule', { lockAt: '2026-09-22T12:00:00.000Z' });
+  await runner.run('round.start_now');
+  await runner.run('round.reschedule', { extendMinutes: 5 });
   assert.notEqual(api.calls[1].key, api.calls[0].key);
-  await runner.run('round.lock');
+  await runner.run('round.start_now');
   assert.notEqual(api.calls[2].key, api.calls[0].key);
 });
 
 test('rejected commands surface the error and the exception copy id', async () => {
-  const round = { roundId: 'r1', state: 'LOCKED', version: 5 };
+  const round = { roundId: 'r1', state: 'REGISTRATION_OPEN', version: 5 };
   const api = fakeApi([{ error: err('POOL_TOO_SMALL', { exceptionId: 'E20' }) }]);
   const rejected = [];
   const runner = createCommandRunner({ post: api.post, newKey, getRound: () => round, hooks: { onRejected: (e, c) => rejected.push([c, exceptionIdFor(e)]) } });
-  const res = await runner.run('round.start');
+  const res = await runner.run('round.start_now');
   assert.equal(res.status, 'rejected');
-  assert.deepEqual(rejected, [['round.start', 'E20']]);
+  assert.deepEqual(rejected, [['round.start_now', 'E20']]);
   assert.equal(exceptionIdFor(err('ILLEGAL_TRANSITION')), 'E10');
   assert.equal(exceptionIdFor(err('DRAW_FAILED')), 'E21');
   assert.equal(exceptionIdFor(err('POOL_EXHAUSTED')), 'E11');
@@ -111,26 +111,29 @@ test('guards: no round, command not allowed in state, start_now always confirmed
   const api = fakeApi([{ accepted: true }]);
   let round = null;
   const runner = createCommandRunner({ post: api.post, newKey, getRound: () => round });
-  assert.equal((await runner.run('round.start')).status, 'no-round');
+  assert.equal((await runner.run('round.start_now')).status, 'no-round');
   round = { roundId: 'r1', state: 'WINNER', version: 1 };
   assert.equal((await runner.run('round.draw.next')).status, 'not-allowed');
+  round = { roundId: 'r1', state: 'REGISTRATION_OPEN', version: 1 };
+  for (const gone of ['round.lock', 'round.start', 'round.close']) assert.equal((await runner.run(gone)).status, 'not-allowed', `D-53 removed ${gone}`);
   assert.equal(api.calls.length, 0);
   round = { roundId: 'r1', state: 'REGISTRATION_OPEN', version: 1 };
   assert.equal((await runner.run('round.start_now', { confirmed: 'yes' })).status, 'accepted');
   assert.deepEqual(api.calls[0].body.params, { confirmed: true });
 });
 
-test('UX-04: a failed round.lock / start_now lock leg maps to E19; stale, illegal, pool and network stay themselves', () => {
-  assert.equal(exceptionIdFor(err('INTERNAL', { status: 500 }), 'round.lock'), 'E19');
+test('UX-04: a failed start_now lock leg maps to E19; stale, illegal, pool and network stay themselves (D-53: start_now is the only locking command)', () => {
+  assert.equal(exceptionIdFor(err('INTERNAL', { status: 500 }), 'round.start_now'), 'E19');
   assert.equal(exceptionIdFor(err('DB_ERROR'), 'round.start_now'), 'E19');
-  assert.equal(exceptionIdFor(err('INTERNAL', { details: { code: 'E19' } }), 'round.close'), 'E19');
-  assert.equal(exceptionIdFor(err('STALE_VERSION'), 'round.lock'), 'E10');
-  assert.equal(exceptionIdFor(err('ILLEGAL_TRANSITION'), 'round.lock'), 'E10');
+  assert.equal(exceptionIdFor(err('INTERNAL', { details: { code: 'E19' } }), 'round.draw.next'), 'E19', 'an E19-flagged detail wins for any command');
+  assert.equal(exceptionIdFor(err('STALE_VERSION'), 'round.start_now'), 'E10');
+  assert.equal(exceptionIdFor(err('ILLEGAL_TRANSITION'), 'round.start_now'), 'E10');
   assert.equal(exceptionIdFor(err('POOL_TOO_SMALL'), 'round.start_now'), 'E20');
-  assert.equal(exceptionIdFor(err('NETWORK'), 'round.lock'), null);
-  assert.equal(exceptionIdFor(err('VALIDATION'), 'round.lock'), null);
+  assert.equal(exceptionIdFor(err('NETWORK'), 'round.start_now'), null);
+  assert.equal(exceptionIdFor(err('VALIDATION'), 'round.start_now'), null);
   assert.equal(exceptionIdFor(err('INTERNAL'), 'round.draw.next'), null);
-  assert.equal(exceptionIdFor(err('INTERNAL'), 'round.close'), null);
+  assert.equal(exceptionIdFor(err('INTERNAL', { status: 500 }), 'round.lock'), null, 'round.lock no longer exists, so it is not a locking command');
+  assert.equal(exceptionIdFor(err('INTERNAL'), 'round.reschedule'), null);
 });
 
 test('UX-04: runner reports a lock failure as rejected (no mutation, no retry key) and the hook can map it to E19', async () => {
@@ -138,9 +141,9 @@ test('UX-04: runner reports a lock failure as rejected (no mutation, no retry ke
   const api = fakeApi([{ error: err('INTERNAL', { status: 500 }) }]);
   const seen = [];
   const runner = createCommandRunner({ post: api.post, newKey, getRound: () => round, hooks: { onRejected: (e, c) => seen.push(exceptionIdFor(e, c)) } });
-  const res = await runner.run('round.lock');
+  const res = await runner.run('round.start_now');
   assert.equal(res.status, 'rejected');
   assert.deepEqual(seen, ['E19']);
-  assert.equal(runner.retryKeyFor('round.lock'), null);
+  assert.equal(runner.retryKeyFor('round.start_now'), null);
   assert.equal(round.version, 2);
 });

@@ -91,34 +91,110 @@ export function reasonDialog({ title, label, confirmLabel }) {
   });
 }
 
-/** roundFormDialog({ title, values:{title,lockAtLocal,resultWindowSeconds}, submitLabel }) -> Promise<values|null> */
-export function roundFormDialog({ title, values, submitLabel, lockAtOnly = false }) {
+const isFuture = (iso, now) => !!iso && Date.parse(iso) > now;
+
+/**
+ * roundDialog({ title, submitLabel, values: { title, mode: 'at'|'in', lockAtLocal, startInMinutes }, choices, now })
+ * The create / edit round modal (D-53): a name and when the game starts - at a time, or N minutes after Open for players.
+ * Resolves { title, lockAt } | { title, startInMinutes } | null.
+ */
+export function roundDialog({ title, submitLabel, values, choices, now = Date.now(), toIso }) {
+  const id = Math.random().toString(36).slice(2, 8);
+  const refs = { chips: [] };
+  let mode = values.mode === 'at' ? 'at' : 'in';
+  let minutes = values.startInMinutes || choices[1] || choices[0];
+  const sync = () => {
+    refs.atRadio.checked = mode === 'at'; refs.inRadio.checked = mode === 'in';
+    refs.time.disabled = mode !== 'at';
+    refs.atRow.classList.toggle('is-active', mode === 'at'); refs.inRow.classList.toggle('is-active', mode === 'in');
+    for (const c of refs.chips) { const on = mode === 'in' && Number(c.dataset.minutes) === minutes; c.setAttribute('aria-pressed', String(on)); c.classList.toggle('is-on', on); }
+  };
+  const chip = (n) => h('button', { className: 'seg', type: 'button', dataset: { minutes: n }, 'aria-pressed': 'false', ref: (el) => refs.chips.push(el), onClick: () => { mode = 'in'; minutes = n; sync(); } }, t('adminLocal.mc.minutes', { n }));
+  return openModal({
+    title,
+    body: () => {
+      const body = h('div', { className: 'stack round-dialog' },
+        h('div', { className: 'field' },
+          h('label', { className: 'field__label', for: `name-${id}` }, t('adminLocal.mc.name')),
+          h('input', { className: 'input', id: `name-${id}`, type: 'text', required: true, maxlength: 80, autocomplete: 'off', value: values.title || '', ref: (el) => { refs.name = el; } })),
+        h('fieldset', { className: 'start-choice stack stack--tight' },
+          h('legend', { className: 'field__label' }, t('adminLocal.mc.start')),
+          h('div', { className: 'start-option', ref: (el) => { refs.inRow = el; } },
+            h('label', { className: 'start-option__head' },
+              h('input', { type: 'radio', name: `mode-${id}`, value: 'in', ref: (el) => { refs.inRadio = el; }, onChange: () => { mode = 'in'; sync(); } }),
+              h('span', null, t('adminLocal.mc.startIn'))),
+            h('div', { className: 'seg-row', role: 'group', 'aria-label': t('adminLocal.mc.startIn') }, choices.map(chip)),
+            h('p', { className: 'muted start-option__hint' }, t('adminLocal.mc.startInHint'))),
+          h('div', { className: 'start-option', ref: (el) => { refs.atRow = el; } },
+            h('label', { className: 'start-option__head' },
+              h('input', { type: 'radio', name: `mode-${id}`, value: 'at', ref: (el) => { refs.atRadio = el; }, onChange: () => { mode = 'at'; sync(); refs.time.focus(); } }),
+              h('span', null, t('adminLocal.mc.startAt'))),
+            h('input', { className: 'input', id: `time-${id}`, type: 'datetime-local', step: 60, value: values.lockAtLocal || '', 'aria-label': t('adminLocal.mc.startAt'), ref: (el) => { refs.time = el; } }))),
+        h('p', { className: 'field__error', role: 'alert', hidden: true, ref: (el) => { refs.err = el; } }));
+      sync();
+      return body;
+    },
+    initialFocus: `#name-${id}`,
+    actions: (done) => [
+      h('button', { className: 'btn btn--ghost', type: 'button', onClick: () => done(null) }, t('adminLocal.cancelDialog')),
+      h('button', { className: 'btn btn--primary', type: 'button', dataset: { role: 'submit' }, onClick: () => {
+        const name = refs.name.value.trim();
+        const fail = (key, el) => { refs.err.textContent = t(key); refs.err.hidden = false; el.focus(); };
+        if (!name) return fail('adminLocal.mc.nameRequired', refs.name);
+        if (mode === 'in') return done({ title: name, startInMinutes: minutes });
+        const lockAt = toIso(refs.time.value);
+        if (!isFuture(lockAt, now)) return fail('adminLocal.mc.timeRequired', refs.time);
+        return done({ title: name, lockAt });
+      } }, submitLabel),
+    ],
+  });
+}
+
+/** pickTimeDialog({ valueLocal, now, toIso }) -> Promise<ISO|null>: a new start time for an open round. */
+export function pickTimeDialog({ valueLocal, now = Date.now(), toIso }) {
+  const id = Math.random().toString(36).slice(2, 8);
+  const refs = {};
+  return openModal({
+    title: t('adminLocal.mc.pickTimeTitle'),
+    body: h('div', { className: 'stack stack--tight' },
+      h('div', { className: 'field' },
+        h('label', { className: 'field__label', for: `pick-${id}` }, t('adminLocal.mc.newTime')),
+        h('input', { className: 'input', id: `pick-${id}`, type: 'datetime-local', step: 60, value: valueLocal || '', ref: (el) => { refs.time = el; } })),
+      h('p', { className: 'field__error', role: 'alert', hidden: true, ref: (el) => { refs.err = el; } }, t('adminLocal.mc.timeRequired'))),
+    initialFocus: `#pick-${id}`,
+    actions: (done) => [
+      h('button', { className: 'btn btn--ghost', type: 'button', onClick: () => done(null) }, t('adminLocal.cancelDialog')),
+      h('button', { className: 'btn btn--primary', type: 'button', onClick: () => {
+        const iso = toIso(refs.time.value);
+        if (!isFuture(iso, now)) { refs.err.hidden = false; refs.time.focus(); return; }
+        done(iso);
+      } }, t('adminLocal.mc.save')),
+    ],
+  });
+}
+
+/** typeToConfirmDialog({ title, message, word, confirmLabel }) -> Promise<boolean>: the confirm button works only once `word` is typed. */
+export function typeToConfirmDialog({ title, message, word, confirmLabel }) {
   const id = Math.random().toString(36).slice(2, 8);
   const refs = {};
   return openModal({
     title,
+    describedBy: `type-desc-${id}`,
     body: h('div', { className: 'stack stack--tight' },
-      !lockAtOnly && h('div', { className: 'field' },
-        h('label', { className: 'field__label', for: `title-${id}` }, t('adminLocal.title')),
-        h('input', { className: 'input', id: `title-${id}`, type: 'text', required: true, maxlength: 80, value: values.title || '', ref: (el) => { refs.title = el; } })),
+      h('p', { id: `type-desc-${id}` }, message),
       h('div', { className: 'field' },
-        h('label', { className: 'field__label', for: `lock-${id}` }, t('adminLocal.lockAt')),
-        h('input', { className: 'input', id: `lock-${id}`, type: 'datetime-local', required: true, step: 60, value: values.lockAtLocal || '', ref: (el) => { refs.lockAt = el; } })),
-      !lockAtOnly && h('div', { className: 'field' },
-        h('label', { className: 'field__label', for: `rw-${id}` }, t('adminLocal.resultWindow')),
-        h('input', { className: 'input', id: `rw-${id}`, type: 'number', min: 10, max: 15, step: 1, value: String(values.resultWindowSeconds ?? 12), ref: (el) => { refs.rw = el; } })),
-      h('p', { className: 'field__error', hidden: true, ref: (el) => { refs.err = el; } })),
-    initialFocus: lockAtOnly ? `#lock-${id}` : `#title-${id}`,
+        h('label', { className: 'field__label', for: `type-${id}` }, t('adminLocal.mc.clearType')),
+        h('input', { className: 'input mono', id: `type-${id}`, type: 'text', autocomplete: 'off', spellcheck: false, ref: (el) => { refs.input = el; } })),
+      h('p', { className: 'field__error', role: 'alert', hidden: true, ref: (el) => { refs.err = el; } }, t('adminLocal.mc.clearMismatch'))),
+    initialFocus: `#type-${id}`,
     actions: (done) => [
-      h('button', { className: 'btn btn--ghost', type: 'button', onClick: () => done(null) }, t('adminLocal.cancelDialog')),
-      h('button', { className: 'btn btn--primary', type: 'button', onClick: () => {
-        const out = { lockAtLocal: refs.lockAt.value };
-        if (!lockAtOnly) { out.title = refs.title.value.trim(); out.resultWindowSeconds = refs.rw.value; }
-        if ((!lockAtOnly && !out.title) || !out.lockAtLocal) { refs.err.hidden = false; refs.err.textContent = t('adminLocal.formRequired'); (out.title === '' ? refs.title : refs.lockAt).focus(); return; }
-        done(out);
-      } }, submitLabel),
+      h('button', { className: 'btn btn--ghost', type: 'button', onClick: () => done(false) }, t('adminLocal.cancelDialog')),
+      h('button', { className: 'btn btn--danger', type: 'button', onClick: () => {
+        if (refs.input.value.trim() !== word) { refs.err.hidden = false; refs.input.focus(); return; }
+        done(true);
+      } }, confirmLabel),
     ],
-  });
+  }).then((v) => v === true);
 }
 
 export { setPending };

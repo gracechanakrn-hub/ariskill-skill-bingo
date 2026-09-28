@@ -7,12 +7,12 @@ describe('audit log reconstructs transitions, actors, draws and rejections (A-09
   before(async () => { t = await startServer(); });
   after(async () => { await t.close(); });
 
-  test('a full round leaves an ordered trail: create, open, lock, start, every draw (with number and skill), result, rejections', async () => {
+  test('a full round leaves an ordered trail: create, open, start_now, every draw (with number and skill), result, rejections', async () => {
     const round = await createRound(t);
     const a = await join(t); await readyBoard(t, a, boardSet(0));
     const b = await join(t); await readyBoard(t, b, boardSet(0));
-    await tryCommand(t, round.roundId, 'round.start', round.version); // illegal
-    await tryCommand(t, round.roundId, 'round.lock', round.version + 5); // stale
+    await tryCommand(t, round.roundId, 'round.draw.next', round.version); // illegal in REGISTRATION_OPEN
+    await tryCommand(t, round.roundId, 'round.start_now', round.version + 5, { confirmed: true }); // stale
     const started = await startRound(t, round);
     const { results, round: end } = await drawUntilEnd(t, started);
     assert.equal(end.state, 'WINNER');
@@ -22,13 +22,13 @@ describe('audit log reconstructs transitions, actors, draws and rejections (A-09
     assert.ok(entries.every((e, i) => i === 0 || e.id < entries[i - 1].id), 'newest first');
     const chrono = entries.slice().reverse();
     const actions = chrono.filter(e => e.outcome === 'accepted' && e.actor === 'admin').map(e => e.action);
-    assert.deepEqual(actions.slice(0, 4), ['round.create', 'round.registration.open', 'round.lock', 'round.start']);
+    assert.deepEqual(actions.slice(0, 3), ['round.create', 'round.registration.open', 'round.start_now']);
     const draws = chrono.filter(e => e.action === 'round.draw.next' && e.outcome === 'accepted');
     assert.equal(draws.length, results.length);
     assert.deepEqual(draws.map(d => d.details.drawNumber), results.map((_, i) => i + 1));
     assert.deepEqual(draws.map(d => d.details.skillId), results.map(r => r.effects.draw.skill.id));
     assert.ok(draws.at(-1).details.winners.length >= 1 && draws.at(-1).details.winners.every(w => [a.participantId, b.participantId].includes(w)));
-    assert.deepEqual(chrono.map(e => [e.details?.fromState, e.details?.toState]).filter(x => x[0]).slice(0, 4), [['DRAFT', 'REGISTRATION_OPEN'], ['REGISTRATION_OPEN', 'LOCKED'], ['LOCKED', 'PLAYING'], ['PLAYING', 'PLAYING']].slice(0, 4).map((x, i) => i === 3 ? [x[0], draws.length === 1 ? 'WINNER' : 'PLAYING'] : x));
+    assert.deepEqual(chrono.map(e => [e.details?.fromState, e.details?.toState]).filter(x => x[0]).slice(0, 3), [['DRAFT', 'REGISTRATION_OPEN'], ['REGISTRATION_OPEN', 'PLAYING'], ['PLAYING', draws.length === 1 ? 'WINNER' : 'PLAYING']]);
     const rejected = chrono.filter(e => e.outcome === 'rejected');
     assert.deepEqual(rejected.map(e => e.details.code), ['ILLEGAL_TRANSITION', 'STALE_VERSION']);
     assert.equal(rejected[1].expectedVersion, round.version + 5); assert.equal(rejected[1].actualVersion, round.version);

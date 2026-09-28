@@ -8,6 +8,7 @@ import { createLogger } from '../../services/game-service/src/log.js';
 import { createApp } from '../../services/game-service/src/app.js';
 import { signJoinToken } from '../../services/game-service/src/auth.js';
 import skillMaster from '../../packages/skill-master/data/skill-master.json' with { type: 'json' };
+import taxonomy from '../../packages/skill-master/data/taxonomy.json' with { type: 'json' };
 import realtime from '../../contracts/realtime-events.json' with { type: 'json' };
 import { splitCharmSlots, faceForMatches, countSkillKinds, pickPlate, pickEyes, pickTopper, CHARM_BY_ID, CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS, MIN_DRAW_FOR_BINGO, POOL_MINIMUM } from '../../packages/game-rules/src/index.js';
 
@@ -20,8 +21,10 @@ export const ACTIVE_IDS = skillMaster.skills.filter(s => s.status === 'active').
 export const ELIGIBLE_IDS = ACTIVE_IDS;
 export const CORE_CRITICAL_IDS = skillMaster.skills.filter(s => s.status === 'active' && (s.isCore || s.isCritical)).map(s => s.id).sort();
 export const OPTIONAL_IDS = skillMaster.skills.filter(s => s.status === 'active' && !(s.isCore || s.isCritical)).map(s => s.id).sort();
-export const ROLES = skillMaster.roles.map(r => ({ id: r.id, name: r.name, platformId: r.platformId }));
-export const PLATFORMS = skillMaster.platforms.map(p => ({ id: p.id, name: p.name }));
+// D-55: platform and role choices come from taxonomy.json (independent lists); ROLES lists the Skill Matrix roles first.
+export const ALL_ROLES = taxonomy.roles.map(r => ({ id: r.id, name: r.name, inMatrix: !!r.matrixRoleId }));
+export const ROLES = [...ALL_ROLES.filter(r => r.inMatrix), ...ALL_ROLES.filter(r => !r.inMatrix)];
+export const PLATFORMS = taxonomy.platforms.map(p => ({ id: p.id, name: p.name }));
 export const DEFAULT_EVENT_ID = 'evt_qa';
 
 let keyCounter = 0;
@@ -86,7 +89,7 @@ export async function command(t, roundId, cmd, expectedVersion, params = {}, key
   if (r.status !== 200) { const e = new Error(`${cmd} failed: ${r.status} ${JSON.stringify(r.body)}`); e.response = r; throw e; }
   return r.body;
 }
-export function roleAt(i = 0) { const r = ROLES[i % ROLES.length]; return { platformId: r.platformId, roleId: r.id }; }
+export function roleAt(i = 0) { const matrix = ROLES.filter(r => r.inMatrix); const r = matrix[i % matrix.length]; return { platformId: PLATFORMS[i % PLATFORMS.length].id, roleId: r.id }; }
 export async function join(t, { employeeRef = `emp-${nextKey()}`, displayName = 'QA Player', consent = true, profile = roleAt(0), token = null } = {}) {
   const s = await t.api.post(`/events/${t.eventId}/session`, { joinToken: token ?? t.joinToken(), employeeRef, displayName, consentPublicName: consent });
   if (s.status !== 201) { const e = new Error(`session failed: ${s.status} ${JSON.stringify(s.body)}`); e.response = s; throw e; }
@@ -108,9 +111,9 @@ export async function readyBoard(t, p, skillIds) {
   const f = await finalizeBoard(t, p); if (f.status !== 200) throw new Error(`finalize failed: ${f.status} ${JSON.stringify(f.body)}`);
   return f.body.board;
 }
+/** Start now (D-53): REGISTRATION_OPEN -> PLAYING in one confirmed step; returns the started round summary. */
 export async function startRound(t, round) {
-  const l = await command(t, round.roundId, 'round.lock', round.version);
-  const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+  const s = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
   return s.round;
 }
 export async function drawUntilEnd(t, round, max = 200) {
@@ -118,7 +121,7 @@ export async function drawUntilEnd(t, round, max = 200) {
   for (let i = 0; i < max && cur.state === 'PLAYING'; i++) { const r = await command(t, cur.roundId, 'round.draw.next', cur.version); results.push(r); cur = r.round; }
   return { results, round: cur };
 }
-/** Close a WINNER/EXHAUSTED round through the result-window timer (server clock is moved, then released). */
+/** Close a WINNER round through the result-window timer (server clock is moved, then released). */
 export function closeByTimer(t, roundId) {
   const r = t.db.get('SELECT published_at, ended_at, result_window_seconds FROM rounds WHERE id = ?', roundId);
   const base = Date.parse(r.published_at ?? r.ended_at);

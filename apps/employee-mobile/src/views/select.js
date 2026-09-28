@@ -1,6 +1,6 @@
-// apps/employee-mobile/src/views/select.js - E3 Skill picker (D-35): three short questions fill a live 4 x 4 board.
-//   1. Arise core skills (discovery mode 'core'), 2. skills in your role without the core ones ('role', no kind labels),
-//   3. search ('search'), skipped when the board is already full. Tapping a chip adds or removes it; tapping a filled
+// apps/employee-mobile/src/views/select.js - E3 Skill picker (D-35, D-54): four short questions fill a live 4 x 4 board.
+//   1. Arise core skills (discovery mode 'core'), 2. technical skills of your role from the Skill Matrix ('tech'),
+//   3. soft skills of your role ('soft'), 4. search ('search'), skipped when the board is already full. Tapping a chip adds or removes it; tapping a filled
 //   tile removes it (swap). The board shows the draft in tap order; the server shuffles it on finalize (BR-04), and
 //   "Review board" leaves the picker for the shuffled board. There is no "accept all" control (requirement 4.1).
 import { h, mount } from '/packages/ui/dom.js';
@@ -10,7 +10,8 @@ import { t } from '/packages/contracts/index.js';
 import { tl, exceptionCopy, notice, button, placeholder } from './common.js';
 import { selectionProgress, saveBlockedReason, editableRound, pickerSlots, nextPickStep, REQUIRED_SELECTIONS, PICK_STEPS } from '../state.js';
 
-const STEP_MODE = { 1: 'core', 2: 'role', 3: 'search' };
+const STEP_MODE = { 1: 'core', 2: 'tech', 3: 'soft', 4: 'search' };
+const SEARCH_STEP = 4;
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_LIMIT = 40;
 
@@ -75,7 +76,7 @@ export function mountSelect(root, ctx) {
     const dots = [];
     for (let i = 1; i <= PICK_STEPS; i++) {
       const done = i < s;
-      const skipped = i === 3 && s < 3 && full();
+      const skipped = i > s && full();
       if (i > 1) dots.push(h('li', { className: 'pick-steps__line', 'aria-hidden': 'true' }));
       dots.push(h('li', { className: `pick-steps__dot${i === s ? ' is-on' : ''}${done ? ' is-done' : ''}${skipped ? ' is-skipped' : ''}`, 'aria-current': i === s ? 'step' : null }, done ? '✓' : String(i)));
     }
@@ -96,8 +97,8 @@ export function mountSelect(root, ctx) {
     const left = REQUIRED_SELECTIONS - lastState.ui.draft.length;
     els.title.textContent = t(`pick.q${s}.title`);
     els.fullPill.hidden = !isFull;
-    els.hint.textContent = isFull ? t('pick.swapHint') : s === 3 ? t('pick.q3.hint', { count: left }) : t(`pick.q${s}.hint`);
-    els.search.hidden = s !== 3;
+    els.hint.textContent = isFull ? t('pick.swapHint') : s === SEARCH_STEP ? t('pick.q4.hint', { count: left }) : t(`pick.q${s}.hint`);
+    els.search.hidden = s !== SEARCH_STEP;
     const actions = [];
     if (s > 1) actions.push(button(t('pick.back'), { className: 'btn--ghost pick-back', onClick: () => ctx.actions.setPickStep(s - 1) }));
     else if (lastState.ui.editing && lastState.board && lastState.board.state === 'READY') actions.push(button(tl('ui.backToBoard'), { className: 'btn--ghost pick-back', onClick: ctx.actions.stopEditing }));
@@ -110,8 +111,8 @@ export function mountSelect(root, ctx) {
       renderedStep = s;
       const mode = STEP_MODE[s];
       if (mode !== 'search') ensureList(mode, '', { limit: 500 });
-      if (s === 3) els.searchInput.value = query;
-      if (focus) (s === 3 ? els.searchInput : els.title).focus({ preventScroll: true });
+      if (s === SEARCH_STEP) els.searchInput.value = query;
+      if (focus) (s === SEARCH_STEP ? els.searchInput : els.title).focus({ preventScroll: true });
     }
     renderChips();
   }

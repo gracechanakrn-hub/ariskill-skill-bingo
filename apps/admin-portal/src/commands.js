@@ -76,12 +76,12 @@ export function createCommandRunner({ post, newKey, getRound, hooks = {} }) {
 }
 
 /** Commands whose server-side transaction locks boards (BR-07): an unexpected failure is E19. */
-const LOCKING_COMMANDS = new Set(['round.lock', 'round.start_now']);
+const LOCKING_COMMANDS = new Set(['round.start_now']);
 const NOT_LOCK_FAILURES = new Set(['STALE_VERSION', 'ILLEGAL_TRANSITION', 'POOL_TOO_SMALL', 'POOL_EXHAUSTED', 'UNAUTHORIZED', 'FORBIDDEN', 'TOKEN_EXPIRED', 'VALIDATION', 'REASON_REQUIRED', 'NOT_FOUND', 'RATE_LIMITED', 'IDEMPOTENCY_MISMATCH', 'NETWORK', 'TIMEOUT']);
 
 /**
  * Map a rejected command error to the exception id whose copy the UI shows (contracts/api-contract.yaml).
- * `command` lets a failed round.lock / round.start_now lock leg (INTERNAL, DB failure, any E19-flagged detail)
+ * `command` lets a failed round.start_now lock leg (INTERNAL, DB failure, any E19-flagged detail)
  * surface as E19 "The round couldn't finish locking" (UX-04).
  */
 export function exceptionIdFor(error, command = null) {

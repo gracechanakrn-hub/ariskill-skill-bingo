@@ -259,17 +259,19 @@ test('F-01: a participant without a board may save during LOCKED/PLAYING; the la
   assert.equal(screenFor(ev.state), 'deferred');
 });
 
-test('picker (D-35): question 3 is skipped when the board is full; slots keep tap order; READY stays in the picker while picking', () => {
+test('picker (D-35, D-54): four questions; the rest are skipped when the board is full; slots keep tap order; READY stays in the picker while picking', () => {
   assert.equal(nextPickStep(1, 3), 2);
-  assert.equal(nextPickStep(2, 13), 3);
-  assert.equal(nextPickStep(2, 16), 'review', 'full after question 2: skip the search');
+  assert.equal(nextPickStep(2, 10), 3, 'technical -> soft');
+  assert.equal(nextPickStep(3, 13), 4, 'soft -> search');
+  assert.equal(nextPickStep(2, 16), 'review', 'full after question 2: skip soft skills and the search');
+  assert.equal(nextPickStep(3, 16), 'review', 'full after question 3: skip the search');
   assert.equal(nextPickStep(1, 16), 'review');
-  assert.equal(nextPickStep(3, 15), 3);
+  assert.equal(nextPickStep(4, 15), 4);
   assert.deepEqual(pickerSlots(['b', 'a']).slice(0, 3), ['b', 'a', null]);
   assert.equal(pickerSlots(ids(16)).length, 16);
   const ready = board({ state: 'READY', version: 2, selectedSkillIds: ids(16), cells: cells(ids(16)) });
   const s = joined({ board: ready });
   assert.equal(screenFor(s), 'board');
   assert.equal(screenFor({ ...s, ui: { ...s.ui, picking: true } }), 'select', 'server finalized at 16 while the player is still answering');
-  assert.equal(REQUIRED_SELECTIONS, 16); assert.equal(PICK_STEPS, 3);
+  assert.equal(REQUIRED_SELECTIONS, 16); assert.equal(PICK_STEPS, 4);
 });

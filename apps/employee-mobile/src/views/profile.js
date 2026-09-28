@@ -1,5 +1,5 @@
 // apps/employee-mobile/src/views/profile.js - E2 Platform + Role. Both selects start on a disabled placeholder;
-// nothing is ever prefilled (M-02, BR-01). The Role list is filtered by the chosen Platform.
+// nothing is ever prefilled (M-02, BR-01). Platform and Role are independent lists (D-55), both alphabetical.
 import { h, mount, setPending } from '/packages/ui/dom.js';
 import { t } from '/packages/contracts/index.js';
 import { tl, exceptionCopy, notice, button, placeholder } from './common.js';
@@ -23,13 +23,7 @@ export function mountProfile(root, ctx) {
     select.value = ''; // explicit: no preselected value
   }
 
-  function onPlatformChange() {
-    const platformId = platformSelect.value;
-    const roles = taxonomy ? taxonomy.roles.filter((r) => r.platformId === platformId) : [];
-    options(roleSelect, roles, t('profile.role'));
-    roleSelect.disabled = !platformId;
-    syncButton();
-  }
+  const byName = (list) => list.slice().sort((a, b) => a.name.localeCompare(b.name));
 
   function syncButton() {
     const ready = !!platformSelect.value && !!roleSelect.value;
@@ -45,10 +39,10 @@ export function mountProfile(root, ctx) {
         notice(exceptionCopy(loadError || 'E3'), { tone: 'danger', role: 'alert', extra: button(tl('ui.retry'), { onClick: load, variant: 'primary' }) })));
       return;
     }
-    platformSelect = h('select', { className: 'select', id: 'profile-platform', name: 'platformId', required: true, onChange: onPlatformChange });
-    roleSelect = h('select', { className: 'select', id: 'profile-role', name: 'roleId', required: true, disabled: true, onChange: syncButton });
-    options(platformSelect, taxonomy.platforms, t('profile.platform'));
-    options(roleSelect, [], t('profile.role'));
+    platformSelect = h('select', { className: 'select', id: 'profile-platform', name: 'platformId', required: true, onChange: syncButton });
+    roleSelect = h('select', { className: 'select', id: 'profile-role', name: 'roleId', required: true, onChange: syncButton });
+    options(platformSelect, byName(taxonomy.platforms), t('profile.platform'));
+    options(roleSelect, byName(taxonomy.roles), t('profile.role'));
     submit = button(t('profile.cta'), { variant: 'primary', className: 'btn--block btn--lg', type: 'submit', 'aria-describedby': 'profile-hint' });
     hint = h('p', { className: 'field__hint', id: 'profile-hint', 'aria-live': 'polite' });
     roleField = h('div', { className: 'field' }, h('label', { className: 'field__label', for: 'profile-role' }, t('profile.role')), roleSelect);

@@ -427,7 +427,7 @@ html.theme-venue, .stage-body { height: 100%; overflow: hidden; }
 
 /* ==========================================================================================================
    Stage v2 (D-46): same type as the phone, AriSkill sign, minimal interactive dashboard.
-   Three always-on numbers; five insight cards (tabs) open their list or the matrix diagram in the side panel.
+   Three always-on numbers; five insight cards (tabs) open their ranked list in the side panel.
    ========================================================================================================== */
 :root {
   --font-ui: "Electrolize", "Plus Jakarta Sans", system-ui, sans-serif;
@@ -495,22 +495,6 @@ html.theme-venue, .stage-body { height: 100%; overflow: hidden; }
 .explore__panel .bar-row--r1 .bar-row__fill { background: linear-gradient(90deg, var(--s2-mint), var(--s2-lime)); }
 @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* matrix diagram */
-.matrix { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: calc(300 * var(--u)) minmax(0, 1fr); gap: calc(32 * var(--u)); align-items: center; }
-.matrix__hero { display: flex; flex-direction: column; align-items: center; gap: calc(6 * var(--u)); }
-.matrix__donut { width: calc(280 * var(--u)); height: calc(280 * var(--u)); }
-.matrix__track { fill: none; stroke: rgba(231, 223, 255, .12); stroke-width: 18; }
-.matrix__arc { fill: none; stroke: var(--s2-lime); stroke-width: 18; stroke-linecap: round; filter: drop-shadow(0 0 calc(8 * var(--u)) rgba(182, 255, 92, .45)); }
-.matrix__pct { fill: #fff; font: 400 32px var(--font-ui); }
-.matrix__cap { fill: #CFC8F5; font: 400 11px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; }
-.matrix__meta { margin: 0; font-size: calc(24 * var(--u)); color: #CFC8F5; }
-.matrix__hist { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: calc(8 * var(--u)); }
-.matrix__hist svg { width: 100%; height: auto; max-height: calc(420 * var(--u)); }
-.matrix__bar { fill: #8B7CF0; }
-.matrix__n { fill: #fff; font: 400 16px var(--font-ui); }
-.matrix__k { fill: #B9B2E6; font: 400 15px var(--font-ui); }
-.matrix__axis { font-size: calc(20 * var(--u)); color: #B9B2E6; text-align: center; }
-.matrix__wait { font-size: calc(24 * var(--u)); }
 @media (prefers-reduced-motion: reduce) { .explore__panel .bar-row__fill { animation: none; } .insight-card { transition: none; } }
 :root[data-reduced-motion="true"] .explore__panel .bar-row__fill { animation: none; }
 
@@ -563,8 +547,6 @@ html.theme-venue {
   .insight-card { min-height: calc(120 * var(--u)); }
   .explore__panel { min-height: calc(560 * var(--u)); overflow: visible; }
   .explore__panel .bar-list { overflow: visible; }
-  .matrix { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-  .matrix__hist { width: 100%; }
   .stage__footer { flex-wrap: wrap; }
 }
 @media (max-width: 600px) {
@@ -598,7 +580,3 @@ html.theme-venue {
   .insight-card { min-height: calc(90 * var(--u)); }
 }
 
-/* D-50: the matrix panel is the donut only, centred and larger */
-.matrix { grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; }
-.matrix__donut { width: calc(420 * var(--u)); height: calc(420 * var(--u)); }
-.matrix__meta { font-size: calc(30 * var(--u)); }

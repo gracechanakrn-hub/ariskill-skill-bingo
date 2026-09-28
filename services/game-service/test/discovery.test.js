@@ -1,31 +1,112 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, join, saveBoard, readyBoard, boardSet, defaultRole, ELIGIBLE_IDS } from './helpers.js';
-import { ROLES, ROLE_SKILL_LEVELS, SKILLS, MATRIX_FREQUENCY, MATRIX_VERSION } from '../src/skills.js';
+import { startServer, createRound, join, saveBoard, readyBoard, boardSet, defaultRole, MATRIX_ROLES, ELIGIBLE_IDS } from './helpers.js';
+import { ROLES, PLATFORMS, SKILL_MASTER, ROLE_SKILL_LEVELS, SKILLS, MATRIX_FREQUENCY, MATRIX_VERSION } from '../src/skills.js';
 
 describe('skill discovery and profile (M-02, M-03, BR-01, BR-03)', () => {
   let t;
   before(async () => { t = await startServer(); await createRound(t); });
   after(async () => { await t.close(); });
 
-  test('taxonomy lists platforms, roles with platformId and the matrix version; profile must be explicit and consistent', async () => {
+  test('taxonomy (D-55): the owner\'s 47 platforms and 76 roles (independent lists, roles flag inMatrix) and the matrix version; profile must be explicit', async () => {
     const p = await join(t, { profile: null });
     const tax = (await t.api.get('/taxonomy', p.token)).body;
-    assert.equal(tax.platforms.length, 13); assert.equal(tax.roles.length, 46); assert.equal(tax.matrixVersion, MATRIX_VERSION);
-    assert.ok(tax.roles.every(r => r.id && r.name && r.platformId));
+    assert.deepEqual(Object.keys(tax).filter(k => !['correlationId', 'serverTime'].includes(k)).sort(), ['matrixVersion', 'platforms', 'roles']);
+    assert.equal(tax.platforms.length, 47); assert.equal(tax.roles.length, 76); assert.equal(tax.matrixVersion, MATRIX_VERSION);
+    assert.deepEqual(tax.platforms, PLATFORMS);
+    assert.ok(tax.platforms.every(pl => pl.id && pl.name && Object.keys(pl).sort().join() === 'id,name'));
+    assert.ok(tax.roles.every(r => r.id && r.name && typeof r.inMatrix === 'boolean' && !('platformId' in r)), 'roles carry no platform (D-55)');
+    assert.equal(tax.roles.filter(r => r.inMatrix).length, 45);
+    assert.ok(tax.roles.every(r => r.inMatrix === ROLE_SKILL_LEVELS.has(r.id)), 'inMatrix exactly when the Skill Matrix maps the role id');
     const bad = await t.api.post('/me/profile', { platformId: tax.platforms[0].id }, p.token);
-    assert.equal(bad.status, 400);
-    const mismatch = await t.api.post('/me/profile', { platformId: tax.platforms[0].id, roleId: tax.roles.find(r => r.platformId !== tax.platforms[0].id).id }, p.token);
-    assert.equal(mismatch.status, 400); assert.equal(mismatch.body.error.code, 'VALIDATION');
+    assert.equal(bad.status, 400); assert.equal(bad.body.error.code, 'VALIDATION');
+    const badRole = await t.api.post('/me/profile', { platformId: tax.platforms[0].id, roleId: 'role_nope' }, p.token);
+    assert.equal(badRole.status, 400); assert.equal(badRole.body.error.code, 'VALIDATION');
+    const oldPlatform = await t.api.post('/me/profile', { platformId: 'platform_data-engineering', roleId: tax.roles[0].id }, p.token);
+    assert.equal(oldPlatform.status, 400, 'pre-D-55 platform ids no longer exist'); assert.equal(oldPlatform.body.error.code, 'VALIDATION');
     assert.equal((await t.api.get('/me', p.token)).body.participant.platformId, null, 'nothing derived or partially saved');
     const role = tax.roles[3];
-    const ok = await t.api.post('/me/profile', { platformId: role.platformId, roleId: role.id }, p.token);
-    assert.equal(ok.status, 200); assert.equal(ok.body.participant.roleId, role.id); assert.equal(ok.body.participant.platformId, role.platformId);
+    const ok = await t.api.post('/me/profile', { platformId: tax.platforms[6].id, roleId: role.id }, p.token);
+    assert.equal(ok.status, 200); assert.equal(ok.body.participant.roleId, role.id); assert.equal(ok.body.participant.platformId, tax.platforms[6].id);
+  });
+
+  test('profile (D-55): any valid platform is accepted with any valid role, matrix or not', async () => {
+    const p = await join(t, { profile: null });
+    const nonMatrix = ROLES.filter(r => !r.inMatrix);
+    const pairs = [
+      [PLATFORMS[0], ROLES[0]], [PLATFORMS.at(-1), ROLES.at(-1)], [PLATFORMS[10], nonMatrix[0]], [PLATFORMS[20], nonMatrix.at(-1)],
+      ...PLATFORMS.map((pl, i) => [pl, ROLES[(i * 7) % ROLES.length]]),
+      ...ROLES.map((r, i) => [PLATFORMS[(i * 5 + 3) % PLATFORMS.length], r]),
+    ];
+    for (const [pl, r] of pairs) {
+      const res = await t.api.post('/me/profile', { platformId: pl.id, roleId: r.id }, p.token);
+      assert.equal(res.status, 200, `${pl.id} + ${r.id}`);
+      assert.equal(res.body.participant.platformId, pl.id); assert.equal(res.body.participant.roleId, r.id);
+    }
+  });
+
+  test('tech / soft (picker questions 2 and 3, D-54): the role\'s Hard / Soft Skills from the Skill Matrix in level order; soft tops up to at least 8', async () => {
+    for (const [i, role] of MATRIX_ROLES.entries()) {
+      const p = await join(t, { profile: { platformId: PLATFORMS[i % PLATFORMS.length].id, roleId: role.id } });
+      const levels = ROLE_SKILL_LEVELS.get(role.id);
+      const order = { core: 0, critical: 1, optional: 2 };
+      const tech = (await t.api.get('/skills/discovery?mode=tech&limit=500', p.token)).body;
+      assert.equal(tech.mode, 'tech');
+      const mappedHard = [...levels.keys()].filter(id => SKILLS.get(id)?.kind === 'Hard Skill' && SKILLS.get(id)?.status === 'active');
+      assert.deepEqual(tech.skills.map(s => s.id).sort(), mappedHard.sort(), `${role.id}: every mapped technical skill, nothing else`);
+      assert.ok(tech.skills.every(s => s.roleLevel === 'critical' || s.roleLevel === 'optional'), 'technical skills are critical or optional in the matrix');
+      const seq = tech.skills.map(s => order[s.roleLevel]);
+      assert.ok(seq.every((v, i) => i === 0 || v >= seq[i - 1]), 'critical before optional');
+      const soft = (await t.api.get('/skills/discovery?mode=soft&limit=500', p.token)).body.skills;
+      assert.ok(soft.every(s => s.kind === 'Soft Skill'), 'soft skills only');
+      assert.equal(new Set(soft.map(s => s.id)).size, soft.length, 'no duplicates');
+      const mappedSoft = [...levels.keys()].filter(id => SKILLS.get(id)?.kind === 'Soft Skill' && SKILLS.get(id)?.status === 'active');
+      assert.deepEqual(soft.slice(0, mappedSoft.length).map(s => s.id).sort(), mappedSoft.sort(), `${role.id}: the role's own soft skills come first`);
+      assert.ok(soft.length >= Math.min(8, [...SKILLS.values()].filter(x => x.kind === 'Soft Skill' && x.status === 'active').length), 'at least 8 choices');
+    }
+  });
+
+  test('tech fallback (D-55): a role without Skill Matrix data gets the 30 most matrix-frequent active Hard Skills, alphabetical', async () => {
+    const hard = [...SKILLS.values()].filter(s => s.status === 'active' && s.kind === 'Hard Skill');
+    // Independent reference: frequency = number of matrix roles mapping the skill (roleSkillMap rows), ties by name.
+    const freq = new Map();
+    for (const m of SKILL_MASTER.roleSkillMap) freq.set(m.skillId, (freq.get(m.skillId) ?? 0) + 1);
+    const top = hard.sort((a, b) => (freq.get(b.id) ?? 0) - (freq.get(a.id) ?? 0) || a.name.localeCompare(b.name)).slice(0, 30);
+    const expected = top.map(s => s.name).sort((a, b) => a.localeCompare(b));
+    const nonMatrix = ROLES.filter(r => !r.inMatrix);
+    assert.equal(nonMatrix.length, 31);
+    for (const role of [nonMatrix[0], nonMatrix[15], nonMatrix.at(-1)]) {
+      const p = await join(t, { profile: { platformId: PLATFORMS[2].id, roleId: role.id } });
+      const tech = (await t.api.get('/skills/discovery?mode=tech&limit=500', p.token)).body;
+      assert.equal(tech.mode, 'tech');
+      assert.equal(tech.skills.length, 30, `${role.id}: 30 fallback choices`);
+      assert.ok(tech.skills.every(s => s.kind === 'Hard Skill' && s.eligible && s.roleLevel === null), 'active Hard Skills with no role level');
+      assert.deepEqual(tech.skills.map(s => s.name), expected, 'the most matrix-frequent ones, alphabetical');
+      const minTop = Math.min(...top.map(s => freq.get(s.id) ?? 0));
+      assert.ok(hard.slice(30).every(s => (freq.get(s.id) ?? 0) <= minTop), 'no left-out Hard Skill is more frequent than a chosen one');
+    }
+  });
+
+  test('soft for a role without Skill Matrix data (D-55): every active Soft Skill, alphabetical; recommended / role are empty', async () => {
+    const role = ROLES.find(r => !r.inMatrix);
+    const p = await join(t, { profile: { platformId: PLATFORMS[9].id, roleId: role.id } });
+    const soft = (await t.api.get('/skills/discovery?mode=soft&limit=500', p.token)).body;
+    const expected = [...SKILLS.values()].filter(s => s.status === 'active' && s.kind === 'Soft Skill').map(s => s.name).sort((a, b) => a.localeCompare(b));
+    assert.ok(expected.length >= 8);
+    assert.equal(soft.mode, 'soft');
+    assert.deepEqual(soft.skills.map(s => s.name), expected);
+    assert.ok(soft.skills.every(s => s.roleLevel === null));
+    for (const mode of ['recommended', 'role']) {
+      const r = (await t.api.get(`/skills/discovery?mode=${mode}&limit=500`, p.token)).body;
+      assert.equal(r.mode, mode); assert.deepEqual(r.skills, [], `${mode} is empty without matrix data`);
+    }
+    const core = (await t.api.get('/skills/discovery?mode=core&limit=500', p.token)).body.skills;
+    assert.equal(core.length, 7, 'core does not depend on the role');
   });
 
   test('recommended: role core, then critical, then optional skills, each with roleLevel and eligibility flags', async () => {
-    const role = ROLES[5];
-    const p = await join(t, { profile: { platformId: role.platformId, roleId: role.id } });
+    const role = MATRIX_ROLES[5];
+    const p = await join(t, { profile: defaultRole(5) });
     const r = (await t.api.get('/skills/discovery?mode=recommended&limit=500', p.token)).body;
     assert.equal(r.mode, 'recommended'); assert.equal(r.selectedCount, 0);
     const levels = ROLE_SKILL_LEVELS.get(role.id);
@@ -42,8 +123,8 @@ describe('skill discovery and profile (M-02, M-03, BR-01, BR-03)', () => {
   });
 
   test('picker lists (D-35): core is the 7 Core Skill kind; role is the role list without them; unknown mode is 400', async () => {
-    const role = ROLES[5];
-    const p = await join(t, { profile: { platformId: role.platformId, roleId: role.id } });
+    const role = MATRIX_ROLES[5];
+    const p = await join(t, { profile: defaultRole(5) });
     const core = (await t.api.get('/skills/discovery?mode=core&limit=500', p.token)).body;
     const expected = [...SKILLS.values()].filter(s => s.status === 'active' && s.kind === 'Core Skill').map(s => s.name).sort((a, b) => a.localeCompare(b));
     assert.equal(core.mode, 'core'); assert.equal(expected.length, 7);

@@ -1,6 +1,6 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/insights",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "audience": "admin Insights and stage dashboard (aggregate only)",
   "definitions": {
     "joinedRate": "participants with a session / null (no denominator in v1)",
@@ -14,6 +14,7 @@
     "cohortSuppression": "Platform/Role breakdowns are omitted when the cohort has fewer than 5 joined participants (D-15)",
     "matrixVersion": "skill-matrix-2026-tech-role-20260319 (from skill-master.json)",
     "topCoreSkills": "every active Core Skill kind skill (the picker's question 1) with the count of boards (READY+) containing it, descending (D-46)",
+    "topTechSkillsTopSoftSkills": "the ten most picked skills of the Hard Skill kind (the picker's question 2) and of the Soft Skill kind (question 3), with the count of boards (READY+) containing each, descending (D-54)",
     "matrixAlignmentDistribution": "matrixAlignment.distribution[k] = completed boards whose participant matched k of the 16 skills (k = 0..16); null below the cohort minimum (D-46)"
   },
   "allow": [
@@ -22,6 +23,8 @@
     "roleEngagement",
     "topSkills",
     "topCoreSkills",
+    "topTechSkills",
+    "topSoftSkills",
     "coreCriticalDensity",
     "matrixAlignment",
     "skillsBeyondMatrix",

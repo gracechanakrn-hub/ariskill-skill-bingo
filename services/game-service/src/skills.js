@@ -1,12 +1,16 @@
 // Skill Master index (packages/skill-master/data/skill-master.json, D-05/D-06). Loaded once; read-only.
 import skillMaster from '../../../packages/skill-master/data/skill-master.json' with { type: 'json' };
+// Platform and role choices come from the owner's lists (D-55, tools/data/build_taxonomy.mjs); the Skill Matrix still supplies
+// the skills. A role in the matrix keeps the matrix role id, so ROLE_SKILL_LEVELS applies to it unchanged.
+import taxonomy from '../../../packages/skill-master/data/taxonomy.json' with { type: 'json' };
 import { isEligibleSkill, countSkillKinds } from '../../../packages/game-rules/src/index.js';
 
 export const SKILL_MASTER = skillMaster;
 export const MATRIX_VERSION = skillMaster.matrixVersion;
 export const SKILLS = new Map(skillMaster.skills.map(s => [s.id, s]));
-export const PLATFORMS = skillMaster.platforms.map(p => ({ id: p.id, name: p.name }));
-export const ROLES = skillMaster.roles.map(r => ({ id: r.id, name: r.name, platformId: r.platformId }));
+export const TAXONOMY_VERSION = taxonomy.version;
+export const PLATFORMS = taxonomy.platforms.map(p => ({ id: p.id, name: p.name }));
+export const ROLES = taxonomy.roles.map(r => ({ id: r.id, name: r.name, inMatrix: !!r.matrixRoleId }));
 export const PLATFORM_BY_ID = new Map(PLATFORMS.map(p => [p.id, p]));
 export const ROLE_BY_ID = new Map(ROLES.map(r => [r.id, r]));
 

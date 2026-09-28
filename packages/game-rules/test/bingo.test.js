@@ -39,7 +39,7 @@ test('draws are unique and the seeded simulation is reproducible (fixture determ
     for (const d of r1.draws) assert.ok(pool.includes(d.skillId));
   }
 });
-test('exhausted pool without a winner ends EXHAUSTED', () => {
+test('simulateRound: an emptied pool without a full line reports outcome EXHAUSTED (the service then picks closest-line winners, D-53)', () => {
   const noLine = { boardId: 'x', participantId: 'px', cells: cellsFrom(A) };
   // pool of only 4 skills that do not form a line on the board (positions 0,1,2,4)
   const pool = [A[0], A[1], A[2], A[4]];

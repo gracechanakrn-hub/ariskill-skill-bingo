@@ -83,6 +83,10 @@ export function createApp({ db, clock, config, log = createLogger(config.logLeve
     { m: 'GET', p: /^\/admin\/events\/([^/]+)\/stream$/, auth: 'admin', sse: 'admin' },
     { m: 'POST', p: /^\/admin\/events\/([^/]+)\/rounds$/, auth: 'admin', limit: 'commands', idem: true, h: (ctx) => ok(ctx, game.createRound(ctx.params[0], ctx.body, ctx.meta), 201) },
     { m: 'POST', p: /^\/admin\/rounds\/([^/]+)\/commands$/, auth: 'admin', limit: 'commands', idem: true, h: (ctx) => ok(ctx, game.command(ctx.params[0], ctx.body, ctx.meta)) },
+    // D-53: delete a round (any state) and, outside production, clear every round, player and Soul of an event
+    { m: 'DELETE', p: /^\/admin\/rounds\/([^/]+)$/, auth: 'admin', limit: 'commands', idem: true, h: (ctx) => ok(ctx, game.deleteRound(ctx.params[0], ctx.meta)) },
+    { m: 'POST', p: /^\/admin\/events\/([^/]+)\/test-mode$/, auth: 'admin', limit: 'commands', idem: true, h: (ctx) => { requireEvent(ctx.params[0]); return ok(ctx, game.setTestMode(ctx.params[0], ctx.body, ctx.meta)); } },
+    { m: 'POST', p: /^\/admin\/events\/([^/]+)\/reset$/, auth: 'admin', limit: 'commands', idem: true, h: (ctx) => { requireEvent(ctx.params[0]); if (ctx.body?.confirm !== 'DELETE') throw new ApiError('VALIDATION', 'type DELETE to confirm'); return ok(ctx, game.resetEvent(ctx.params[0], ctx.meta)); } },
     { m: 'GET', p: /^\/admin\/events\/([^/]+)\/insights$/, auth: 'admin', h: (ctx) => { requireEvent(ctx.params[0]); return ok(ctx, projections.insights(ctx.params[0])); } },
     { m: 'GET', p: /^\/admin\/events\/([^/]+)\/audit$/, auth: 'admin', h: (ctx) => {
       requireEvent(ctx.params[0]);

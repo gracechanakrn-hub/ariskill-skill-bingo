@@ -1,22 +1,24 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/admin",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "audience": "admin (Mission Control)",
   "allow": {
     "eventId": "string",
     "eventName": "string",
     "sequence": "int",
     "serverTime": "ISO",
-    "rounds": "[RoundSummary + resultWindowEndsAt + startOverdue + readiness]",
+    "rounds": "[RoundSummary + startInMinutes + openedAt + createdAt + resultWindowEndsAt + startOverdue + readiness] (D-53)",
     "currentRound": {
-      "summary": "RoundSummary + resultWindowEndsAt (ISO|null)",
+      "summary": "RoundSummary + startInMinutes (int|null) + openedAt (ISO|null) + createdAt (ISO) + resultWindowEndsAt (ISO|null) (D-53)",
       "readiness": {
         "poolSize": "int",
         "poolMinimum": 5,
         "anyBoardCanWin": "bool",
         "boardsThatCanWin": "int",
-        "startOverdue": "bool",
-        "lockCountdownMs": "int|null"
+        "startOverdue": "bool (always false since D-53: there is no LOCKED state)",
+        "lockCountdownMs": "int|null",
+        "startBlocked": "bool (D-53: the start time passed but the pool was under 5; cleared when the start time changes)",
+        "unfinishedBoards": "int (D-53: DRAFT boards plus players who joined since opening without a board; 0 unless REGISTRATION_OPEN)"
       },
       "counts": "Counts (+ connections)",
       "draws": "[Draw + matchedBoards]",
@@ -39,7 +41,10 @@
       "stage": "int",
       "participants": "int",
       "admin": "int"
-    }
+    },
+    "testMode": "bool (D-56: test mode is on for this event; Mission Control shows a reminder banner)",
+    "testModeLocked": "bool (D-56: BINGO_ALLOW_RESET=off; test mode cannot be turned on)",
+    "canClearData": "bool (D-53, D-56: test mode on and not locked; the Clear all data action is hidden otherwise)"
   },
   "forbidden": [
     "selectedSkillIds of individuals",

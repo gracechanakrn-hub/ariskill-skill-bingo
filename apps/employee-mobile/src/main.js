@@ -272,6 +272,9 @@ function handleEnvelope(envelope, meta) {
   if (!Number.isFinite(seq) || seq <= st.sequence) return;
   const { state: next, effects } = reduceEvent(st, envelope);
   store.set({ ...next, sequence: seq });
+  // D-53: the admin deleted a round or cleared the event; the server snapshot says what is left (after a clear the
+  // session no longer exists, so refreshMe drops back to the join screen).
+  if (envelope.type === 'round.deleted' || envelope.type === 'event.reset') { refreshMe().catch(() => {}); return; }
   // The participant stream skips sequence numbers by design (events are numbered across audiences), which the shared
   // sse-client reports as a gap + replay. Keep its snapshot refetch, but decide liveness here (src/liveness.js) so a
   // genuinely new event of the acknowledged epoch still celebrates and announces; backlog after a reconnect does not.

@@ -5,17 +5,38 @@ export const TERMINAL_STATES = Object.freeze(['CLOSED', 'CANCELLED']);
 export const POOL_MINIMUM = 5;
 export const RESULT_WINDOW = Object.freeze({ min: 10, max: 15, default: 12 });
 
-/** Allowed commands per round state (contracts/round-state-machine.json). */
+/** Allowed commands per round state (contracts/round-state-machine.json v2, D-53). Delete is a separate endpoint (any state). */
 export const COMMANDS_BY_STATE = Object.freeze({
   DRAFT: ['round.update', 'round.registration.open', 'round.cancel'],
-  REGISTRATION_OPEN: ['round.reschedule', 'round.lock', 'round.start_now', 'round.cancel'],
-  LOCKED: ['round.start', 'round.cancel'],
+  REGISTRATION_OPEN: ['round.reschedule', 'round.start_now', 'round.cancel'],
   PLAYING: ['round.draw.next', 'round.cancel'],
   WINNER: [],
-  EXHAUSTED: ['round.close', 'round.cancel'],
   CLOSED: [],
   CANCELLED: [],
 });
+
+/** D-53: the five statuses the admin sees. WINNER (the 12 s Bingo celebration) and CLOSED both read "Finished". */
+export const STATUS = Object.freeze({
+  DRAFT: { label: 'Draft', step: 0, pill: 'pill--info' },
+  REGISTRATION_OPEN: { label: 'Registration open', step: 1, pill: 'pill--open' },
+  PLAYING: { label: 'Playing', step: 2, pill: 'pill--live' },
+  WINNER: { label: 'Finished', step: 3, pill: 'pill--success' },
+  CLOSED: { label: 'Finished', step: 3, pill: 'pill--success' },
+  CANCELLED: { label: 'Cancelled', step: -1, pill: 'pill--danger' },
+});
+export const STEPS = Object.freeze(['Draft', 'Registration open', 'Playing', 'Finished']);
+export const START_IN_CHOICES = Object.freeze([5, 10, 15, 30]);
+export const EXTEND_CHOICES = Object.freeze([1, 3, 5, 10, 15]);
+/** Unfinished-boards alert: more than `over` players unfinished within the last `windowMs` before the start time. */
+export const UNFINISHED_ALERT = Object.freeze({ over: 3, windowMs: 2 * 60 * 1000 });
+
+export function statusOf(roundState) { return STATUS[roundState] || { label: String(roundState || ''), step: -1, pill: 'pill--info' }; }
+
+/** Default name for the next round: "Round N" where N is one past the highest number so far. */
+export function defaultRoundTitle(rounds) {
+  const max = (rounds || []).reduce((m, r) => Math.max(m, Number(r.number) || 0), 0);
+  return `Round ${max + 1}`;
+}
 
 export function isCommandAllowed(roundState, command) {
   return (COMMANDS_BY_STATE[roundState] || []).includes(command);
@@ -33,6 +54,9 @@ export function initialState() {
     resultWindowEndsAt: null,
     bingo: null,
     boardsWithFourInLine: null,
+    canClearData: false,
+    testMode: false,
+    testModeLocked: false,
     loaded: false,
   };
 }
@@ -40,7 +64,7 @@ export function initialState() {
 function emptyCounts() { return { joined: 0, completed: 0, incomplete: 0, active: 0, deferred: 0, matchedBoards: 0, connections: 0 }; }
 
 function emptyReadiness() {
-  return { poolSize: 0, poolMinimum: POOL_MINIMUM, anyBoardCanWin: false, boardsThatCanWin: 0, startOverdue: false, lockCountdownMs: null };
+  return { poolSize: 0, poolMinimum: POOL_MINIMUM, anyBoardCanWin: false, boardsThatCanWin: 0, startOverdue: false, lockCountdownMs: null, startBlocked: false, unfinishedBoards: 0 };
 }
 
 /** Build a currentRound block from a bare RoundSummary (used when an event introduces a new round before the snapshot arrives). */
@@ -79,6 +103,9 @@ export function normaliseSnapshot(snapshot, prev = initialState()) {
     currentRound: cur,
     join: snapshot.join ?? null,
     connections: snapshot.connections || prev.connections,
+    canClearData: snapshot.canClearData === true,
+    testMode: snapshot.testMode === true,
+    testModeLocked: snapshot.testModeLocked === true,
     resultWindowEndsAt: sameRound && cur.summary.state === 'WINNER' ? prev.resultWindowEndsAt : null,
     bingo: sameRound ? prev.bingo : null,
     boardsWithFourInLine: sameRound ? prev.boardsWithFourInLine : null,
@@ -122,35 +149,38 @@ export function reduceEvent(state, envelope) {
     }
     case 'round.updated': {
       const extra = {};
-      if (p.startOverdue !== undefined && cur && cur.summary.roundId === (p.round?.roundId ?? envelope.roundId)) {
-        extra.readiness = { ...cur.readiness, startOverdue: !!p.startOverdue };
+      if (p.startBlocked !== undefined && cur && cur.summary.roundId === (p.round?.roundId ?? envelope.roundId)) {
+        extra.readiness = { ...cur.readiness, startBlocked: !!p.startBlocked };
       }
       return p.round ? withSummary(state, p.round, extra) : state;
     }
     case 'round.registration_opened':
       return p.round ? withSummary(state, p.round) : state;
-    case 'round.locked': {
-      if (!p.round) return state;
-      const extra = {};
-      if (cur && cur.summary.roundId === p.round.roundId) {
-        extra.counts = { ...cur.counts, active: p.activeBoards ?? cur.counts.active, deferred: p.deferredBoards ?? cur.counts.deferred };
-        extra.readiness = { ...cur.readiness, lockCountdownMs: null };
-      }
-      return withSummary(state, p.round, extra);
-    }
     case 'round.started': {
       if (!p.round) return state;
       const extra = {};
       if (cur && cur.summary.roundId === p.round.roundId) {
-        extra.readiness = { ...cur.readiness, poolSize: p.poolSize ?? cur.readiness.poolSize, startOverdue: false, lockCountdownMs: null };
+        extra.readiness = { ...cur.readiness, poolSize: p.poolSize ?? cur.readiness.poolSize, startBlocked: false, unfinishedBoards: 0, lockCountdownMs: null };
+        extra.counts = { ...cur.counts, active: p.activeBoards ?? cur.counts.active, deferred: p.deferredBoards ?? cur.counts.deferred };
         extra.poolRemaining = p.poolSize ?? cur.poolRemaining;
       }
       return withSummary(state, p.round, extra);
     }
     case 'round.cancelled':
-    case 'round.exhausted':
     case 'round.closed':
       return p.round ? withSummary(state, p.round) : state;
+    case 'round.deleted': {
+      // D-53: the round and everything in it are gone; the snapshot that follows picks the new current round
+      const id = p.roundId ?? envelope.roundId;
+      const rounds = state.rounds.filter((r) => r.roundId !== id);
+      const gone = cur && cur.summary.roundId === id;
+      return { ...state, rounds, currentRound: gone ? null : cur, ...(gone ? { bingo: null, resultWindowEndsAt: null, boardsWithFourInLine: null } : {}) };
+    }
+    case 'event.updated': // D-56 test mode switched
+      if (typeof p.testMode !== 'boolean') return state;
+      return { ...state, testMode: p.testMode, canClearData: p.testMode && !state.testModeLocked };
+    case 'event.reset':
+      return { ...state, rounds: [], currentRound: null, bingo: null, resultWindowEndsAt: null, boardsWithFourInLine: null };
     case 'draw.accepted': {
       if (!forCurrent || !p.draw) return state;
       const draws = cur.draws.filter((d) => d.number !== p.draw.number);
@@ -208,62 +238,47 @@ export function clampResultWindow(n) {
 }
 
 /**
- * roundViewModel(state) -> what the Mission Control round panel needs to render.
- * Start readiness comes from the server (readiness.poolSize / anyBoardCanWin); the client only displays it.
+ * roundViewModel(state, now) -> what the Mission Control round panel needs to render (D-53).
+ * Start readiness comes from the server (readiness.*); the client only displays it. `now` is the synced server clock.
  */
-export function roundViewModel(state) {
+export function roundViewModel(state, now = Date.now()) {
   const cur = state.currentRound;
   if (!cur) return { phase: 'none', summary: null, controls: {}, canCreateNext: true };
   const s = cur.summary.state;
   const readiness = cur.readiness || emptyReadiness();
-  const poolTooSmall = (readiness.poolSize ?? 0) < (readiness.poolMinimum ?? POOL_MINIMUM);
+  const status = statusOf(s);
+  const msToStart = s === 'REGISTRATION_OPEN' && cur.summary.lockAt ? Date.parse(cur.summary.lockAt) - now : null;
+  const unfinished = Number(readiness.unfinishedBoards) || 0;
   const controls = {
     edit: s === 'DRAFT',
     openRegistration: s === 'DRAFT',
-    lockNow: s === 'REGISTRATION_OPEN',
     startNow: s === 'REGISTRATION_OPEN',
-    reschedule: s === 'REGISTRATION_OPEN',
-    start: s === 'LOCKED',
-    startEnabled: s === 'LOCKED' && !poolTooSmall,
+    extend: s === 'REGISTRATION_OPEN',
     nextSkill: s === 'PLAYING',
-    close: s === 'EXHAUSTED',
     cancel: isCommandAllowed(s, 'round.cancel'),
+    delete: true,
     createNext: TERMINAL_STATES.includes(s),
   };
-  // Irreversible actions always go through a confirmation dialog (A-01 / UX-03); reschedule is the safe default.
-  const confirmRequired = { lockNow: true, startNow: true, cancel: true, reschedule: false, start: false, nextSkill: false, close: false };
   return {
     phase: s,
+    status,
     summary: cur.summary,
     readiness,
-    poolTooSmall,
-    startBlockedException: s === 'LOCKED' && poolTooSmall ? 'E20' : null,
+    msToStart,
+    startBlocked: s === 'REGISTRATION_OPEN' && !!readiness.startBlocked,
+    unfinished,
+    unfinishedAlert: s === 'REGISTRATION_OPEN' && !readiness.startBlocked && unfinished > UNFINISHED_ALERT.over && msToStart !== null && msToStart <= UNFINISHED_ALERT.windowMs,
     showJoin: s === 'REGISTRATION_OPEN',
-    showLockCountdown: s === 'REGISTRATION_OPEN' && !!cur.summary.lockAt,
-    showReadiness: s === 'LOCKED' || s === 'REGISTRATION_OPEN',
-    startOverdue: s === 'LOCKED' && !!readiness.startOverdue,
     draws: drawsNewestFirst(cur.draws),
     poolRemaining: cur.poolRemaining,
     winners: cur.winners || [],
-    exhaustedException: s === 'EXHAUSTED' ? 'E23' : null,
     controls,
-    confirmRequired,
     canCreateNext: controls.createNext,
   };
 }
 
-/** Round state -> pill modifier class; text is always shown next to the colour. */
-export function statePill(roundState) {
-  switch (roundState) {
-    case 'REGISTRATION_OPEN': return 'pill--open';
-    case 'PLAYING': return 'pill--live';
-    case 'WINNER': return 'pill--success';
-    case 'LOCKED': case 'EXHAUSTED': return 'pill--warning';
-    case 'CANCELLED': return 'pill--danger';
-    case 'CLOSED': return 'pill--closed';
-    default: return 'pill--info';
-  }
-}
+/** Round state -> pill modifier class; the plain status text is always shown next to the colour. */
+export function statePill(roundState) { return statusOf(roundState).pill; }
 
 /** SSE status -> pill modifier + whether the UI should show the reconnect banner. */
 export function connectionView(status) {

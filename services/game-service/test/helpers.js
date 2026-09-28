@@ -4,7 +4,7 @@ import { openDatabase } from '../src/db.js';
 import { createClock } from '../src/clock.js';
 import { createLogger } from '../src/log.js';
 import { createApp } from '../src/app.js';
-import { SKILL_MASTER, ROLE_SKILL_LEVELS, ROLES } from '../src/skills.js';
+import { SKILL_MASTER, ROLE_SKILL_LEVELS, ROLES, PLATFORMS } from '../src/skills.js';
 import { signJoinToken } from '../src/auth.js';
 import { CELLS, GRID, LINE_MASKS, REQUIRED_SELECTIONS } from '../../../packages/game-rules/src/index.js';
 
@@ -67,7 +67,9 @@ export async function command(t, roundId, cmd, expectedVersion, params = {}, key
 export async function tryCommand(t, roundId, cmd, expectedVersion, params = {}, key = nextKey('cmd')) {
   return t.api.post(`/admin/rounds/${roundId}/commands`, { command: cmd, expectedVersion, params }, t.admin, key);
 }
-export function defaultRole(i = 0) { const r = ROLES[i % ROLES.length]; return { platformId: r.platformId, roleId: r.id }; }
+// D-55: platform and role are independent; pair them by index. The roles used by default are in the Skill Matrix.
+export const MATRIX_ROLES = ROLES.filter(r => r.inMatrix);
+export function defaultRole(i = 0) { const r = MATRIX_ROLES[i % MATRIX_ROLES.length]; return { platformId: PLATFORMS[i % PLATFORMS.length].id, roleId: r.id }; }
 export async function join(t, { employeeRef = `emp-${nextKey()}`, displayName = 'Test Player', consent = true, profile = defaultRole(0) } = {}) {
   const s = await t.api.post(`/events/${EVENT_ID}/session`, { joinToken: t.joinToken(), employeeRef, displayName, consentPublicName: consent });
   if (s.status !== 201) throw new Error(`session failed: ${JSON.stringify(s.body)}`);
@@ -88,10 +90,9 @@ export async function readyBoard(t, p, skillIds) {
   const f = await finalizeBoard(t, p); if (f.status !== 200) throw new Error(`finalize failed: ${JSON.stringify(f.body)}`);
   return f.body.board;
 }
-/** Lock + start a round; returns the started round summary. */
+/** Start a round with Start now (D-53: REGISTRATION_OPEN -> PLAYING in one step); returns the started round summary. */
 export async function startRound(t, round) {
-  const l = await command(t, round.roundId, 'round.lock', round.version);
-  const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+  const s = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
   return s.round;
 }
 /** Draw until the round leaves PLAYING (or max draws). Returns { results, round }. */
@@ -148,8 +149,8 @@ export function arrangeCells(db, boardId, orderedSkillIds) {
 }
 /**
  * Test-only: narrow a round's pool snapshot to `skillIds`. Every active skill on an active board is draw-eligible (D-33),
- * so a round whose draws must be known exactly (BR-12 boundary, co-winners, EXHAUSTED) pins its pool here. Call it after
- * round.start when fewer than POOL_MINIMUM skills are wanted (start checks the snapshot; draws read it each time).
+ * so a round whose draws must be known exactly (BR-12 boundary, co-winners, closest-line fallback) pins its pool here. Call it after
+ * round.start_now when fewer than POOL_MINIMUM skills are wanted (start checks the snapshot; draws read it each time).
  */
 export function setPool(db, roundId, skillIds) { db.run('UPDATE rounds SET pool_json = ? WHERE id = ?', JSON.stringify([...skillIds].sort()), roundId); }
 /** A layout with `placed` ({position: skillId}) and the remaining cells filled in order from `fill`. */

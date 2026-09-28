@@ -58,7 +58,7 @@ function hCalls(js, tag) {
       const line = text.slice(0, m.index).split('\n').length;
       const cleaned = args.map(a => a.trim()).filter(Boolean);
       const attrs = (cleaned[0] ?? '').startsWith('{') ? cleaned[0] : '';
-      out.push({ file: path, line, args: cleaned, attrs, full: text.slice(start, i) });
+      out.push({ file: path, line, args: cleaned, attrs, full: text.slice(start, i), index: m.index, end: i });
     }
   }
   return out;
@@ -137,10 +137,13 @@ describe('accessibility static checks', () => {
           const wrapped = /<label\b[^>]*>(?:(?!<\/label>)[\s\S])*$/i.test(html.slice(Math.max(0, m.index - 400), m.index));
           assert.ok(/aria-label(ledby)?=/.test(tag) || (id && labelFor.has(id)) || wrapped || /\stitle=/.test(tag), `unlabelled control: ${tag}`);
         }
+        // a control created inside an h('label', ...) call is labelled by wrapping, like <label><input> in HTML (D-53 start-mode radios)
+        const labelCalls = hCalls(js, 'label');
+        const wrappedInLabel = (c) => labelCalls.some(l => l.file === c.file && l.index < c.index && c.index < l.end);
         for (const tag of ['input', 'select', 'textarea']) for (const c of hCalls(js, tag)) {
           if (/type:\s*['"]hidden['"]/.test(c.attrs)) continue;
           const id = idOf(c.attrs);
-          const ok = attrHas(c.attrs, 'aria-label') || attrHas(c.attrs, 'aria-labelledby') || (id && labelFor.has(id)) || (id === undefined && /\bid:\s*[a-zA-Z_$]/.test(c.attrs)) /* id from a variable: assume the label is generated alongside */ || attrHas(c.attrs, 'title');
+          const ok = attrHas(c.attrs, 'aria-label') || attrHas(c.attrs, 'aria-labelledby') || (id && labelFor.has(id)) || (id === undefined && /\bid:\s*[a-zA-Z_$]/.test(c.attrs)) /* id from a variable: assume the label is generated alongside */ || attrHas(c.attrs, 'title') || wrappedInLabel(c);
           assert.ok(ok, `${c.file}:${c.line} h('${tag}') without label association`);
         }
       });

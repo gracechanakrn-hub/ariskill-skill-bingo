@@ -49,7 +49,7 @@ describe('Soul decorations at round end (D-29)', () => {
     participantStream = readSse(t.baseUrl, '/me/stream', { token: players[0].p.token, timeoutMs: 2000, until: ev => ev.some(e => e.event === 'soul.created') });
     await new Promise(r => setTimeout(r, 50));
     const end = await drawUntilEnd(t, started);
-    assert.ok(['WINNER', 'EXHAUSTED'].includes(end.round.state));
+    assert.equal(end.round.state, 'WINNER'); // D-53: always a winner (closest line when the pool empties)
     for (const pl of players) pl.me = (await t.api.get('/me', pl.p.token)).body;
   });
   after(async () => { await t.close(); });

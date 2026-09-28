@@ -68,6 +68,9 @@ export function loadConfig(env = process.env, overrides = {}) {
     // Contract defaults (commands 10/s per actor, session 5/min per IP, discovery 20/s per session). The session limit is per client IP:
     // a venue behind NAT shares one address, so BINGO_SESSION_RATE_PER_MIN raises it and BINGO_TRUST_PROXY=1 keys it on X-Forwarded-For.
     rateLimits: overrides.rateLimits ?? { commandsPerSec: 10, sessionPerMin: int(env.BINGO_SESSION_RATE_PER_MIN, 5), discoveryPerSec: 20 },
+    // D-56 test mode: the admin turns it on in Mission Control to allow Clear all data (pre-event testing on any server).
+    // BINGO_ALLOW_RESET=off locks it: test mode cannot be turned on and clearing is refused (use it once the event is live).
+    testModeLocked: overrides.testModeLocked ?? ['0', 'off', 'false', 'no'].includes(String(env.BINGO_ALLOW_RESET ?? 'on').toLowerCase()),
     trustProxy: overrides.trustProxy ?? ['1', 'true', 'yes'].includes(String(env.BINGO_TRUST_PROXY ?? '').toLowerCase()),
     generatedSecrets: generated,
     ...(overrides.extra ?? {}),
@@ -84,6 +87,7 @@ export function describeConfig(cfg) {
     `  public base URL: ${cfg.publicBaseUrl}`,
     `  database: ${cfg.dbPath}`,
   ];
+  lines.push(cfg.testModeLocked ? '  test mode: locked off (BINGO_ALLOW_RESET=off)' : '  test mode: can be turned on in Mission Control (set BINGO_ALLOW_RESET=off to lock it once the event is live)');
   if (cfg.env !== 'production') {
     lines.push(`  admin token: ${cfg.adminToken}${cfg.generatedSecrets.includes('BINGO_ADMIN_TOKEN') ? ' (generated dev value)' : ''}`);
     lines.push(`  stage token: ${cfg.stageToken}${cfg.generatedSecrets.includes('BINGO_STAGE_TOKEN') ? ' (generated dev value)' : ''}`);

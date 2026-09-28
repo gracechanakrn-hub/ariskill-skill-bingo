@@ -1,6 +1,6 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, readyBoard, boardSet, startRound, drawUntilEnd, EVENT_ID, CELLS, OPTIONAL_IDS } from './helpers.js';
+import { startServer, createRound, command, join, readyBoard, boardSet, startRound, drawUntilEnd, MATRIX_ROLES, EVENT_ID, CELLS, OPTIONAL_IDS } from './helpers.js';
 import { ROLES, roleSkillSet, SKILLS, PLATFORMS, MATRIX_VERSION } from '../src/skills.js';
 import { computeInsights } from '../../analytics-projection/src/insights.js';
 import { findForbiddenKeys } from '../src/projections.js';
@@ -12,20 +12,27 @@ describe('private insight, aggregate insights with cohort suppression, retention
 
   test('insight is available only after the board is FINISHED, is private, and counts against the role map at matrixVersion', async () => {
     const round = await createRound(t);
-    const role = ROLES[2];
-    const a = await join(t, { profile: { platformId: role.platformId, roleId: role.id } });
+    const role = MATRIX_ROLES[2];
+    const a = await join(t, { profile: { platformId: PLATFORMS[4].id, roleId: role.id } });
     const set = roleSkillSet(role.id);
     const inMatrix = [...set].filter(id => SKILLS.get(id)?.status === 'active').sort().slice(0, 6);
     const beyond = boardSet(0, 40).filter(id => !set.has(id) && !inMatrix.includes(id)).slice(0, CELLS - 6);
     await readyBoard(t, a, [...inMatrix, ...beyond]);
     const b = await join(t); await readyBoard(t, b, boardSet(60));
+    // D-55: a role without Skill Matrix data (any platform) still gets an insight, flagged roleInMatrix false.
+    const noMatrixRole = ROLES.find(r => !r.inMatrix);
+    const c = await join(t, { profile: { platformId: PLATFORMS[4].id, roleId: noMatrixRole.id } }); await readyBoard(t, c, [...inMatrix, ...beyond]);
     assert.equal((await t.api.get('/me/insight', a.token)).status, 404, 'not before FINISHED');
     const started = await startRound(t, round);
     await drawUntilEnd(t, started);
     const ins = (await t.api.get('/me/insight', a.token)).body;
     assert.equal(ins.roundId, round.roundId); assert.equal(ins.matrixVersion, MATRIX_VERSION); assert.equal(ins.inMatrixCount, 6); assert.equal(ins.beyondMatrixCount, 10); assert.equal(ins.totalSelected, CELLS);
+    assert.equal(ins.roleInMatrix, true);
+    const none = (await t.api.get('/me/insight', c.token)).body;
+    assert.equal(none.roleInMatrix, false, 'D-55: no Skill Matrix data for this role');
+    assert.equal(none.inMatrixCount, 0); assert.equal(none.beyondMatrixCount, CELLS); assert.equal(none.totalSelected, CELLS); assert.equal(none.matrixVersion, MATRIX_VERSION);
     const other = (await t.api.get('/me/insight', b.token)).body;
-    assert.notDeepEqual([other.inMatrixCount, other.beyondMatrixCount], [6, 10]);
+    assert.notDeepEqual([other.inMatrixCount, other.beyondMatrixCount], [6, 10]); assert.equal(other.roleInMatrix, true);
     for (const [aud, path, tok] of [['public', `/events/${EVENT_ID}/snapshot`, null], ['stage', `/stage/events/${EVENT_ID}/snapshot`, t.stage], ['admin', `/admin/events/${EVENT_ID}/snapshot`, t.admin]]) {
       const body = (await t.api.get(path, tok)).body;
       assert.deepEqual(findForbiddenKeys(aud, body), [], aud); assert.ok(!JSON.stringify(body).includes('inMatrixCount'));
@@ -34,16 +41,18 @@ describe('private insight, aggregate insights with cohort suppression, retention
   });
 
   test('cohort suppression: platform/role breakdowns below 5 joined are omitted and counted (pure function and API)', async () => {
-    const roleA = ROLES[10], roleB = ROLES[11];
-    const parts = [...Array(5)].map((_, i) => ({ participantId: `p${i}`, platformId: roleA.platformId, roleId: roleA.id }));
-    parts.push(...[...Array(4)].map((_, i) => ({ participantId: `q${i}`, platformId: roleB.platformId, roleId: roleB.id })));
+    // D-55: platform and role are independent; cohort A is 5 people on one platform + role, cohort B 4 on another pair.
+    const roleA = MATRIX_ROLES[10], roleB = MATRIX_ROLES[11];
+    const platformA = PLATFORMS[10].id, platformB = PLATFORMS[11].id;
+    const parts = [...Array(5)].map((_, i) => ({ participantId: `p${i}`, platformId: platformA, roleId: roleA.id }));
+    parts.push(...[...Array(4)].map((_, i) => ({ participantId: `q${i}`, platformId: platformB, roleId: roleB.id })));
     const boards = parts.map(p => ({ participantId: p.participantId, state: 'FINISHED', selectedSkillIds: boardSet(0), matrixVersion: MATRIX_VERSION }));
     const r = computeInsights({ participants: parts, boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
     assert.deepEqual(r.roleEngagement.map(x => x.roleId), [roleA.id]);
     assert.equal(r.roleEngagement[0].joined, 5); assert.equal(r.roleEngagement[0].completed, 5);
-    const platformsExpected = roleA.platformId === roleB.platformId ? 1 : 1;
-    assert.equal(r.platformEngagement.length, platformsExpected);
-    assert.equal(r.suppressedCohorts, roleA.platformId === roleB.platformId ? 1 : 2);
+    assert.deepEqual(r.platformEngagement.map(x => x.platformId), [platformA]);
+    assert.equal(r.platformEngagement[0].joined, 5); assert.equal(r.platformEngagement[0].name, PLATFORMS[10].name);
+    assert.equal(r.suppressedCohorts, 2, 'role B and platform B (4 each)');
     assert.equal(r.participation.joined, 9); assert.equal(r.participation.completedRate, 1); assert.equal(r.topSkills.length, 10); assert.equal(r.topSkills[0].count, 9);
     assert.equal(r.coreCriticalDensity.totalSelections, 9 * CELLS); assert.equal(r.coreCriticalDensity.optional, 9 * boardSet(0).filter(id => OPTIONAL_IDS.includes(id)).length);
     assert.ok(r.matrixAlignment.rate >= 0 && r.matrixAlignment.rate <= 1); assert.equal(r.matrixAlignment.participants, 9); assert.ok(r.skillsBeyondMatrix.length <= 10);
@@ -52,10 +61,10 @@ describe('private insight, aggregate insights with cohort suppression, retention
     const s = await startServer();
     try {
       await createRound(s);
-      for (let i = 0; i < 4; i++) { const p = await join(s, { profile: { platformId: roleA.platformId, roleId: roleA.id } }); await readyBoard(s, p, boardSet(i)); }
+      for (let i = 0; i < 4; i++) { const p = await join(s, { profile: { platformId: platformA, roleId: roleA.id } }); await readyBoard(s, p, boardSet(i)); }
       let ins = (await s.api.get(`/admin/events/${EVENT_ID}/insights`, s.admin)).body;
       assert.deepEqual(ins.roleEngagement, []); assert.equal(ins.suppressedCohorts, 2); assert.equal(ins.participation.joined, 4); assert.equal(ins.matrixVersion, MATRIX_VERSION); assert.ok(ins.computedAt);
-      const fifth = await join(s, { profile: { platformId: roleA.platformId, roleId: roleA.id } }); await readyBoard(s, fifth, boardSet(9));
+      const fifth = await join(s, { profile: { platformId: platformA, roleId: roleA.id } }); await readyBoard(s, fifth, boardSet(9));
       ins = (await s.api.get(`/admin/events/${EVENT_ID}/insights`, s.admin)).body;
       assert.deepEqual(ins.roleEngagement, [], 'cached for 2 s');
       s.clock.advance(2500);
@@ -63,7 +72,7 @@ describe('private insight, aggregate insights with cohort suppression, retention
       assert.equal(ins.roleEngagement.length, 1); assert.equal(ins.roleEngagement[0].joined, 5); assert.equal(ins.suppressedCohorts, 0);
       assert.deepEqual(findForbiddenKeys('insights', ins), []);
       const stage = (await s.api.get(`/stage/events/${EVENT_ID}/snapshot`, s.stage)).body.insights;
-      assert.deepEqual(Object.keys(stage).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
+      assert.deepEqual(Object.keys(stage).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'topSoftSkills', 'topTechSkills', 'totals']);
     } finally { await s.close(); }
   });
 
@@ -92,12 +101,12 @@ describe('private insight, aggregate insights with cohort suppression, retention
 });
 
 describe('stage dashboard data (D-46)', () => {
-  const role = ROLES[0];
+  const role = MATRIX_ROLES[0];
   const CORE = [...SKILLS.values()].filter(s => s.kind === 'Core Skill' && s.status === 'active').map(s => s.id);
   const inRole = [...roleSkillSet(role.id)];
   const others = [...SKILLS.values()].filter(s => s.status === 'active' && !roleSkillSet(role.id).has(s.id)).map(s => s.id);
   const board = (i, ids) => ({ participantId: `p${i}`, state: 'READY', selectedSkillIds: ids, matrixVersion: MATRIX_VERSION });
-  const people = (n) => Array.from({ length: n }, (_, i) => ({ participantId: `p${i}`, platformId: role.platformId, roleId: role.id }));
+  const people = (n) => Array.from({ length: n }, (_, i) => ({ participantId: `p${i}`, platformId: PLATFORMS[0].id, roleId: role.id }));
   const pick = (a, n, from = 0) => a.slice(from, from + n);
 
   test('topCoreSkills lists every active Core Skill, most picked first; the matched-count distribution sums to the boards', () => {
@@ -111,11 +120,42 @@ describe('stage dashboard data (D-46)', () => {
     assert.ok(inRole.length > 0);
   });
 
+  test('topTechSkills / topSoftSkills (D-54): the ten most picked Hard / Soft Skills, most picked first, only their own kind', () => {
+    const HARD = [...SKILLS.values()].filter(s => s.kind === 'Hard Skill' && s.status === 'active').map(s => s.id);
+    const SOFT = [...SKILLS.values()].filter(s => s.kind === 'Soft Skill' && s.status === 'active').map(s => s.id);
+    const boards = [0, 1, 2, 3, 4].map(i => board(i, [...pick(CORE, 2), ...pick(SOFT, 3 + i), ...pick(HARD, CELLS - 5 - i, i)]));
+    const r = computeInsights({ participants: people(5), boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    for (const [list, kind] of [[r.topTechSkills, 'Hard Skill'], [r.topSoftSkills, 'Soft Skill']]) {
+      assert.ok(list.length > 0 && list.length <= 10);
+      assert.ok(list.every(x => SKILLS.get(x.skillId).kind === kind && x.name === SKILLS.get(x.skillId).name && x.count > 0));
+      assert.deepEqual(list.map(x => x.count), [...list.map(x => x.count)].sort((a, b) => b - a));
+      assert.deepEqual(Object.keys(list[0]).sort(), ['count', 'name', 'skillId']);
+    }
+    assert.equal(r.topSoftSkills[0].count, 5, 'the first soft skill is on every board');
+    assert.equal(r.topSoftSkills.length, 7, 'only picked soft skills are listed');
+  });
+
   test('the distribution is withheld below 5 boards so a small room never shows one person', () => {
     const boards = [0, 1, 2].map(i => board(i, [...pick(CORE, 2), ...pick(others, CELLS - 2, i)]));
     const r = computeInsights({ participants: people(3), boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
     assert.equal(r.matrixAlignment.distribution, null);
     assert.equal(r.matrixAlignment.participants, 3);
+  });
+
+  test('matrixAlignment ignores a board whose role has no Skill Matrix data (D-55)', () => {
+    const noMatrix = ROLES.find(r => !r.inMatrix);
+    const inRoleBoard = [...pick(inRole, 8), ...pick(others, CELLS - 8)];
+    const boards = [0, 1, 2, 3, 4].map(i => board(i, inRoleBoard));
+    const base = computeInsights({ participants: people(5), boards, skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    assert.equal(base.matrixAlignment.participants, 5); assert.equal(base.matrixAlignment.rate, 0.5);
+    // A sixth player with a non-matrix role and a board of skills outside role A's map: not counted at all.
+    const extra = board(5, pick(others, CELLS, 40));
+    const withOther = computeInsights({ participants: [...people(5), { participantId: 'p5', platformId: PLATFORMS[1].id, roleId: noMatrix.id }], boards: [...boards, extra], skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    assert.deepEqual(withOther.matrixAlignment, base.matrixAlignment, 'rate, participants and distribution unchanged');
+    assert.deepEqual(withOther.skillsBeyondMatrix, base.skillsBeyondMatrix, 'its skills are not "beyond" a matrix it has none of');
+    assert.equal(withOther.participation.completed, 6, 'it still counts as a completed board');
+    const onlyOther = computeInsights({ participants: [{ participantId: 'p5', platformId: PLATFORMS[1].id, roleId: noMatrix.id }], boards: [extra], skills: SKILLS, platforms: PLATFORMS, roles: ROLES, roleSkillSet, matrixVersion: MATRIX_VERSION, computedAt: 'now' });
+    assert.equal(onlyOther.matrixAlignment.rate, null); assert.equal(onlyOther.matrixAlignment.participants, 0); assert.deepEqual(onlyOther.skillsBeyondMatrix, []);
   });
 
   test('the stage snapshot counts rounds that reached a result and combines every round (D-48)', async () => {

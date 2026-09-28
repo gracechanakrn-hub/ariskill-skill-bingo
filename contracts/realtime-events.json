@@ -51,7 +51,7 @@
       ],
       "payload": {
         "round": "RoundSummary",
-        "startOverdue": "bool (optional; system actor, no version change)"
+        "startBlocked": "bool (optional; system actor, no version change: the start time passed but the pool is under 5 skills, D-53)"
       }
     },
     "round.registration_opened": {
@@ -76,7 +76,8 @@
         "round": "RoundSummary",
         "activeBoards": "int",
         "deferredBoards": "int"
-      }
+      },
+      "deprecated": "D-53: no longer emitted (LOCKED and EXHAUSTED states removed); kept so older clients still validate"
     },
     "round.started": {
       "audiences": [
@@ -111,7 +112,8 @@
       ],
       "payload": {
         "round": "RoundSummary"
-      }
+      },
+      "deprecated": "D-53: no longer emitted (LOCKED and EXHAUSTED states removed); kept so older clients still validate"
     },
     "round.closed": {
       "audiences": [
@@ -249,6 +251,37 @@
       "payload": {
         "reason": "string"
       }
+    },
+    "round.deleted": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {
+        "roundId": "string",
+        "number": "int"
+      },
+      "note": "D-53: the round and its boards, draws, winners and Souls were removed. Clients refetch their snapshot."
+    },
+    "event.reset": {
+      "audiences": [
+        "admin",
+        "stage",
+        "public",
+        "participant"
+      ],
+      "payload": {},
+      "note": "D-53 (non-production only): every round, player and Soul of the event was removed. Clients refetch their snapshot; participant sessions are gone (401 -> join again)."
+    },
+    "event.updated": {
+      "audiences": [
+        "admin"
+      ],
+      "payload": {
+        "testMode": "bool (D-56: test mode switched on or off in Mission Control)"
+      }
     }
   },
   "shapes": {
@@ -291,7 +324,8 @@
       "participantId": "string",
       "label": "string",
       "lineIds": "string[]",
-      "winningDrawNumber": "int"
+      "winningDrawNumber": "int",
+      "closest": "bool (D-53: true when the pool ran out without a full line and this board had the most tiles in one line)"
     },
     "ParticipantBoard": {
       "boardId": "string",

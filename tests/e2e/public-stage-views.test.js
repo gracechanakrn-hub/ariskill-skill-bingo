@@ -4,7 +4,7 @@
 // The deterministic RNG seed makes the two identical boards win on the same draw (a consented and a non-consented co-winner).
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { startServer, createRound, command, join, me, readyBoard, boardSet, setPool, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract, SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, skillStringsIn, charmSplit, expectedDecor, expectedSeedPicks, CELLS, REQUIRED_SELECTIONS } from './helpers.js';
+import { startServer, createRound, command, join, me, readyBoard, boardSet, setPool, drawUntilEnd, openStream, closeByTimer, sleep, nextKey, ROLES, PLATFORMS, ELIGIBLE_IDS, OPTIONAL_IDS, REGEX_TRIPPING_SKILL_IDS, PRIVACY_TEXT_REGEX, privacyTextHits, findKeys, forbiddenKeysFromContract, SOUL_CONFIG_KEYS, SOUL_CONFIG_V3_KEYS, skillStringsIn, charmSplit, expectedDecor, expectedSeedPicks, CELLS, REQUIRED_SELECTIONS } from './helpers.js';
 import { DRAW_POLICY } from '../../packages/game-rules/src/index.js';
 import publicContract from '../../contracts/projections/public.json' with { type: 'json' };
 import stageContract from '../../contracts/projections/stage.json' with { type: 'json' };
@@ -13,9 +13,11 @@ import realtime from '../../contracts/realtime-events.json' with { type: 'json' 
 const FORBIDDEN = { public: forbiddenKeysFromContract(publicContract), stage: forbiddenKeysFromContract(stageContract) };
 const ENTRANCE_KEYS = ['badge', 'config', 'edge', 'enteredAt', 'greeting', 'label', 'soulId'];
 const safeRoles = ROLES.filter(r => !PRIVACY_TEXT_REGEX.test(`${r.id} ${r.name}`));
-const byPlatform = new Map(); for (const r of safeRoles) { if (!byPlatform.has(r.platformId)) byPlatform.set(r.platformId, []); byPlatform.get(r.platformId).push(r); }
-const [cohortRole, otherRole] = [...byPlatform.values()].find(rs => rs.length >= 2);
-const profileOf = (r) => ({ platformId: r.platformId, roleId: r.id });
+// D-55: platform and role are independent choices. Two Skill Matrix roles share one explicit platform, so the platform
+// cohort (7 people) is revealed while the 2-person role cohort stays suppressed.
+const [cohortRole, otherRole] = safeRoles.filter(r => r.inMatrix);
+const sharedPlatform = PLATFORMS.find(p => !PRIVACY_TEXT_REGEX.test(`${p.id} ${p.name}`));
+const profileOf = (r) => ({ platformId: sharedPlatform.id, roleId: r.id });
 const winnerSet = boardSet(0, REQUIRED_SELECTIONS, ELIGIBLE_IDS, REGEX_TRIPPING_SKILL_IDS);
 const safeOthers = ELIGIBLE_IDS.filter(id => !REGEX_TRIPPING_SKILL_IDS.includes(id) && !winnerSet.includes(id));
 // Cohort boards hold only 3 of the pair's skills (never a full line of 4) plus 13 shared skills kept out of the pool below,
@@ -65,7 +67,7 @@ describe('public + stage views across a full round', () => {
     assert.equal(stage.publicState, 'Waiting'); assert.equal(stage.round.startOverdue, false); assert.equal(stage.counts.incomplete, 0); assert.equal(stage.counts.deferred, 0);
     assert.deepEqual(stage.resultTiming, { winningDrawNumber: null, publishedAt: null, resultWindowEndsAt: null });
     const ins = stage.insights;
-    assert.deepEqual(Object.keys(ins).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'totals']);
+    assert.deepEqual(Object.keys(ins).sort(), ['coreCriticalDensity', 'matrixAlignment', 'platformEngagement', 'roleEngagement', 'skillsBeyondMatrix', 'suppressedCohorts', 'topCoreSkills', 'topSkills', 'topSoftSkills', 'topTechSkills', 'totals']);
     assert.ok(!ins.roleEngagement.some(r => r.roleId === cohortRole.id), 'a 4-person role cohort is suppressed');
     assert.ok(!ins.roleEngagement.some(r => r.roleId === otherRole.id), 'a 2-person role cohort is suppressed');
     assert.ok(ins.suppressedCohorts >= 2); assert.equal(ins.coreCriticalDensity.totalSelections, 6 * CELLS); assert.ok(ins.topSkills.length <= 10 && ins.topSkills.every(s => 'count' in s && !('participantId' in s)));
@@ -76,15 +78,15 @@ describe('public + stage views across a full round', () => {
     const { stage: s2 } = await snapshotPair('waiting-5-cohort');
     const row = s2.insights.roleEngagement.find(r => r.roleId === cohortRole.id);
     assert.ok(row, 'cohort of 5 is shown'); assert.equal(row.joined, 5); assert.equal(row.completed, 5); assert.equal(row.name, cohortRole.name);
-    assert.ok(s2.insights.platformEngagement.some(p => p.platformId === cohortRole.platformId && p.joined === 7));
+    assert.ok(s2.insights.platformEngagement.some(p => p.platformId === sharedPlatform.id && p.joined === 7 && p.name === sharedPlatform.name));
     assert.ok(!s2.insights.roleEngagement.some(r => r.roleId === otherRole.id), 'the 2-person cohort stays suppressed');
   });
 
-  test('Locked -> Playing -> Winner: snapshots stay clean, winner labels follow consent (name vs Soul # pseudonym) in result.published', async () => {
-    const l = await command(t, round.roundId, 'round.lock', round.version);
-    const { pub: locked, stage: lockedStage } = await snapshotPair('locked');
-    assert.equal(locked.publicState, 'Waiting'); assert.equal(locked.join, null, 'no QR once locked'); assert.equal(locked.counts.active, 7); assert.equal(lockedStage.counts.active, 7);
-    const s = await command(t, round.roundId, 'round.start', l.resultingVersion);
+  test('Start -> Playing -> Winner: snapshots stay clean, winner labels follow consent (name vs Soul # pseudonym) in result.published', async () => {
+    const s = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true }); // D-53: no LOCKED step
+    const { pub: started, stage: startedStage } = await snapshotPair('started');
+    assert.equal(started.publicState, 'Playing'); assert.equal(started.join, null, 'no QR once started'); assert.equal(started.counts.active, 7); assert.equal(startedStage.counts.active, 7);
+    assert.equal(started.currentDraw, null, 'nothing drawn yet');
     setPool(t, round.roundId, winnerSet); // every active skill is drawable (D-33): keep the cohort's shared skills out
     let cur = s.round;
     for (let i = 0; i < 2; i++) cur = (await command(t, cur.roundId, 'round.draw.next', cur.version)).round;
@@ -170,7 +172,7 @@ describe('public + stage views across a full round', () => {
   test('every public and stage SSE payload across the round is clean and allowed for its audience; all expected event types were observed', async () => {
     await sleep(100);
     for (const s of Object.values(streams)) { s.close(); await s.done; }
-    const expectedTypes = ['round.registration_opened', 'participation.updated', 'round.locked', 'round.started', 'draw.accepted', 'draw.match_counts_updated', 'bingo.detected', 'result.published', 'soul.float_accepted', 'round.closed', 'round.created', 'round.cancelled'];
+    const expectedTypes = ['round.registration_opened', 'participation.updated', 'round.started', 'draw.accepted', 'draw.match_counts_updated', 'bingo.detected', 'result.published', 'soul.float_accepted', 'round.closed', 'round.created', 'round.cancelled'];
     for (const [aud, s] of Object.entries(streams)) {
       assert.ok(s.events.length >= 20, `${aud} stream saw the round`);
       const seen = new Set(s.events.map(e => e.event));
@@ -185,6 +187,7 @@ describe('public + stage views across a full round', () => {
       const ids = s.events.map(e => e.id);
       assert.ok(ids.every((v, i) => i === 0 || v > ids[i - 1]), `${aud} monotonic sequence`);
       for (const ty of ['board.saved', 'board.ready', 'board.locked_active', 'board.deferred', 'soul.created']) assert.ok(!seen.has(ty), `${aud} never receives participant-only ${ty}`);
+      for (const ty of ['round.locked', 'round.exhausted']) assert.ok(!seen.has(ty), `${aud}: D-53 removed ${ty}`);
       const draws = s.events.filter(e => e.event === 'draw.accepted');
       assert.ok(draws.every(d => !('myMatchedPositions' in d.data.payload) && !('matchedPositionsByParticipant' in d.data.payload)));
       const counts = s.events.filter(e => e.event === 'draw.match_counts_updated');
@@ -221,7 +224,7 @@ describe('public + stage views across a full round', () => {
     try {
       const r1 = await createRound(s, { title: 'Live' });
       const p = await join(s); await readyBoard(s, p, winnerSet);
-      const l = await command(s, r1.roundId, 'round.lock', r1.version); const st = await command(s, r1.roundId, 'round.start', l.resultingVersion);
+      const st = await command(s, r1.roundId, 'round.start_now', r1.version, { confirmed: true });
       await command(s, r1.roundId, 'round.draw.next', st.resultingVersion);
       const draft = await createRound(s, { title: 'Mistake', open: false });
       let pub = (await s.api.get(`/events/${s.eventId}/snapshot`)).body;

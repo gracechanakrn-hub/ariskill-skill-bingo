@@ -1,6 +1,6 @@
 {
   "$id": "ariskill-skill-bingo/contracts/projections/stage",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "audience": "stage (presenter, read-only)",
   "allow": {
     "eventId": "string",
@@ -35,6 +35,8 @@
       },
       "topSkills": "[{skillId, name, kind, count}] (top 10)",
       "topCoreSkills": "[{skillId, name, count}] every active Core Skill kind skill (D-46)",
+      "topTechSkills": "[{skillId, name, count}] the ten most picked Hard Skill kind skills (D-54)",
+      "topSoftSkills": "[{skillId, name, count}] the ten most picked Soft Skill kind skills (D-54)",
       "coreCriticalDensity": {
         "core": "int",
         "critical": "int",

@@ -7,7 +7,7 @@ import { formatCountdown } from '/packages/ui/clock-sync.js';
 import { formatInt } from '/packages/ui/format.js';
 import { animateOnce, MOTION } from '/packages/ui/motion.js';
 import { t, exception, COPY } from '/packages/contracts/index.js';
-import { winnerRows, ageSeconds, formatEngagement, formatPercent } from './insights.js';
+import { winnerRows, ageSeconds, formatEngagement } from './insights.js';
 
 export const FALLBACK_COPY = Object.freeze({
   'stage.count.joined': 'Joined', 'stage.count.completed': 'Completed', 'stage.count.incomplete': 'Incomplete',
@@ -28,9 +28,7 @@ export const FALLBACK_COPY = Object.freeze({
   'stage.token': 'Stage token', 'stage.tokenSubmit': 'Open dashboard', 'stage.skip': 'Skip to content', 'stage.retry': 'Retry',
   'stage.souls': 'Souls in the Galaxy', 'stage.nextRound': 'Next round', 'stage.moreWinners': '+{count} more',
   'stage.kpi.rounds': 'Rounds played', 'stage.kpi.participants': 'Participants', 'stage.kpi.completed': 'Completed',
-  'stage.coreSkills': 'Top core skills', 'stage.matrix': 'Role Skill Matrix matched', 'stage.matrix.avg': 'average match',
-  'stage.matrix.players': '{count} players', 'stage.matrix.axis': 'Players by skills in their role matrix (0-16)',
-  'stage.matrix.wait': 'The breakdown appears once 5 boards are complete.', 'stage.boards': 'on {count} boards',
+  'stage.coreSkills': 'Top core skills', 'stage.techSkills': 'Top technical skills', 'stage.softSkills': 'Top soft skills', 'stage.boards': 'on {count} boards',
   'stage.eng.legend': 'joined \u00B7 completed', 'stage.seeParticipants': 'See participants',
 });
 
@@ -155,10 +153,11 @@ export function renderLoading(refs) {
 
 // ---------------------------------------------------------------------------------------------------------------
 // Dashboard (D-46): logo + live round strip, three always-on numbers, and five insight cards; tapping a card opens its
-// list (or the matrix diagram) in the side panel. Aggregate data only (contracts/projections/stage.json).
+// ranked list in the side panel. Aggregate data only (contracts/projections/stage.json).
 // ---------------------------------------------------------------------------------------------------------------
-export const PANELS = Object.freeze(['platforms', 'roles', 'topSkills', 'coreSkills', 'matrix']);
-const dash = { selected: 'topSkills', refs: null, args: null };
+// D-54: top core / technical / soft skills (the picker's questions 1-3); the overall top skills and the Role Skill Matrix panel were removed.
+export const PANELS = Object.freeze(['platforms', 'roles', 'coreSkills', 'techSkills', 'softSkills']);
+const dash = { selected: 'coreSkills', refs: null, args: null };
 
 /**
  * renderDashboard(refs, vm, { changed, effects, nowMs, synced })
@@ -206,18 +205,15 @@ export function formatDashboard(insights) {
   const i = insights || {};
   const rank = (list) => { const rows = (Array.isArray(list) ? list : []).filter((r) => r && r.name).map((r) => ({ name: String(r.name), count: Number(r.count) || 0 })); rows.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)); const max = rows.reduce((m, r) => Math.max(m, r.count), 0); return rows.map((r, k) => ({ ...r, rank: k + 1, pct: max ? Math.round((r.count / max) * 100) : 0 })); };
   const eng = (list) => { const rows = formatEngagement(list, { limit: 50 }); const max = rows.reduce((m, r) => Math.max(m, r.joined), 0); return rows.map((r, k) => ({ ...r, rank: k + 1, pct: max ? Math.round((r.joined / max) * 100) : 0 })); };
-  const a = i.matrixAlignment || null;
-  const rate = a && Number.isFinite(Number(a.rate)) && a.rate !== null ? Number(a.rate) : null;
   return {
     hasData: Boolean(insights),
     platforms: eng(i.platformEngagement), roles: eng(i.roleEngagement),
-    topSkills: rank(i.topSkills), coreSkills: rank(i.topCoreSkills),
-    matrix: { rate, percent: rate === null ? '' : formatPercent(rate), participants: Number(a?.participants) || 0, version: a?.matrixVersion || '' },
+    coreSkills: rank(i.topCoreSkills), techSkills: rank(i.topTechSkills), softSkills: rank(i.topSoftSkills),
     suppressedCohorts: Number(i.suppressedCohorts) || 0,
   };
 }
 
-const CARD_TITLE = { platforms: 'stage.platforms', roles: 'stage.roles', topSkills: 'stage.topSkills', coreSkills: 'stage.coreSkills', matrix: 'stage.matrix' };
+const CARD_TITLE = { platforms: 'stage.platforms', roles: 'stage.roles', coreSkills: 'stage.coreSkills', techSkills: 'stage.techSkills', softSkills: 'stage.softSkills' };
 function renderCard(key) {
   const on = dash.selected === key;
   return h('button', {
@@ -231,7 +227,6 @@ function renderCard(key) {
 function renderPanel(key, f) {
   const title = h('h2', { class: 'panel__title' }, tx(CARD_TITLE[key]));
   if (!f.hasData) return [title, h('p', { class: 'muted panel__empty' }, tx('stage.noInsights'))];
-  if (key === 'matrix') return [title, renderMatrix(f.matrix)];
   const rows = f[key];
   if (!rows.length) return [title, h('p', { class: 'muted panel__empty' }, key === 'platforms' || key === 'roles' ? tx('stage.noCohorts') : tx('stage.noInsights'))];
   const isEng = key === 'platforms' || key === 'roles';
@@ -243,19 +238,6 @@ function renderPanel(key, f) {
         h('span', { class: 'bar-row__count tabular' }, formatInt(isEng ? r.joined : r.count))),
       h('span', { class: 'bar-row__bar', 'aria-hidden': 'true' }, h('span', { class: 'bar-row__fill', style: { width: `${r.pct}%` } }))))),
   ];
-}
-
-/** Donut of the average match (D-50: the matched-count bar chart was removed). SVG built with dom.h (no innerHTML). */
-function renderMatrix(m) {
-  if (m.rate === null) return h('p', { class: 'muted panel__empty' }, tx('stage.noInsights'));
-  const R = 70, C = 2 * Math.PI * R, pct = Math.max(0, Math.min(1, m.rate));
-  const donut = h('svg', { class: 'matrix__donut', viewBox: '0 0 180 180', role: 'img', 'aria-label': `${m.percent} ${tx('stage.matrix.avg')}` },
-    h('circle', { cx: 90, cy: 90, r: R, class: 'matrix__track' }),
-    h('circle', { cx: 90, cy: 90, r: R, class: 'matrix__arc', 'stroke-dasharray': `${(C * pct).toFixed(1)} ${C.toFixed(1)}`, transform: 'rotate(-90 90 90)' }),
-    h('text', { x: 90, y: 88, class: 'matrix__pct', 'text-anchor': 'middle' }, m.percent),
-    h('text', { x: 90, y: 116, class: 'matrix__cap', 'text-anchor': 'middle' }, tx('stage.matrix.avg')));
-  const parts = [h('div', { class: 'matrix__hero' }, donut, h('p', { class: 'matrix__meta tabular' }, tx('stage.matrix.players', { count: formatInt(m.participants) })))];
-  return h('div', { class: 'matrix' }, ...parts);
 }
 
 function renderStatus() {

@@ -34,3 +34,12 @@ test('state-copy.csv mirrors copy.json', () => {
   const rows = csv.trim().split('\n').length - 1;
   assert.equal(rows, Object.keys(COPY.key).length + Object.keys(COPY.exceptions).length);
 });
+test('insight.noMatrix (D-55): present in copy.json and state-copy.csv with the {role} placeholder, distinct from insight.inMatrix', () => {
+  const s = COPY.key['insight.noMatrix'];
+  assert.ok(typeof s === 'string' && s.includes('{role}'), 'copy.json insight.noMatrix with {role}');
+  assert.notEqual(s, COPY.key['insight.inMatrix']);
+  assert.equal(t('insight.noMatrix', { role: 'Chief Data Officer' }), s.replace('{role}', 'Chief Data Officer'));
+  const csv = readFileSync(new URL('../../docs/ux/state-copy.csv', import.meta.url), 'utf8');
+  const row = csv.split('\n').find(l => l.startsWith('"insight.noMatrix",'));
+  assert.ok(row, 'state-copy.csv row'); assert.ok(row.includes(`"${s}"`), 'csv text matches copy.json');
+});

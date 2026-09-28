@@ -1,9 +1,10 @@
-// Current round panel (A2.DRAFT ... A2.END). Pure render from the view-model; actions are injected callbacks.
+// Current round panel (A2, D-53): Draft -> Registration open -> Playing -> Finished, plus Cancelled. One primary next step
+// per status, Extend chips while open, the unfinished-boards alert, and Cancel / Delete. Pure render from the view-model.
 import { h, setPending } from '/packages/ui/dom.js';
 import { formatInt, formatTime } from '/packages/ui/format.js';
 import { qrToSvg } from '/packages/ui/qr.js';
-import { t, exceptionCopy } from '../copy.js';
-import { statePill } from '../state.js';
+import { t } from '../copy.js';
+import { STEPS, EXTEND_CHOICES } from '../state.js';
 
 function kindChip(kind) {
   const k = String(kind || '').toLowerCase();
@@ -44,19 +45,6 @@ export function renderCounts(counts, extra = {}) {
     tiles.map(([k, v]) => h('div', { role: 'listitem' }, statTile(t(k), v))));
 }
 
-function readinessPanel(vm) {
-  const r = vm.readiness;
-  const items = [
-    h('li', { className: r.poolSize < r.poolMinimum ? 'is-warning' : 'is-ok' }, h('span', { 'aria-hidden': 'true' }, r.poolSize < r.poolMinimum ? '! ' : '✓ '), t('admin.readiness.pool', { count: formatInt(r.poolSize) })),
-    h('li', { className: r.anyBoardCanWin ? 'is-ok' : 'is-warning' }, h('span', { 'aria-hidden': 'true' }, r.anyBoardCanWin ? '✓ ' : '! '), r.anyBoardCanWin ? t('admin.readiness.canWin', { count: formatInt(r.boardsThatCanWin) }) : t('admin.readiness.noneCanWin')),
-  ];
-  return h('section', { className: 'card card--flat stack stack--tight readiness', 'aria-labelledby': 'readiness-title' },
-    h('h3', { id: 'readiness-title', className: 'section-title' }, t('stage.status')),
-    h('ul', { className: 'readiness__list' }, items),
-    vm.startBlockedException && h('p', { className: 'banner banner--warning', role: 'note' }, exceptionCopy(vm.startBlockedException)),
-    vm.startOverdue && h('p', { className: 'banner banner--warning', role: 'note' }, t('admin.startOverdue')));
-}
-
 function joinPanel(join) {
   if (!join || !join.joinUrl) return null;
   const svg = svgFromString(qrToSvg(join.joinUrl, { size: 256, margin: 3, dark: '#000', light: '#fff', ariaLabel: t('adminLocal.joinLink') }));
@@ -81,13 +69,33 @@ function winnersPanel(vm, state) {
   const list = vm.winners.length ? h('ul', { className: 'winner-list' }, vm.winners.map((w) => h('li', null,
     h('strong', null, w.label || w.participantId),
     ' · ', t('adminLocal.winningDraw', { draw: w.winningDrawNumber }),
-    ' · ', t('adminLocal.lines', { lines: (w.lineIds || []).join(', ') || '–' })))) : h('p', { className: 'muted' }, t('adminLocal.loading'));
-  const window_ = vm.phase !== 'WINNER' ? null : state.resultWindowEndsAt
-    ? countdown(state.resultWindowEndsAt, { label: t('adminLocal.resultWindowEnds'), id: 'result-window' })
-    : h('p', { className: 'muted' }, t('adminLocal.resultWindowAuto', { seconds: vm.summary.resultWindowSeconds }));
-  return h('section', { className: 'card card--flat stack stack--tight', 'aria-labelledby': 'winners-title' },
-    h('h3', { id: 'winners-title', className: 'section-title' }, `${t('result.bingo')} · ${t('adminLocal.winners')} (${vm.winners.length})`),
-    list, window_);
+    ' · ', t('adminLocal.lines', { lines: (w.lineIds || []).join(', ') || '–' }),
+    w.closest ? h('span', { className: 'muted' }, ` · ${t('adminLocal.mc.closest')}`) : null))) : h('p', { className: 'muted' }, t('adminLocal.loading'));
+  const closest = vm.winners.some((w) => w.closest);
+  const finishing = vm.phase === 'WINNER' && state.resultWindowEndsAt ? countdown(state.resultWindowEndsAt, { label: t('adminLocal.mc.finishingIn'), id: 'result-window' }) : null;
+  return h('section', { className: 'card card--flat stack stack--tight winners-card', 'aria-labelledby': 'winners-title' },
+    h('h3', { id: 'winners-title', className: 'section-title' }, t(closest ? 'adminLocal.mc.closestTitle' : 'adminLocal.mc.winnersTitle', { count: vm.winners.length })),
+    list, finishing);
+}
+
+function progressSteps(vm) {
+  const step = vm.status.step;
+  return h('ol', { className: ['steps', vm.phase === 'CANCELLED' ? 'is-cancelled' : null], 'aria-label': t('adminLocal.mc.progress') },
+    STEPS.map((label, i) => h('li', { className: ['steps__item', i < step ? 'is-done' : null, i === step ? 'is-current' : null], 'aria-current': i === step ? 'step' : undefined },
+      h('span', { className: 'steps__dot', 'aria-hidden': 'true' }, i < step ? '✓' : String(i + 1)),
+      h('span', { className: 'steps__label' }, label))));
+}
+
+function extendRow(actions, disabled, { id = 'extend', compact = false } = {}) {
+  return h('div', { className: ['extend-row', compact ? 'extend-row--compact' : null], role: 'group', 'aria-label': t('adminLocal.mc.extendLabel'), id },
+    h('span', { className: 'extend-row__label' }, t('adminLocal.mc.extend')),
+    EXTEND_CHOICES.map((n) => h('button', { className: 'seg', type: 'button', disabled, dataset: { command: `extend-${n}-${id}` }, onClick: () => actions.extend(n) }, t('adminLocal.mc.extendBy', { n }))),
+    h('button', { className: 'seg seg--link', type: 'button', disabled, dataset: { command: `pick-${id}` }, onClick: actions.pickTime }, t('adminLocal.mc.pickTime')));
+}
+
+function startLine(s) {
+  if (s.state === 'DRAFT') return s.lockAt ? t('adminLocal.mc.startsAt', { time: formatTime(s.lockAt) }) : s.startInMinutes ? t('adminLocal.mc.startsIn', { n: s.startInMinutes }) : '';
+  return '';
 }
 
 /**
@@ -97,9 +105,10 @@ function winnersPanel(vm, state) {
 export function renderRoundPanel(state, vm, ctx) {
   const { actions, pendingCommand } = ctx;
   if (vm.phase === 'none') {
-    return h('section', { className: 'card stack', 'aria-labelledby': 'round-panel-title' },
+    return h('section', { className: 'card stack empty-round', 'aria-labelledby': 'round-panel-title' },
       h('h2', { id: 'round-panel-title' }, t('adminLocal.currentRound')),
-      h('p', { className: 'muted' }, t('adminLocal.noCurrentRound')));
+      h('p', { className: 'muted' }, t('adminLocal.mc.noRound')),
+      h('div', null, h('button', { className: 'btn btn--primary btn--lg', type: 'button', onClick: actions.create }, t('adminLocal.mc.createRound'))));
   }
   const s = vm.summary; const cur = state.currentRound;
   const busy = (cmd) => pendingCommand === cmd;
@@ -110,46 +119,48 @@ export function renderRoundPanel(state, vm, ctx) {
     return el;
   };
 
-  const header = h('div', { className: 'cluster cluster--between round-head' },
-    h('div', { className: 'stack stack--tight' },
-      h('h2', { id: 'round-panel-title' }, `${t('adminLocal.round')} ${s.number} · ${s.title}`),
-      h('div', { className: 'cluster' },
-        h('span', { className: ['pill', statePill(s.state)] }, s.state),
-        h('span', { className: 'muted tabular' }, `${t('adminLocal.version')} ${s.version}`),
-        s.lockAt && h('span', { className: 'muted' }, `${t('adminLocal.lockAt')}: ${formatTime(s.lockAt)}`),
-        cur.lastCommand && h('span', { className: 'muted' }, `${t('adminLocal.lastCommand')}: ${cur.lastCommand.command} · ${t(`adminLocal.${cur.lastCommand.outcome}`)}`))));
+  const explain = vm.startBlocked ? t('adminLocal.mc.explain.blocked') : t(`adminLocal.mc.explain.${vm.phase}`, { time: s.lockAt ? formatTime(s.lockAt) : '' });
+  const header = h('div', { className: 'round-head stack stack--tight' },
+    h('div', { className: 'cluster cluster--between' },
+      h('h2', { id: 'round-panel-title' }, s.title),
+      h('span', { className: ['pill', 'pill--status', vm.status.pill], role: 'status', 'aria-label': `${t('adminLocal.mc.status')}: ${vm.status.label}` }, vm.status.label)),
+    progressSteps(vm),
+    h('p', { className: 'round-explain' }, explain, startLine(s) ? h('span', { className: 'muted' }, ` ${startLine(s)}.`) : null),
+    vm.phase === 'CANCELLED' && s.cancellationReason && h('p', { className: 'banner banner--danger', role: 'note' }, t('adminLocal.cancelledReason', { reason: s.cancellationReason })));
 
   const sections = [header];
-  sections.push(renderCounts(cur.counts, s.state === 'WINNER' || s.state === 'EXHAUSTED' ? { draws: cur.draws.length, poolRemaining: vm.poolRemaining } : {}));
-
-  const controls = [];
+  const primary = [];
   switch (vm.phase) {
     case 'DRAFT':
-      controls.push(btn(t('adminLocal.edit'), 'round.update', actions.edit, { kind: 'btn--ghost' }));
-      controls.push(btn(t('admin.openRegistration'), 'round.registration.open', actions.openRegistration));
+      primary.push(btn(t('adminLocal.mc.openForPlayers'), 'round.registration.open', actions.openRegistration, { kind: 'btn--primary btn--lg' }));
+      primary.push(btn(t('adminLocal.mc.editTitle'), 'round.update', actions.edit, { kind: 'btn--ghost' }));
       break;
-    case 'REGISTRATION_OPEN':
+    case 'REGISTRATION_OPEN': {
+      if (vm.startBlocked) sections.push(h('div', { className: 'alert alert--danger stack stack--tight', role: 'alert' },
+        h('p', { className: 'alert__text' }, t('adminLocal.mc.startBlocked')),
+        extendRow(actions, anyPending, { id: 'extend-blocked', compact: true })));
+      else if (vm.unfinishedAlert) sections.push(h('div', { className: 'alert alert--warning stack stack--tight', role: 'alert', dataset: { alert: 'unfinished' } },
+        h('p', { className: 'alert__text' }, t('adminLocal.mc.unfinished', { count: formatInt(vm.unfinished) })),
+        extendRow(actions, anyPending, { id: 'extend-alert', compact: true }),
+        h('p', { className: 'muted alert__hint' }, t('adminLocal.mc.unfinishedHint'))));
       sections.push(h('div', { className: 'grid grid--2 open-grid' },
-        joinPanel(state.join),
         h('div', { className: 'stack' },
-          vm.showLockCountdown && countdown(s.lockAt, { label: t('admin.lockCountdown'), id: 'lock-countdown' }),
-          readinessPanel(vm))));
-      // Safe default first and primary; the irreversible Lock now / Start now are ghost and confirmed (UX-03).
-      controls.push(btn(t('adminLocal.reschedule'), 'round.reschedule', actions.reschedule));
-      controls.push(btn(t('admin.lockNow'), 'round.lock', actions.lockNow, { kind: 'btn--ghost' }));
-      controls.push(btn(t('admin.startNow'), 'round.start_now', actions.startNow, { kind: 'btn--ghost' }));
+          s.lockAt && !vm.startBlocked && h('div', { className: 'start-clock' }, countdown(s.lockAt, { label: t('adminLocal.mc.gameStartsIn'), id: 'start-countdown' })),
+          h('div', { className: 'mini-stats' },
+            statTile(t('adminLocal.counts.joined'), cur.counts.joined),
+            statTile(t('adminLocal.counts.completed'), cur.counts.completed),
+            statTile(t('adminLocal.mc.unfinishedLabel'), vm.unfinished))),
+        joinPanel(state.join)));
+      primary.push(btn(t('adminLocal.mc.startNow'), 'round.start_now', actions.startNow, { kind: 'btn--primary btn--lg' }));
+      if (!vm.startBlocked && !vm.unfinishedAlert) primary.push(extendRow(actions, anyPending)); // the alert carries its own Extend chips
       break;
-    case 'LOCKED':
-      sections.push(readinessPanel(vm));
-      controls.push(btn(t('admin.start'), 'round.start', actions.start, { disabled: !vm.controls.startEnabled, describedBy: vm.startBlockedException ? 'start-blocked-note' : null }));
-      if (vm.startBlockedException) sections.push(h('p', { id: 'start-blocked-note', className: 'visually-hidden' }, exceptionCopy(vm.startBlockedException)));
-      break;
+    }
     case 'PLAYING': {
-      const nextBtn = btn(t('admin.nextSkill'), 'round.draw.next', actions.nextSkill, { kind: 'btn--primary btn--lg next-skill', describedBy: 'pacing-hint', id: 'next-skill' });
+      const nextBtn = btn(t('adminLocal.mc.drawNext'), 'round.draw.next', actions.nextSkill, { kind: 'btn--primary btn--lg next-skill', describedBy: 'pacing-hint', id: 'next-skill' });
       sections.push(h('section', { className: 'card next-skill-card stack', 'aria-labelledby': 'draw-title' },
-        h('h3', { id: 'draw-title', className: 'visually-hidden' }, t('admin.nextSkill')),
+        h('h3', { id: 'draw-title', className: 'visually-hidden' }, t('adminLocal.mc.drawNext')),
         h('p', { className: 'draw-summary tabular' },
-          `${t('adminLocal.counts.draws')} ${formatInt(cur.draws.length)} · ${t('adminLocal.counts.poolRemaining')} ${vm.poolRemaining === null ? '–' : formatInt(vm.poolRemaining)} · ${t('adminLocal.counts.matchedBoards')} ${formatInt(cur.counts.matchedBoards ?? 0)}`,
+          `${t('adminLocal.counts.draws')} ${formatInt(cur.draws.length)} · ${t('adminLocal.counts.poolRemaining')} ${vm.poolRemaining === null ? '–' : formatInt(vm.poolRemaining)} · ${t('adminLocal.counts.active')} ${formatInt(cur.counts.active ?? 0)}`,
           state.boardsWithFourInLine !== null && state.boardsWithFourInLine !== undefined ? ` · ${t('adminLocal.boardsFourInLine', { count: formatInt(state.boardsWithFourInLine) })}` : ''),
         h('div', { className: 'cluster next-skill-row' },
           nextBtn,
@@ -161,30 +172,27 @@ export function renderRoundPanel(state, vm, ctx) {
       break;
     }
     case 'WINNER':
-      sections.push(winnersPanel(vm, state));
-      sections.push(h('section', { className: 'stack stack--tight', 'aria-labelledby': 'draws-title' },
-        h('h3', { id: 'draws-title', className: 'section-title' }, t('adminLocal.draws')), drawList(vm)));
-      break;
-    case 'EXHAUSTED':
-      sections.push(h('p', { className: 'banner banner--warning', role: 'note' }, `${exceptionCopy('E23')} ${exceptionCopy('E11')}`));
-      sections.push(h('section', { className: 'stack stack--tight', 'aria-labelledby': 'draws-title' },
-        h('h3', { id: 'draws-title', className: 'section-title' }, t('adminLocal.draws')), drawList(vm)));
-      controls.push(btn(t('admin.close'), 'round.close', actions.close));
-      break;
     case 'CLOSED':
+      if (vm.winners.length || vm.phase === 'WINNER') sections.push(winnersPanel(vm, state));
+      if (vm.draws.length) sections.push(h('details', { className: 'draws-details' }, h('summary', null, `${t('adminLocal.draws')} · ${formatInt(vm.draws.length)}`), drawList(vm)));
+      primary.push(h('button', { className: 'btn btn--primary btn--lg', type: 'button', onClick: actions.create }, t('adminLocal.mc.createRound')));
+      break;
     case 'CANCELLED':
-      if (s.cancellationReason) sections.push(h('p', { className: 'banner banner--danger', role: 'note' }, t('adminLocal.cancelledReason', { reason: s.cancellationReason })));
-      if (vm.winners.length) sections.push(winnersPanel(vm, state));
-      controls.push(h('button', { className: 'btn btn--primary', type: 'button', onClick: actions.createNext }, t('adminLocal.createNext')));
+      primary.push(h('button', { className: 'btn btn--primary btn--lg', type: 'button', onClick: actions.create }, t('adminLocal.mc.createRound')));
       break;
     default:
       break;
   }
-  if (vm.controls.cancel) controls.push(btn(t('admin.cancel'), 'round.cancel', actions.cancel, { kind: 'btn--danger btn--cancel' }));
-  if (controls.length) {
-    const row = h('div', { className: 'cluster round-actions', role: 'group', 'aria-label': t('adminLocal.currentRound') }, controls);
-    if (vm.phase === 'PLAYING') sections.push(row); else sections.splice(1, 0, row);
-  }
+
+  const secondary = [];
+  if (vm.controls.cancel) secondary.push(btn(t('adminLocal.mc.cancel'), 'round.cancel', actions.cancel, { kind: 'btn--ghost btn--sm' }));
+  secondary.push(btn(t('adminLocal.mc.delete'), 'round.delete', () => actions.deleteRound(s), { kind: 'btn--danger btn--sm' }));
+  const actionBar = h('div', { className: 'round-actions', role: 'group', 'aria-label': t('adminLocal.currentRound') },
+    h('div', { className: 'round-actions__primary cluster' }, primary),
+    h('div', { className: 'round-actions__secondary cluster', role: 'group', 'aria-label': t('adminLocal.mc.moreActions') }, secondary));
+  // Playing: after the draw card. Open: after any alert, above the countdown + QR. Otherwise right under the header.
+  const at = vm.phase === 'PLAYING' ? 2 : vm.phase === 'REGISTRATION_OPEN' ? sections.length - 1 : 1;
+  sections.splice(at, 0, actionBar);
 
   return h('section', { className: ['card', 'stack', 'round-panel', `is-${vm.phase.toLowerCase()}`], 'aria-labelledby': 'round-panel-title', dataset: { phase: vm.phase } }, sections);
 }

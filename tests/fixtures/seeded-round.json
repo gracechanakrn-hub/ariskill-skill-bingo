@@ -1,7 +1,7 @@
 {
   "fixtureVersion": 1,
-  "description": "Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1, default guided draws): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, lock, start, then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.",
-  "generatedAt": "2026-09-27T06:17:52.083Z",
+  "description": "Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1, default guided draws): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, start now (round.start_now {confirmed:true}), then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.",
+  "generatedAt": "2026-09-28T09:26:50.528Z",
   "env": {
     "BINGO_ENV": "test",
     "BINGO_DB_PATH": ":memory:",
@@ -17,12 +17,11 @@
     "title": "Fixture Round",
     "number": 1,
     "resultWindowSeconds": 12,
-    "lockAtHint": "+1h from now (any future time; lock is triggered by round.lock)"
+    "lockAtHint": "+1h from now (any future time; play is started by round.start_now before it)"
   },
   "commands": [
     "round.registration.open",
-    "round.lock",
-    "round.start",
+    "round.start_now {confirmed:true}",
     "round.draw.next (repeat until state != PLAYING)"
   ],
   "boards": [
@@ -30,7 +29,7 @@
       "employeeRef": "fixture-001",
       "displayName": "Avery Rivera",
       "consentPublicName": true,
-      "platformId": "platform_data-engineering",
+      "platformId": "platform_aomplearn-and-o2o-and-ariseweb",
       "roleId": "role_ai-engineer",
       "skillIds": [
         "skill_adaptability",
@@ -55,7 +54,7 @@
       "employeeRef": "fixture-002",
       "displayName": "Blake Chen",
       "consentPublicName": false,
-      "platformId": "platform_data-engineering",
+      "platformId": "platform_cloud-center-of-excellence",
       "roleId": "role_ai-engineer",
       "skillIds": [
         "skill_adaptability",
@@ -80,8 +79,8 @@
       "employeeRef": "fixture-003",
       "displayName": "Casey Okafor",
       "consentPublicName": true,
-      "platformId": "platform_enterprise-architecture",
-      "roleId": "role_enterprise-architect",
+      "platformId": "platform_data",
+      "roleId": "role_chief-finance-officer",
       "skillIds": [
         "skill_android-debug-and-testing",
         "skill_android-design-pattern",
@@ -105,8 +104,8 @@
       "employeeRef": "fixture-004",
       "displayName": "Devin Silva",
       "consentPublicName": true,
-      "platformId": "platform_enterprise-architecture",
-      "roleId": "role_enterprise-architect",
+      "platformId": "platform_digital-core-banking",
+      "roleId": "role_chief-finance-officer",
       "skillIds": [
         "skill_android-debug-and-testing",
         "skill_android-design-pattern",
@@ -130,8 +129,8 @@
       "employeeRef": "fixture-005",
       "displayName": "Emery Novak",
       "consentPublicName": false,
-      "platformId": "platform_it-security",
-      "roleId": "role_cloud-detection-and-response-specialist",
+      "platformId": "platform_e-learning-platform",
+      "roleId": "role_cloud-engineer",
       "skillIds": [
         "skill_business-needs-analysis",
         "skill_business-process-management",
@@ -155,8 +154,8 @@
       "employeeRef": "fixture-006",
       "displayName": "Finley Haddad",
       "consentPublicName": true,
-      "platformId": "platform_people-experience",
-      "roleId": "role_recruiter",
+      "platformId": "platform_fulfillment-portal",
+      "roleId": "role_data-engineer",
       "skillIds": [
         "skill_conflict-resolution",
         "skill_containerization-and-orchestration",
@@ -178,8 +177,9 @@
     }
   ],
   "expected": {
-    "lock": {
+    "start": {
       "activeBoards": 6,
+      "unfinishedBoards": 0,
       "deferredBoards": 0
     },
     "poolSize": 64,
@@ -470,6 +470,6 @@
         "row-0"
       ]
     },
-    "finalRoundVersion": 13
+    "finalRoundVersion": 12
   }
 }

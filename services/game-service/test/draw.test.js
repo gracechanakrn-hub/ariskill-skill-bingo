@@ -88,9 +88,12 @@ describe('draw transaction (A-04, A-05, BR-09..BR-15)', () => {
     const draws = [first, ...results].map(r => r.effects.draw);
     assert.deepEqual(draws.map(d => d.number), draws.map((_, i) => i + 1));
     assert.equal(new Set(draws.map(d => d.skill.id)).size, draws.length);
-    const pool = new Set([...setA, ...setB]);
+    // D-53: boards reassigned from earlier cancelled rounds of this shared server play too (partial boards are no longer
+    // deferred), so the pool is every skill on any board that played, which includes all of setA and setB.
+    const pool = new Set(t.db.all(`SELECT DISTINCT c.skill_id FROM board_cells c JOIN boards b ON b.id = c.board_id WHERE b.round_id = ? AND b.state = 'FINISHED'`, round.roundId).map(r => r.skill_id));
+    for (const id of [...setA, ...setB]) assert.ok(pool.has(id), id);
     assert.ok(draws.every(d => pool.has(d.skill.id) && ['Core', 'Critical', 'Optional'].includes(d.skill.kind)));
-    assert.ok(['WINNER', 'EXHAUSTED'].includes(end.state));
+    assert.equal(end.state, 'WINNER', 'D-53: every round ends with a winner');
     assert.ok(t.db.get('SELECT COUNT(*) AS c FROM draws WHERE round_id = ?', round.roundId).c <= pool.size);
     const poolJson = JSON.parse(t.db.get('SELECT pool_json FROM rounds WHERE id = ?', round.roundId).pool_json);
     assert.deepEqual(poolJson, [...pool].sort(), 'the pool is every skill on an active board, optional ones included');

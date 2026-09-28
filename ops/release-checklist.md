@@ -17,6 +17,7 @@ Build ID: `____________` (from `build/build-info.json`)  Schema version: `____` 
 ## Deployment conditions (from critique round 1 / red-team)
 - [ ] `BINGO_ENV=production`, all secrets set (`BINGO_ADMIN_TOKEN`, `BINGO_STAGE_TOKEN`, `BINGO_JOIN_SECRET`, `BINGO_SESSION_SECRET`); server refuses to start otherwise
 - [ ] `BINGO_SESSION_RATE_PER_MIN` sized for the crowd (recommended 300 for a NAT'd venue) and recorded here: `______`
+- [ ] Test mode (D-56): before the event, test on the event server with **Test mode** on in Mission Control, then **Clear all data**; before doors open, turn Test mode **off** (the amber banner disappears). Once live, restart with `BINGO_ALLOW_RESET=off` so nobody can turn it back on
 - [ ] `BINGO_TRUST_PROXY=1` ONLY when a trusted reverse proxy rewrites inbound `X-Forwarded-For`; otherwise unset. Recorded: `______`
 - [ ] TLS and HSTS terminated at ingress; `BINGO_PUBLIC_BASE_URL` is the https venue URL (QR payload)
 - [ ] Venue join-rate check passed in rehearsal: 10 phones join within 60 s on the venue network without a 429

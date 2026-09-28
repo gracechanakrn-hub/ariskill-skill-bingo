@@ -144,8 +144,11 @@ export function mountSoul(root, ctx, screen) {
     const children = [h('h2', { id: 'insight-title', className: 'section__title' }, `\u{1F512}︎ ${t('insight.title')}`)];
     if (i) {
       const roleName = ctx.roleName(state.participant && state.participant.roleId) || '';
-      children.push(h('p', { className: 'lead' }, t('insight.inMatrix', { count: i.inMatrixCount, role: roleName })));
-      children.push(h('p', null, t('insight.beyond', { count: i.beyondMatrixCount })));
+      if (i.roleInMatrix === false) children.push(h('p', { className: 'lead' }, t('insight.noMatrix', { role: roleName }))); // D-55
+      else {
+        children.push(h('p', { className: 'lead' }, t('insight.inMatrix', { count: i.inMatrixCount, role: roleName })));
+        children.push(h('p', null, t('insight.beyond', { count: i.beyondMatrixCount })));
+      }
     } else if (state.insightAvailable) {
       children.push(h('p', { className: 'muted', role: 'status' }, tl('ui.loading')));
     }

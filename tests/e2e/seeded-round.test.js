@@ -1,7 +1,7 @@
 // Seeded deterministic round replay (requirement 18.2 "at least one seeded deterministic round", AC 5, 6, 7; M-08, M-10, A-06).
 // Replays tests/fixtures/seeded-round.json exactly as services/game-service/README.md describes:
 // fresh server with BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1; first round of evt_demo; six explicit
-// profiles; save + finalize the listed skillIds; lock; start; draw until the round leaves PLAYING.
+// profiles; save + finalize the listed skillIds; start now (D-53: no separate lock); draw until the round leaves PLAYING.
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -66,11 +66,11 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
     for (const [k, s] of Object.entries(streams)) assert.equal(s.status, 200, `${k} stream`);
   });
 
-  test('lock and start match the fixture: 6 active / 0 deferred boards, pool of the 64 distinct active skills on them', async () => {
-    const lock = await command(t, round.roundId, 'round.lock', round.version);
-    assert.equal(lock.effects.activeBoards, fixture.expected.lock.activeBoards); assert.equal(lock.effects.deferredBoards, fixture.expected.lock.deferredBoards);
-    const start = await command(t, round.roundId, 'round.start', lock.resultingVersion);
-    assert.equal(start.round.state, 'PLAYING'); assert.equal(start.effects.poolSize, fixture.expected.poolSize);
+  test('start now matches the fixture: 6 active / 0 unfinished / 0 deferred boards, pool of the 64 distinct active skills on them', async () => {
+    assert.deepEqual(fixture.commands.slice(0, 2), ['round.registration.open', 'round.start_now {confirmed:true}']);
+    const start = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
+    assert.deepEqual({ activeBoards: start.effects.activeBoards, unfinishedBoards: start.effects.unfinishedBoards, deferredBoards: start.effects.deferredBoards }, fixture.expected.start);
+    assert.equal(start.round.state, 'PLAYING'); assert.equal(start.resultingVersion, round.version + 1); assert.equal(start.effects.poolSize, fixture.expected.poolSize);
     round = start.round;
     const pool = JSON.parse(t.db.get('SELECT pool_json FROM rounds WHERE id = ?', round.roundId).pool_json);
     assert.deepEqual(pool, fixture.expected.pool, 'pool content is exactly the fixture pool');
@@ -164,7 +164,7 @@ describe('seeded round replay (BINGO_RNG_SEED=fixture-1)', () => {
       assert.deepEqual(res.data.payload.winners.map(w => w.label).sort(), expectedLabels, `${k} winner labels`);
       if (k === 'admin') {
         assert.deepEqual(res.data.payload.winners.map(w => w.participantId).sort(), [...expectedIds].sort());
-        for (const w of res.data.payload.winners) { assert.deepEqual(Object.keys(w).sort(), ['label', 'lineIds', 'participantId', 'winningDrawNumber']); assert.equal(w.winningDrawNumber, fixture.expected.winningDrawNumber); }
+        for (const w of res.data.payload.winners) { assert.deepEqual(Object.keys(w).sort(), ['closest', 'label', 'lineIds', 'participantId', 'winningDrawNumber']); assert.equal(w.closest, false); assert.equal(w.winningDrawNumber, fixture.expected.winningDrawNumber); }
       } else {
         for (const w of res.data.payload.winners) { assert.ok(w.soulId.startsWith('soul_')); soulIds.add(w.soulId); }
         if (k === 'stage') for (const w of res.data.payload.winners) assert.deepEqual(Object.keys(w).sort(), ['label', 'soulId', 'winningDrawNumber']);

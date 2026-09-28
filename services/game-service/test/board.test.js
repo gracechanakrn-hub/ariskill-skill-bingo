@@ -86,7 +86,7 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
     assert.equal(c.status, 422); assert.equal(c.body.error.code, 'IDEMPOTENCY_MISMATCH');
   });
 
-  test('BR-07: a save arriving after lockAt is ROUND_LOCKED (E8) even before the lock transaction ran', async () => {
+  test('BR-07: a save arriving after lockAt is ROUND_LOCKED (E8) even before the start transaction ran', async () => {
     const p = await join(t);
     await saveBoard(t, p, boardSet(0, 3));
     const r = t.db.get('SELECT lock_at, state FROM rounds WHERE id = ?', round.roundId);
@@ -95,19 +95,19 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
     try {
       const late = await saveBoard(t, p, boardSet(0, 4), 1);
       assert.equal(late.status, 409); assert.equal(late.body.error.code, 'ROUND_LOCKED'); assert.equal(late.body.error.exceptionId, 'E8');
-      assert.equal(t.db.get('SELECT state FROM rounds WHERE id = ?', round.roundId).state, 'REGISTRATION_OPEN', 'lock transaction has not run yet');
+      assert.equal(t.db.get('SELECT state FROM rounds WHERE id = ?', round.roundId).state, 'REGISTRATION_OPEN', 'start transaction has not run yet');
       assert.equal((await t.api.get('/me', p.token)).body.board.selectedSkillIds.length, 3);
       const fin = await t.api.post('/me/board/finalize', { boardVersion: 1 }, p.token);
       assert.equal(fin.status, 409); assert.equal(fin.body.error.code, 'ROUND_LOCKED');
     } finally { t.clock.unfreeze(); }
   });
 
-  test('F-01: a late joiner saving while the round is LOCKED/PLAYING gets a DEFERRED(late) board (200 + E8 notice + board.deferred); an in-play board still gets E8', async () => {
+  test('F-01: a late joiner saving while the round is PLAYING gets a DEFERRED(late) board (200 + E8 notice + board.deferred); an in-play board still gets E8', async () => {
     const s = await startServer();
     try {
       const r = await createRound(s);
       const early = await join(s, { displayName: 'Early' }); await readyBoard(s, early, boardSet(0));
-      await command(s, r.roundId, 'round.lock', r.version);
+      const started = await command(s, r.roundId, 'round.start_now', r.version, { confirmed: true }); // D-53: no LOCKED step
       const late = await join(s, { displayName: 'Late' });
       const seq0 = s.db.get('SELECT COALESCE(MAX(sequence),0) AS q FROM events_outbox WHERE event_id = ?', EVENT_ID).q;
       const save = await saveBoard(s, late, boardSet(5, 7), 0);
@@ -128,7 +128,6 @@ describe('board: selection, finalize, versions, idempotency (M-04..M-07, BR-01, 
       const blocked = await saveBoard(s, early, boardSet(1), 2);
       assert.equal(blocked.status, 409); assert.equal(blocked.body.error.code, 'ROUND_LOCKED'); assert.equal(blocked.body.error.exceptionId, 'E8');
       assert.equal((await s.api.get('/me', early.token)).body.board.state, 'LOCKED_ACTIVE');
-      const started = await command(s, r.roundId, 'round.start', r.version + 1);
       const late2 = await join(s, { displayName: 'Later' });
       const save2 = await saveBoard(s, late2, boardSet(20, 3), 0);
       assert.equal(save2.status, 200); assert.equal(save2.body.board.state, 'DEFERRED');

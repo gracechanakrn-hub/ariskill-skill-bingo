@@ -40,3 +40,14 @@ export function matchMask(cells, drawnSet) {
   for (const c of cells) if (drawnSet.has(c.skillId)) m |= (1 << c.position);
   return m >>> 0;
 }
+
+/**
+ * Unfinished board at round start (D-53): 1-15 skills placed at random positions of the 4 x 4 grid; the other positions
+ * stay blank (no cell), so they can never match and lines through them can never complete. Returns cells in position order.
+ */
+export function randomizePartialBoard(skillIds, rng) {
+  if (!skillIds.length || skillIds.length > CELLS) throw new RangeError(`1-${CELLS} skills required`);
+  const positions = shuffle([...Array(CELLS).keys()], rng).slice(0, skillIds.length).sort((a, b) => a - b);
+  const order = shuffle(skillIds, rng);
+  return positions.map((position, i) => ({ position, skillId: order[i] }));
+}

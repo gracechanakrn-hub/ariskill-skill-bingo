@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateSelections, isComplete, randomizeBoard, matchMask, REQUIRED_SELECTIONS } from '../src/board.js';
+import { validateSelections, isComplete, randomizeBoard, randomizePartialBoard, matchMask, REQUIRED_SELECTIONS } from '../src/board.js';
 import { CELLS } from '../src/lines.js';
 import { seededRng } from '../src/random.js';
 import { SKILLS, ELIGIBLE_IDS } from './helpers.js';
@@ -34,4 +34,22 @@ test('matchMask marks only drawn skills', () => {
   const cells = ids.map((skillId, position) => ({ position, skillId }));
   assert.equal(matchMask(cells, new Set()), 0);
   assert.equal(matchMask(cells, new Set([ids[0], ids[N - 1]])), (1 | (1 << (N - 1))) >>> 0);
+});
+test('D-53 randomizePartialBoard: 1-16 skills land on unique random cells, the rest stay blank; 0 or 17 throw RangeError', () => {
+  for (let n = 1; n <= N; n++) {
+    const ids = ELIGIBLE_IDS.slice(0, n);
+    const cells = randomizePartialBoard(ids, seededRng(`partial-${n}`));
+    assert.equal(cells.length, n);
+    const positions = cells.map(c => c.position);
+    assert.equal(new Set(positions).size, n, 'unique positions');
+    assert.deepEqual(positions, positions.slice().sort((a, b) => a - b), 'position order');
+    for (const p of positions) assert.ok(Number.isInteger(p) && p >= 0 && p < CELLS);
+    assert.deepEqual(cells.map(c => c.skillId).sort(), ids.slice().sort(), 'every skill placed once');
+    assert.deepEqual(randomizePartialBoard(ids, seededRng(`partial-${n}`)), cells, 'deterministic for a seed');
+  }
+  // positions really vary across seeds for a small board
+  const layouts = new Set(); for (let s = 0; s < 20; s++) layouts.add(randomizePartialBoard(ELIGIBLE_IDS.slice(0, 3), seededRng(`vary-${s}`)).map(c => c.position).join(','));
+  assert.ok(layouts.size > 1);
+  assert.throws(() => randomizePartialBoard([], seededRng(1)), RangeError);
+  assert.throws(() => randomizePartialBoard(ELIGIBLE_IDS.slice(0, N + 1), seededRng(1)), RangeError);
 });

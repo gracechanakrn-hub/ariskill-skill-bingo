@@ -6,8 +6,8 @@ import { startServer, createRound, command, join, me, saveBoard, finalizeBoard, 
 import { DRAW_POLICY } from '../../packages/game-rules/src/index.js';
 import { exception, t as copy } from '../../packages/contracts/index.js';
 
-describe('employee journey: join -> profile -> discover -> 16 skills -> READY -> lock -> play -> Soul -> Float', () => {
-  let t, round, alice, bob, carol, aliceFirstLayout;
+describe('employee journey: join -> profile -> discover -> 16 skills -> READY -> start -> play -> Soul -> Float', () => {
+  let t, round, alice, bob, carol, dave, aliceFirstLayout;
   const aliceSet = boardSet(0);
   before(async () => { t = await startServer(); round = await createRound(t, { title: 'Journey 1' }); });
   after(async () => { await t.close(); });
@@ -47,12 +47,15 @@ describe('employee journey: join -> profile -> discover -> 16 skills -> READY ->
     ]) { assert.equal(r.status, 409, name); assert.equal(r.body.error.code, 'PROFILE_REQUIRED', name); assert.equal(r.body.error.exceptionId, 'E16', name); assert.equal(r.body.error.message, exception('E16').copy); }
     const tax = await t.api.get('/taxonomy', alice.token);
     assert.equal(tax.status, 200); assert.ok(tax.body.platforms.length > 0 && tax.body.roles.length > 0 && tax.body.matrixVersion);
-    const role = tax.body.roles[0];
-    const wrongPlatform = tax.body.platforms.find(p => p.id !== role.platformId);
-    const mismatch = await t.api.post('/me/profile', { platformId: wrongPlatform.id, roleId: role.id }, alice.token);
-    assert.equal(mismatch.status, 400, 'role must belong to the chosen platform');
-    const set = await t.api.post('/me/profile', { platformId: role.platformId, roleId: role.id }, alice.token);
-    assert.equal(set.status, 200); assert.equal(set.body.participant.platformId, role.platformId); assert.equal(set.body.participant.roleId, role.id);
+    const role = tax.body.roles.find(r => r.inMatrix);
+    assert.ok(tax.body.roles.every(r => !('platformId' in r)), 'D-55: roles are not tied to a platform');
+    const unknownRole = await t.api.post('/me/profile', { platformId: tax.body.platforms[0].id, roleId: 'role_does-not-exist' }, alice.token);
+    assert.equal(unknownRole.status, 400); assert.equal(unknownRole.body.error.code, 'VALIDATION');
+    assert.equal((await me(t, alice)).participant.platformId, null, 'nothing partially saved');
+    // D-55: platform and role are independent, so the last platform goes with the first matrix role.
+    const platform = tax.body.platforms.at(-1);
+    const set = await t.api.post('/me/profile', { platformId: platform.id, roleId: role.id }, alice.token);
+    assert.equal(set.status, 200); assert.equal(set.body.participant.platformId, platform.id); assert.equal(set.body.participant.roleId, role.id);
     assert.equal((await me(t, alice)).participant.roleId, role.id);
   });
 
@@ -125,30 +128,41 @@ describe('employee journey: join -> profile -> discover -> 16 skills -> READY ->
     aliceFirstLayout = layout;
   });
 
-  test('lock: incomplete board -> DEFERRED with an E5 event; save after lock -> E8; late joiner after lock is parked as DEFERRED(late) with the E8 notice, never in the pool (BR-05..BR-07, AC 3, AC 9, contract 1.0.2 / D-20)', async () => {
+  test('start (D-53): an unfinished board plays with blank spots, an empty board -> DEFERRED with an E5 event; save after the start -> E8; late joiner is parked as DEFERRED(late) with the E8 notice, never in the pool (BR-05..BR-07, AC 3, AC 9, contract 1.0.2 / D-20)', async () => {
     bob = await join(t, { employeeRef: 'emp-bob', displayName: 'Bob Draft', consent: false, profile: roleAt(3) });
+    dave = await join(t, { employeeRef: 'emp-dave', displayName: 'Dave Empty', consent: true, profile: roleAt(4) });
     const bobStream = await openStream(t.baseUrl, '/me/stream', { token: bob.token });
+    const daveStream = await openStream(t.baseUrl, '/me/stream', { token: dave.token });
     assert.equal(bobStream.status, 200);
-    const partial = await saveBoard(t, bob, boardSet(30, 10));
+    const partial = await saveBoard(t, bob, boardSet(30, 3)); // 3 skills: plays, but can never complete a line
     assert.equal(partial.status, 200);
+    assert.equal((await saveBoard(t, dave, [])).status, 200); // a board with no skill at all
     await bobStream.waitFor(ev => ev.some(e => e.event === 'board.saved'), 2000, 'board.saved');
-    const l = await command(t, round.roundId, 'round.lock', round.version);
-    assert.equal(l.round.state, 'LOCKED'); assert.equal(l.effects.activeBoards, 1); assert.equal(l.effects.deferredBoards, 1);
+    const unfinished = (await t.api.get(`/admin/events/${t.eventId}/snapshot`, t.admin)).body.currentRound.readiness.unfinishedBoards;
+    assert.equal(unfinished, 2, 'Mission Control counts the two unfinished boards');
+    const l = await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true });
+    assert.equal(l.round.state, 'PLAYING'); assert.equal(l.effects.activeBoards, 2); assert.equal(l.effects.unfinishedBoards, 1); assert.equal(l.effects.deferredBoards, 1);
+    assert.equal(l.effects.poolSize, CELLS + 3);
     round = l.round;
-    await bobStream.waitFor(ev => ev.some(e => e.event === 'board.deferred'), 2000, 'board.deferred');
-    const deferred = bobStream.events.find(e => e.event === 'board.deferred');
-    assert.equal(deferred.data.payload.reason, 'incomplete'); assert.equal(deferred.data.payload.board.state, 'DEFERRED'); assert.deepEqual(deferred.data.payload.board.selectedSkillIds, boardSet(30, 10));
-    assert.equal(exception('E5').copy, copy('board.deferred'), 'the E5 copy shown for an incomplete board at lock exists in the catalog');
-    bobStream.close(); await bobStream.done;
-    const bobMe = await me(t, bob);
-    assert.equal(bobMe.board.state, 'DEFERRED'); assert.equal(bobMe.board.cells, null);
-    assert.equal((await me(t, alice)).board.state, 'LOCKED_ACTIVE');
+    await bobStream.waitFor(ev => ev.some(e => e.event === 'board.locked_active'), 2000, 'board.locked_active');
+    const bobLocked = bobStream.events.find(e => e.event === 'board.locked_active').data.payload.board;
+    assert.equal(bobLocked.state, 'LOCKED_ACTIVE'); assert.equal(bobLocked.cells.length, 3); assert.equal(new Set(bobLocked.cells.map(c => c.position)).size, 3, 'three skills on three random cells, the rest blank');
+    await daveStream.waitFor(ev => ev.some(e => e.event === 'board.deferred'), 2000, 'board.deferred');
+    const deferred = daveStream.events.find(e => e.event === 'board.deferred');
+    assert.equal(deferred.data.payload.reason, 'incomplete'); assert.equal(deferred.data.payload.board.state, 'DEFERRED'); assert.deepEqual(deferred.data.payload.board.selectedSkillIds, []);
+    assert.equal(exception('E5').copy, copy('board.deferred'), 'the E5 copy shown for a deferred board at the start exists in the catalog');
+    for (const s of [bobStream, daveStream]) { s.close(); await s.done; }
+    const daveMe = await me(t, dave);
+    assert.equal(daveMe.board.state, 'DEFERRED'); assert.equal(daveMe.board.cells, null);
+    assert.equal((await me(t, alice)).board.state, 'LOCKED_ACTIVE'); assert.equal((await me(t, bob)).board.state, 'LOCKED_ACTIVE');
     const late = await saveBoard(t, alice, [...aliceSet.slice(1), ELIGIBLE_IDS[90]]);
     assert.equal(late.status, 409); assert.equal(late.body.error.code, 'ROUND_LOCKED'); assert.equal(late.body.error.exceptionId, 'E8'); assert.equal(late.body.error.message, exception('E8').copy);
     assert.equal((await me(t, alice)).board.state, 'LOCKED_ACTIVE', 'rejected save did not mutate the locked board');
     const bobLate = await saveBoard(t, bob, boardSet(30));
-    assert.equal(bobLate.status, 409); assert.equal(bobLate.body.error.exceptionId, 'E8', 'deferred boards cannot re-enter a locked round');
-    // late joiner (no board in the locked round): contract 1.0.2 -> 200 with a DEFERRED(late) board and the E8 notice
+    assert.equal(bobLate.status, 409); assert.equal(bobLate.body.error.exceptionId, 'E8', 'an unfinished board in play cannot be completed any more');
+    const daveLate = await saveBoard(t, dave, boardSet(60));
+    assert.equal(daveLate.status, 409); assert.equal(daveLate.body.error.exceptionId, 'E8', 'deferred boards cannot re-enter a started round');
+    // late joiner (no board in the started round): contract 1.0.2 -> 200 with a DEFERRED(late) board and the E8 notice
     carol = await join(t, { employeeRef: 'emp-carol', displayName: 'Carol Late', consent: true, profile: roleAt(5) });
     const carolStream = await openStream(t.baseUrl, '/me/stream', { token: carol.token });
     const poolBefore = (await t.api.get(`/admin/events/${t.eventId}/snapshot`, t.admin)).body.currentRound.readiness.poolSize;
@@ -162,21 +176,20 @@ describe('employee journey: join -> profile -> discover -> 16 skills -> READY ->
     assert.equal(lateEv.data.payload.reason, 'late'); assert.equal(lateEv.data.payload.board.state, 'DEFERRED'); assert.equal(lateEv.data.payload.board.boardId, carolSave.body.board.boardId);
     carolStream.close(); await carolStream.done;
     const carolMe = await me(t, carol);
-    assert.equal(carolMe.board.state, 'DEFERRED', 'late board is parked, not active'); assert.equal(carolMe.round.state, 'LOCKED'); assert.equal(carolMe.board.cells, null);
+    assert.equal(carolMe.board.state, 'DEFERRED', 'late board is parked, not active'); assert.equal(carolMe.round.state, 'PLAYING'); assert.equal(carolMe.board.cells, null);
     const carolAgain = await saveBoard(t, carol, boardSet(51));
-    assert.equal(carolAgain.status, 409, 'once parked, the deferred board cannot re-enter the locked round'); assert.equal(carolAgain.body.error.exceptionId, 'E8');
+    assert.equal(carolAgain.status, 409, 'once parked, the deferred board cannot re-enter the started round'); assert.equal(carolAgain.body.error.exceptionId, 'E8');
     assert.equal((await t.api.get(`/admin/events/${t.eventId}/snapshot`, t.admin)).body.currentRound.readiness.poolSize, poolBefore, 'late board never enters the pool');
-    assert.equal(t.db.get("SELECT COUNT(*) AS c FROM boards WHERE round_id = ? AND state = 'LOCKED_ACTIVE'", round.roundId).c, 1, 'active boards unchanged');
+    assert.equal(t.db.get("SELECT COUNT(*) AS c FROM boards WHERE round_id = ? AND state = 'LOCKED_ACTIVE'", round.roundId).c, 2, 'active boards unchanged');
     assert.equal(t.db.get('SELECT deferred_reason FROM boards WHERE id = ?', carolSave.body.board.boardId).deferred_reason, 'late');
     const pub = (await t.api.get(`/events/${t.eventId}/snapshot`)).body;
-    assert.equal(pub.publicState, 'Waiting'); assert.equal(pub.join, null, 'no QR join link while locked'); assert.equal(pub.counts.active, 1);
+    assert.equal(pub.publicState, 'Playing'); assert.equal(pub.join, null, 'no QR join link while playing'); assert.equal(pub.counts.active, 2);
   });
 
   test('play to the end: Soul present, private insight only for the finished board, Float once, replay returns the original entrance, never a second entrance (M-12, M-13, AC 11)', async () => {
     const aliceStream = await openStream(t.baseUrl, '/me/stream', { token: alice.token });
-    const started = await command(t, round.roundId, 'round.start', round.version);
-    assert.equal(started.round.state, 'PLAYING'); assert.equal(started.effects.poolSize, CELLS);
-    const { results, round: end } = await drawUntilEnd(t, started.round);
+    assert.equal(round.state, 'PLAYING', 'started in the previous step');
+    const { results, round: end } = await drawUntilEnd(t, round);
     assert.equal(end.state, 'WINNER'); assert.ok(results.length >= DRAW_POLICY.winFrom, 'guided draws (default): no Bingo before draw 6 while a safe skill exists');
     assert.ok(results.slice(0, -1).every(r => r.effects.winners === undefined && r.round.state === 'PLAYING'));
     const last = results.at(-1);
@@ -198,10 +211,14 @@ describe('employee journey: join -> profile -> discover -> 16 skills -> READY ->
     assert.ok(am.soul && am.soul.floatToken && am.soul.floated === false && am.soul.badge === 'bingo-star');
     const insight = await t.api.get('/me/insight', alice.token);
     assert.equal(insight.status, 200); assert.equal(insight.body.roundId, round.roundId); assert.equal(insight.body.totalSelected, CELLS);
-    assert.equal(insight.body.inMatrixCount + insight.body.beyondMatrixCount, CELLS); assert.ok(insight.body.matrixVersion);
+    assert.equal(insight.body.inMatrixCount + insight.body.beyondMatrixCount, CELLS); assert.ok(insight.body.matrixVersion); assert.equal(insight.body.roleInMatrix, true, "Alice picked a Skill Matrix role (D-55)");
+    const daveInsight = await t.api.get('/me/insight', dave.token);
+    assert.equal(daveInsight.status, 404, 'a deferred (empty) board has no insight');
+    assert.equal((await me(t, dave)).soul, null, 'no Soul for a deferred board'); assert.equal((await me(t, dave)).insightAvailable, false);
+    const bm = await me(t, bob); // the unfinished board played: it finishes with a Soul like every played board
+    assert.equal(bm.board.state, 'FINISHED'); assert.ok(bm.soul && bm.soul.badge === null); assert.equal(bm.result.isWinner, false);
     const bobInsight = await t.api.get('/me/insight', bob.token);
-    assert.equal(bobInsight.status, 404, 'deferred (unfinished) board has no insight');
-    assert.equal((await me(t, bob)).soul, null, 'no Soul for a deferred board'); assert.equal((await me(t, bob)).insightAvailable, false);
+    assert.equal(bobInsight.status, 200); assert.equal(bobInsight.body.totalSelected, 3);
     for (const [name, path, tok] of [['public', `/events/${t.eventId}/snapshot`, null], ['stage', `/stage/events/${t.eventId}/snapshot`, t.stage], ['admin', `/admin/events/${t.eventId}/snapshot`, t.admin], ['insights', `/admin/events/${t.eventId}/insights`, t.admin]]) {
       const text = JSON.stringify((await t.api.get(path, tok)).body);
       assert.ok(!text.includes('inMatrixCount') && !text.includes('beyondMatrixCount'), `${name} never carries the private insight`);
@@ -234,10 +251,12 @@ describe('employee journey: join -> profile -> discover -> 16 skills -> READY ->
     const closed = closeByTimer(t, round.roundId);
     assert.equal(closed.state, 'CLOSED');
     const next = await createRound(t, { title: 'Journey 2' });
+    const daveMe = await me(t, dave);
+    assert.equal(daveMe.board.roundId, next.roundId); assert.equal(daveMe.board.state, 'DRAFT'); assert.deepEqual(daveMe.board.selectedSkillIds, []); assert.equal(daveMe.board.cells, null);
+    const daveReady = await readyBoard(t, dave, boardSet(30));
+    assert.equal(daveReady.state, 'READY'); assert.equal(daveReady.roundId, next.roundId);
     const bobMe = await me(t, bob);
-    assert.equal(bobMe.board.roundId, next.roundId); assert.equal(bobMe.board.state, 'DRAFT'); assert.deepEqual(bobMe.board.selectedSkillIds, boardSet(30, 10)); assert.equal(bobMe.board.cells, null);
-    const bobReady = await readyBoard(t, bob, boardSet(30));
-    assert.equal(bobReady.state, 'READY'); assert.equal(bobReady.roundId, next.roundId);
+    assert.equal(bobMe.board.roundId, round.roundId, 'the played unfinished board stays with the finished round'); assert.equal(bobMe.nextRound.roundId, next.roundId);
     const carolMe = await me(t, carol);
     assert.equal(carolMe.board.roundId, next.roundId, 'late board reassigned when the next round opens'); assert.equal(carolMe.board.state, 'DRAFT'); assert.deepEqual(carolMe.board.selectedSkillIds, boardSet(50));
     const carolReady = await readyBoard(t, carol, boardSet(50));

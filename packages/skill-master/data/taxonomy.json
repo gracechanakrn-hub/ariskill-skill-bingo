@@ -1,0 +1,585 @@
+{
+  "version": "28-09-26",
+  "source": {
+    "platforms": "platform-28-09-26.csv",
+    "roles": "role-28-09-26.csv"
+  },
+  "generatedBy": "tools/data/build_taxonomy.mjs",
+  "counts": {
+    "platforms": 47,
+    "roles": 76,
+    "rolesInMatrix": 45
+  },
+  "platforms": [
+    {
+      "id": "platform_aomplearn-and-o2o-and-ariseweb",
+      "name": "Aomplearn & O2O & AriseWeb"
+    },
+    {
+      "id": "platform_cdi",
+      "name": "CDI"
+    },
+    {
+      "id": "platform_ceo-office",
+      "name": "CEO Office"
+    },
+    {
+      "id": "platform_cloud-center-of-excellence",
+      "name": "Cloud Center of Excellence"
+    },
+    {
+      "id": "platform_connext",
+      "name": "Connext"
+    },
+    {
+      "id": "platform_corporate-experience",
+      "name": "Corporate Experience"
+    },
+    {
+      "id": "platform_data",
+      "name": "Data"
+    },
+    {
+      "id": "platform_design-office",
+      "name": "Design Office"
+    },
+    {
+      "id": "platform_dgl",
+      "name": "DGL"
+    },
+    {
+      "id": "platform_digital-core-banking",
+      "name": "Digital Core Banking"
+    },
+    {
+      "id": "platform_digital-payment-processor-dpp",
+      "name": "Digital Payment Processor (DPP)"
+    },
+    {
+      "id": "platform_ekyc",
+      "name": "eKYC"
+    },
+    {
+      "id": "platform_e-learning-platform",
+      "name": "E-learning Platform"
+    },
+    {
+      "id": "platform_finance",
+      "name": "Finance"
+    },
+    {
+      "id": "platform_finops",
+      "name": "FinOps"
+    },
+    {
+      "id": "platform_fulfillment-portal",
+      "name": "Fulfillment Portal"
+    },
+    {
+      "id": "platform_health-platform",
+      "name": "Health Platform"
+    },
+    {
+      "id": "platform_insurance",
+      "name": "Insurance"
+    },
+    {
+      "id": "platform_investment",
+      "name": "Investment"
+    },
+    {
+      "id": "platform_lotto",
+      "name": "Lotto"
+    },
+    {
+      "id": "platform_martech",
+      "name": "MarTech"
+    },
+    {
+      "id": "platform_mobile-as-a-service",
+      "name": "Mobile as a Service"
+    },
+    {
+      "id": "platform_next",
+      "name": "NEXT"
+    },
+    {
+      "id": "platform_open-bank-mini-app",
+      "name": "Open Bank : Mini App"
+    },
+    {
+      "id": "platform_open-bank-bank-in-bank",
+      "name": "Open Bank: Bank in Bank"
+    },
+    {
+      "id": "platform_open-bank-openapi",
+      "name": "Open Bank: OpenAPI"
+    },
+    {
+      "id": "platform_open-bank-paotang-id",
+      "name": "Open Bank: Paotang ID"
+    },
+    {
+      "id": "platform_operation-portal",
+      "name": "Operation Portal"
+    },
+    {
+      "id": "platform_paotang",
+      "name": "Paotang"
+    },
+    {
+      "id": "platform_payment",
+      "name": "Payment"
+    },
+    {
+      "id": "platform_people-experience",
+      "name": "People Experience"
+    },
+    {
+      "id": "platform_pqa",
+      "name": "PQA"
+    },
+    {
+      "id": "platform_production-reliability",
+      "name": "Production Reliability"
+    },
+    {
+      "id": "platform_skillbased",
+      "name": "Skillbased"
+    },
+    {
+      "id": "platform_solar",
+      "name": "Solar"
+    },
+    {
+      "id": "platform_solar-payment",
+      "name": "Solar - Payment"
+    },
+    {
+      "id": "platform_strategy-office",
+      "name": "Strategy Office"
+    },
+    {
+      "id": "platform_talent-hub",
+      "name": "Talent Hub"
+    },
+    {
+      "id": "platform_tdp",
+      "name": "TDP"
+    },
+    {
+      "id": "platform_tech-innovation",
+      "name": "Tech Innovation"
+    },
+    {
+      "id": "platform_technology-enablement",
+      "name": "Technology Enablement"
+    },
+    {
+      "id": "platform_transformation-innovation-lab",
+      "name": "Transformation Innovation Lab"
+    },
+    {
+      "id": "platform_transformation-management-office",
+      "name": "Transformation Management Office"
+    },
+    {
+      "id": "platform_tungngern",
+      "name": "TungNgern"
+    },
+    {
+      "id": "platform_u-app",
+      "name": "U-App"
+    },
+    {
+      "id": "platform_ux-ui",
+      "name": "UX/UI"
+    },
+    {
+      "id": "platform_welfare",
+      "name": "Welfare"
+    }
+  ],
+  "roles": [
+    {
+      "id": "role_agile-practitioner-lead",
+      "name": "Agile Practitioner Lead",
+      "matrixRoleId": "role_agile-practitioner-lead"
+    },
+    {
+      "id": "role_ai-engineer",
+      "name": "AI Engineer",
+      "matrixRoleId": "role_ai-engineer"
+    },
+    {
+      "id": "role_analytics-engineer",
+      "name": "Analytics Engineer",
+      "matrixRoleId": "role_analytics-engineer"
+    },
+    {
+      "id": "role_business-analyst",
+      "name": "Business Analyst",
+      "matrixRoleId": "role_business-analyst"
+    },
+    {
+      "id": "role_chief-data-officer",
+      "name": "Chief Data Officer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_chief-executive-officer",
+      "name": "Chief Executive Officer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_chief-finance-officer",
+      "name": "Chief Finance Officer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_chief-information-security-officer",
+      "name": "Chief Information Security Officer",
+      "matrixRoleId": "role_chief-information-security-officer"
+    },
+    {
+      "id": "role_chief-operating-officer",
+      "name": "Chief Operating Officer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_chief-people-experience-officer",
+      "name": "Chief People Experience Officer",
+      "matrixRoleId": "role_chief-people-experience-officer"
+    },
+    {
+      "id": "role_chief-strategy-officer",
+      "name": "Chief Strategy Officer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_cloud-detection-and-response-specialist",
+      "name": "Cloud Detection and Response Specialist",
+      "matrixRoleId": "role_cloud-detection-and-response-specialist"
+    },
+    {
+      "id": "role_cloud-engineer",
+      "name": "Cloud Engineer",
+      "matrixRoleId": "role_cloud-engineer"
+    },
+    {
+      "id": "role_cloud-finops-lead",
+      "name": "Cloud FinOps Lead",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_cloud-security-specialist",
+      "name": "Cloud Security Specialist",
+      "matrixRoleId": "role_cloud-security-specialist"
+    },
+    {
+      "id": "role_contract-counsel",
+      "name": "Contract Counsel",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_corporate-experience-strategist",
+      "name": "Corporate Experience Strategist",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_corporate-secretary",
+      "name": "Corporate Secretary",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_cyber-grc-consultant",
+      "name": "Cyber GRC Consultant",
+      "matrixRoleId": "role_cyber-grc-consultant"
+    },
+    {
+      "id": "role_data-analyst",
+      "name": "Data Analyst",
+      "matrixRoleId": "role_data-analyst"
+    },
+    {
+      "id": "role_data-engineer",
+      "name": "Data Engineer",
+      "matrixRoleId": "role_data-engineer"
+    },
+    {
+      "id": "role_data-science",
+      "name": "Data Science",
+      "matrixRoleId": "role_data-science"
+    },
+    {
+      "id": "role_database-engineer",
+      "name": "Database Engineer",
+      "matrixRoleId": "role_database-engineer"
+    },
+    {
+      "id": "role_database-specialist",
+      "name": "Database Specialist",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_delivery-control-service-dcs-manager",
+      "name": "Delivery Control Service (DCS) Manager",
+      "matrixRoleId": "role_delivery-control-service-dcs-manager"
+    },
+    {
+      "id": "role_delivery-manager",
+      "name": "Delivery Manager",
+      "matrixRoleId": "role_delivery-manager"
+    },
+    {
+      "id": "role_devops-engineer",
+      "name": "DevOps Engineer",
+      "matrixRoleId": "role_devops-engineer"
+    },
+    {
+      "id": "role_digital-transformation-specialist",
+      "name": "Digital Transformation Specialist",
+      "matrixRoleId": "role_digital-transformation-specialist"
+    },
+    {
+      "id": "role_end-user-computing",
+      "name": "End User Computing",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_enterprise-architect",
+      "name": "Enterprise Architect",
+      "matrixRoleId": "role_enterprise-architect"
+    },
+    {
+      "id": "role_finance",
+      "name": "Finance",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_financial-planning-and-analyst",
+      "name": "Financial Planning and Analyst",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_finops-engineer",
+      "name": "FinOps Engineer",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_front-end-mobile-android",
+      "name": "Front-End (Mobile Android)",
+      "matrixRoleId": "role_front-end-mobile-android"
+    },
+    {
+      "id": "role_front-end-mobile-ios",
+      "name": "Front-End (Mobile iOS)",
+      "matrixRoleId": "role_front-end-mobile-ios"
+    },
+    {
+      "id": "role_head-of-cloud-center-excellence",
+      "name": "Head of Cloud Center Excellence",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_head-of-design-office",
+      "name": "Head of Design Office",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_interaction-designer",
+      "name": "Interaction Designer",
+      "matrixRoleId": "role_interaction-designer"
+    },
+    {
+      "id": "role_it-operation",
+      "name": "IT Operation",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_it-specialist",
+      "name": "IT Specialist",
+      "matrixRoleId": "role_it-specialist"
+    },
+    {
+      "id": "role_l-and-d-architect",
+      "name": "Learning & Development Architect",
+      "matrixRoleId": "role_l-and-d-architect"
+    },
+    {
+      "id": "role_platform-lead",
+      "name": "Platform Lead",
+      "matrixRoleId": "role_platform-lead"
+    },
+    {
+      "id": "role_platform-squad-lead",
+      "name": "Platform Squad Lead",
+      "matrixRoleId": "role_platform-squad-lead"
+    },
+    {
+      "id": "role_principal-technology-consultant",
+      "name": "Principal Technology Consultant",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_process-improvement-specialist",
+      "name": "Process Improvement Specialist",
+      "matrixRoleId": "role_process-improvement-specialist"
+    },
+    {
+      "id": "role_product-owner",
+      "name": "Product Owner",
+      "matrixRoleId": "role_product-owner"
+    },
+    {
+      "id": "role_px-consultant",
+      "name": "PX Consultant",
+      "matrixRoleId": "role_px-consultant"
+    },
+    {
+      "id": "role_recruiter",
+      "name": "Recruiter",
+      "matrixRoleId": "role_recruiter"
+    },
+    {
+      "id": "role_resource-planner",
+      "name": "Resource Planner",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_risk-management-specialist",
+      "name": "Risk Management Specialist",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_scrum-master",
+      "name": "Scrum Master",
+      "matrixRoleId": "role_scrum-master"
+    },
+    {
+      "id": "role_security-architect",
+      "name": "Security Architect",
+      "matrixRoleId": "role_security-architect"
+    },
+    {
+      "id": "role_security-consultant",
+      "name": "Security Consultant",
+      "matrixRoleId": "role_security-consultant"
+    },
+    {
+      "id": "role_senior-consultant",
+      "name": "Senior Consultant",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_service-delivery-management",
+      "name": "Service Delivery Management",
+      "matrixRoleId": "role_service-delivery-management"
+    },
+    {
+      "id": "role_site-reliability-engineer",
+      "name": "Site Reliability Engineer",
+      "matrixRoleId": "role_site-reliability-engineer"
+    },
+    {
+      "id": "role_social-media-expert",
+      "name": "Social Media Expert",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_software-engineer",
+      "name": "Software Engineer",
+      "matrixRoleId": "role_software-engineer"
+    },
+    {
+      "id": "role_solution-architect",
+      "name": "Solution Architect",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_sourcing-and-procurement-specialist",
+      "name": "Sourcing & Procurement Specialist",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_talent-advisor",
+      "name": "Talent Advisor",
+      "matrixRoleId": "role_talent-advisor"
+    },
+    {
+      "id": "role_talent-fulfillment-services-lead",
+      "name": "Talent Fulfillment Services Lead",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_talent-fulfilment-services",
+      "name": "Talent Fulfilment Services",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_talent-strategist-c-and-b",
+      "name": "Talent Strategist (C&B)",
+      "matrixRoleId": "role_talent-strategist-c-and-b"
+    },
+    {
+      "id": "role_talent-strategist-od",
+      "name": "Talent Strategist (OD)",
+      "matrixRoleId": "role_talent-strategist-od"
+    },
+    {
+      "id": "role_technical-coach",
+      "name": "Technical Coach",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_technology-governance-manager",
+      "name": "Technology Governance Manager",
+      "matrixRoleId": "role_technology-governance-manager"
+    },
+    {
+      "id": "role_technology-strategy-manager",
+      "name": "Technology Strategy Manager",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_test-engineer",
+      "name": "Test Engineer",
+      "matrixRoleId": "role_test-engineer"
+    },
+    {
+      "id": "role_ui-designer",
+      "name": "UI Designer",
+      "matrixRoleId": "role_ui-designer"
+    },
+    {
+      "id": "role_ux-designer",
+      "name": "UX Designer",
+      "matrixRoleId": "role_ux-designer"
+    },
+    {
+      "id": "role_ux-researcher",
+      "name": "UX Researcher",
+      "matrixRoleId": "role_ux-researcher"
+    },
+    {
+      "id": "role_ux-writer",
+      "name": "UX Writer",
+      "matrixRoleId": "role_ux-writer"
+    },
+    {
+      "id": "role_workplace-assistant",
+      "name": "Workplace Assistant",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_workplace-management-specialist",
+      "name": "Workplace Management Specialist",
+      "matrixRoleId": null
+    },
+    {
+      "id": "role_workplace-people-engagement",
+      "name": "Workplace People Engagement",
+      "matrixRoleId": null
+    }
+  ]
+}

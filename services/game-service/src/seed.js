@@ -11,7 +11,7 @@ import { createLogger } from './log.js';
 import { createApp } from './app.js';
 import { signJoinToken, employeeRefHash } from './auth.js';
 import { newId } from './ids.js';
-import { SKILL_MASTER, ROLES, ROLE_SKILL_LEVELS } from './skills.js';
+import { SKILL_MASTER, ROLES, PLATFORMS, ROLE_SKILL_LEVELS } from './skills.js';
 import { seededRng, shuffle, CELLS } from '../../../packages/game-rules/src/index.js';
 
 const FIRST = ['Avery', 'Blake', 'Casey', 'Devin', 'Emery', 'Finley', 'Harper', 'Jordan', 'Kai', 'Logan', 'Morgan', 'Noel', 'Parker', 'Quinn', 'Reese', 'Sage', 'Taylor', 'Uma', 'Val', 'Wren'];
@@ -72,7 +72,7 @@ async function seedDemo() {
     const employeeRef = `sim-${String(i).padStart(3, '0')}`;
     if (!canBuild) { skipped += 1; continue; }
     try {
-      const r = seedPlayer(app, eventId, { employeeRef, displayName: simulatedName(i - 1), consent: i % 2 === 1, platformId: role.platformId, roleId: role.id, skillIds: boardForRole(role.id, employeeRef) });
+      const r = seedPlayer(app, eventId, { employeeRef, displayName: simulatedName(i - 1), consent: i % 2 === 1, platformId: PLATFORMS[(i * 5) % PLATFORMS.length].id, roleId: role.id, skillIds: boardForRole(role.id, employeeRef) }); // D-55: independent platform
       if (r.created) created += 1; else skipped += 1;
     } catch (e) { skipped += 1; process.stderr.write(`player ${employeeRef}: ${e.message}\n`); }
   }
@@ -109,7 +109,7 @@ export async function buildFixture() {
     { employeeRef: 'fixture-004', displayName: 'Devin Silva', consent: true, skillIds: B },
     { employeeRef: 'fixture-005', displayName: 'Emery Novak', consent: false, skillIds: C },
     { employeeRef: 'fixture-006', displayName: 'Finley Haddad', consent: true, skillIds: D },
-  ].map((d, i) => ({ ...d, platformId: roles[i].platformId, roleId: roles[i].id }));
+  ].map((d, i) => ({ ...d, platformId: PLATFORMS[i * 3].id, roleId: roles[i].id }));
   const lockAt = new Date(clock.now() + 60 * 60 * 1000).toISOString();
   const created = app.game.createRound(eventId, { title: 'Fixture Round', lockAt, resultWindowSeconds: 12 }, meta('admin'));
   let round = created.round;
@@ -117,8 +117,7 @@ export async function buildFixture() {
   cmd('round.registration.open');
   const players = defs.map(d => seedPlayer(app, eventId, d));
   const boards = players.map((p, i) => ({ ...defs[i], participantId: p.participant.id, boardId: p.board.boardId, cells: p.board.cells.map(c => c.skillId) }));
-  const lock = cmd('round.lock');
-  const start = cmd('round.start');
+  const start = cmd('round.start_now', { confirmed: true }); // D-53: one step from REGISTRATION_OPEN to PLAYING
   const draws = [];
   let winners = null;
   while (round.state === 'PLAYING') {
@@ -129,16 +128,16 @@ export async function buildFixture() {
   const refOf = new Map(boards.map(b => [b.participantId, b.employeeRef]));
   const fixture = {
     fixtureVersion: 1,
-    description: 'Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1, default guided draws): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, lock, start, then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.',
+    description: 'Deterministic seeded round produced by running the real game-service commands in memory. Replay against a fresh server (BINGO_ENV=test, BINGO_DB_PATH=:memory:, BINGO_RNG_SEED=fixture-1, default guided draws): create the first round of evt_demo, open registration, join the six players with explicit profiles, save + finalize the listed skillIds in order, start now (round.start_now {confirmed:true}), then draw until the round leaves PLAYING. Draw order, winning draw number and co-winners must match `expected`.',
     generatedAt: clock.iso(),
     env: { BINGO_ENV: 'test', BINGO_DB_PATH: ':memory:', BINGO_RNG_SEED: config.rngSeed, BINGO_DRAW_GUIDANCE: config.drawGuidance ? 'on' : 'off' },
     determinism: { draws: `${config.drawGuidance ? 'guidedDraw (D-33, DRAW_POLICY) driven by' : 'uniform pick with'} seededRng(\`\${BINGO_RNG_SEED}:\${eventId}:round-\${roundNumber}:draw-\${drawNumber}\`) over the sorted remaining pool`, boardLayout: 'seededRng(`${BINGO_RNG_SEED}:board:${sortedSkillIds.join(",")}`) Fisher-Yates over the selection set; identical sets get identical layouts' },
     eventId,
-    round: { title: 'Fixture Round', number: 1, resultWindowSeconds: 12, lockAtHint: '+1h from now (any future time; lock is triggered by round.lock)' },
-    commands: ['round.registration.open', 'round.lock', 'round.start', 'round.draw.next (repeat until state != PLAYING)'],
+    round: { title: 'Fixture Round', number: 1, resultWindowSeconds: 12, lockAtHint: '+1h from now (any future time; play is started by round.start_now before it)' },
+    commands: ['round.registration.open', 'round.start_now {confirmed:true}', 'round.draw.next (repeat until state != PLAYING)'],
     boards: boards.map(b => ({ employeeRef: b.employeeRef, displayName: b.displayName, consentPublicName: b.consent, platformId: b.platformId, roleId: b.roleId, skillIds: b.skillIds })),
     expected: {
-      lock: { activeBoards: lock.effects.activeBoards, deferredBoards: lock.effects.deferredBoards },
+      start: { activeBoards: start.effects.activeBoards, unfinishedBoards: start.effects.unfinishedBoards, deferredBoards: start.effects.deferredBoards },
       poolSize: start.effects.poolSize,
       pool: json.parse(db.get('SELECT pool_json FROM rounds WHERE id = ?', round.roundId).pool_json),
       boardLayouts: boards.map(b => ({ employeeRef: b.employeeRef, cells: b.cells })),

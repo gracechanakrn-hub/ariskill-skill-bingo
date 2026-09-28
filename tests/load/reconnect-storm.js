@@ -17,7 +17,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import { join as pathJoin } from 'node:path';
-import { startServer, createRound, command, join, saveBoard, boardSet, ELIGIBLE_IDS, ROLES, openStream, sleep, nextKey } from '../e2e/helpers.js';
+import { startServer, createRound, command, join, saveBoard, boardSet, ELIGIBLE_IDS, ROLES, PLATFORMS, openStream, sleep, nextKey } from '../e2e/helpers.js';
 
 const ROOT = pathJoin(fileURLToPath(import.meta.url), '..', '..', '..');
 const PLAYERS = Number.parseInt(process.env.PLAYERS ?? '150', 10);
@@ -46,7 +46,7 @@ async function main() {
     const t0setup = performance.now();
     const players = await inBatches([...Array(PLAYERS).keys()], async (i) => {
       const role = ROLES[i % ROLES.length];
-      const p = await timed(() => join(t, { employeeRef: `load-${i}`, displayName: `Load ${i}`, consent: i % 2 === 0, profile: { platformId: role.platformId, roleId: role.id } }));
+      const p = await timed(() => join(t, { employeeRef: `load-${i}`, displayName: `Load ${i}`, consent: i % 2 === 0, profile: { platformId: PLATFORMS[i % PLATFORMS.length].id, roleId: role.id } })); // D-55: independent platform
       const set = boardSet((i * 7) % (ELIGIBLE_IDS.length - 25));
       const s = await timed(() => saveBoard(t, p, set, 0)); if (s.status !== 200) throw new Error(`save ${i}: ${JSON.stringify(s.body)}`);
       const f = await timed(() => t.api.post('/me/board/finalize', { boardVersion: s.body.resultingVersion }, p.token, nextKey('fin'))); if (f.status !== 200) throw new Error(`finalize ${i}: ${JSON.stringify(f.body)}`);
@@ -69,7 +69,7 @@ async function main() {
     log(`streams: ${streams.length} open in ${report.results.streamsOpenMs} ms (server sees ${t.app.hub.size()})`);
 
     // ---- play: draw fan-out ----------------------------------------------------------------------------------------------
-    const l = await command(t, round.roundId, 'round.lock', round.version); let cur = (await command(t, round.roundId, 'round.start', l.resultingVersion)).round;
+    let cur = (await command(t, round.roundId, 'round.start_now', round.version, { confirmed: true })).round; // D-53: one step
     const fanout = [], cmdLat = [], perDraw = [];
     const waitAll = async (n, timeoutMs = 15000) => { const deadline = performance.now() + timeoutMs; while (performance.now() < deadline) { if (streams.every(s => s.seen.has(n))) return true; await sleep(2); } return false; };
     let drawsDone = 0;
