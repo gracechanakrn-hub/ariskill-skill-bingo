@@ -58,6 +58,10 @@ test('the reveal builds the shared rig with the Soul config and its decorations,
   assert.match(scene, /const crownP = opts && opts\.badge \? loadWinnerCrown\(mods\) : Promise\.resolve\(null\);/, 'the crown is fetched only for a winner');
   assert.match(scene, /Promise\.race\(\[crownP, new Promise\(\(r\) => setTimeout\(\(\) => r\(null\), DECOR_WAIT_MS\)\)\]\)/, 'bounded wait for the crown');
   assert.doesNotMatch(scene, /TorusGeometry|makeDashedRingTexture|'dashed-ring'|'halo-ring'/, 'D-58: no floor ring, dashed ring or halo ring');
+  assert.match(scene, /resolveReveal = \(\) => \{ resolve\(\); if \(!disposed\) startProbe\(\); \};/, 'the speed check starts after the reveal');
+  assert.match(scene, /const LIGHTER = \['reduced', 'minimal'\];/, 'two lighter steps before the flat Soul');
+  const view = src('views/soul.js');
+  assert.match(view, /dieCut: false, glow: 'soft', crown: true \}/, 'the flat Soul wears the crown too');
   assert.match(scene, /loadSoulDecor\(mods, opts && opts\.config\)/);
   assert.match(scene, /Promise\.race\(\[decorP, new Promise\(\(r\) => setTimeout\(\(\) => r\(null\), DECOR_WAIT_MS\)\)\]\)/, 'bounded wait');
   assert.match(scene, /decorLate\.then\(\(d\) => \{ if \(!disposed && d\) rig\.setDecor\(d\); \}\)/, 'late decorations join the reveal');
@@ -71,7 +75,7 @@ test('the reveal builds the shared rig with the Soul config and its decorations,
 
 test('the 2D fallback and the alt text use renderer v4 with the Soul config (gradient, face and charm sprites)', () => {
   const view = src('views/soul.js');
-  assert.match(view, /const alt = soulAltText\(soul\.config, soul\.badge\);/);
+  assert.match(view, /const alt = soulAltText\(soul\.config, soul\.badge, \{ crown: true \}\);/);
   assert.match(view, /renderSoulSvg\(soul\.config, \{ size: 220, badge: soul\.badge, detail: 'full', reducedMotion: prefersReducedMotion\(\), label: alt/);
   assert.doesNotMatch(view, /images: false/, 'inline SVG keeps its <image> layers');
   const main = src('main.js');

@@ -219,12 +219,28 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
   }
 
   function render() { if (composer) composer.render(); else renderer.render(scene, camera); }
-  let lightened = false;
-  /** The lighter scene for a phone that misses the frame budget: reduced pixel ratio, glow pass off. */
+  // A phone that misses the frame budget steps down before the flat Soul takes over (D-57, D-58): 1) 1.25 x and no glow
+  // pass, 2) 1 x and no multisampling; only a phone still too slow at the lightest step gets the SVG.
+  const LIGHTER = ['reduced', 'minimal'];
+  let lightStep = 0;
   function lighten() {
-    const pr = pixelRatioFor('reduced', devicePixelRatio || 1);
-    renderer.setPixelRatio(pr); if (composer) { composer.setPixelRatio(pr); if (bloom) bloom.enabled = false; }
+    const level = LIGHTER[lightStep++];
+    const pr = pixelRatioFor(level, devicePixelRatio || 1);
+    renderer.setPixelRatio(pr);
+    if (composer) {
+      composer.setPixelRatio(pr); if (bloom) bloom.enabled = false;
+      if (level === 'minimal') for (const rt of [composer.renderTarget1, composer.renderTarget2]) if (rt.samples) { rt.samples = 0; rt.dispose(); }
+    }
     resize(); render();
+  }
+  /** D-58: the speed check runs once the reveal is over (its shader warm-up and mote burst are not the steady cost). */
+  function startProbe() {
+    const onProbe = (exceeded, mean) => {
+      if (!exceeded || disposed) return;
+      if (lightStep < LIGHTER.length) { lighten(); cancelProbe = probeFrameTime(onProbe); return; }
+      if (typeof onFallback === 'function') onFallback(mean);
+    };
+    cancelProbe = probeFrameTime(onProbe);
   }
 
   function setPhase(next) { phase = next; host.dataset.phase = next; }
@@ -270,17 +286,10 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
   return {
     reveal({ durationMs = 2000 } = {}) {
       return new Promise((resolve) => {
-        resolveReveal = resolve;
+        resolveReveal = () => { resolve(); if (!disposed) startProbe(); };
         revealDur = Math.max(1, durationMs); revealStart = performance.now(); setPhase('reveal');
         last = revealStart;
         if (!raf) raf = requestAnimationFrame(tick);
-        // D-57: too slow -> first a lighter scene (lower resolution, no glow), and only then the flat Soul
-        const onProbe = (exceeded, mean) => {
-          if (!exceeded || disposed) return;
-          if (!lightened) { lightened = true; lighten(); cancelProbe = probeFrameTime(onProbe); return; }
-          if (typeof onFallback === 'function') onFallback(mean);
-        };
-        cancelProbe = probeFrameTime(onProbe);
       });
     },
     skip() { if (phase === 'reveal') { revealStart = performance.now() - revealDur; if (!raf) raf = requestAnimationFrame(tick); } },

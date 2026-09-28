@@ -115,6 +115,7 @@ test('frameBudgetExceeded needs evidence and compares the median against 33 ms',
   assert.equal(pixelRatioFor('high', 2), 2);
   assert.equal(pixelRatioFor('low', 3), 1.5);
   assert.equal(pixelRatioFor('reduced', 3), 1.25, 'the lighter step before the flat fallback');
+  assert.equal(pixelRatioFor('minimal', 3), 1, 'the lightest step (D-58)');
   assert.equal(pixelRatioFor('high', 1), 1, 'never above the device');
   assert.equal(pixelRatioFor('unknown', 3), 1);
 });

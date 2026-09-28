@@ -67,8 +67,8 @@ export function mountSoul(root, ctx, screen) {
     const soul = state.soul;
     if (!soul) return;
     if (renderedSoulId !== soul.soulId) {
-      const alt = soulAltText(soul.config, soul.badge);
-      const svg = svgElement(renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: 'full', reducedMotion: prefersReducedMotion(), label: alt, idPrefix: `soul-${soul.soulId}`, dieCut: false, glow: 'soft' }));
+      const alt = soulAltText(soul.config, soul.badge, { crown: true }); // D-58: the winner wears the crown
+      const svg = svgElement(renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: 'full', reducedMotion: prefersReducedMotion(), label: alt, idPrefix: `soul-${soul.soulId}`, dieCut: false, glow: 'soft', crown: true }));
       mount(els.figure, svg);
       els.caption.textContent = soul.badge === 'bingo-star' ? t('soul.badgeLabel') : '';
       renderedSoulId = soul.soulId;

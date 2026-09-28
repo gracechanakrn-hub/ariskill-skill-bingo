@@ -82,7 +82,7 @@ id,kind,trigger_or_key,copy,recovery
 "soul.floated",state,"soul.floated","Your Soul is in the Galaxy",
 "soul.countdown",state,"soul.countdown","3 -> 2 -> 1 -> FLOAT",
 "soul.badge",state,"soul.badge","Bingo Star",
-"soul.badgeLabel",state,"soul.badgeLabel","Bingo Star badge: completed a line this round",
+"soul.badgeLabel",state,"soul.badgeLabel","Bingo crown: completed a line this round",
 "insight.title",state,"insight.title","Your Role Skill Matrix insight",
 "insight.inMatrix",state,"insight.inMatrix","{count} of your 16 skills are in the {role} matrix",
 "insight.beyond",state,"insight.beyond","{count} go beyond the current matrix",

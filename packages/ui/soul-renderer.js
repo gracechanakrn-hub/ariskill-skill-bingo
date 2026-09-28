@@ -43,6 +43,7 @@ import { SILHOUETTE, LINES, EYES, ORB, DRIP_STROKES, HIGHLIGHTS, BOUNDS, MAPPING
 import { SOUL_CATALOG, GRADIENTS, CHARM_BY_ID, FACES, SLOT_COUNT, PLATES, PLATE_IDS, EYES as EYE_DESIGNS, EYE_IDS } from '../game-rules/src/soul-catalog.js';
 import { SOUL_DECOR } from './soul-decor-data.js';
 import { SOUL_FACE } from './soul-face-data.js';
+import { CROWN_PLACE } from './soul3d/winner.js';
 
 export const SOUL_RENDERER_VERSION = '5.0.0';
 export const VIEWBOX = 200;
@@ -344,7 +345,7 @@ function charmsAlt(charms) {
  * named). Never mentions Platform, Role, rank, capability or a skill. v3: "Arise Soul, Aurora colour, with a bean face,
  * heart eyes and round glasses. 10 charms: 4 technical, 4 core, 2 soft. A lemon classic star charm on its antenna".
  */
-export function soulAltText(config, badge = null) {
+export function soulAltText(config, badge = null, { crown = false } = {}) {
   const s = resolveSoul(config);
   let t;
   if (s.version === 3) {
@@ -361,7 +362,7 @@ export function soulAltText(config, badge = null) {
   } else {
     t = `Arise Soul, ${s.palette} colour, with round button eyes and a glowing antenna orb`;
   }
-  if (badge === 'bingo-star') t += '. Bingo Star badge: completed a line this round';
+  if (badge === 'bingo-star') t += crown ? '. Bingo crown: completed a line this round' : '. Bingo Star badge: completed a line this round';
   return t;
 }
 
@@ -413,12 +414,46 @@ function badgeSvg(medallion = false) {
     `<path d="${starPath(0, 0.5, M.star, M.star * 0.46)}" fill="${STICKER.gold}" stroke-linejoin="round"/><path d="${starPath(-1.1, -0.8, 5, 2.3)}" fill="#FFF0B3" opacity=".75"/></g>`;
 }
 
+/**
+ * The winner's gold crown in 2D (D-58), the front view of the 3D crown (packages/ui/soul3d/winner.js,
+ * tools/ai/blender/winner_crown.py) placed by the same CROWN_PLACE through MAPPING (model x, y -> 100 + 70 x,
+ * 178.6 - 70 y), so the flat Soul wears it exactly where the 3D Soul does: a flared gold band, the five front spikes
+ * leaning outwards with a ruby / sapphire jewel on each tip, and three sapphire gems on the band.
+ */
+export const CROWN_2D = Object.freeze({ band: [0.348, 0.366, 0.1], ring: 0.356, spike: [0.058, 0.15], tilt: 0.12, step: 0.56, jewel: [0.03, 0.16], gem: [0.022, 0.37, 0.05] });
+export const CROWN_LABEL = 'Bingo crown: completed a line this round';
+function crownSvg(id) {
+  const k = MAPPING.scale, C = CROWN_2D;
+  const cx = MAPPING.cx + k * CROWN_PLACE.position[0], by = MAPPING.y0 - k * CROWN_PLACE.position[1];
+  const rot = n(-CROWN_PLACE.rotationZ * 180 / Math.PI);      // a -z roll in 3D is clockwise on screen (+deg in SVG)
+  const bw = k * C.band[0], tw = k * C.band[1], bh = k * C.band[2], sag = 2.2;
+  const band = `M${n(-bw)} 0Q0 ${n(sag)} ${n(bw)} 0L${n(tw)} ${n(-bh)}Q0 ${n(-bh + sag)} ${n(-tw)} ${n(-bh)}Z`;
+  let spikes = '', jewels = '', gems = '';
+  for (let i = 0; i < 5; i++) {
+    const a = Math.PI / 2 + (i - 2) * C.step, x = Math.cos(a) * C.ring * k, lean = -Math.cos(a) * C.tilt;  // lean outwards
+    const r = C.spike[0] * k, h = C.spike[1] * k, y0 = -bh + sag * (1 - (x / tw) ** 2) * 0.5;
+    const tx = x + Math.sin(-lean) * h, ty = y0 - Math.cos(lean) * h;
+    spikes += `<path d="M${n(x - r)} ${n(y0)}L${n(tx)} ${n(ty)}L${n(x + r)} ${n(y0)}Z"/>`;
+    const jy = -k * C.jewel[1] + (ty - (y0 - h)) * 0.4;
+    jewels += `<circle cx="${n(tx * 1.02)}" cy="${n(Math.min(ty, jy))}" r="${n(C.jewel[0] * k)}" fill="${i % 2 ? '#4D7DFF' : '#E0356B'}"/>`;
+    if (i % 2 === 0) gems += `<circle cx="${n(Math.cos(a) * C.gem[1] * k)}" cy="${n(-C.gem[2] * k + sag * 0.5)}" r="${n(C.gem[0] * k)}" fill="#4D7DFF"/>`;
+  }
+  return `<g role="img" aria-label="${CROWN_LABEL}" data-crown="" transform="translate(${n(cx)} ${n(by)}) rotate(${rot})"><title>${CROWN_LABEL}</title>` +
+    `<defs><linearGradient id="${id}-cg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#B9861F"/><stop offset=".5" stop-color="#F6C453"/><stop offset="1" stop-color="#FFE7A3"/></linearGradient>` +
+    `<filter id="${id}-cf" x="-.6" y="-.8" width="2.2" height="2.6"><feGaussianBlur stdDeviation="3"/></filter></defs>` +
+    `<ellipse cx="0" cy="${n(-bh * 1.2)}" rx="${n(tw * 1.1)}" ry="${n(bh * 1.8)}" fill="#F6C453" opacity=".35" filter="url(#${id}-cf)"/>` +
+    `<g fill="url(#${id}-cg)" stroke="#8A5E12" stroke-width=".6" stroke-linejoin="round">${spikes}<path d="${band}"/></g>` +
+    `<path d="M${n(-bw * 0.92)} ${n(-bh * 0.55)}Q0 ${n(-bh * 0.55 + sag)} ${n(bw * 0.92)} ${n(-bh * 0.55)}" fill="none" stroke="#FFF3C4" stroke-width=".9" opacity=".7"/>` +
+    `<g stroke="#fff" stroke-opacity=".5" stroke-width=".4">${jewels}${gems}</g></g>`;
+}
+
 // ---------- main ----------
 
 /**
  * Render a Soul as a complete <svg> string.
  * @param {object} config SoulConfig v1, v2 or v3 (indices or names) - see packages/game-rules/src/soul.js
- * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face, dieCut=true, glow=null }
+ * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face, dieCut=true, glow=null, crown=false }
+ *   crown         true: a 'bingo-star' winner wears the gold crown on its head instead of the star badge (the phone, D-58)
  *   glow          'soft' draws only the soft glow, never the dashed ring or the halo ring (the phone, D-58)
  *   size          CSS px of the square output (viewBox is always 200); the die-cut and shadow scale with it.
  *   badge         'bingo-star' draws the gold star (upper right; on a medallion for v2+); never part of the config (BR-17).
@@ -434,13 +469,13 @@ function badgeSvg(medallion = false) {
  *   reducedMotion removes the glow breath <animate>; label overrides the alt text; idPrefix namespaces defs ids.
  */
 export function renderSoulSvg(config, opts = {}) {
-  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE, dieCut: withDieCut = true, glow: glowOverride = null } = opts;
+  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE, dieCut: withDieCut = true, glow: glowOverride = null, crown = false } = opts;
   const s = resolveSoul(config);
   const pal = s.pal;
   const decorated = s.version >= 2;               // v2+: gradient body, soft glow for halo, medallion badge
   const v3 = s.version === 3 && faceUsable(face); // the v3 body: its own outline, no button eyes, no antenna orb
   const id = idPrefix || `soul-${s.seed.replace(/[^A-Za-z0-9_-]/g, '')}`;
-  const alt = esc(label || soulAltText(config, detail === 'dot' ? null : badge)); // dot never draws the badge
+  const alt = esc(label || soulAltText(config, detail === 'dot' ? null : badge, { crown })); // dot never draws the badge
   const open = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX} ${VIEWBOX}" width="${size}" height="${size}" role="img" aria-label="${alt}" data-soul="${esc(s.seed)}" data-detail="${detail}">`;
 
   if (detail === 'dot') {
@@ -499,7 +534,7 @@ export function renderSoulSvg(config, opts = {}) {
   const decorations = decorated && images ? imagesSvg(spriteLayers(s, decor, face)) : '';
 
   return open + defs + ambient + orbGlow + dieCut + bodySvg + rim + lines + drips + highlight + eyes + orb + decorations +
-    (badge === 'bingo-star' ? badgeSvg(decorated) : '') + '</svg>';
+    (badge === 'bingo-star' ? (crown ? crownSvg(id) : badgeSvg(decorated)) : '') + '</svg>';
 }
 
 /**

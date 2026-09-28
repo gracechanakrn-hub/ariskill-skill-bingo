@@ -46,7 +46,7 @@ describe('decorated Soul (D-29) text alternative', () => {
 
   test('the phone labels its Soul with the alt text; the 3D stage is decorative; the Galaxy impostor canvas never enters the DOM', () => {
     const view = read('apps/employee-mobile/src/views/soul.js');
-    assert.match(view, /soulAltText\(soul\.config, soul\.badge\)/);
+    assert.match(view, /soulAltText\(soul\.config, soul\.badge, \{ crown: true \}\)/);
     assert.match(view, /label: alt/);
     assert.match(view, /stage3d = h\('div', \{ className: 'soul-3d', 'aria-hidden': 'true' \}\)/);
     const impostor = read('apps/public-galaxy/src/renderer/impostor.js');

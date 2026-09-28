@@ -33,7 +33,7 @@ export function frameBudgetExceeded(samplesMs, budgetMs = FRAME_BUDGET_MS) {
 }
 
 /** Pixel ratio cap per tier (D-57: the hero canvas is ~360 px wide, so 2.5 x stays near 900 px). Pure. */
-export const PIXEL_RATIO_CAP = Object.freeze({ high: 2.5, low: 1.5, reduced: 1.25 });
+export const PIXEL_RATIO_CAP = Object.freeze({ high: 2.5, low: 1.5, reduced: 1.25, minimal: 1 });
 export function pixelRatioFor(quality, dpr = 1) {
   return Math.min(dpr || 1, PIXEL_RATIO_CAP[quality] ?? 1);
 }

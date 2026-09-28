@@ -216,3 +216,25 @@ test('D-58 phone options: dieCut false drops the white die-cut; glow soft never 
   assert.doesNotMatch(halo, /<ellipse[^>]*fill="none"[^>]*stroke-width="3"/, 'no halo ring');
   assert.doesNotMatch(phone, /stroke="#FFFFFF"[^>]*stroke-linejoin="round"/i, 'no white die-cut stroke');
 });
+
+test('D-58 crown in 2D: a winner wears the gold crown where the 3D crown sits (CROWN_PLACE through MAPPING), instead of the star', async () => {
+  const { renderSoulSvg, soulAltText, CROWN_LABEL } = await import('../soul-renderer.js');
+  const { CROWN_PLACE } = await import('../soul3d/winner.js');
+  const { MAPPING } = await import('../soul-baseline-shape.js');
+  const cfg = { seed: 'crown', palette: 'aurora', body: 'drop', eyes: 'dot', antenna: 'orb', mouth: 'smile', glow: 'soft', driftPhase: 0 };
+  const crowned = renderSoulSvg(cfg, { badge: 'bingo-star', crown: true, reducedMotion: true, images: false });
+  const m = crowned.match(/data-crown="" transform="translate\(([\d.]+) ([\d.]+)\) rotate\(([\d.-]+)\)"/);
+  assert.ok(m, 'the crown group is drawn');
+  assert.ok(Math.abs(Number(m[1]) - (MAPPING.cx + MAPPING.scale * CROWN_PLACE.position[0])) < 0.11, 'x from CROWN_PLACE');
+  assert.ok(Math.abs(Number(m[2]) - (MAPPING.y0 - MAPPING.scale * CROWN_PLACE.position[1])) < 0.11, 'y from CROWN_PLACE');
+  assert.ok(Math.abs(Number(m[3]) + CROWN_PLACE.rotationZ * 180 / Math.PI) < 0.11, 'the same tilt');
+  assert.equal((crowned.match(/<circle[^>]*fill="#E0356B"/g) || []).length, 3, 'three ruby jewels');
+  assert.equal((crowned.match(/<circle[^>]*fill="#4D7DFF"/g) || []).length, 5, 'two sapphire jewels + three gems');
+  assert.match(crowned, new RegExp(CROWN_LABEL));
+  assert.doesNotMatch(crowned, /Bingo Star badge/, 'no star badge under the crown');
+  const star = renderSoulSvg(cfg, { badge: 'bingo-star', reducedMotion: true, images: false });
+  assert.doesNotMatch(star, /data-crown/, 'the default keeps the star (big screen 2D tiers)');
+  assert.doesNotMatch(renderSoulSvg(cfg, { crown: true, reducedMotion: true, images: false }), /data-crown/, 'no badge, no crown');
+  assert.match(soulAltText(cfg, 'bingo-star', { crown: true }), /Bingo crown: completed a line this round$/);
+  assert.match(soulAltText(cfg, 'bingo-star'), /Bingo Star badge/);
+});
