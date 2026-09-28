@@ -23,8 +23,10 @@ export const COMPRESSIBLE_EXT = new Set(['.js', '.mjs', '.css', '.html', '.json'
 export const COMPRESS_MIN_BYTES = 8 * 1024;
 export const GZIP_CACHE_MAX_BYTES = 64 * 1024 * 1024;
 export const IMMUTABLE_PREFIX = '/packages/vendor/';
-export const CACHE_IMMUTABLE = 'public, max-age=31536000, immutable';
-export const CACHE_REVALIDATE = 'no-cache';
+// no-transform (D-57): a CDN in front of the server (Hostinger hcdn) must not re-encode or downscale the images - it
+// shrank the 2x big-screen backdrop from 2746 x 2376 to 1600 x 1384.
+export const CACHE_IMMUTABLE = 'public, max-age=31536000, immutable, no-transform';
+export const CACHE_REVALIDATE = 'no-cache, no-transform';
 
 // gzip cache: key -> Buffer, insertion-ordered so the oldest entry is evicted first when the byte budget is exceeded.
 const gzipCache = new Map();

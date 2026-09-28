@@ -110,6 +110,7 @@ describe('static serving: gzip negotiation, ETag/304, cache headers (D-22)', () 
   test('Cache-Control is immutable only under /packages/vendor/; everything else revalidates; the vendored library is compressed once per process', async () => {
     clearStaticCache();
     const v1 = await raw(`${srv.base}/packages/vendor/three/build/three.module.js`, { 'Accept-Encoding': 'gzip' });
+    for (const cc of [CACHE_IMMUTABLE, CACHE_REVALIDATE]) assert.match(cc, /\bno-transform\b/, 'D-57: a CDN must not re-encode or downscale the art');
     assert.equal(v1.status, 200); assert.equal(v1.headers['cache-control'], CACHE_IMMUTABLE); assert.equal(v1.headers['content-encoding'], 'gzip'); assert.ok(v1.headers['content-type'].startsWith('text/javascript'));
     assert.equal(gunzipSync(v1.body).toString(), bigVendor);
     const stats1 = staticCacheStats();
