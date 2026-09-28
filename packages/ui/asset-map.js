@@ -17,10 +17,10 @@ const ASSETS_DATA = {
   "audioManifestId": "ariskill-skill-bingo/assets/manifest/audio",
   "license": "internal-original",
   "sha256OfManifests": {
-    "assets/manifest/assets.yaml": "9f45975375782108165d0aae2e07997b6558be4db787a11dd52415e2c3d17e9a",
+    "assets/manifest/assets.yaml": "bbe8761ddc06d17f0e30d3a23a36be6e1caa039e34ff2d6559d831b5b0e16046",
     "assets/manifest/audio.yaml": "029d35157a1aa2fe7f7fdf6ac4ce8f29825fd80d935786e7dcf961c98f7c1aa1",
     "assets/manifest/audio.json": "d5a0b96fe5b41e503d63dc00bbf0bdf977e0dbd950eaae430a4bce4f2e57b732",
-    "combined": "3355de07fc849acb35801f31d79c4d0aef355093f1815d09f3b5c0b59ec54197"
+    "combined": "a755ab451cba5bed1692b1d42a946b54325ac8962ee4db23fa8ee36b6e614a2d"
   },
   "baseUrl": "/assets",
   "manifests": {
@@ -1053,8 +1053,8 @@ const ASSETS_DATA = {
       "format": "jpeg",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "9e1697e261f708b895458c6fc133024c758541c0964a4cf1a923e9537b66d231",
-      "bytes": 84503,
+      "sha256": "fcb866a7ac3c3bbeacfc40f94ac2486b64ebdd6969bdb7a39a6007d068679fd6",
+      "bytes": 239939,
       "lods": []
     },
     "space_config": {
@@ -1063,8 +1063,8 @@ const ASSETS_DATA = {
       "format": "json",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "057af0c1e215d860e4cbbeebd65bb5cfcb38162eb6fc1e25be1c07a49ec58db2",
-      "bytes": 5152,
+      "sha256": "8e065227565f2e9e3ce86a5ce4a8e85725a35f8e80f519547c0088a7877bedd6",
+      "bytes": 5166,
       "lods": []
     },
     "space_constellations": {
@@ -1073,8 +1073,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "e4bb5896ccb27e01ec87193ff69f64c99fb47964b946bdb5c260c14fe820de04",
-      "bytes": 22220,
+      "sha256": "4f95a4aa99dc80abf675de4f3b6debcfeecdd1cbc612aa2b01070e2d0d5f1a0a",
+      "bytes": 54544,
       "lods": []
     },
     "space_falling_star": {
@@ -1093,8 +1093,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "f946e86911fe0e08a328e59df41d6a0204703d9a83076d5dcb74f2397bf95c82",
-      "bytes": 14610,
+      "sha256": "9fd088ccf3847b63af9fcb6edf0e300cdf9ee989b29b3f453cb781445174aa4f",
+      "bytes": 18262,
       "lods": []
     },
     "space_meteor_2": {
@@ -1103,8 +1103,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "ccfb689548064210d40ae957ce808c6420b3e004267d2ab11eeda9d695f4e92c",
-      "bytes": 11800,
+      "sha256": "0821044d75bb18d3c2ae437ce6ab74220a695c98b374ba113ce554b566ba4e85",
+      "bytes": 14906,
       "lods": []
     },
     "space_meteor_3": {
@@ -1113,8 +1113,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "8249494eaa774e5b2e08fbcb78740de2c74898635253c1b83adc517fe058a247",
-      "bytes": 15664,
+      "sha256": "66c705fb34fbc95dafe3dcfe1cc07b7418637ebdd348d28ae44c4c124f248e94",
+      "bytes": 19576,
       "lods": []
     },
     "space_meteor_4": {
@@ -1123,8 +1123,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "51a36fe40f38f4dcce169af27ad99c2313f87f0f57f0db3c46dd2e839c088751",
-      "bytes": 13482,
+      "sha256": "e8a75fb2ebb12b95735af4c7455d231cc4f397740b9d6be491a19d8ccab42efb",
+      "bytes": 17630,
       "lods": []
     },
     "space_meteor_5": {
@@ -1133,8 +1133,8 @@ const ASSETS_DATA = {
       "format": "webp",
       "fallbackUrl": null,
       "fallbackFormat": null,
-      "sha256": "10ab6b8a252646b644b266fe3e378f4d6651e446482add19969cb8d7c5f5b1f8",
-      "bytes": 12676,
+      "sha256": "ba3ee02c50d16ad5d301fe3abce90df04b1fa50ac300303462e038c26b281b14",
+      "bytes": 16320,
       "lods": []
     }
   }

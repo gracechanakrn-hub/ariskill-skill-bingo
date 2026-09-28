@@ -6,6 +6,7 @@
     "height": 1080
   },
   "overscan": 1.1,
+  "scale": 2,
   "backdrop": {
     "file": "backdrop.jpg",
     "drift": {

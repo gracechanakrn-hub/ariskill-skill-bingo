@@ -3,19 +3,19 @@
   "renders": "tools/ai/blender/galaxy_space.py",
   "files": {
     "backdrop.jpg": {
-      "bytes": 84503,
-      "sha256": "9e1697e261f708b895458c6fc133024c758541c0964a4cf1a923e9537b66d231",
+      "bytes": 239939,
+      "sha256": "fcb866a7ac3c3bbeacfc40f94ac2486b64ebdd6969bdb7a39a6007d068679fd6",
       "px": [
-        1373,
-        1188
+        2746,
+        2376
       ]
     },
     "constellations.webp": {
-      "bytes": 22220,
-      "sha256": "e4bb5896ccb27e01ec87193ff69f64c99fb47964b946bdb5c260c14fe820de04",
+      "bytes": 54544,
+      "sha256": "4f95a4aa99dc80abf675de4f3b6debcfeecdd1cbc612aa2b01070e2d0d5f1a0a",
       "px": [
-        1373,
-        1188
+        2746,
+        2376
       ]
     },
     "falling-star.webp": {
@@ -27,48 +27,48 @@
       ]
     },
     "meteor-1.webp": {
-      "bytes": 14610,
-      "sha256": "f946e86911fe0e08a328e59df41d6a0204703d9a83076d5dcb74f2397bf95c82",
+      "bytes": 18262,
+      "sha256": "9fd088ccf3847b63af9fcb6edf0e300cdf9ee989b29b3f453cb781445174aa4f",
       "px": [
-        353,
-        484
+        352,
+        482
       ]
     },
     "meteor-2.webp": {
-      "bytes": 11800,
-      "sha256": "ccfb689548064210d40ae957ce808c6420b3e004267d2ab11eeda9d695f4e92c",
+      "bytes": 14906,
+      "sha256": "0821044d75bb18d3c2ae437ce6ab74220a695c98b374ba113ce554b566ba4e85",
       "px": [
-        208,
-        468
+        207,
+        467
       ]
     },
     "meteor-3.webp": {
-      "bytes": 15664,
-      "sha256": "8249494eaa774e5b2e08fbcb78740de2c74898635253c1b83adc517fe058a247",
+      "bytes": 19576,
+      "sha256": "66c705fb34fbc95dafe3dcfe1cc07b7418637ebdd348d28ae44c4c124f248e94",
       "px": [
-        402,
-        462
+        400,
+        460
       ]
     },
     "meteor-4.webp": {
-      "bytes": 13482,
-      "sha256": "51a36fe40f38f4dcce169af27ad99c2313f87f0f57f0db3c46dd2e839c088751",
+      "bytes": 17630,
+      "sha256": "e8a75fb2ebb12b95735af4c7455d231cc4f397740b9d6be491a19d8ccab42efb",
       "px": [
         406,
-        392
+        390
       ]
     },
     "meteor-5.webp": {
-      "bytes": 12676,
-      "sha256": "10ab6b8a252646b644b266fe3e378f4d6651e446482add19969cb8d7c5f5b1f8",
+      "bytes": 16320,
+      "sha256": "ba3ee02c50d16ad5d301fe3abce90df04b1fa50ac300303462e038c26b281b14",
       "px": [
-        314,
-        489
+        312,
+        488
       ]
     },
     "space.json": {
-      "bytes": 5152,
-      "sha256": "057af0c1e215d860e4cbbeebd65bb5cfcb38162eb6fc1e25be1c07a49ec58db2"
+      "bytes": 5166,
+      "sha256": "8e065227565f2e9e3ce86a5ce4a8e85725a35f8e80f519547c0088a7877bedd6"
     }
   }
 }

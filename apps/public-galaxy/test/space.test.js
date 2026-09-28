@@ -30,6 +30,24 @@ const W = 1248, H = 1080;
 /** Direction changes per second of a sampled signal, halved: its highest repetition rate (Hz). */
 /** Plates compared to a pixel's billionth (they come out of a cover fit). */
 const near = (a, b, msg) => { for (const k of Object.keys(b)) assert.ok(Math.abs(a[k] - b[k]) < 1e-9, `${msg || ''} ${k}: ${a[k]} vs ${b[k]}`); assert.deepEqual(Object.keys(a).sort(), Object.keys(b).sort()); };
+/** Pixel size of a baseline / progressive JPEG (its SOF marker) or a VP8X / VP8 / VP8L WebP, from the file header. */
+function imageSize(file) {
+  const b = readFileSync(file);
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    for (let i = 2; i < b.length;) {
+      const m = b[i + 1], len = b.readUInt16BE(i + 2);
+      if (m >= 0xc0 && m <= 0xc3) return { width: b.readUInt16BE(i + 7), height: b.readUInt16BE(i + 5) };
+      i += 2 + len;
+    }
+  }
+  if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const kind = b.toString('ascii', 12, 16);
+    if (kind === 'VP8X') return { width: 1 + b.readUIntLE(24, 3), height: 1 + b.readUIntLE(27, 3) };
+    if (kind === 'VP8 ') return { width: b.readUInt16LE(26) & 0x3fff, height: b.readUInt16LE(28) & 0x3fff };
+    if (kind === 'VP8L') { const v = b.readUInt32LE(21); return { width: 1 + (v & 0x3fff), height: 1 + ((v >> 14) & 0x3fff) }; }
+  }
+  throw new Error(`${file}: not a JPEG / WebP`);
+}
 function hz(values, dt) {
   let prev = 0, turns = 0;
   for (let i = 1; i < values.length; i++) { const d = values[i] - values[i - 1]; const s = Math.abs(d) < 1e-12 ? 0 : Math.sign(d); if (s && prev && s !== prev) turns++; if (s) prev = s; }
@@ -67,6 +85,12 @@ test('the shipped space.json (the Blender renders) is a usable spec whose files 
   assert.equal(spec.meteors.length, raw.meteors.length, 'every meteor kept');
   assert.ok(spec.meteors.some((m) => m.front) && spec.constellations.stars.length > 0);
   for (const m of spec.meteors.filter((x) => x.front)) assert.ok(m.x < 0.12 || m.x > 0.88 || m.y < 0.12 || m.y > 0.88, `front meteor ${m.file} at a corner or edge, where Souls never go`);
+  // D-57: the plates are rendered at 2 x for 4K screens; the layout region (what they cover) is unchanged
+  assert.deepEqual(raw.region, { width: 1248, height: 1080 });
+  const plate2x = { width: Math.round(1248 * raw.overscan * 2), height: Math.round(1080 * raw.overscan * 2) };
+  assert.deepEqual(plate2x, { width: 2746, height: 2376 });
+  assert.deepEqual(imageSize(files.backdrop), plate2x, 'backdrop.jpg decodes at 2 x the overscanned region');
+  assert.deepEqual(imageSize(files.constellations), plate2x, 'constellations.webp decodes at 2 x the overscanned region');
 });
 
 test('loadSpace: space.json and its images through injectable loaders; a missing image leaves out its layer; no json, no space', async () => {
@@ -200,7 +224,11 @@ test('renderers: the nebula / aurora shader, fireflies, forest and doodads are g
   const three = src('renderer/three.js');
   for (const gone of [/doodadSvg|DOODAD_|doodadLayout|updateDoodads/, /paintForest|FOREST_LAYERS|forestPlanes/, /AURORA|auroraPhase|auroraU/, /FIREFLY|fireflies|ffMat/, /NEBULA_|nebula/]) assert.doesNotMatch(three, gone);
   assert.match(three, /import \{ backdropPlacement, constellationPlacement, constellationStars, meteorPose, fallingStarAt \} from '\.\/space\.js';/);
-  assert.match(three, /const backdrop = spec \? spacePlane\(spaceImages\.backdrop, \{ renderOrder: 0, transparent: false \}\) : null;/);
+  assert.match(three, /const backdrop = spec \? spacePlane\(spaceImages\.backdrop, \{ renderOrder: 0, transparent: false, mipmaps: true \}\) : null;/);
+  // D-57: the 2 x plates are mipmapped (with anisotropy) so a 1080p screen minifies them cleanly
+  assert.match(three, /const constLines = spec \? spacePlane\(spaceImages\.constellations, \{ renderOrder: 1, mipmaps: true \}\) : null;/);
+  assert.match(three, /map\.minFilter = mipmaps \? THREE\.LinearMipmapLinearFilter : THREE\.LinearFilter;/);
+  assert.match(three, /if \(mipmaps\) map\.anisotropy = Math\.min\(8, renderer\.capabilities\.getMaxAnisotropy\(\)\);/);
   assert.match(three, /renderOrder: m\.front \? 70 : 5, parent: m\.front \? overlay : scene/, 'front meteors after the Souls, the rest behind the orbit');
   assert.match(three, /spacePlane\(spaceImages\.fallingStar, \{ renderOrder: 12, additive: true \}\)/);
   assert.match(three, /fallingStarAt\(spec, width, height, t, \{ seed, reducedMotion, quality: f\.quality \}\)/);

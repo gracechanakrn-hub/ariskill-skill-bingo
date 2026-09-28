@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { IMPOSTOR, wantsImpostor, impostorKey, tileRect, tileUv, liveTileSize, entrancePose, ENTRANCE_POSE, createBakeQueue, pumpBudget } from '../src/renderer/impostor-plan.js';
 import { createAtlas, spriteRects } from '../src/renderer/atlas.js';
-import { createScene } from '../src/renderer/scene.js';
+import { createScene, ATLAS_CELLS } from '../src/renderer/scene.js';
 import { createEntranceQueue } from '../src/entrance-queue.js';
 import { soulSpriteLayers, VIEWBOX } from '../../../packages/ui/soul-renderer.js';
 import { decorFixture, v2Config, neutralV2 } from '../../../packages/ui/test/decor-fixture.js';
@@ -45,9 +45,13 @@ test('plan: tiles tile the square stage, uv rects map back to the rendered squar
   }
   assert.equal(seen.size, per * per, 'no two tiles overlap');
   assert.equal(tileRect(0, { size: 999 }).size, IMPOSTOR.tile);
-  assert.equal(liveTileSize(72, 1, 1), 108, '1.5 x like the atlas cells');
-  assert.equal(liveTileSize(72, 1.12, 2), 242);
+  assert.equal(liveTileSize(72, 1, 1), 144, '2 x like the atlas cells (D-57)');
+  assert.equal(liveTileSize(56, 1.12, 2), 251);
+  assert.equal(liveTileSize(72, 1, 2), IMPOSTOR.tile, 'a 72 px Soul at dpr 2 wants 288 px: capped by the tile');
   assert.equal(liveTileSize(128, 1, 2), IMPOSTOR.tile, 'capped by the tile');
+  // the bake tile holds the largest atlas cell (a 256 px cell is baked 1:1, never through a live tile)
+  assert.ok(Math.max(...ATLAS_CELLS) <= IMPOSTOR.tile, 'every atlas cell fits the bake tile');
+  assert.equal(tileRect(IMPOSTOR.bakeTile, { size: 256 }).size, 256);
   assert.ok(liveTileSize(0) >= 8);
 });
 
@@ -127,12 +131,12 @@ test('atlas hands v2 cells to the impostor stage (cached by soul, badge, cell), 
   atlas.setImpostors(stage);
   const soul = { soulId: 'soul_3d', config: v2Config({ face: 'angel' }), badge: 'bingo-star' };
   const e = atlas.get(soul, 'full', 72, { priority: 1 });
-  assert.equal(e.impostor, true); assert.equal(e.key, impostorKey('soul_3d', 'bingo-star', 128));
+  assert.equal(e.impostor, true); assert.equal(e.key, impostorKey('soul_3d', 'bingo-star', 192), 'D-57: a 72 px Soul -> 192 px cell');
   assert.equal(atlas.get(soul, 'simple', 72), e, 'one impostor for every sprite level at that cell');
-  assert.equal(jobs.length, 1); assert.equal(jobs[0].priority, 1); assert.equal(jobs[0].cell, 128);
+  assert.equal(jobs.length, 1); assert.equal(jobs[0].priority, 1); assert.equal(jobs[0].cell, 192);
   assert.equal(e.ready, false, 'placeholder until baked');
   const v0 = atlas.version;
-  jobs[0].draw({ tag: 'stage-canvas' }, 512, 512, 128);
+  jobs[0].draw({ tag: 'stage-canvas' }, 512, 512, 192);
   assert.equal(e.ready, true); assert.ok(atlas.version > v0);
   assert.equal(loads.length, 0, 'an impostor cell never rasterises the SVG');
   // v1 and dot Souls never go to the stage

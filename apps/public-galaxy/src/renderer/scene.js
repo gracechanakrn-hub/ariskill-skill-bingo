@@ -540,18 +540,29 @@ export function createScene(opts = {}) {
 // ---- v2 sticker atlas cells (art direction v2 / D-25) ----
 // The Galaxy atlas is rasterised from the 2D renderer at detail 'simple' (3 px die-cut and r 3-4 / 6-8 speckles at
 // a 240 px Soul). Those features only survive if the cell is larger than the on-screen sprite: cells are picked at
-// ATLAS_SUPERSAMPLE x the device size (bilinear minification stays under 2 x) in 48..192 px steps.
-// Measured at 1920x1080 (dpr 1): 12-16 Souls draw at 72 px -> 128 px cells; 22 -> 61 px -> 96; 120 -> 46 px -> 96;
-// 300 -> 34 px -> 64; 450 -> 26 px -> 48 (11 shelf rows of a single 2048^2 page).
-export const ATLAS_CELLS = Object.freeze([48, 64, 96, 128, 192]);
-export const ATLAS_SUPERSAMPLE = 1.5;
+// ATLAS_SUPERSAMPLE x the device size (bilinear minification stays under 2 x) in 48..256 px steps.
+// D-57: 2 x supersampling and a 256 px cell keep Souls crisp on a 4K screen (dpr 2: a 72 px Soul -> 144 device px -> 256).
+// Measured at 1920x1080 (dpr 1): 12-16 Souls draw at 72 px -> 192 px cells; 22 -> 61 px -> 128; 120 -> 46 px -> 96;
+// 300 -> 34 px -> 96; 450 -> 26 px -> 64 (15 shelf rows of a single 2048^2 page).
+// Memory guard (D-57): 2 x cells at dpr 2 would need 192 px cells for 450-600 Souls (the three.js orbit cells are asked at
+// the near depth size, 1.36 x), i.e. up to 6 pages. Given the Soul count, the cell steps down until the crowd fits the
+// ATLAS_MAX_PAGES budget, so small crowds get the sharp large cells and a full venue never runs out of atlas.
+export const ATLAS_CELLS = Object.freeze([48, 64, 96, 128, 192, 256]);
+export const ATLAS_SUPERSAMPLE = 2;
+export const ATLAS_PAGE_SIZE = 2048;  // one 2048^2 RGBA page = 16 MB
+export const ATLAS_MAX_PAGES = 3;     // 48 MB, under the 64 MB texture budget
 export const STICKER_REF_PX = 240;
 
-/** Atlas cell edge (px) for a sprite drawn at `devicePx` device pixels. */
-export function atlasCellFor(devicePx) {
+/**
+ * Atlas cell edge (px) for a sprite drawn at `devicePx` device pixels. With a Soul `count`, the largest cell at or below
+ * that whose shelf footprint for `count` Souls fits ATLAS_MAX_PAGES pages of `pageSize` (no count: no cap).
+ */
+export function atlasCellFor(devicePx, count = 0, pageSize = ATLAS_PAGE_SIZE) {
   const want = Math.max(1, Number(devicePx) || 1) * ATLAS_SUPERSAMPLE;
-  for (const c of ATLAS_CELLS) if (want <= c) return c;
-  return ATLAS_CELLS[ATLAS_CELLS.length - 1];
+  let i = ATLAS_CELLS.findIndex((c) => want <= c);
+  if (i < 0) i = ATLAS_CELLS.length - 1;
+  if (count > 0) while (i > 0 && atlasFootprint(count, ATLAS_CELLS[i], pageSize).pages > ATLAS_MAX_PAGES) i--;
+  return ATLAS_CELLS[i];
 }
 
 /** Sticker features (px) inside a cell: die-cut band outside the body, small / large speckle radius. */
@@ -561,7 +572,7 @@ export function stickerFeaturePx(cell) {
 }
 
 /** Shelf-packing footprint of `count` sprites in `cell` px cells on `pageSize`^2 RGBA pages. */
-export function atlasFootprint(count, cell, pageSize = 2048) {
+export function atlasFootprint(count, cell, pageSize = ATLAS_PAGE_SIZE) {
   const n = Math.max(0, Math.floor(count) || 0);
   const perRow = Math.max(1, Math.floor(pageSize / cell));
   const rowsPerPage = Math.max(1, Math.floor(pageSize / cell));
@@ -574,6 +585,6 @@ export function atlasFootprint(count, cell, pageSize = 2048) {
 export function atlasCellPlan(count, width = 1248, height = 1080, dpr = 1, ringsData = DEFAULT_RINGS) {
   const layout = layoutViewport(width, height);
   const px = spriteSizePx(layout, count, ringsData);
-  const cell = atlasCellFor(px * dpr);
+  const cell = atlasCellFor(px * dpr, count);
   return { count, spritePx: px, devicePx: px * dpr, cell, detail: selectLod(count, px), features: stickerFeaturePx(cell), footprint: atlasFootprint(count, cell) };
 }

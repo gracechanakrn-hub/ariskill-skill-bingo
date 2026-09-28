@@ -2,10 +2,12 @@
 // layers, rings, twinkle and the entrance trail; this table adds what only the Three path has: resolution
 // scale and bloom parameters (off on `low`). The space backdrop's own rule (space.js): no falling stars and no meteor
 // spin on `low`.
+// msaa: multisample count of the composer's render targets (smooth orbit rings, constellation lines and Soul edges;
+// the canvas itself is created without antialias because everything is drawn through the composer). D-57.
 export const THREE_QUALITY = Object.freeze({
-  high: { resolutionScale: 1.0, maxPixelRatio: 2, bloom: { strength: 0.62, radius: 0.55, threshold: 0.58 } },
-  medium: { resolutionScale: 0.85, maxPixelRatio: 1.5, bloom: { strength: 0.52, radius: 0.5, threshold: 0.62 } },
-  low: { resolutionScale: 0.7, maxPixelRatio: 1, bloom: null },
+  high: { resolutionScale: 1.0, maxPixelRatio: 2, msaa: 4, bloom: { strength: 0.62, radius: 0.55, threshold: 0.58 } },
+  medium: { resolutionScale: 0.85, maxPixelRatio: 1.5, msaa: 2, bloom: { strength: 0.52, radius: 0.5, threshold: 0.62 } },
+  low: { resolutionScale: 0.7, maxPixelRatio: 1, msaa: 0, bloom: null },
 });
 
 /** Transient bloom bumps (strength added to the base, decaying linearly). Flash safety: single, non-repeating. */

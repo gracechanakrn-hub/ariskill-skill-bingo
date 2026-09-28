@@ -199,14 +199,16 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
     const map = new THREE.Texture(img);
     map.colorSpace = THREE.SRGBColorSpace; map.generateMipmaps = mipmaps; map.needsUpdate = true;
     map.minFilter = mipmaps ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter; map.magFilter = THREE.LinearFilter;
+    if (mipmaps) map.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map, transparent, depthTest: false, depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending }));
     mesh.frustumCulled = false; mesh.renderOrder = renderOrder;
     parent.add(mesh);
     spaceTextures.push(map); spaceMeshes.push(mesh);
     return { mesh, aspect: img.width / img.height || 1 };
   }
-  const backdrop = spec ? spacePlane(spaceImages.backdrop, { renderOrder: 0, transparent: false }) : null;
-  const constLines = spec ? spacePlane(spaceImages.constellations, { renderOrder: 1 }) : null;
+  // D-57: the plates are rendered at 2x; mipmaps keep them clean when a 1080p screen shows them smaller
+  const backdrop = spec ? spacePlane(spaceImages.backdrop, { renderOrder: 0, transparent: false, mipmaps: true }) : null;
+  const constLines = spec ? spacePlane(spaceImages.constellations, { renderOrder: 1, mipmaps: true }) : null;
   // meteors: behind the orbit in the sky (bloomed), or in front of the Souls in the overlay (at the corners and edges)
   const meteors = spec ? spec.meteors.map((m, i) => { const q = spacePlane((spaceImages.meteors || [])[i], { renderOrder: m.front ? 70 : 5, parent: m.front ? overlay : scene, mipmaps: true }); return q ? { m, ...q } : null; }).filter(Boolean) : [];
   const fallingStar = spec && spec.fallingStars ? spacePlane(spaceImages.fallingStar, { renderOrder: 12, additive: true }) : null;
@@ -337,7 +339,9 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
   }
 
   // ---- composer ----
-  const composer = new EffectComposer(renderer);
+  // D-57: multisampled targets (the count follows the quality level, see applyQuality) smooth every edge drawn
+  const composerTarget = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: qualitySettings(quality).msaa || 0 });
+  const composer = new EffectComposer(renderer, composerTarget);
   const renderPass = new RenderPass(scene, camera);
   const bloomPass = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.6, 0.5, 0.6);
   const overlayPass = new RenderPass(overlay, camera);
@@ -361,6 +365,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
     const s = qualitySettings(q);
     pr = pixelRatioFor(q, dpr);
     renderer.setPixelRatio(pr); composer.setPixelRatio(pr);
+    for (const rt of [composer.renderTarget1, composer.renderTarget2]) if (rt.samples !== (s.msaa || 0)) { rt.samples = s.msaa || 0; rt.dispose(); } // reallocated on next use
     bloomPass.enabled = !!s.bloom;
     if (s.bloom) { bloomPass.radius = s.bloom.radius; bloomPass.threshold = s.bloom.threshold; bloomPass.strength = s.bloom.strength; }
     for (const sm of starMeshes) sm.pts.material.uniforms.uPixelRatio.value = pr;
@@ -378,9 +383,10 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
   /**
    * One sticker: the palette light behind it (bloomed) and the sticker itself in the overlay, from its live tile when it
    * has one, else from its atlas cell (a placeholder glow until the cell lands). opts: { detail, alpha, scale, glow,
-   * now, priority (1: bake ahead, an entrance), live (uv rect), cellScale (a visit asks for a cell at its drawn size) }.
+   * now, priority (1: bake ahead, an entrance), live (uv rect), cellScale (a visit asks for a cell at its drawn size),
+   * count (the orbit's Soul count: caps the cell so the crowd fits the atlas pages, D-57) }.
    */
-  function drawSoul(item, { detail, alpha = 1, scale = 1, glow = 0, now, priority = 0, live = null, cellScale = 1 }) {
+  function drawSoul(item, { detail, alpha = 1, scale = 1, glow = 0, now, priority = 0, live = null, cellScale = 1, count = 0 }) {
     const won = item.badge === 'bingo-star';            // a Bingo winner: bigger, in a gold glow (WINNER_LOOK, D-36)
     const size = item.size * (scale || 1) * (won ? WINNER_LOOK.scale : 1);
     const [r, g, b] = glowOf(item);
@@ -394,7 +400,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
     const hull = (texelsPerPx) => (flash > 0 ? hullPx(size) * texelsPerPx : 0);
     // the atlas cell, even while live: an entrance bakes its impostor ahead of settling (priority 1); a live visit needs
     // none (its orbit cell exists), and without a live tile it asks for a cell at its drawn size
-    const entry = live && cellScale !== 1 ? null : atlas.get(item, detail, item.size * cellScale * pr, { priority });
+    const entry = live && cellScale !== 1 ? null : atlas.get(item, detail, item.size * cellScale * pr, { priority, count });
     if (live && liveTex) { pushSticker(liveTex, 1 / IMPOSTOR.stage, item.x, item.y, size, live.u0, live.v0, live.u1, live.v1, alpha, hull(live.size / size), flash); return; }
     if (entry && entry.ready && entry.page >= 0 && pageTex[entry.page]) {
       const ps = atlas.pageSize;
@@ -488,7 +494,7 @@ export function createThreeRenderer({ container, atlas, starLayers = [], space =
     halo.begin(); clusterBatch.begin(); particleBatch.begin();
     // orbit cells are baked at the nearest depth size (D-36), so a near Soul is as sharp as its live tile and one cell
     // serves the whole orbit
-    for (const item of f.souls) drawSoul(item, { detail: item.detail, alpha: item.alpha ?? 1, scale: item.scale ?? 1, now, live: item.act ? liveOf(item) : null, cellScale: item.depth === undefined || item.detail === 'dot' ? 1 : DEPTH.scale[1] });
+    for (const item of f.souls) drawSoul(item, { detail: item.detail, alpha: item.alpha ?? 1, scale: item.scale ?? 1, now, live: item.act ? liveOf(item) : null, cellScale: item.depth === undefined || item.detail === 'dot' ? 1 : DEPTH.scale[1], count: f.souls.length });
     for (const c of f.clusters) {
       // neutral lilac glow, identical for every cluster (only the DOM count label differs)
       clusterBatch.push(c.x, c.y, c.size * 1.7, 0, 0, 1, 1, 0.72, 0.62, 1, 0.34);

@@ -54,11 +54,14 @@ test('the committed pack matches its provenance, holds its budgets and lists 9 e
   for (const e of real) assert.equal(e.checksum, by[e.id].checksum, e.id);
 });
 
-test('the backdrop is the plate (region x overscan) and every other layer has alpha; space.json names exactly the images', () => {
+test('the backdrop is the plate (region x overscan x scale) and every other layer has alpha; space.json names exactly the images', () => {
   const spec = JSON.parse(readFileSync(join(ROOT, RUNTIME, 'space.json'), 'utf8'));
   const back = jpegInfo(readFileSync(join(ROOT, RUNTIME, spec.backdrop.file)));
   assert.equal(back.ok, true);
-  assert.deepEqual([back.width, back.height], [Math.round(spec.region.width * spec.overscan), Math.round(spec.region.height * spec.overscan)]);
+  assert.equal(spec.scale, 2, 'D-57: the plates are rendered at 2x for a 4K big screen');
+  assert.deepEqual([back.width, back.height], [Math.round(spec.region.width * spec.overscan * spec.scale), Math.round(spec.region.height * spec.overscan * spec.scale)]);
+  const lines = webpInfo(readFileSync(join(ROOT, RUNTIME, spec.constellations.file)));
+  assert.deepEqual([lines.width, lines.height], [back.width, back.height], 'the constellation plate matches the backdrop');
   const layers = specFiles(spec).filter((f) => f !== spec.backdrop.file);
   assert.equal(layers.length, 2 + spec.meteors.length);
   for (const f of layers) { const w = webpInfo(readFileSync(join(ROOT, RUNTIME, f))); assert.equal(w.ok, true, f); assert.equal(w.alpha, true, f); }

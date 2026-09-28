@@ -79,7 +79,7 @@ export function tileUv(rect, stage = IMPOSTOR.stage) {
 }
 
 /** Live entrance render size (device px) for a sprite `sizePx` at `scale`: supersampled like the atlas, capped by the tile. */
-export function liveTileSize(sizePx, scale = 1, pixelRatio = 1, { supersample = 1.5, tile = IMPOSTOR.tile } = {}) {
+export function liveTileSize(sizePx, scale = 1, pixelRatio = 1, { supersample = 2, tile = IMPOSTOR.tile } = {}) { // D-57: matches ATLAS_SUPERSAMPLE
   const want = Math.ceil(Math.max(8, (Number(sizePx) || 0) * (Number(scale) || 1) * (Number(pixelRatio) || 1) * supersample));
   return Math.min(tile, want);
 }

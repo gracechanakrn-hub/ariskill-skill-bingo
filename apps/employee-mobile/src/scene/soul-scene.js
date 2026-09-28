@@ -80,7 +80,8 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
 
   let composer = null, bloom = null;
   if (high) {
-    composer = new addons.EffectComposer(renderer);
+    // D-57: the composer draws into its own targets, which the canvas antialias flag does not reach: 4x MSAA there
+    composer = new addons.EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
     composer.addPass(new addons.RenderPass(scene, camera));
     bloom = new addons.UnrealBloomPass(new THREE.Vector2(256, 256), 0.3, 0.3, LOOK.bloomThreshold);
     composer.addPass(bloom);
@@ -89,7 +90,7 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
 
   // ---- light (identical for every Soul): studio reflections for the clay + the Blender colour-render rig (warm key
   // upper left, cool fill right, lavender rim behind) + the palette glow rising from the ring ----
-  const envTarget = makeStudioEnvironment(THREE, renderer, { size: high ? 128 : 64 });
+  const envTarget = makeStudioEnvironment(THREE, renderer, { size: high ? 256 : 128 }); // D-57: sharper reflections
   scene.environment = envTarget.texture;
   addStudioLights(THREE, scene);
   addGlowLight(THREE, scene, P.colors.glow);
@@ -237,6 +238,13 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
   }
 
   function render() { if (composer) composer.render(); else renderer.render(scene, camera); }
+  let lightened = false;
+  /** The lighter scene for a phone that misses the frame budget: reduced pixel ratio, glow pass off. */
+  function lighten() {
+    const pr = pixelRatioFor('reduced', devicePixelRatio || 1);
+    renderer.setPixelRatio(pr); if (composer) { composer.setPixelRatio(pr); if (bloom) bloom.enabled = false; }
+    resize(); render();
+  }
 
   function setPhase(next) { phase = next; host.dataset.phase = next; }
   function tick(now) {
@@ -286,7 +294,13 @@ function build(host, { THREE, addons }, models, quality, { config, badge = null,
         revealDur = Math.max(1, durationMs); revealStart = performance.now(); setPhase('reveal');
         last = revealStart;
         if (!raf) raf = requestAnimationFrame(tick);
-        cancelProbe = probeFrameTime((exceeded, mean) => { if (exceeded && typeof onFallback === 'function' && !disposed) onFallback(mean); });
+        // D-57: too slow -> first a lighter scene (lower resolution, no glow), and only then the flat Soul
+        const onProbe = (exceeded, mean) => {
+          if (!exceeded || disposed) return;
+          if (!lightened) { lightened = true; lighten(); cancelProbe = probeFrameTime(onProbe); return; }
+          if (typeof onFallback === 'function') onFallback(mean);
+        };
+        cancelProbe = probeFrameTime(onProbe);
       });
     },
     skip() { if (phase === 'reveal') { revealStart = performance.now() - revealDur; if (!raf) raf = requestAnimationFrame(tick); } },

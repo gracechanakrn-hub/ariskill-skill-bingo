@@ -6,8 +6,11 @@ export const FRAME_BUDGET_MS = 33; // 30 fps floor for the phone hero scene (gam
 /**
  * Decide the scene tier from plain inputs. Pure.
  *  - 'off'  : no WebGL, or the user/QA forced it off -> existing SVG / CSS path
- *  - 'low'  : small screens, low core count / memory, high DPR -> no bloom, pixel ratio 1, fewer motes
- *  - 'high' : bloom via EffectComposer, pixel ratio up to 1.5
+ *  - 'low'  : low core count / memory -> no bloom, pixel ratio up to 1.5, fewer motes
+ *  - 'high' : bloom via EffectComposer with 4x MSAA, pixel ratio up to 2.5
+ * D-57: a sharp (dpr 3) screen no longer lowers the tier by itself - every recent iPhone is dpr 3 and got a blurry 1x
+ * Soul. A phone that cannot keep up is caught by the frame-time probe, which first drops the resolution and the glow
+ * (soul-scene.js) before falling back to the flat Soul.
  * Reduced motion never disables the scene by itself (it only stops ambient movement); the scene stays static.
  */
 export function sceneQuality({ webgl = false, dpr = 1, cores = 4, memoryGb = 4, forced = null } = {}) {
@@ -15,7 +18,7 @@ export function sceneQuality({ webgl = false, dpr = 1, cores = 4, memoryGb = 4, 
   if (!webgl) return 'off';
   if (forced === 'high' || forced === 'force') return 'high';
   if (forced === 'low') return 'low';
-  if (cores <= 4 || memoryGb <= 2 || dpr >= 3) return 'low';
+  if (cores <= 2 || memoryGb <= 2) return 'low';
   return 'high';
 }
 
@@ -29,10 +32,10 @@ export function frameBudgetExceeded(samplesMs, budgetMs = FRAME_BUDGET_MS) {
   return median > budgetMs;
 }
 
-/** Pixel ratio cap per tier (kept small: the hero canvas is ~360 px wide). Pure. */
+/** Pixel ratio cap per tier (D-57: the hero canvas is ~360 px wide, so 2.5 x stays near 900 px). Pure. */
+export const PIXEL_RATIO_CAP = Object.freeze({ high: 2.5, low: 1.5, reduced: 1.25 });
 export function pixelRatioFor(quality, dpr = 1) {
-  if (quality === 'high') return Math.min(dpr || 1, 1.5);
-  return 1;
+  return Math.min(dpr || 1, PIXEL_RATIO_CAP[quality] ?? 1);
 }
 
 // ---- browser probes (best effort, never throw) ----------------------------------------------------------------

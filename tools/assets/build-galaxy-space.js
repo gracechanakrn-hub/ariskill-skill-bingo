@@ -22,11 +22,14 @@ export const SOURCE_DIR = 'assets-src/generated/galaxy-space';
 export const RUNTIME = 'assets/space';
 export const MANIFEST = 'assets/manifest/assets.yaml';
 export const SPACE_BUDGETS = Object.freeze({
-  backdropBytes: 160 * 1024,             // backdrop.jpg (the opaque plate, region x overscan)
+  // D-57 (owner: sharper big screen): the backdrop and constellation plates are rendered at space.json `scale` (2), so
+  // they stay crisp on a 4K screen. The big screen runs on a PC / laptop GPU, so the decoded-texture budget of this pack
+  // rises from 16 to 56 MB (two 2746 x 2376 plates = 49.8 MB; the meteors stay at 1x).
+  backdropBytes: 320 * 1024,             // backdrop.jpg (the opaque plate, region x overscan x scale)
   layerBytes: 64 * 1024,                 // each WebP layer (constellation lines, meteors, falling star)
   specBytes: 16 * 1024,                  // space.json
-  spaceBytes: 320 * 1024,                // everything under assets/space/
-  textureBytes: 16 * 1024 * 1024,        // decoded RGBA of every image (art direction: texture memory <= 64 MB in all)
+  spaceBytes: 512 * 1024,                // everything under assets/space/
+  textureBytes: 56 * 1024 * 1024,        // decoded RGBA of every image (D-57; was 16 MB at 1x)
 });
 const hex = (buf) => createHash('sha256').update(buf).digest('hex');
 
@@ -128,7 +131,9 @@ export function buildGalaxySpace({ root = DEFAULT_ROOT, budgets = SPACE_BUDGETS,
   for (const n of images) if (!packed.includes(n)) problems.push(`space.json names ${n}, which is not in the pack`);
   for (const n of packed) if (!images.includes(n)) problems.push(`${RUNTIME}/${n}: packed but not named by space.json`);
   if (bufs.get('space.json').length > B.specBytes) problems.push(`space.json: ${bufs.get('space.json').length} bytes > ${B.specBytes}`);
-  const plate = [Math.round(region.width * spec.overscan), Math.round(region.height * spec.overscan)];
+  const scale = spec.scale === undefined ? 1 : spec.scale;          // D-57: plates rendered at this multiple
+  if (!(scale >= 1 && scale <= 3)) problems.push(`space.json scale ${scale} must be 1..3`);
+  const plate = [Math.round(region.width * spec.overscan * scale), Math.round(region.height * spec.overscan * scale)];
   for (const n of packed) {
     const buf = bufs.get(n);
     if (!buf) continue;
@@ -137,7 +142,7 @@ export function buildGalaxySpace({ root = DEFAULT_ROOT, budgets = SPACE_BUDGETS,
     if (!info.ok) { problems.push(`${RUNTIME}/${n}: ${info.reason}`); continue; }
     const px = prov.files[n] && prov.files[n].px;
     if (!Array.isArray(px) || px[0] !== info.width || px[1] !== info.height) problems.push(`${RUNTIME}/${n}: ${info.width}x${info.height} px disagrees with provenance`);
-    if (isBackdrop && (info.width !== plate[0] || info.height !== plate[1])) problems.push(`${RUNTIME}/${n}: backdrop ${info.width}x${info.height} != the plate ${plate[0]}x${plate[1]} (region x overscan)`);
+    if (isBackdrop && (info.width !== plate[0] || info.height !== plate[1])) problems.push(`${RUNTIME}/${n}: backdrop ${info.width}x${info.height} != the plate ${plate[0]}x${plate[1]} (region x overscan x scale)`);
     if (!isBackdrop && !info.alpha) problems.push(`${RUNTIME}/${n}: a layer over the backdrop needs alpha`);
     const limit = isBackdrop ? B.backdropBytes : B.layerBytes;
     if (buf.length > limit) problems.push(`${RUNTIME}/${n}: ${buf.length} bytes > ${limit}`);

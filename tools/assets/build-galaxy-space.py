@@ -18,7 +18,8 @@ SRC = os.path.join(ROOT, 'assets-src', 'generated', 'galaxy-space')
 OUT = os.path.join(ROOT, 'assets', 'space')
 REGION = (1248, 1080)
 OVERSCAN = 1.1
-PW, PH = round(REGION[0] * OVERSCAN), round(REGION[1] * OVERSCAN)          # the plate: 1373 x 1188
+PW, PH = round(REGION[0] * OVERSCAN), round(REGION[1] * OVERSCAN)          # the plate: 1373 x 1188 layout units
+SCALE = 2   # the Blender renders are SCALE x the plate (galaxy_space.py --scale); the lines are drawn to match
 
 # Four real constellations, shapes normalised to their own box (x right, y down), placed in region fractions where the
 # sky is free: under the title (Big Dipper), top middle (Cassiopeia), left (Orion), right (Cygnus).
@@ -104,17 +105,19 @@ def falling_star():
 def main():
     os.makedirs(OUT, exist_ok=True)
     back = Image.open(os.path.join(SRC, 'backdrop.png')).convert('RGB')
-    assert back.size == (PW, PH), back.size
+    assert back.size == (round(PW * SCALE), round(PH * SCALE)), back.size
     back.save(os.path.join(OUT, 'backdrop.jpg'), quality=86, optimize=True, progressive=True)
-    draw_lines((PW, PH)).save(os.path.join(OUT, 'constellations.webp'), quality=90, method=6)
+    draw_lines((round(PW * SCALE), round(PH * SCALE)), SCALE).save(os.path.join(OUT, 'constellations.webp'), quality=90, method=6)
     for name, *_ in METEORS:
         m = Image.open(os.path.join(SRC, f'{name}.png')).convert('RGBA')
         bbox = m.getbbox(); m = m.crop(bbox)                                      # tight: the size is the rock's height
+        # D-57: meteors are small on screen, so they ship at 1x (texture memory); only the plates stay at SCALE
+        if SCALE != 1: m = m.resize((round(m.width / SCALE), round(m.height / SCALE)), Image.LANCZOS)
         m.save(os.path.join(OUT, f'{name}.webp'), quality=88, method=6)
     falling_star().save(os.path.join(OUT, 'falling-star.webp'), quality=90, method=6)
     data = {
         'version': 1, 'generator': 'tools/ai/blender/galaxy_space.py + tools/assets/build-galaxy-space.py',
-        'region': {'width': REGION[0], 'height': REGION[1]}, 'overscan': OVERSCAN,
+        'region': {'width': REGION[0], 'height': REGION[1]}, 'overscan': OVERSCAN, 'scale': SCALE,
         'backdrop': {'file': 'backdrop.jpg', 'drift': {'px': 12, 'periodS': 80}, 'breathe': {'amount': 0.012, 'periodS': 50}, 'parallax': 0.35},
         'constellations': {'file': 'constellations.webp', 'lineShimmer': {'amount': 0.25, 'periodS': 9},
                            'stars': [{k: v for k, v in s.items() if k != 'c'} for s in constellation_stars()],

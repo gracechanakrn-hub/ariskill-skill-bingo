@@ -1,5 +1,6 @@
-// Soul sprite atlas: renderSoulSvg -> data: URL -> Image -> offscreen canvas, packed in 48..192 px cells
-// (scene.js#atlasCellFor: 1.5 x the device size so the die-cut, eyes and drips stay crisp) and cached by
+// Soul sprite atlas: renderSoulSvg -> data: URL -> Image -> offscreen canvas, packed in 48..256 px cells
+// (scene.js#atlasCellFor: 2 x the device size so the die-cut, eyes and drips stay crisp, D-57; stepped down for a
+// large crowd so it fits ATLAS_MAX_PAGES) and cached by
 // soulId + detail + badge (+ cell). Browser-only (Image/canvas); imported by canvas2d.js, webgl2.js, static.js and
 // three.js. CSP: img-src 'self' data: blob: allows the data: URL rasterisation.
 // Art direction v2 / soul-renderer 3 (the D-27 baseline character): the atlas is always rasterised at detail 'simple'
@@ -12,11 +13,11 @@
 // per frame and cached by soulId + badge + cell - and fall back to this 2D composition whenever the stage fails.
 // Stage 15 (D-36): the big screen's Souls have no white die-cut, so the SVG is rendered with dieCut: false.
 import { renderSoulSvg, soulSpriteLayers, VIEWBOX } from '../../../../packages/ui/soul-renderer.js';
-import { ATLAS_CELLS, atlasCellFor } from './scene.js';
+import { ATLAS_CELLS, ATLAS_PAGE_SIZE, ATLAS_MAX_PAGES, atlasCellFor } from './scene.js';
 import { impostorKey } from './impostor-plan.js';
 
-const ATLAS_SIZE = 2048;               // one 2048^2 RGBA page = 16 MB, well under the 64 MB budget
-const MAX_PAGES = 3;
+const ATLAS_SIZE = ATLAS_PAGE_SIZE;    // one 2048^2 RGBA page = 16 MB, well under the 64 MB budget
+const MAX_PAGES = ATLAS_MAX_PAGES;
 const DETAIL_RANK = { dot: 0, simple: 1, full: 2 };
 
 export function capDetail(detail, maxDetail = 'simple') {
@@ -98,11 +99,12 @@ export function createAtlas(opts = {}) {
   /**
    * Returns the atlas entry for a Soul, requesting rasterisation on first use. `entry.ready` is false until the
    * image has landed on the page; renderers then draw a placeholder dot (same size, palette-neutral).
-   * opts.priority 1 (a Float entrance) bakes its impostor ahead of settled Souls.
+   * opts.priority 1 (a Float entrance) bakes its impostor ahead of settled Souls; opts.count (the Souls on screen) caps
+   * the cell so the crowd fits the page budget (scene.js#atlasCellFor).
    */
-  function get(soul, detail, devicePx, { priority = 0 } = {}) {
+  function get(soul, detail, devicePx, { priority = 0, count = 0 } = {}) {
     const d = capDetail(detail, maxDetail);
-    const cell = atlasCellFor(devicePx);
+    const cell = atlasCellFor(devicePx, count, pageSize);
     const use3d = !!impostors && impostors.accepts(soul, d);
     const key = use3d ? impostorKey(soul.soulId, soul.badge, cell) : keyFor(soul.soulId, d, soul.badge, cell);
     let entry = entries.get(key);

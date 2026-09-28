@@ -48,6 +48,14 @@ test('quality table: bloom off on low, resolution scale per level, pixel ratio b
   for (const q of ['high', 'medium', 'low']) assert.ok(!('fireflies' in THREE_QUALITY[q]) && !('forestLayers' in THREE_QUALITY[q]));
 });
 
+test('quality table: MSAA per level (D-57: 4 / 2 / 0) drives the composer\'s multisampled HalfFloat targets', () => {
+  assert.deepEqual(['high', 'medium', 'low'].map((q) => THREE_QUALITY[q].msaa), [4, 2, 0]);
+  assert.equal(qualitySettings('nope').msaa, 4, 'unknown levels fall back to high');
+  assert.match(source, /new THREE\.WebGLRenderTarget\(1, 1, \{ type: THREE\.HalfFloatType, samples: qualitySettings\(quality\)\.msaa \|\| 0 \}\)/);
+  assert.match(source, /new EffectComposer\(renderer, composerTarget\)/);
+  assert.match(source, /for \(const rt of \[composer\.renderTarget1, composer\.renderTarget2\]\) if \(rt\.samples !== \(s\.msaa \|\| 0\)\) \{ rt\.samples = s\.msaa \|\| 0; rt\.dispose\(\); \}/, 'a level change rebuilds both targets');
+});
+
 test('bloom strength: base plus a clamped transient boost; pulses decay to zero (single, non-repeating)', () => {
   assert.equal(bloomStrength('low', 1), 0);
   assert.equal(bloomStrength('high', 0), THREE_QUALITY.high.bloom.strength);

@@ -1,7 +1,7 @@
 """Cinematic space backdrop for the big screen (stage 15, D-36): the Galaxy region's sky, rendered once in Blender and
 moved a little at runtime (apps/public-galaxy/src/renderer: drift, twinkle, spin, falling stars).
 
-    blender -b -P tools/ai/blender/galaxy_space.py -- [--only backdrop|meteors]
+    blender -b -P tools/ai/blender/galaxy_space.py -- [--only backdrop|meteors] [--scale 2]
 
   backdrop   opaque  deep-space gradient, violet / blue / magenta nebula, a diagonal milky-way band with dust lanes and
                      a dense faint starfield, a distant galaxy, and a dark planet limb silhouetted in the lower right
@@ -20,7 +20,10 @@ def arg(name, default=None):
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 OUT = os.path.join(ROOT, 'assets-src/generated/galaxy-space')
 REGION, OVERSCAN = (1248, 1080), 1.1
-W, H = round(REGION[0] * OVERSCAN), round(REGION[1] * OVERSCAN)       # 1373 x 1188
+W, H = round(REGION[0] * OVERSCAN), round(REGION[1] * OVERSCAN)       # 1373 x 1188 (layout units)
+# Render scale: the same scene at SCALE x the pixels (2 = 2746 x 2376, sharp on a 4K big screen). Layout stays in
+# 1373 x 1188 units, so the look does not change with the scale.
+SCALE = float(arg('--scale', '2'))
 ONLY = arg('--only')
 os.makedirs(OUT, exist_ok=True)
 
@@ -56,7 +59,7 @@ def setup(w, h, transparent):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     sc = bpy.context.scene
     sc.render.engine = 'BLENDER_EEVEE'; sc.view_settings.view_transform = 'AgX'; sc.view_settings.look = 'AgX - Medium High Contrast'
-    sc.render.resolution_x, sc.render.resolution_y = w, h
+    sc.render.resolution_x, sc.render.resolution_y = round(w * SCALE), round(h * SCALE)
     try: sc.eevee.taa_render_samples = 64
     except Exception: pass
     world = bpy.data.worlds.new('w'); sc.world = world; world.use_nodes = True

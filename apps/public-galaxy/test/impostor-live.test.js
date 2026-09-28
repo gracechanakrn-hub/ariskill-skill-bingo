@@ -12,6 +12,7 @@ import * as REAL from '../../../packages/vendor/three/index.js';
 import { createImpostorStage } from '../src/renderer/impostor.js';
 import { IMPOSTOR, LIVE_ROLES, allocateLiveTile, blockTiles, tileRect, tileUv, liveTileSize } from '../src/renderer/impostor-plan.js';
 import { createAtlas } from '../src/renderer/atlas.js';
+import { atlasCellFor } from '../src/renderer/scene.js';
 import { WINNER_LOOK } from '../src/renderer/three-quality.js';
 import { clearSoulModelCache, clearSoulDecorCache, actionDuration } from '../../../packages/ui/soul3d/index.js';
 import { renderSoulSvg } from '../../../packages/ui/soul-renderer.js';
@@ -83,7 +84,7 @@ test('plan: 8 live tiles (never the bake tile), 2 x 2 blocks for the visit, a si
   // a block renders up to 512 px; a visit at 3.2 x wants more than a tile
   assert.deepEqual(tileRect(3, { size: 999, span: 2 }), { x: 0, y: 256, glY: 0, size: 512 });
   assert.equal(tileRect(3, { size: 999 }).size, IMPOSTOR.tile);
-  assert.equal(liveTileSize(72, 3.2, 1, { tile: 512 }), 346);
+  assert.equal(liveTileSize(72, 3.2, 1, { tile: 512 }), 461, 'D-57: 2 x supersampled, still inside the 512 px block');
   assert.equal(liveTileSize(72, 3.2, 2, { tile: 512 }), 512);
   assert.deepEqual(tileUv(tileRect(3, { size: 400, span: 2 })), { u0: 0, v0: 656 / 768, u1: 400 / 768, v1: 256 / 768 });
 });
@@ -152,7 +153,7 @@ test('three.js: one live call for entrances, the visit and the performers; perfo
   assert.match(three, /impostors\.renderLive\(liveItems, pr, \{ reducedMotion \}\)/);
   const souls = three.indexOf('for (const item of f.souls) drawSoul('), ents = three.indexOf('for (const e of f.entrances) {', souls), vis = three.indexOf('for (const v of visits) drawSoul(');
   assert.ok(three.indexOf('impostors.renderLive(') < souls && souls < ents && ents < vis, 'live renders first, then souls (far to near), entrances, the visit');
-  assert.match(three, /drawSoul\(item, \{ detail: item\.detail, alpha: item\.alpha \?\? 1, scale: item\.scale \?\? 1, now, live: item\.act \? liveOf\(item\) : null, cellScale: [^}]*DEPTH\.scale\[1\] \}\)/);
+  assert.match(three, /drawSoul\(item, \{ detail: item\.detail, alpha: item\.alpha \?\? 1, scale: item\.scale \?\? 1, now, live: item\.act \? liveOf\(item\) : null, cellScale: [^}]*DEPTH\.scale\[1\], count: f\.souls\.length \}\)/, 'D-57: the orbit count caps the cell to the atlas pages');
   assert.match(three, /glow: VISIT_GLOW, now, priority: 1, live: liveOf\(v\)/);
   assert.doesNotMatch(three.slice(vis, three.indexOf('\n', vis)), /trail/, 'no trail for the visit');
   // one run per texture change keeps the draw order: an acting Soul among the others, not after all of them
@@ -179,7 +180,9 @@ test('atlas: the 2D cell is the SVG without the die-cut', async () => {
     createAtlas({ maxDetail: 'simple' }).get({ soulId: 'soul_2d', config: cfg }, 'simple', 72);
     await new Promise((r) => setTimeout(r, 10));
     const svg = decodeURIComponent(loads.find((u) => u.startsWith('data:image/svg+xml')).split(',').slice(1).join(','));
-    const opts = { size: 128, detail: 'simple', badge: null, reducedMotion: true, images: false, idPrefix: 'pg-soul_2d-simple-128' };
+    const cell = atlasCellFor(72);
+    assert.equal(cell, 192, 'D-57: a 72 px Soul at dpr 1 gets a 192 px cell (2 x)');
+    const opts = { size: cell, detail: 'simple', badge: null, reducedMotion: true, images: false, idPrefix: `pg-soul_2d-simple-${cell}` };
     assert.equal(svg, renderSoulSvg(cfg, { ...opts, dieCut: false }));
     assert.notEqual(svg, renderSoulSvg(cfg, opts), 'the default (phone) SVG keeps its die-cut');
   } finally { delete globalThis.document; delete globalThis.Image; }

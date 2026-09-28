@@ -94,8 +94,9 @@ test('hashSeed is stable and bob phase stays within one turn', () => {
 test('sceneQuality tiers: no WebGL -> off, low-end -> low, otherwise high, QA overrides win', () => {
   assert.equal(sceneQuality({ webgl: false, dpr: 2, cores: 8 }), 'off');
   assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 8, memoryGb: 4 }), 'high');
-  assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 4, memoryGb: 4 }), 'low');
-  assert.equal(sceneQuality({ webgl: true, dpr: 3, cores: 8, memoryGb: 8 }), 'low');
+  assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 4, memoryGb: 4 }), 'high', 'D-57: 4 cores is a normal phone');
+  assert.equal(sceneQuality({ webgl: true, dpr: 3, cores: 8, memoryGb: 8 }), 'high', 'D-57: a sharp screen no longer lowers the tier');
+  assert.equal(sceneQuality({ webgl: true, dpr: 3, cores: 2, memoryGb: 4 }), 'low', 'very few cores');
   assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 8, memoryGb: 2 }), 'low');
   assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 8, forced: 'off' }), 'off');
   assert.equal(sceneQuality({ webgl: true, dpr: 2, cores: 2, forced: 'force' }), 'high');
@@ -110,9 +111,12 @@ test('frameBudgetExceeded needs evidence and compares the median against 33 ms',
   assert.equal(frameBudgetExceeded(new Array(20).fill(40)), true);
   assert.equal(frameBudgetExceeded([...new Array(19).fill(16), 400]), false, 'one hitch does not trip it');
   assert.equal(frameBudgetExceeded(null), false);
-  assert.equal(pixelRatioFor('high', 3), 1.5);
-  assert.equal(pixelRatioFor('low', 3), 1);
-  assert.equal(pixelRatioFor('high', 1), 1);
+  assert.equal(pixelRatioFor('high', 3), 2.5, 'D-57: sharp on dpr 3 phones');
+  assert.equal(pixelRatioFor('high', 2), 2);
+  assert.equal(pixelRatioFor('low', 3), 1.5);
+  assert.equal(pixelRatioFor('reduced', 3), 1.25, 'the lighter step before the flat fallback');
+  assert.equal(pixelRatioFor('high', 1), 1, 'never above the device');
+  assert.equal(pixelRatioFor('unknown', 3), 1);
 });
 
 // ---- baseline Soul (D-27) -------------------------------------------------------------------------------------
