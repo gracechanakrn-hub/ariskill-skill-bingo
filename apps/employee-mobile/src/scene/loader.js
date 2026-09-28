@@ -35,7 +35,9 @@ function whenIdle(fn, timeout, fallbackMs) {
 function prefetchModels(mods, config = null) {
   return Promise.all([import('./soul-model.js'), import('./capability.js')]).then(([model, cap]) => {
     const tier = cap.detectQuality();
-    if (tier !== 'off') model.prefetchSoulModels(mods, tier === 'high' ? ['lite', 'hero'] : ['lite'], model.soulBodyVariant(config));
+    // D-58: only the body this phone will draw (hero on high, lite on low; no hull since the die-cut is gone) and, before
+    // the Soul is known, the v3 body every new Soul stands on (SOUL_CONFIG_VERSION 3) instead of the old baseline
+    if (tier !== 'off') model.prefetchSoulModels(mods, [tier === 'high' ? 'hero' : 'lite'], config ? model.soulBodyVariant(config) : 'v3');
   });
 }
 
@@ -48,7 +50,7 @@ export function prefetchThree() {
 
 /**
  * Warm the v3 body (stage 13, D-31: every v3 Soul stands on it) once the round-end config is known, so the reveal of a
- * v3 Soul opens without waiting on the network; the baseline of v1 / v2 Souls is already warm from prefetchThree.
+ * v3 Soul opens without waiting on the network (since D-58 prefetchThree already warms the v3 body during play).
  * Idle-time, once per session, only when the device runs the 3D scene. Safe to call many times.
  */
 let bodyPrefetched = false;
@@ -56,6 +58,14 @@ export function prefetchSoulBody(config) {
   if (!config || typeof config !== 'object' || !(Number(config.version) >= 3) || bodyPrefetched) return; // soulBodyVariant's rule
   bodyPrefetched = true;
   whenIdle(() => { loadThree().then((mods) => prefetchModels(mods, config)).catch(() => { bodyPrefetched = false; }); }, 1500, 300);
+}
+
+/** D-58: warm the winner's gold crown (34 KB) on the result screen, only for a Bingo winner. Safe to call many times. */
+let crownPrefetched = false;
+export function prefetchWinnerCrown() {
+  if (crownPrefetched) return;
+  crownPrefetched = true;
+  whenIdle(() => { loadThree().then((mods) => import('../../../../packages/ui/soul3d/winner.js').then((w) => w.loadWinnerCrown(mods))).catch(() => { crownPrefetched = false; }); }, 1500, 300);
 }
 
 /**

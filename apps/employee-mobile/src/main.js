@@ -24,7 +24,7 @@ import { mountPlaying } from './views/playing.js';
 import { mountResult } from './views/result.js';
 import { mountSoul } from './views/soul.js';
 import { createBackdrop } from './backdrop.js';
-import { prefetchThree, prefetchSoulBody, prefetchSoulDecor } from './scene/loader.js';
+import { prefetchThree, prefetchSoulBody, prefetchSoulDecor, prefetchWinnerCrown } from './scene/loader.js';
 import { sparseStreamLiveness, createGapTracker } from './liveness.js';
 
 // Persistence lives in localStorage keyed by event (+ participant) so a QR re-scan or a closed tab keeps the
@@ -182,7 +182,7 @@ function afterRender(state) {
   if (screen === 'playing' || screen === 'locked' || screen === 'result') prefetchThree();
   // The round-end Soul config is known on the result screen: warm its own models too - the v3 body of a v3 Soul (D-31)
   // and its charm / face models (D-29, D-31) - so the reveal opens decorated without waiting on the network.
-  if ((screen === 'result' || screen === 'soul') && state.soul && state.soul.config) { prefetchSoulBody(state.soul.config); prefetchSoulDecor(state.soul.config); }
+  if ((screen === 'result' || screen === 'soul') && state.soul && state.soul.config) { prefetchSoulBody(state.soul.config); prefetchSoulDecor(state.soul.config); if (state.soul.badge) prefetchWinnerCrown(); }
   // Auto-finalize a server DRAFT that already holds 16 (reassigned deferred board or resumed session).
   if (screen === 'select' && shouldAutoFinalize(state) && autoFinalizedFor !== `${state.board.boardId}:${state.board.version}`) {
     autoFinalizedFor = `${state.board.boardId}:${state.board.version}`;

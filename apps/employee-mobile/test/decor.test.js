@@ -54,7 +54,10 @@ test('one 3D Soul: the phone scene modules are the shared packages/ui/soul3d imp
 
 test('the reveal builds the shared rig with the Soul config and its decorations, and never waits long for them', async () => {
   const scene = src('scene/soul-scene.js');
-  assert.match(scene, /buildSoulRig\(THREE, \{ body: models\.body, hull: models\.hull, config, badge: [^,]+, decor, quality, glowTexture: glowTex \}\)/);
+  assert.match(scene, /buildSoulRig\(THREE, \{ body: models\.body, hull: models\.hull, config, badge: [^,]+, decor, quality, glowTexture: glowTex, dieCut: false, winnerCrown: P\.badge \? \(crownGlb \|\| true\) : false \}\)/, 'D-58: no die-cut; a winner wears the crown');
+  assert.match(scene, /const crownP = opts && opts\.badge \? loadWinnerCrown\(mods\) : Promise\.resolve\(null\);/, 'the crown is fetched only for a winner');
+  assert.match(scene, /Promise\.race\(\[crownP, new Promise\(\(r\) => setTimeout\(\(\) => r\(null\), DECOR_WAIT_MS\)\)\]\)/, 'bounded wait for the crown');
+  assert.doesNotMatch(scene, /TorusGeometry|makeDashedRingTexture|'dashed-ring'|'halo-ring'/, 'D-58: no floor ring, dashed ring or halo ring');
   assert.match(scene, /loadSoulDecor\(mods, opts && opts\.config\)/);
   assert.match(scene, /Promise\.race\(\[decorP, new Promise\(\(r\) => setTimeout\(\(\) => r\(null\), DECOR_WAIT_MS\)\)\]\)/, 'bounded wait');
   assert.match(scene, /decorLate\.then\(\(d\) => \{ if \(!disposed && d\) rig\.setDecor\(d\); \}\)/, 'late decorations join the reveal');

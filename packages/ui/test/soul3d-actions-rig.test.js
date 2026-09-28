@@ -259,7 +259,7 @@ test('dieCut: false leaves out only the white die-cut hull (the big screen); the
   acting.rest();
   assert.deepEqual(draws(acting, m), draws(big, m));
   for (const r of [phone, explicit, big, acting]) r.dispose();
-  // the phone reveal passes no dieCut: it keeps the default
+  // D-58: the phone reveal now leaves the die-cut out too (it read as a white border around the Soul)
   const scene = readFileSync(join(ROOT, 'apps/employee-mobile/src/scene/soul-scene.js'), 'utf8');
-  assert.match(scene, /buildSoulRig\(THREE, \{/); assert.doesNotMatch(scene, /dieCut/);
+  assert.match(scene, /buildSoulRig\(THREE, \{[^}]*dieCut: false/);
 });

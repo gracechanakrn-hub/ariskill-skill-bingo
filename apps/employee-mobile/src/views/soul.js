@@ -68,7 +68,7 @@ export function mountSoul(root, ctx, screen) {
     if (!soul) return;
     if (renderedSoulId !== soul.soulId) {
       const alt = soulAltText(soul.config, soul.badge);
-      const svg = svgElement(renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: 'full', reducedMotion: prefersReducedMotion(), label: alt, idPrefix: `soul-${soul.soulId}` }));
+      const svg = svgElement(renderSoulSvg(soul.config, { size: 220, badge: soul.badge, detail: 'full', reducedMotion: prefersReducedMotion(), label: alt, idPrefix: `soul-${soul.soulId}`, dieCut: false, glow: 'soft' }));
       mount(els.figure, svg);
       els.caption.textContent = soul.badge === 'bingo-star' ? t('soul.badgeLabel') : '';
       renderedSoulId = soul.soulId;

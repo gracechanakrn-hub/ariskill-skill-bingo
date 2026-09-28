@@ -204,3 +204,15 @@ test('a decorated Soul never draws the halo glow ring above its orb (it would re
   for (const face of ['nerdy', 'pirate', 'angel']) assert.doesNotMatch(renderSoulSvg(v2Config({ glow: 2, face }), opts), HALO, face);
   assert.match(renderSoulSvg({ version: 1, seed: 'v1halo', palette: 1, glow: 2 }, opts), HALO);
 });
+
+test('D-58 phone options: dieCut false drops the white die-cut; glow soft never draws the dashed ring or the halo ring', async () => {
+  const { renderSoulSvg } = await import('../soul-renderer.js');
+  const base = { seed: 'd58', palette: 'aurora', body: 'drop', eyes: 'dot', antenna: 'orb', mouth: 'smile', driftPhase: 0.2 };
+  const ring = renderSoulSvg({ ...base, glow: 'ring' }, { size: 220, detail: 'full', reducedMotion: true, images: false });
+  assert.match(ring, /stroke-dasharray="10 6"/, 'the ring trait draws the dashed ring by default');
+  const phone = renderSoulSvg({ ...base, glow: 'ring' }, { size: 220, detail: 'full', reducedMotion: true, images: false, dieCut: false, glow: 'soft' });
+  assert.doesNotMatch(phone, /stroke-dasharray="10 6"/, 'no dashed ring');
+  const halo = renderSoulSvg({ ...base, glow: 'halo' }, { size: 220, detail: 'full', reducedMotion: true, images: false, dieCut: false, glow: 'soft' });
+  assert.doesNotMatch(halo, /<ellipse[^>]*fill="none"[^>]*stroke-width="3"/, 'no halo ring');
+  assert.doesNotMatch(phone, /stroke="#FFFFFF"[^>]*stroke-linejoin="round"/i, 'no white die-cut stroke');
+});

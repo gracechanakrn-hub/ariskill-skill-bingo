@@ -23,7 +23,7 @@ test('a v3 Soul reveals on the v3 body: the scene loads the models of its config
   assert.equal(sceneModel.soulBodyVariant(v3Config()), 'v3');
   for (const c of [v2Config(), neutralV2(), { seed: 'v1', palette: 'coral' }, undefined]) assert.equal(sceneModel.soulBodyVariant(c), 'v2');
   const scene = src('scene/soul-scene.js');
-  assert.match(scene, /models = await loadSoulModels\(mods, quality, \{ variant: soulBodyVariant\(opts && opts\.config\) \}\)/);
+  assert.match(scene, /models = await loadSoulModels\(mods, quality, \{ variant: soulBodyVariant\(opts && opts\.config\), hull: false \}\)/, 'D-58: no hull download');
   assert.match(scene, /if \(!models \|\| !host\.isConnected\) return null;/, 'no v3 body (face data not built, 404): the SVG path');
   assert.match(scene, /loadSoulDecor\(mods, opts && opts\.config\)/, 'the v3 plate, eyes, kit and antenna charm come with the decorations');
   assert.equal(await createSoulScene(null, { config: v3Config() }), null);
@@ -67,5 +67,7 @@ test('once the round-end config is known: the v3 body is prefetched once (v3 onl
   } finally { if (had) globalThis.requestIdleCallback = had; else delete globalThis.requestIdleCallback; }
   const main = src('main.js');
   assert.match(main, /prefetchSoulBody\(state\.soul\.config\); prefetchSoulDecor\(state\.soul\.config\);/, 'the result screen warms both');
-  assert.match(src('scene/loader.js'), /model\.prefetchSoulModels\(mods, tier === 'high' \? \['lite', 'hero'\] : \['lite'\], model\.soulBodyVariant\(config\)\)/);
+  // D-58: only the tier's own body, and the v3 body before the Soul is known; winners also warm the crown
+  assert.match(src('scene/loader.js'), /model\.prefetchSoulModels\(mods, \[tier === 'high' \? 'hero' : 'lite'\], config \? model\.soulBodyVariant\(config\) : 'v3'\)/);
+  assert.match(main, /if \(state\.soul\.badge\) prefetchWinnerCrown\(\);/);
 });

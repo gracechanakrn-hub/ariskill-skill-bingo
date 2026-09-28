@@ -418,7 +418,8 @@ function badgeSvg(medallion = false) {
 /**
  * Render a Soul as a complete <svg> string.
  * @param {object} config SoulConfig v1, v2 or v3 (indices or names) - see packages/game-rules/src/soul.js
- * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face, dieCut=true }
+ * @param {object} opts { size=160, badge=null|'bingo-star', detail='full'|'simple'|'dot', reducedMotion=false, label=null, idPrefix, images=true, decor, face, dieCut=true, glow=null }
+ *   glow          'soft' draws only the soft glow, never the dashed ring or the halo ring (the phone, D-58)
  *   size          CSS px of the square output (viewBox is always 200); the die-cut and shadow scale with it.
  *   badge         'bingo-star' draws the gold star (upper right; on a medallion for v2+); never part of the config (BR-17).
  *   detail        'full' = gradients, filters (soft drips, highlight blur, drop shadow), ambient glow style, optional
@@ -433,7 +434,7 @@ function badgeSvg(medallion = false) {
  *   reducedMotion removes the glow breath <animate>; label overrides the alt text; idPrefix namespaces defs ids.
  */
 export function renderSoulSvg(config, opts = {}) {
-  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE, dieCut: withDieCut = true } = opts;
+  const { size = 160, badge = null, detail = 'full', reducedMotion = false, label = null, idPrefix, images = true, decor = SOUL_DECOR, face = SOUL_FACE, dieCut: withDieCut = true, glow: glowOverride = null } = opts;
   const s = resolveSoul(config);
   const pal = s.pal;
   const decorated = s.version >= 2;               // v2+: gradient body, soft glow for halo, medallion badge
@@ -494,7 +495,7 @@ export function renderSoulSvg(config, opts = {}) {
   const orb = v3 ? '' : `<circle cx="${ORB.cx}" cy="${ORB.cy}" r="${ORB.r}" fill="${pal.highlight}" stroke="${pal.outline}" stroke-width="1.6"/><circle cx="${ORB.spec.x}" cy="${ORB.spec.y}" r="2.6" fill="#fff"/>`;
   // A decorated Soul (v2+) never draws the halo glow style (a ring above the antenna): the angel face kit's halo means
   // soft skills (D-29), so any other ring there would read as one. Those Souls take the soft glow instead.
-  const ambient = full ? glowSvg(decorated && s.glow === 'halo' ? 'soft' : s.glow, pal, id, !reducedMotion, s.driftPhase) : '';
+  const ambient = full ? glowSvg(glowOverride === 'soft' || (decorated && s.glow === 'halo') ? 'soft' : s.glow, pal, id, !reducedMotion, s.driftPhase) : '';
   const decorations = decorated && images ? imagesSvg(spriteLayers(s, decor, face)) : '';
 
   return open + defs + ambient + orbGlow + dieCut + bodySvg + rim + lines + drips + highlight + eyes + orb + decorations +

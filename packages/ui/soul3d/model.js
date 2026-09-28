@@ -137,12 +137,13 @@ export function prefetchSoulModels(mods, lods = ['lite', 'hero'], variant = 'v2'
  * Resolves { body, hull } or null when nothing loads (caller keeps its SVG / CSS fallback). opts: { variant ('v2' |
  * 'v3', from soulBodyVariant(config)), face (SOUL_FACE, injectable for tests) }.
  */
-export async function loadSoulModels(mods, quality, { variant = 'v2', face = SOUL_FACE } = {}) {
+export async function loadSoulModels(mods, quality, { variant = 'v2', face = SOUL_FACE, hull: needHull = true } = {}) {
   const wantHero = quality === 'high';
   const load = (lod) => loadSoulModel(mods, lod, variant, { face });
   let body = await load(wantHero ? 'hero' : 'lite').catch(() => null);
   if (!body && wantHero) body = await load('lite').catch(() => null);
   if (!body) return null;
-  const hull = body.lod === 'lite' ? body : await load('lite').catch(() => body);
+  // hull: false (no white die-cut, e.g. the phone since D-58) skips the extra lite download
+  const hull = !needHull || body.lod === 'lite' ? body : await load('lite').catch(() => body);
   return { body, hull };
 }
